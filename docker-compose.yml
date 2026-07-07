@@ -1,0 +1,17 @@
+services:
+  database:
+    container_name: db.kartographe
+    image: postgres:17-alpine
+    networks:
+      - kartograph-net
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  database-data:
+
+networks:
+  kartograph-net:
+    driver: bridge
