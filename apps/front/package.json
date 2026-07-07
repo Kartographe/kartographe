@@ -1,0 +1,48 @@
+{
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.20.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "api:sync": "node --env-file=.env.local scripts/api-sync.mjs"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^2.1.0",
+    "@ant-design/icons": "^6.2.3",
+    "@t3-oss/env-core": "^0.13.10",
+    "@tanstack/react-query": "^5.90.21",
+    "@tanstack/react-router": "^1.159.5",
+    "antd": "^6.3.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.19",
+    "openapi-fetch": "^0.17.0",
+    "openapi-react-query": "^0.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.13",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query-devtools": "^5.91.3",
+    "@tanstack/react-router-devtools": "^1.159.5",
+    "@tanstack/router-plugin": "^1.159.5",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "openapi-typescript": "^7.13.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "ultracite": "7.1.5",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^6.1.1"
+  }
+}

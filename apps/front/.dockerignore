@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+.git
+.tanstack
+.vite
+*.log
+.DS_Store
+
+# Exclude env files so the build uses the ##VITE_*## placeholders (real values
+# are injected at container start by docker/prepare.sh).
+.env
+.env.*
