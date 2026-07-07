@@ -2,12 +2,36 @@ services:
   database:
     container_name: db.kartographe
     image: postgres:17-alpine
+    ports:
+      - "5431:5432"
     networks:
       - kartograph-net
     volumes:
       - database-data:/var/lib/postgresql/data
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  back:
+    container_name: back.kartographe
+    build:
+      context: ./apps/back
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    links:
+      - database:db
+    networks:
+      - kartograph-net
 
 volumes:
   database-data:
