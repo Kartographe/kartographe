@@ -17,8 +17,8 @@ services:
       retries: 5
       start_period: 10s
 
-  back:
-    container_name: back.kartographe
+  api:
+    container_name: api.kartographe
     build:
       context: ./apps/back
     ports:
@@ -30,6 +30,24 @@ services:
         condition: service_healthy
     links:
       - database:db
+    networks:
+      - kartograph-net
+
+  app:
+    container_name: app.kartographe
+    build:
+      context: ./apps/front
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5173:80"
+    # Injected into the bundle at container start (docker/prepare.sh replaces
+    # the ##VITE_*## placeholders). Change a value + restart to repoint the app
+    # without rebuilding. VITE_API_URL targets the host-published API port
+    # since the fetch runs in the browser.
+    env_file:
+      - .env
+    depends_on:
+      - api
     networks:
       - kartograph-net
 
