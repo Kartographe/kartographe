@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -24,6 +25,11 @@ import { Route as Auth2faRouteImport } from './routes/auth/2fa'
 import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
 import { Route as AppAccountSecurityRouteImport } from './routes/_app/account/security'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -97,6 +103,7 @@ const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
+  '/terms': typeof TermsRoute
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
+  '/terms': typeof TermsRoute
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
+  '/terms': typeof TermsRoute
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/auth'
     | '/'
+    | '/terms'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/terms'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/auth'
     | '/_app'
+    | '/terms'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -193,10 +205,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -343,6 +363,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

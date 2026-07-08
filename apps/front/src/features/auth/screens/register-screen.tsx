@@ -98,6 +98,18 @@ export function RegisterScreen() {
         <form.FormRoot>
           <Flex gap={12} vertical>
             {error ? <Alert message={error} showIcon type="error" /> : null}
+            <form.AppField name="gender">
+              {(field) => (
+                <field.SelectField
+                  label={t`Civilité`}
+                  options={[
+                    { label: t`Non précisé`, value: "unknown" },
+                    { label: t`Madame`, value: "female" },
+                    { label: t`Monsieur`, value: "male" },
+                  ]}
+                />
+              )}
+            </form.AppField>
             <Flex gap={12}>
               <div className="flex-1">
                 <form.AppField name="firstName">
@@ -129,18 +141,6 @@ export function RegisterScreen() {
                 />
               )}
             </form.AppField>
-            <form.AppField name="gender">
-              {(field) => (
-                <field.SelectField
-                  label={t`Civilité`}
-                  options={[
-                    { label: t`Non précisé`, value: "unknown" },
-                    { label: t`Madame`, value: "female" },
-                    { label: t`Monsieur`, value: "male" },
-                  ]}
-                />
-              )}
-            </form.AppField>
             <form.AppField name="password">
               {(field) => (
                 <field.PasswordField
@@ -152,7 +152,16 @@ export function RegisterScreen() {
             <form.AppField name="acceptedTerms">
               {(field) => (
                 <field.CheckboxField>
-                  {t`J'accepte les conditions d'utilisation`}
+                  <Trans>
+                    J'accepte les{" "}
+                    <Link
+                      onClick={(event) => event.stopPropagation()}
+                      target="_blank"
+                      to="/terms"
+                    >
+                      conditions d'utilisation
+                    </Link>
+                  </Trans>
                 </field.CheckboxField>
               )}
             </form.AppField>

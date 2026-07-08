@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
-import { Flex, Result, Spin } from "antd";
+import { Flex, Result, Spin, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { $api } from "@/api/$api";
 import { turnstileHeaders } from "@/api/turnstile";
@@ -45,9 +45,14 @@ export function ActivationScreen({ token }: ActivationScreenProps) {
 
   return (
     <AuthCard title={t`Activation du compte`}>
-      <TurnstileWidget onToken={setTurnstileToken} />
       {status === "pending" ? (
-        <Flex align="center" justify="center" style={{ padding: 24 }} vertical>
+        <Flex align="center" gap={16} style={{ padding: "8px 0" }} vertical>
+          <Typography.Text style={{ textAlign: "center" }} type="secondary">
+            {isTurnstileEnabled()
+              ? t`Confirmez que vous n'êtes pas un robot pour activer votre compte.`
+              : t`Activation de votre compte en cours…`}
+          </Typography.Text>
+          <TurnstileWidget onToken={setTurnstileToken} />
           <Spin />
         </Flex>
       ) : null}
