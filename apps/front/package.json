@@ -19,6 +19,7 @@
     "@lingui/core": "^6.5.0",
     "@lingui/react": "^6.5.0",
     "@t3-oss/env-core": "^0.13.10",
+    "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.159.5",
     "antd": "^6.3.0",
