@@ -68,6 +68,12 @@ export function ThemeProvider({ children }: Props) {
             Avatar: {
               colorTextPlaceholder: "#1677ff",
             },
+            // Card head gets a distinct tint from the body, and the body
+            // (colorBgContainer) already steps off the page background — so
+            // head, body and main are three legible surfaces.
+            Card: {
+              headerBg: isDark ? "#17314e" : "#eef3fb",
+            },
             Menu: {
               itemSelectedBg: "#1677ff",
               itemSelectedColor: "#ffffff",

@@ -133,7 +133,7 @@ export function UserMenu({ collapsed }: UserMenuProps) {
       onOpenChange={setOpen}
       open={open}
       placement="rightBottom"
-      styles={{ content: { padding: 4 } }}
+      styles={{ content: { padding: 0 } }}
       trigger="click"
     >
       <Flex
