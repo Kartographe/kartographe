@@ -9,6 +9,7 @@ Two mounting points:
 
 from fastapi import APIRouter
 
+from src.routes.api.accounts import router as accounts_router
 from src.routes.api.auth import router as auth_router
 from src.routes.api.health import router as health_router
 from src.routes.api.mcp import router as mcp_router
@@ -16,9 +17,9 @@ from src.routes.api.me import router as me_router
 
 router = APIRouter()
 
-# `/v1/*` — versioned public surface. Empty for now; feature routers get
-# included here as the API grows.
+# `/v1/*` — versioned public surface; every route here is also an MCP tool.
 v1_router = APIRouter(prefix="/v1")
+v1_router.include_router(accounts_router)  # multi-tenant workspaces & members
 router.include_router(v1_router)
 
 # Out-of-version endpoints, mounted at the root.

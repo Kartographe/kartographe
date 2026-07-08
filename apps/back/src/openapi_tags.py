@@ -37,6 +37,26 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Consent to MCP authorization requests and manage connected applications.",
     },
     {
+        "name": "api.me.invitations",
+        "x-displayName": "Current user › Invitations",
+        "description": "List, accept and refuse account invitations addressed to the signed-in user.",
+    },
+    {
+        "name": "api.accounts",
+        "x-displayName": "Accounts",
+        "description": "Create and manage workspaces the signed-in user belongs to.",
+    },
+    {
+        "name": "api.accounts.users",
+        "x-displayName": "Accounts › Members",
+        "description": "List members of an account and manage their roles.",
+    },
+    {
+        "name": "api.accounts.invitations",
+        "x-displayName": "Accounts › Invitations",
+        "description": "Invite members to an account and manage pending invitations.",
+    },
+    {
         "name": "api.mcp.metadata",
         "x-displayName": "MCP › Discovery",
         "description": "OAuth authorization-server and protected-resource metadata for MCP clients.",

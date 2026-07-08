@@ -15,12 +15,19 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlmodel import Session, select
 
 from src.database import get_session
+from src.managers.account import AccountManager
+from src.managers.account_invitations import AccountInvitationsManager
+from src.managers.account_users import AccountUsersManager
 from src.managers.auth import AuthManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
+from src.managers.me_invitations import MeInvitationsManager
 from src.managers.me_mcp import MeMCPManager
 from src.managers.me_security import MeSecurityManager
 from src.managers.token import UserTokenManager
+from src.models.account import Account
+from src.models.account_user import AccountUser
+from src.models.account_user_invitation import AccountUserInvitation
 from src.models.enum import UserStatus
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
@@ -196,3 +203,88 @@ def get_current_me_mcp_authorization_request(
 CurrentMeMCPAuthorizationRequestDep = Annotated[
     UserMcpAuthorizationRequest, Depends(get_current_me_mcp_authorization_request)
 ]
+
+
+# --- Accounts (multi-tenant) --------------------------------------------
+
+def get_account_manager(session: SessionDep) -> AccountManager:
+    return AccountManager(session)
+
+
+AccountManagerDep = Annotated[AccountManager, Depends(get_account_manager)]
+
+
+def get_account_users_manager(session: SessionDep) -> AccountUsersManager:
+    return AccountUsersManager(session)
+
+
+AccountUsersManagerDep = Annotated[AccountUsersManager, Depends(get_account_users_manager)]
+
+
+def get_account_invitations_manager(session: SessionDep) -> AccountInvitationsManager:
+    return AccountInvitationsManager(session)
+
+
+AccountInvitationsManagerDep = Annotated[AccountInvitationsManager, Depends(get_account_invitations_manager)]
+
+
+def get_me_invitations_manager(session: SessionDep) -> MeInvitationsManager:
+    return MeInvitationsManager(session)
+
+
+MeInvitationsManagerDep = Annotated[MeInvitationsManager, Depends(get_me_invitations_manager)]
+
+
+def get_current_account(account_id: uuid.UUID, session: SessionDep) -> Account:
+    """Load the account behind `{account_id}`. 404 (not 403) on a missing or
+    disabled account so we don't leak which account ids exist."""
+    account = session.get(Account, account_id)
+    if account is None or not account.enabled:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Account not found.")
+    return account
+
+
+CurrentAccountDep = Annotated[Account, Depends(get_current_account)]
+
+
+def get_current_account_user(
+    user: CurrentUserDep, account: CurrentAccountDep, manager: AccountManagerDep
+) -> AccountUser:
+    """Resolve the caller's effective membership in the account. 403 if none —
+    the account exists but the caller is not a member."""
+    account_user = manager.resolve_account_user(user_id=user.id, account=account)
+    if account_user is None:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not a member of this account.")
+    return account_user
+
+
+CurrentAccountUserDep = Annotated[AccountUser, Depends(get_current_account_user)]
+
+
+def get_target_account_user(
+    account_user_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> AccountUser:
+    """Load a member seat by `{account_user_id}`, scoped to the account. Lighter
+    filter than the caller's own membership (no status/time-window) so admins can
+    act on disabled seats. 404 if it doesn't belong to the account."""
+    account_user = session.get(AccountUser, account_user_id)
+    if account_user is None or not account_user.enabled or account_user.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Member not found.")
+    return account_user
+
+
+TargetAccountUserDep = Annotated[AccountUser, Depends(get_target_account_user)]
+
+
+def get_current_account_invitation(
+    invitation_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> AccountUserInvitation:
+    """Load an invitation by `{invitation_id}`, scoped to the account. 404 if it
+    doesn't belong to the account."""
+    invitation = session.get(AccountUserInvitation, invitation_id)
+    if invitation is None or not invitation.enabled or invitation.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Invitation not found.")
+    return invitation
+
+
+CurrentAccountInvitationDep = Annotated[AccountUserInvitation, Depends(get_current_account_invitation)]
