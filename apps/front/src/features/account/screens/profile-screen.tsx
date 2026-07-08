@@ -6,12 +6,10 @@ import { $api } from "@/api/$api";
 import { ProfilePicture } from "@/features/account/components/profile-picture";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
-import { useThemeStore } from "@/lib/theme/theme-store";
 
 export function ProfileScreen() {
   const { t } = useLingui();
   const queryClient = useQueryClient();
-  const setThemeMode = useThemeStore((state) => state.setMode);
   const meQuery = useCurrentUser();
 
   const updateMutation = $api.useMutation("patch", "/me", {
@@ -28,8 +26,6 @@ export function ProfileScreen() {
       lastName: me?.lastName ?? "",
       phone: me?.phone ?? "",
       gender: me?.gender ?? "unknown",
-      language: me?.language ?? "fr-FR",
-      theme: me?.theme ?? "system",
     },
     validators: {
       onSubmit: z.object({
@@ -37,8 +33,6 @@ export function ProfileScreen() {
         lastName: z.string().min(1, t`Nom requis`),
         phone: z.string(),
         gender: z.enum(["unknown", "male", "female"]),
-        language: z.enum(["fr-FR", "en-GB", "es-ES", "de-DE", "it-IT"]),
-        theme: z.enum(["system", "light", "dark"]),
       }),
     },
     onSubmit: async ({ value }) => {
@@ -48,12 +42,8 @@ export function ProfileScreen() {
           lastName: value.lastName,
           phone: value.phone || undefined,
           gender: value.gender,
-          language: value.language,
-          theme: value.theme,
         },
       });
-      // Reflect the theme choice locally right away.
-      setThemeMode(value.theme === "system" ? "auto" : value.theme);
     },
   });
 
@@ -73,7 +63,7 @@ export function ProfileScreen() {
   return (
     <Flex gap={16} vertical>
       <Typography.Title level={3} style={{ margin: 0 }}>
-        {t`Mon profil`}
+        {t`Informations`}
       </Typography.Title>
       <ProfilePicture src={me.pictureProfile} />
       <Divider />
@@ -104,32 +94,6 @@ export function ProfileScreen() {
                     { label: t`Non précisé`, value: "unknown" },
                     { label: t`Madame`, value: "female" },
                     { label: t`Monsieur`, value: "male" },
-                  ]}
-                />
-              )}
-            </form.AppField>
-            <form.AppField name="language">
-              {(field) => (
-                <field.SelectField
-                  label={t`Langue`}
-                  options={[
-                    { label: "Français", value: "fr-FR" },
-                    { label: "English", value: "en-GB" },
-                    { label: "Español", value: "es-ES" },
-                    { label: "Deutsch", value: "de-DE" },
-                    { label: "Italiano", value: "it-IT" },
-                  ]}
-                />
-              )}
-            </form.AppField>
-            <form.AppField name="theme">
-              {(field) => (
-                <field.SelectField
-                  label={t`Thème`}
-                  options={[
-                    { label: t`Système`, value: "system" },
-                    { label: t`Clair`, value: "light" },
-                    { label: t`Sombre`, value: "dark" },
                   ]}
                 />
               )}

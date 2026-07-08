@@ -1,7 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { Alert, Flex, Skeleton, Typography } from "antd";
 import { $api } from "@/api/$api";
-import { ActivityLogCard } from "@/features/account/components/security/activity-log-card";
 import { OtpCard } from "@/features/account/components/security/otp-card";
 import { PasswordCard } from "@/features/account/components/security/password-card";
 import { SecurityKeysCard } from "@/features/account/components/security/security-keys-card";
@@ -33,7 +32,6 @@ export function SecurityScreen() {
       <PasswordCard hasPassword={overview.hasPassword} />
       <OtpCard otpEnabled={overview.otpEnabled} />
       <SecurityKeysCard />
-      <ActivityLogCard />
     </Flex>
   );
 }

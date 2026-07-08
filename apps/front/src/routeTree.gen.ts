@@ -22,9 +22,11 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotRouteImport } from './routes/auth/forgot'
 import { Route as AuthActivationRouteImport } from './routes/auth/activation'
 import { Route as Auth2faRouteImport } from './routes/auth/2fa'
-import { Route as AppAccountRouteRouteImport } from './routes/_app/account/route'
-import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
-import { Route as AppAccountSecurityRouteImport } from './routes/_app/account/security'
+import { Route as AppMeRouteRouteImport } from './routes/_app/me/route'
+import { Route as AppMeIndexRouteImport } from './routes/_app/me/index'
+import { Route as AppMeSettingsRouteImport } from './routes/_app/me/settings'
+import { Route as AppMeSecurityRouteImport } from './routes/_app/me/security'
+import { Route as AppMeLogsRouteImport } from './routes/_app/me/logs'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -90,27 +92,37 @@ const Auth2faRoute = Auth2faRouteImport.update({
   path: '/2fa',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppAccountRouteRoute = AppAccountRouteRouteImport.update({
-  id: '/account',
-  path: '/account',
+const AppMeRouteRoute = AppMeRouteRouteImport.update({
+  id: '/me',
+  path: '/me',
   getParentRoute: () => AppRoute,
 } as any)
-const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+const AppMeIndexRoute = AppMeIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppAccountRouteRoute,
+  getParentRoute: () => AppMeRouteRoute,
 } as any)
-const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
+const AppMeSettingsRoute = AppMeSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppMeRouteRoute,
+} as any)
+const AppMeSecurityRoute = AppMeSecurityRouteImport.update({
   id: '/security',
   path: '/security',
-  getParentRoute: () => AppAccountRouteRoute,
+  getParentRoute: () => AppMeRouteRoute,
+} as any)
+const AppMeLogsRoute = AppMeLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AppMeRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
   '/terms': typeof TermsRoute
-  '/account': typeof AppAccountRouteRouteWithChildren
+  '/me': typeof AppMeRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -120,8 +132,10 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
-  '/account/security': typeof AppAccountSecurityRoute
-  '/account/': typeof AppAccountIndexRoute
+  '/me/logs': typeof AppMeLogsRoute
+  '/me/security': typeof AppMeSecurityRoute
+  '/me/settings': typeof AppMeSettingsRoute
+  '/me/': typeof AppMeIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -136,15 +150,17 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/': typeof AppIndexRoute
-  '/account/security': typeof AppAccountSecurityRoute
-  '/account': typeof AppAccountIndexRoute
+  '/me/logs': typeof AppMeLogsRoute
+  '/me/security': typeof AppMeSecurityRoute
+  '/me/settings': typeof AppMeSettingsRoute
+  '/me': typeof AppMeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
   '/terms': typeof TermsRoute
-  '/_app/account': typeof AppAccountRouteRouteWithChildren
+  '/_app/me': typeof AppMeRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -155,8 +171,10 @@ export interface FileRoutesById {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/_app/': typeof AppIndexRoute
-  '/_app/account/security': typeof AppAccountSecurityRoute
-  '/_app/account/': typeof AppAccountIndexRoute
+  '/_app/me/logs': typeof AppMeLogsRoute
+  '/_app/me/security': typeof AppMeSecurityRoute
+  '/_app/me/settings': typeof AppMeSettingsRoute
+  '/_app/me/': typeof AppMeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,7 +182,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/'
     | '/terms'
-    | '/account'
+    | '/me'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -174,8 +192,10 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset'
     | '/auth/u2f'
-    | '/account/security'
-    | '/account/'
+    | '/me/logs'
+    | '/me/security'
+    | '/me/settings'
+    | '/me/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -190,14 +210,16 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/'
-    | '/account/security'
-    | '/account'
+    | '/me/logs'
+    | '/me/security'
+    | '/me/settings'
+    | '/me'
   id:
     | '__root__'
     | '/auth'
     | '/_app'
     | '/terms'
-    | '/_app/account'
+    | '/_app/me'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -208,8 +230,10 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/_app/'
-    | '/_app/account/security'
-    | '/_app/account/'
+    | '/_app/me/logs'
+    | '/_app/me/security'
+    | '/_app/me/settings'
+    | '/_app/me/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -311,26 +335,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth2faRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_app/account': {
-      id: '/_app/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AppAccountRouteRouteImport
+    '/_app/me': {
+      id: '/_app/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof AppMeRouteRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/account/': {
-      id: '/_app/account/'
+    '/_app/me/': {
+      id: '/_app/me/'
       path: '/'
-      fullPath: '/account/'
-      preLoaderRoute: typeof AppAccountIndexRouteImport
-      parentRoute: typeof AppAccountRouteRoute
+      fullPath: '/me/'
+      preLoaderRoute: typeof AppMeIndexRouteImport
+      parentRoute: typeof AppMeRouteRoute
     }
-    '/_app/account/security': {
-      id: '/_app/account/security'
+    '/_app/me/settings': {
+      id: '/_app/me/settings'
+      path: '/settings'
+      fullPath: '/me/settings'
+      preLoaderRoute: typeof AppMeSettingsRouteImport
+      parentRoute: typeof AppMeRouteRoute
+    }
+    '/_app/me/security': {
+      id: '/_app/me/security'
       path: '/security'
-      fullPath: '/account/security'
-      preLoaderRoute: typeof AppAccountSecurityRouteImport
-      parentRoute: typeof AppAccountRouteRoute
+      fullPath: '/me/security'
+      preLoaderRoute: typeof AppMeSecurityRouteImport
+      parentRoute: typeof AppMeRouteRoute
+    }
+    '/_app/me/logs': {
+      id: '/_app/me/logs'
+      path: '/logs'
+      fullPath: '/me/logs'
+      preLoaderRoute: typeof AppMeLogsRouteImport
+      parentRoute: typeof AppMeRouteRoute
     }
   }
 }
@@ -363,27 +401,31 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface AppAccountRouteRouteChildren {
-  AppAccountSecurityRoute: typeof AppAccountSecurityRoute
-  AppAccountIndexRoute: typeof AppAccountIndexRoute
+interface AppMeRouteRouteChildren {
+  AppMeLogsRoute: typeof AppMeLogsRoute
+  AppMeSecurityRoute: typeof AppMeSecurityRoute
+  AppMeSettingsRoute: typeof AppMeSettingsRoute
+  AppMeIndexRoute: typeof AppMeIndexRoute
 }
 
-const AppAccountRouteRouteChildren: AppAccountRouteRouteChildren = {
-  AppAccountSecurityRoute: AppAccountSecurityRoute,
-  AppAccountIndexRoute: AppAccountIndexRoute,
+const AppMeRouteRouteChildren: AppMeRouteRouteChildren = {
+  AppMeLogsRoute: AppMeLogsRoute,
+  AppMeSecurityRoute: AppMeSecurityRoute,
+  AppMeSettingsRoute: AppMeSettingsRoute,
+  AppMeIndexRoute: AppMeIndexRoute,
 }
 
-const AppAccountRouteRouteWithChildren = AppAccountRouteRoute._addFileChildren(
-  AppAccountRouteRouteChildren,
+const AppMeRouteRouteWithChildren = AppMeRouteRoute._addFileChildren(
+  AppMeRouteRouteChildren,
 )
 
 interface AppRouteChildren {
-  AppAccountRouteRoute: typeof AppAccountRouteRouteWithChildren
+  AppMeRouteRoute: typeof AppMeRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppAccountRouteRoute: AppAccountRouteRouteWithChildren,
+  AppMeRouteRoute: AppMeRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 

@@ -5,9 +5,9 @@ import { type ReactNode, useEffect, useState } from "react";
 import { MessageBridge } from "@/lib/antd/message-bridge";
 import { resolveIsDark, useThemeStore } from "@/lib/theme/theme-store";
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 export function ThemeProvider({ children }: Props) {
   const mode = useThemeStore((s) => s.mode);
@@ -41,6 +41,8 @@ export function ThemeProvider({ children }: Props) {
     colorBorder: "#3A3C48",
     colorBorderSecondary: "#2C2E38",
     colorText: "rgba(255, 255, 255, 0.9)",
+    colorTextSecondary: "rgba(255, 255, 255, 0.62)",
+    colorTextTertiary: "rgba(255, 255, 255, 0.45)",
   };
 
   return (
@@ -57,6 +59,21 @@ export function ThemeProvider({ children }: Props) {
             colorPrimary: "#6d3ad8",
             colorLink: "#6d3ad8",
             ...(isDark ? darkTokens : {}),
+          },
+          components: {
+            Avatar: {
+              colorTextPlaceholder: "#6d3ad8",
+            },
+            Menu: {
+              itemSelectedBg: "#6d3ad8",
+              itemSelectedColor: "#ffffff",
+            },
+            Rate: {
+              starSize: 16,
+            },
+            Table: {
+              headerBorderRadius: 0,
+            },
           },
         }}
       >

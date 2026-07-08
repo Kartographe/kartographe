@@ -54,7 +54,7 @@ export function UserMenu({ collapsed }: UserMenuProps) {
   const displayName =
     [me?.firstName, me?.lastName].filter(Boolean).join(" ") || me?.email || "";
 
-  function go(to: "/account" | "/account/security") {
+  function go(to: "/me" | "/me/security") {
     navigate({ to });
     setOpen(false);
   }
@@ -73,13 +73,13 @@ export function UserMenu({ collapsed }: UserMenuProps) {
             key: "account",
             icon: <UserOutlined />,
             label: t`Mon compte`,
-            onClick: () => go("/account"),
+            onClick: () => go("/me"),
           },
           {
             key: "security",
             icon: <SafetyOutlined />,
             label: t`Sécurité`,
-            onClick: () => go("/account/security"),
+            onClick: () => go("/me/security"),
           },
         ]}
         selectable={false}

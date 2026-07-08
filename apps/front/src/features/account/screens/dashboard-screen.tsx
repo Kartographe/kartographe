@@ -32,8 +32,8 @@ export function DashboardScreen() {
           {t`Bienvenue sur votre espace Kartographe.`}
         </Typography.Paragraph>
         <Flex gap={16}>
-          <Link to="/account">{t`Mon profil`}</Link>
-          <Link to="/account/security">{t`Sécurité du compte`}</Link>
+          <Link to="/me">{t`Mon profil`}</Link>
+          <Link to="/me/security">{t`Sécurité du compte`}</Link>
         </Flex>
       </Card>
     </Flex>
