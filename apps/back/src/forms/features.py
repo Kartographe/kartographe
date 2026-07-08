@@ -1,0 +1,38 @@
+"""Input schemas for features and their attached files."""
+
+from pydantic import Field
+
+from src.forms._base import CamelBase
+from src.models.enum import FeatureFileType, FeatureType
+
+# --- Feature -------------------------------------------------------------
+
+
+class FeatureCreateForm(CamelBase):
+    """Create a feature. It starts as a draft owned by the caller."""
+
+    title: str = Field(min_length=1, max_length=255)
+    description: dict | None = Field(default=None)
+    type: FeatureType
+
+
+class FeaturePatchForm(CamelBase):
+    """Partial update of a feature — only the keys sent are applied."""
+
+    title: str | None = Field(default=None, min_length=1, max_length=255)
+    description: dict | None = Field(default=None)
+    type: FeatureType | None = Field(default=None)
+
+
+# --- FeatureFile ---------------------------------------------------------
+
+
+class FeatureFilePatchForm(CamelBase):
+    """Partial update of a file's metadata — its type, name and/or description.
+
+    The binary content itself is immutable once uploaded.
+    """
+
+    type: FeatureFileType | None = Field(default=None)
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    description: dict | None = Field(default=None)

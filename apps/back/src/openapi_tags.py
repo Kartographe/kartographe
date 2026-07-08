@@ -57,6 +57,41 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Invite members to an account and manage pending invitations.",
     },
     {
+        "name": "api.applications",
+        "x-displayName": "Applications",
+        "description": "Create and manage the applications tracked inside an account.",
+    },
+    {
+        "name": "api.applications.environments",
+        "x-displayName": "Applications › Environments",
+        "description": "Deployment environments of an application (production, test, …).",
+    },
+    {
+        "name": "api.applications.versions",
+        "x-displayName": "Applications › Versions",
+        "description": "Released versions of an application.",
+    },
+    {
+        "name": "api.applications.environmentVersions",
+        "x-displayName": "Applications › Deployments",
+        "description": "Versions deployed onto an environment and their deployment state.",
+    },
+    {
+        "name": "api.applications.features",
+        "x-displayName": "Applications › Features",
+        "description": "Features attached to an application and their presence window.",
+    },
+    {
+        "name": "api.features",
+        "x-displayName": "Features",
+        "description": "Create and manage the features tracked at the account level.",
+    },
+    {
+        "name": "api.features.files",
+        "x-displayName": "Features › Files",
+        "description": "Files attached to a feature (screenshots, videos, documents).",
+    },
+    {
         "name": "api.mcp.metadata",
         "x-displayName": "MCP › Discovery",
         "description": "OAuth authorization-server and protected-resource metadata for MCP clients.",

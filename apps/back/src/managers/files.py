@@ -10,6 +10,7 @@ if the client sends a raw image.
 """
 
 import uuid
+from dataclasses import dataclass
 from io import BytesIO
 
 from fastapi import HTTPException, UploadFile, status
@@ -20,6 +21,17 @@ from src.services.files import FileStorageInternalService, get_file_storage
 _ALLOWED_IMAGE_EXTENSIONS = frozenset({"jpg", "jpeg", "png", "webp", "gif"})
 _ALLOWED_IMAGE_CONTENT_TYPES = frozenset({"image/jpeg", "image/png", "image/webp", "image/gif"})
 _MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MiB
+_MAX_UPLOAD_BYTES = 50 * 1024 * 1024  # 50 MiB — generic attachments (screenshots, videos, docs)
+
+
+@dataclass(frozen=True)
+class StoredUpload:
+    """Metadata of a generic file persisted through `FileManager.save_upload`."""
+
+    key: str
+    file_name: str
+    file_size: int
+    file_extension: str
 
 
 class FileManager:
@@ -79,6 +91,26 @@ class FileManager:
         self._storage.save(data, key, content_type=content_type)
         return key
 
+    def save_upload(self, file: UploadFile, *, prefix: str) -> StoredUpload:
+        """Validate and store an arbitrary uploaded file (no processing).
+
+        Returns the storage key alongside the metadata the caller persists on
+        its row (original name, byte size, lower-cased extension).
+        """
+        file.file.seek(0, 2)
+        size = file.file.tell()
+        file.file.seek(0)
+        if size == 0:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, "The uploaded file is empty.")
+        if size > _MAX_UPLOAD_BYTES:
+            raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "This file is too large (max 50 MB).")
+
+        file_name = file.filename or "file"
+        extension = self._extension(file_name)
+        key = f"{prefix.strip('/')}/{uuid.uuid4().hex}{('.' + extension) if extension else ''}"
+        self._storage.save(file.file.read(), key, content_type=file.content_type)
+        return StoredUpload(key=key, file_name=file_name, file_size=size, file_extension=extension)
+
     def delete(self, key: str | None) -> None:
         if key:
             self._storage.delete(key)
@@ -87,3 +119,9 @@ class FileManager:
         if not value:
             return None
         return self._storage.url_for(value)
+
+    def download_url_for(self, key: str | None, *, expires_in: int = 300) -> str | None:
+        """Time-limited download URL (pre-signed on S3, plain path locally)."""
+        if not key:
+            return None
+        return self._storage.signed_url_for(key, expires_in=expires_in)

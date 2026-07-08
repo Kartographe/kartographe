@@ -173,3 +173,73 @@ class AccountUserInvitationStatus(str, Enum):
     REFUSED = "refused"
     EXPIRED = "expired"
     CANCELLED = "cancelled"
+
+
+class ApplicationType(str, Enum):
+    BACKOFFICE = "backoffice"
+    CUSTOMER = "customer"
+    PUBLIC = "public"
+    MIXED = "mixed"
+    OTHER = "other"
+
+
+class ApplicationStatus(str, Enum):
+    """Shared draft→active→archived lifecycle for applications, their
+    environments and their versions."""
+
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ApplicationEnvironmentType(str, Enum):
+    PRODUCTION = "production"
+    PRE_PRODUCTION = "pre-production"
+    TEST = "test"
+    FEATURES = "features"
+    HOTFIX = "hotfix"
+    OTHER = "other"
+
+
+class ApplicationVersionType(str, Enum):
+    ALPHA = "alpha"
+    BETA = "beta"
+    STABLE = "stable"
+    DEV = "dev"
+
+
+class ApplicationEnvironmentVersionStatus(str, Enum):
+    """Deployment state of a version on an environment."""
+
+    STANDBY = "standby"
+    FINISHED = "finished"
+    ERROR = "error"
+    CANCELLED = "cancelled"
+
+
+class FeatureType(str, Enum):
+    TECHNICAL = "technical"
+    PRODUCT = "product"
+    QA = "qa"
+    DATA = "data"
+    OPS = "ops"
+    IT = "it"
+    OTHER = "other"
+
+
+class FeatureStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class FeatureFileType(str, Enum):
+    SCREENSHOT = "screenshot"
+    VIDEO = "video"
+    DOCUMENT = "document"
+    OTHER = "other"
+
+
+class FeatureFileStatus(str, Enum):
+    UPLOADED = "uploaded"
+    ARCHIVED = "archived"

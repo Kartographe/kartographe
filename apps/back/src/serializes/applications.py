@@ -1,0 +1,80 @@
+"""Output schemas for applications and their environments, versions and
+deployments."""
+
+import uuid
+from datetime import datetime
+
+from src.models.enum import (
+    ApplicationEnvironmentType,
+    ApplicationEnvironmentVersionStatus,
+    ApplicationStatus,
+    ApplicationType,
+    ApplicationVersionType,
+)
+from src.serializes._base import CamelBase
+
+
+class ApplicationItem(CamelBase):
+    """An application tracked inside an account."""
+
+    date: datetime
+    description: str | None = None
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    status: ApplicationStatus
+    status_date: datetime
+    title: str
+    type: ApplicationType
+
+
+class ApplicationEnvironmentItem(CamelBase):
+    """A deployment environment of an application."""
+
+    date: datetime
+    description: dict
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    status: ApplicationStatus
+    status_date: datetime
+    title: str
+    type: ApplicationEnvironmentType
+    url: str | None = None
+
+
+class ApplicationVersionItem(CamelBase):
+    """A released version of an application (semantic version as an int tuple)."""
+
+    date: datetime
+    description: dict | None = None
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    status: ApplicationStatus
+    status_date: datetime
+    title: str
+    type: ApplicationVersionType
+    version: list[int]
+
+
+class ApplicationEnvironmentVersionItem(CamelBase):
+    """A version deployed onto an environment (a deployment record)."""
+
+    application_version_id: uuid.UUID
+    date: datetime
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    status: ApplicationEnvironmentVersionStatus
+    status_date: datetime
+    status_details: str | None = None
+
+
+class ApplicationFeatureItem(CamelBase):
+    """A feature attached to an application, with its presence window."""
+
+    date: datetime
+    end_application_version_id: uuid.UUID | None = None
+    end_date: datetime | None = None
+    feature_id: uuid.UUID
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    start_application_version_id: uuid.UUID | None = None
+    start_date: datetime | None = None

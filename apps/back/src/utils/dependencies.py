@@ -18,7 +18,14 @@ from src.database import get_session
 from src.managers.account import AccountManager
 from src.managers.account_invitations import AccountInvitationsManager
 from src.managers.account_users import AccountUsersManager
+from src.managers.application import ApplicationManager
+from src.managers.application_environment import ApplicationEnvironmentManager
+from src.managers.application_environment_version import ApplicationEnvironmentVersionManager
+from src.managers.application_feature import ApplicationFeatureManager
+from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
+from src.managers.feature import FeatureManager
+from src.managers.feature_file import FeatureFileManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
 from src.managers.me_invitations import MeInvitationsManager
@@ -28,7 +35,14 @@ from src.managers.token import UserTokenManager
 from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
+from src.models.application import Application
+from src.models.application_environment import ApplicationEnvironment
+from src.models.application_environment_version import ApplicationEnvironmentVersion
+from src.models.application_feature import ApplicationFeature
+from src.models.application_version import ApplicationVersion
 from src.models.enum import UserStatus
+from src.models.feature import Feature
+from src.models.feature_file import FeatureFile
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
 from src.models.user_mcp_grant import UserMcpGrant
@@ -288,3 +302,165 @@ def get_current_account_invitation(
 
 
 CurrentAccountInvitationDep = Annotated[AccountUserInvitation, Depends(get_current_account_invitation)]
+
+
+# --- Applications & features --------------------------------------------
+#
+# Every loader below re-checks the object is bound to the account (or parent
+# resource) behind the URL — a 404 (never a 403) so ids from other accounts
+# don't leak. Membership/role is enforced separately on each route
+# (`CurrentAccountUserDep` for reads, `require_role(...)` for writes).
+
+def get_application_manager(session: SessionDep) -> ApplicationManager:
+    return ApplicationManager(session)
+
+
+ApplicationManagerDep = Annotated[ApplicationManager, Depends(get_application_manager)]
+
+
+def get_application_environment_manager(session: SessionDep) -> ApplicationEnvironmentManager:
+    return ApplicationEnvironmentManager(session)
+
+
+ApplicationEnvironmentManagerDep = Annotated[
+    ApplicationEnvironmentManager, Depends(get_application_environment_manager)
+]
+
+
+def get_application_version_manager(session: SessionDep) -> ApplicationVersionManager:
+    return ApplicationVersionManager(session)
+
+
+ApplicationVersionManagerDep = Annotated[
+    ApplicationVersionManager, Depends(get_application_version_manager)
+]
+
+
+def get_application_environment_version_manager(
+    session: SessionDep,
+) -> ApplicationEnvironmentVersionManager:
+    return ApplicationEnvironmentVersionManager(session)
+
+
+ApplicationEnvironmentVersionManagerDep = Annotated[
+    ApplicationEnvironmentVersionManager, Depends(get_application_environment_version_manager)
+]
+
+
+def get_application_feature_manager(session: SessionDep) -> ApplicationFeatureManager:
+    return ApplicationFeatureManager(session)
+
+
+ApplicationFeatureManagerDep = Annotated[
+    ApplicationFeatureManager, Depends(get_application_feature_manager)
+]
+
+
+def get_feature_manager(session: SessionDep) -> FeatureManager:
+    return FeatureManager(session)
+
+
+FeatureManagerDep = Annotated[FeatureManager, Depends(get_feature_manager)]
+
+
+def get_feature_file_manager(session: SessionDep) -> FeatureFileManager:
+    return FeatureFileManager(session)
+
+
+FeatureFileManagerDep = Annotated[FeatureFileManager, Depends(get_feature_file_manager)]
+
+
+def get_current_application(
+    application_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Application:
+    application = session.get(Application, application_id)
+    if application is None or not application.enabled or application.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Application not found.")
+    return application
+
+
+CurrentApplicationDep = Annotated[Application, Depends(get_current_application)]
+
+
+def get_current_application_environment(
+    environment_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationEnvironment:
+    environment = session.get(ApplicationEnvironment, environment_id)
+    if environment is None or not environment.enabled or environment.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Environment not found.")
+    return environment
+
+
+CurrentApplicationEnvironmentDep = Annotated[
+    ApplicationEnvironment, Depends(get_current_application_environment)
+]
+
+
+def get_current_application_version(
+    version_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationVersion:
+    version = session.get(ApplicationVersion, version_id)
+    if version is None or not version.enabled or version.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Version not found.")
+    return version
+
+
+CurrentApplicationVersionDep = Annotated[ApplicationVersion, Depends(get_current_application_version)]
+
+
+def get_current_application_environment_version(
+    environment_version_id: uuid.UUID,
+    environment: CurrentApplicationEnvironmentDep,
+    session: SessionDep,
+) -> ApplicationEnvironmentVersion:
+    deployment = session.get(ApplicationEnvironmentVersion, environment_version_id)
+    if (
+        deployment is None
+        or not deployment.enabled
+        or deployment.application_environment_id != environment.id
+    ):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Deployment not found.")
+    return deployment
+
+
+CurrentApplicationEnvironmentVersionDep = Annotated[
+    ApplicationEnvironmentVersion, Depends(get_current_application_environment_version)
+]
+
+
+def get_current_application_feature(
+    application_feature_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationFeature:
+    link = session.get(ApplicationFeature, application_feature_id)
+    if link is None or not link.enabled or link.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Application feature not found.")
+    return link
+
+
+CurrentApplicationFeatureDep = Annotated[
+    ApplicationFeature, Depends(get_current_application_feature)
+]
+
+
+def get_current_feature(
+    feature_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Feature:
+    feature = session.get(Feature, feature_id)
+    if feature is None or not feature.enabled or feature.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Feature not found.")
+    return feature
+
+
+CurrentFeatureDep = Annotated[Feature, Depends(get_current_feature)]
+
+
+def get_current_feature_file(
+    feature_file_id: uuid.UUID, feature: CurrentFeatureDep, session: SessionDep
+) -> FeatureFile:
+    feature_file = session.get(FeatureFile, feature_file_id)
+    if feature_file is None or not feature_file.enabled or feature_file.feature_id != feature.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found.")
+    return feature_file
+
+
+CurrentFeatureFileDep = Annotated[FeatureFile, Depends(get_current_feature_file)]

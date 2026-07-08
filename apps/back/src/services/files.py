@@ -27,6 +27,15 @@ class FileStorageInternalService(ABC):
     def url_for(self, key: str) -> str:
         """Absolute, publicly-fetchable URL for `key`. Passes through full URLs."""
 
+    def signed_url_for(self, key: str, *, expires_in: int = 300) -> str:
+        """Time-limited download URL for `key`.
+
+        Backends that support pre-signing (S3) override this to mint a URL that
+        expires after `expires_in` seconds. The default falls back to the plain
+        public URL — correct for the local disk backend, which has no signing.
+        """
+        return self.url_for(key)
+
 
 class LocalFileStorage(FileStorageInternalService):
     def __init__(self, root: Path, public_url_base: str, base_url: str):
@@ -94,6 +103,15 @@ class S3FileStorage(FileStorageInternalService):
         if self._endpoint_url:
             return f"{self._endpoint_url.rstrip('/')}/{self._bucket}/{stripped}"
         return f"https://{self._bucket}.s3.{self._region}.amazonaws.com/{stripped}"
+
+    def signed_url_for(self, key: str, *, expires_in: int = 300) -> str:
+        if key.startswith(("http://", "https://")):
+            return key
+        return self._client.generate_presigned_url(
+            "get_object",
+            Params={"Bucket": self._bucket, "Key": key.lstrip("/")},
+            ExpiresIn=expires_in,
+        )
 
 
 @lru_cache
