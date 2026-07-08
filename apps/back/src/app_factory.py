@@ -1,13 +1,14 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
+from src.managers.mcp_oauth import MCPOAuthError
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
 from src.settings import get_settings
@@ -68,6 +69,15 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     # submitted values such as plaintext passwords).
     app.add_exception_handler(RequestValidationError, validation_error_handler)
 
+    # MCP OAuth errors render the standard `{ error, error_description }` shape.
+    async def _mcp_oauth_error_handler(_: Request, exc: MCPOAuthError) -> JSONResponse:
+        return JSONResponse(
+            {"error": exc.error, "error_description": exc.error_description},
+            status_code=exc.status_code,
+        )
+
+    app.add_exception_handler(MCPOAuthError, _mcp_oauth_error_handler)
+
     app.include_router(router)
 
     # In local storage mode, serve uploaded files from a static mount. Mark them
@@ -110,16 +120,29 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
                 app,
                 name=f"{settings.app_name} MCP",
                 description="MCP server exposing the Kartographe platform as tools for AI agents.",
-                # `/health` is ops-only; `/auth/*` and `/me/*` are unversioned
-                # surfaces that must not be driven by an AI agent (the MCP
-                # transport is unauthenticated for now).
-                exclude_tags=["api.health", "api.auth", "api.me", "api.me.security"],
+                # Keep the ops probe, the unversioned auth/me surfaces and the
+                # OAuth/discovery endpoints out of the agent-callable tool set.
+                exclude_tags=[
+                    "api.health",
+                    "api.auth",
+                    "api.me",
+                    "api.me.security",
+                    "api.me.mcp",
+                    "api.mcp.oauth",
+                    "api.mcp.metadata",
+                ],
             )
             mcp.mount_http(mount_path=settings.mcp_mount_path)
             # Expose to the lifespan closure so the StreamableHTTP session
             # manager is started during FastAPI startup rather than racing the
             # first MCP request.
             fastapi_mcp_instance = mcp
+
+            # Gate the transport: require a valid MCP access token tied to an
+            # active grant (but leave `/mcp/oauth/*` public for the flow itself).
+            from src.utils.mcp_auth import MCPBearerMiddleware
+
+            app.add_middleware(MCPBearerMiddleware, mount_path=settings.mcp_mount_path)
         except ImportError:
             pass
 
