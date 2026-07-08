@@ -28,7 +28,7 @@ API_TAGS: list[dict[str, str]] = [
     },
     {
         "name": "api.me.security",
-        "x-displayName": "Current user — security",
+        "x-displayName": "Current user › Security",
         "description": "Password, authenticator, recovery codes, security keys and activity log.",
     },
 ]
