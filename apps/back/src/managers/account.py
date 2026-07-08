@@ -7,9 +7,12 @@ members/invitations live in the sibling managers.
 
 import uuid
 
-from fastapi import HTTPException, status
-from sqlmodel import Session, select
+from fastapi import HTTPException, UploadFile, status
+from sqlmodel import Session, func, select
 
+from src.filters.accounts import AccountSortField
+from src.filters._base import SortOrder
+from src.managers.files import FileManager
 from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.enum import (
@@ -20,15 +23,42 @@ from src.models.enum import (
     Language,
 )
 from src.models.user import User
+from src.serializes.accounts import AccountItem, AccountUserContextItem
 from src.utils.datetime import FAR_FUTURE, utc_now
 
 # Roles allowed to manage the account (settings, members, invitations).
 PRIVILEGED_ROLES = frozenset({AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR})
 
+# Account logos are normalised to a square of this side (px) before storage.
+_ACCOUNT_PICTURE_SIZE = 512
+
+_SORT_COLUMNS = {
+    AccountSortField.NAME: Account.name,
+    AccountSortField.CREATED_DATE: Account.created_date,
+    AccountSortField.STATUS: Account.status,
+    AccountSortField.ROLE: AccountUser.role,
+}
+
 
 class AccountManager:
     def __init__(self, session: Session):
         self.session = session
+        self._files = FileManager()
+
+    def to_item(self, account: Account, membership: AccountUser | None = None) -> AccountItem:
+        return AccountItem(
+            id=account.id,
+            name=account.name,
+            status=account.status,
+            language=account.language,
+            time_zone=account.time_zone,
+            picture_profile=self._files.public_url_for(account.picture_profile),
+            created_date=account.created_date,
+            status_date=account.status_date,
+            membership=(
+                AccountUserContextItem.model_validate(membership) if membership is not None else None
+            ),
+        )
 
     def find_active_account_user(self, *, user_id: uuid.UUID, account_id: uuid.UUID) -> AccountUser | None:
         """The user's active seat in the account, if any (time-window aware)."""
@@ -50,25 +80,48 @@ class AccountManager:
         """Effective membership behind a request (flat model: direct seat only)."""
         return self.find_active_account_user(user_id=user_id, account_id=account.id)
 
-    def list_for_user(self, user: User, *, role: AccountUserRole | None = None) -> list[tuple[AccountUser, Account]]:
-        """Active memberships of the user, joined to their accounts, newest first."""
+    def list_for_user(
+        self,
+        user: User,
+        *,
+        statuses: list[AccountStatus] | None = None,
+        roles: list[AccountUserRole] | None = None,
+        sort_by: AccountSortField = AccountSortField.CREATED_DATE,
+        sort_order: SortOrder = SortOrder.DESC,
+        page: int = 1,
+        limit: int = 25,
+    ) -> tuple[list[tuple[AccountUser, Account]], int]:
+        """One page of the user's active memberships joined to their accounts.
+
+        Returns `(rows, total)` — `total` is the unpaginated match count.
+        Filters on account status and membership role (multi-value); sorts on
+        name / created_date / status / role."""
         now = utc_now()
-        query = (
-            select(AccountUser, Account)
-            .join(Account, Account.id == AccountUser.account_id)
-            .where(
-                AccountUser.user_id == user.id,
-                AccountUser.status == AccountUserStatus.ACTIVE,
-                AccountUser.enabled.is_(True),
-                AccountUser.start_date <= now,
-                AccountUser.end_date > now,
-                Account.enabled.is_(True),
-            )
-            .order_by(AccountUser.start_date.desc())
-        )
-        if role is not None:
-            query = query.where(AccountUser.role == role)
-        return list(self.session.exec(query).all())
+        conditions = [
+            AccountUser.user_id == user.id,
+            AccountUser.status == AccountUserStatus.ACTIVE,
+            AccountUser.enabled.is_(True),
+            AccountUser.start_date <= now,
+            AccountUser.end_date > now,
+            Account.enabled.is_(True),
+        ]
+        if statuses:
+            conditions.append(Account.status.in_(statuses))
+        if roles:
+            conditions.append(AccountUser.role.in_(roles))
+
+        base = select(AccountUser, Account).join(Account, Account.id == AccountUser.account_id).where(*conditions)
+
+        total = self.session.exec(
+            select(func.count()).select_from(base.subquery())
+        ).one()
+
+        column = _SORT_COLUMNS[sort_by]
+        ordering = column.asc() if sort_order == SortOrder.ASC else column.desc()
+        rows = self.session.exec(
+            base.order_by(ordering).offset((page - 1) * limit).limit(limit)
+        ).all()
+        return list(rows), total
 
     def create_account(
         self, user: User, *, name: str, language: Language, time_zone: str
@@ -136,3 +189,18 @@ class AccountManager:
         account.updated_at = now
         self.session.add(account)
         self.session.commit()
+
+    def set_picture(self, account: Account, file: UploadFile) -> Account:
+        """Store a square-cropped logo and replace the previous one."""
+        previous_key = account.picture_profile
+        key = self._files.save_image(
+            file, prefix=f"accounts/{account.id}/profile", square_size=_ACCOUNT_PICTURE_SIZE
+        )
+        account.picture_profile = key
+        account.updated_at = utc_now()
+        self.session.add(account)
+        self.session.commit()
+        self.session.refresh(account)
+        if previous_key and previous_key != key:
+            self._files.delete(previous_key)
+        return account

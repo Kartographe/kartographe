@@ -7,6 +7,7 @@ front always reads `response.item` / `response.items`, leaving room to add
 metadata later without breaking the contract.
 """
 
+import math
 from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict
@@ -54,6 +55,17 @@ class ListingResponse(CamelBase, Generic[T]):
             count=len(items),
             limit=len(items) or 1,
             page=Pagination(min=1, current=1, max=1),
+            items=items,
+        )
+
+    @classmethod
+    def paginate(cls, items: list, *, count: int, page: int, limit: int) -> "ListingResponse":
+        """Wrap one page of a server-paginated query in the envelope."""
+        max_page = max(1, math.ceil(count / limit)) if limit else 1
+        return cls(
+            count=count,
+            limit=limit,
+            page=Pagination(min=1, current=page, max=max_page),
             items=items,
         )
 

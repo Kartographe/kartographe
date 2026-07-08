@@ -7,14 +7,15 @@ a member of. Role-gated writes go through `require_role`.
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, UploadFile, status
 
+from src.filters.accounts import AccountSortField
+from src.filters._base import PageLimit, SortOrder
 from src.forms.accounts import AccountCreateForm, AccountPatchForm
-from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.enum import AccountStatus, AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse, SuccessResponse
-from src.serializes.accounts import AccountItem, AccountUserContextItem
+from src.serializes.accounts import AccountItem
 from src.serializes.errors import ErrorResponse
 from src.utils.dependencies import (
     AccountManagerDep,
@@ -30,29 +31,41 @@ router = APIRouter(prefix="/accounts", tags=["api.accounts"])
 _FORBIDDEN = {403: {"model": ErrorResponse, "description": "Insufficient permissions on this account"}}
 _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account not found"}}
 
-
-def _account_item(account: Account, membership: AccountUser | None) -> AccountItem:
-    item = AccountItem.model_validate(account)
-    if membership is not None:
-        item.membership = AccountUserContextItem.model_validate(membership)
-    return item
+_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 
 
 @router.get(
     "",
     operation_id="api.accounts.list",
     summary="List my accounts",
-    description="List the workspaces the signed-in user is an active member of, with their role in each.",
+    description=(
+        "List the workspaces the signed-in user is an active member of, with their role in each. "
+        "Filter by account status and/or membership role (repeat the query param for multiple values), "
+        "sort by name/createdDate/status/role, and page through results."
+    ),
     response_model=ListingResponse[AccountItem],
 )
 def list_accounts(
     user: CurrentUserDep,
     manager: AccountManagerDep,
-    role: AccountUserRole | None = None,
+    account_status: Annotated[list[AccountStatus] | None, Query(alias="status")] = None,
+    role: Annotated[list[AccountUserRole] | None, Query(alias="role")] = None,
+    sort_by: Annotated[AccountSortField, Query(alias="sortBy")] = AccountSortField.CREATED_DATE,
+    sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
+    page: Annotated[int, Query(ge=1)] = 1,
+    limit: Annotated[PageLimit, Query()] = PageLimit.L25,
 ) -> ListingResponse[AccountItem]:
-    pairs = manager.list_for_user(user, role=role)
-    items = [_account_item(account, membership) for membership, account in pairs]
-    return ListingResponse.single_page(items)
+    rows, total = manager.list_for_user(
+        user,
+        statuses=account_status,
+        roles=role,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        page=page,
+        limit=limit.value,
+    )
+    items = [manager.to_item(account, membership) for membership, account in rows]
+    return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
 @router.post(
@@ -69,7 +82,7 @@ def create_account(
     account, membership = manager.create_account(
         user, name=form.name, language=form.language, time_zone=form.time_zone
     )
-    return ItemResponse(item=_account_item(account, membership))
+    return ItemResponse(item=manager.to_item(account, membership))
 
 
 @router.get(
@@ -80,8 +93,10 @@ def create_account(
     response_model=ItemResponse[AccountItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
-def get_account(account: CurrentAccountDep, membership: CurrentAccountUserDep) -> ItemResponse[AccountItem]:
-    return ItemResponse(item=_account_item(account, membership))
+def get_account(
+    account: CurrentAccountDep, membership: CurrentAccountUserDep, manager: AccountManagerDep
+) -> ItemResponse[AccountItem]:
+    return ItemResponse(item=manager.to_item(account, membership))
 
 
 @router.patch(
@@ -96,10 +111,37 @@ def update_account(
     account: CurrentAccountDep,
     form: AccountPatchForm,
     manager: AccountManagerDep,
-    membership: Annotated[AccountUser, Depends(require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR))],
+    membership: Annotated[AccountUser, Depends(_ADMIN)],
 ) -> ItemResponse[AccountItem]:
     updated = manager.update(account, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=_account_item(updated, membership))
+    return ItemResponse(item=manager.to_item(updated, membership))
+
+
+@router.post(
+    "/{account_id}/picture",
+    operation_id="api.accounts.setPicture",
+    summary="Upload the account logo",
+    description=(
+        "Upload the account logo (multipart, field `file`). The image is center-cropped "
+        "to a square and resized server-side; the previous logo is replaced. "
+        "Owners and administrators only."
+    ),
+    response_model=ItemResponse[AccountItem],
+    responses={
+        **_FORBIDDEN,
+        **_NOT_FOUND,
+        400: {"model": ErrorResponse, "description": "Unsupported image format"},
+        413: {"model": ErrorResponse, "description": "Image too large"},
+    },
+)
+def set_account_picture(
+    account: CurrentAccountDep,
+    file: UploadFile,
+    manager: AccountManagerDep,
+    membership: Annotated[AccountUser, Depends(_ADMIN)],
+) -> ItemResponse[AccountItem]:
+    updated = manager.set_picture(account, file)
+    return ItemResponse(item=manager.to_item(updated, membership))
 
 
 @router.post(
@@ -116,7 +158,7 @@ def activate_account(
     membership: Annotated[AccountUser, Depends(require_role(AccountUserRole.OWNER))],
 ) -> ItemResponse[AccountItem]:
     updated = manager.set_status(account, AccountStatus.ACTIVE)
-    return ItemResponse(item=_account_item(updated, membership))
+    return ItemResponse(item=manager.to_item(updated, membership))
 
 
 @router.post(
@@ -133,7 +175,7 @@ def deactivate_account(
     membership: Annotated[AccountUser, Depends(require_role(AccountUserRole.OWNER))],
 ) -> ItemResponse[AccountItem]:
     updated = manager.set_status(account, AccountStatus.DISABLED)
-    return ItemResponse(item=_account_item(updated, membership))
+    return ItemResponse(item=manager.to_item(updated, membership))
 
 
 @router.delete(
