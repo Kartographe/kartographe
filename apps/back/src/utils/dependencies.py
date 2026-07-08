@@ -24,8 +24,16 @@ from src.managers.application_environment_version import ApplicationEnvironmentV
 from src.managers.application_feature import ApplicationFeatureManager
 from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
+from src.managers.core import CoreManager
 from src.managers.feature import FeatureManager
 from src.managers.feature_file import FeatureFileManager
+from src.managers.feature_journey import FeatureJourneyManager
+from src.managers.journey import JourneyManager
+from src.managers.journey_scenario import JourneyScenarioManager
+from src.managers.journey_scenario_step import JourneyScenarioStepManager
+from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAssertionManager
+from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
+from src.managers.persona import PersonaManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
 from src.managers.me_invitations import MeInvitationsManager
@@ -40,9 +48,18 @@ from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
 from src.models.application_version import ApplicationVersion
+from src.models.action_type import ActionType
+from src.models.assertion_type import AssertionType
 from src.models.enum import UserStatus
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
+from src.models.feature_journey import FeatureJourney
+from src.models.journey import Journey
+from src.models.journey_scenario import JourneyScenario
+from src.models.journey_scenario_step import JourneyScenarioStep
+from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
+from src.models.journey_scenario_step_file import JourneyScenarioStepFile
+from src.models.persona import Persona
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
 from src.models.user_mcp_grant import UserMcpGrant
@@ -464,3 +481,188 @@ def get_current_feature_file(
 
 
 CurrentFeatureFileDep = Annotated[FeatureFile, Depends(get_current_feature_file)]
+
+
+# --- Core reference catalogues (global, read-only) ----------------------
+
+def get_core_manager(session: SessionDep) -> CoreManager:
+    return CoreManager(session)
+
+
+CoreManagerDep = Annotated[CoreManager, Depends(get_core_manager)]
+
+
+def get_current_action_type(action_type_id: uuid.UUID, session: SessionDep) -> ActionType:
+    action_type = session.get(ActionType, action_type_id)
+    if action_type is None or not action_type.enabled:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Action type not found.")
+    return action_type
+
+
+CurrentActionTypeDep = Annotated[ActionType, Depends(get_current_action_type)]
+
+
+def get_current_assertion_type(assertion_type_id: uuid.UUID, session: SessionDep) -> AssertionType:
+    assertion_type = session.get(AssertionType, assertion_type_id)
+    if assertion_type is None or not assertion_type.enabled:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Assertion type not found.")
+    return assertion_type
+
+
+CurrentAssertionTypeDep = Annotated[AssertionType, Depends(get_current_assertion_type)]
+
+
+# --- Personas & journeys ------------------------------------------------
+#
+# Same rule as applications/features: every loader re-checks the object against
+# the account (and parent resource) behind the URL; 404 (never 403) on a miss.
+
+def get_persona_manager(session: SessionDep) -> PersonaManager:
+    return PersonaManager(session)
+
+
+PersonaManagerDep = Annotated[PersonaManager, Depends(get_persona_manager)]
+
+
+def get_journey_manager(session: SessionDep) -> JourneyManager:
+    return JourneyManager(session)
+
+
+JourneyManagerDep = Annotated[JourneyManager, Depends(get_journey_manager)]
+
+
+def get_journey_scenario_manager(session: SessionDep) -> JourneyScenarioManager:
+    return JourneyScenarioManager(session)
+
+
+JourneyScenarioManagerDep = Annotated[JourneyScenarioManager, Depends(get_journey_scenario_manager)]
+
+
+def get_journey_scenario_step_manager(session: SessionDep) -> JourneyScenarioStepManager:
+    return JourneyScenarioStepManager(session)
+
+
+JourneyScenarioStepManagerDep = Annotated[
+    JourneyScenarioStepManager, Depends(get_journey_scenario_step_manager)
+]
+
+
+def get_journey_scenario_step_file_manager(session: SessionDep) -> JourneyScenarioStepFileManager:
+    return JourneyScenarioStepFileManager(session)
+
+
+JourneyScenarioStepFileManagerDep = Annotated[
+    JourneyScenarioStepFileManager, Depends(get_journey_scenario_step_file_manager)
+]
+
+
+def get_journey_scenario_step_assertion_manager(
+    session: SessionDep,
+) -> JourneyScenarioStepAssertionManager:
+    return JourneyScenarioStepAssertionManager(session)
+
+
+JourneyScenarioStepAssertionManagerDep = Annotated[
+    JourneyScenarioStepAssertionManager, Depends(get_journey_scenario_step_assertion_manager)
+]
+
+
+def get_feature_journey_manager(session: SessionDep) -> FeatureJourneyManager:
+    return FeatureJourneyManager(session)
+
+
+FeatureJourneyManagerDep = Annotated[FeatureJourneyManager, Depends(get_feature_journey_manager)]
+
+
+def get_current_persona(
+    persona_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Persona:
+    persona = session.get(Persona, persona_id)
+    if persona is None or not persona.enabled or persona.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Persona not found.")
+    return persona
+
+
+CurrentPersonaDep = Annotated[Persona, Depends(get_current_persona)]
+
+
+def get_current_journey(
+    journey_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Journey:
+    journey = session.get(Journey, journey_id)
+    if journey is None or not journey.enabled or journey.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Journey not found.")
+    return journey
+
+
+CurrentJourneyDep = Annotated[Journey, Depends(get_current_journey)]
+
+
+def get_current_journey_scenario(
+    scenario_id: uuid.UUID, journey: CurrentJourneyDep, session: SessionDep
+) -> JourneyScenario:
+    scenario = session.get(JourneyScenario, scenario_id)
+    if scenario is None or not scenario.enabled or scenario.journey_id != journey.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Scenario not found.")
+    return scenario
+
+
+CurrentJourneyScenarioDep = Annotated[JourneyScenario, Depends(get_current_journey_scenario)]
+
+
+def get_current_journey_scenario_step(
+    step_id: uuid.UUID, scenario: CurrentJourneyScenarioDep, session: SessionDep
+) -> JourneyScenarioStep:
+    step = session.get(JourneyScenarioStep, step_id)
+    if step is None or not step.enabled or step.journey_scenario_id != scenario.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Step not found.")
+    return step
+
+
+CurrentJourneyScenarioStepDep = Annotated[
+    JourneyScenarioStep, Depends(get_current_journey_scenario_step)
+]
+
+
+def get_current_journey_scenario_step_file(
+    step_file_id: uuid.UUID, step: CurrentJourneyScenarioStepDep, session: SessionDep
+) -> JourneyScenarioStepFile:
+    step_file = session.get(JourneyScenarioStepFile, step_file_id)
+    if step_file is None or not step_file.enabled or step_file.journey_scenario_step_id != step.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "File not found.")
+    return step_file
+
+
+CurrentJourneyScenarioStepFileDep = Annotated[
+    JourneyScenarioStepFile, Depends(get_current_journey_scenario_step_file)
+]
+
+
+def get_current_journey_scenario_step_assertion(
+    assertion_id: uuid.UUID, step: CurrentJourneyScenarioStepDep, session: SessionDep
+) -> JourneyScenarioStepAssertion:
+    assertion = session.get(JourneyScenarioStepAssertion, assertion_id)
+    if (
+        assertion is None
+        or not assertion.enabled
+        or assertion.journey_scenario_step_id != step.id
+    ):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Assertion not found.")
+    return assertion
+
+
+CurrentJourneyScenarioStepAssertionDep = Annotated[
+    JourneyScenarioStepAssertion, Depends(get_current_journey_scenario_step_assertion)
+]
+
+
+def get_current_feature_journey(
+    feature_journey_id: uuid.UUID, feature: CurrentFeatureDep, session: SessionDep
+) -> FeatureJourney:
+    link = session.get(FeatureJourney, feature_journey_id)
+    if link is None or not link.enabled or link.feature_id != feature.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Feature journey not found.")
+    return link
+
+
+CurrentFeatureJourneyDep = Annotated[FeatureJourney, Depends(get_current_feature_journey)]

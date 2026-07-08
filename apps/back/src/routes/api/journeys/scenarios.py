@@ -1,0 +1,183 @@
+"""`/v1/accounts/{account_id}/journeys/{journey_id}/scenarios`.
+
+Scenarios inside a journey. Reads are open to any account member; writes are
+open to the editing roles. Personas referenced on create/update must belong to
+the account. Deleting a scenario cascades a soft-delete to its steps, files and
+assertions.
+"""
+
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, status
+
+from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
+from src.models.account_user import AccountUser
+from src.models.enum import AccountUserRole, JourneyScenarioStatus
+from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.journeys import JourneyScenarioItem
+from src.serializes.errors import ErrorResponse
+from src.utils.dependencies import (
+    CurrentAccountDep,
+    CurrentAccountUserDep,
+    CurrentJourneyDep,
+    CurrentJourneyScenarioDep,
+    CurrentUserDep,
+    JourneyScenarioManagerDep,
+)
+from src.utils.middlewares import require_role
+
+router = APIRouter(
+    prefix="/accounts/{account_id}/journeys/{journey_id}/scenarios",
+    tags=["api.journeys.scenarios"],
+)
+
+_FORBIDDEN = {403: {"model": ErrorResponse, "description": "Insufficient permissions on this account"}}
+_NOT_FOUND = {404: {"model": ErrorResponse, "description": "Journey, scenario or persona not found"}}
+
+_EDITOR = require_role(
+    AccountUserRole.OWNER,
+    AccountUserRole.ADMINISTRATOR,
+    AccountUserRole.LEAD_DEVELOPER,
+    AccountUserRole.PRODUCT_OWNER,
+    AccountUserRole.QA_MANAGER,
+    AccountUserRole.DEVELOPER,
+)
+
+
+@router.get(
+    "",
+    operation_id="api.journeys.scenarios.list",
+    summary="List scenarios",
+    description="List the scenarios of a journey, most recent first. Any member may read.",
+    response_model=ListingResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def list_scenarios(
+    _: CurrentAccountUserDep,
+    journey: CurrentJourneyDep,
+    manager: JourneyScenarioManagerDep,
+) -> ListingResponse[JourneyScenarioItem]:
+    items = [JourneyScenarioItem.model_validate(row) for row in manager.list_for_journey(journey)]
+    return ListingResponse.single_page(items)
+
+
+@router.post(
+    "",
+    operation_id="api.journeys.scenarios.create",
+    summary="Create a scenario",
+    description=(
+        "Create a scenario. It starts as a draft owned by the caller. Any referenced persona "
+        "must belong to the account. Editing roles only."
+    ),
+    response_model=ItemResponse[JourneyScenarioItem],
+    status_code=status.HTTP_201_CREATED,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def create_scenario(
+    form: JourneyScenarioCreateForm,
+    account: CurrentAccountDep,
+    journey: CurrentJourneyDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> ItemResponse[JourneyScenarioItem]:
+    scenario = manager.create(
+        account,
+        journey,
+        user,
+        type=form.type,
+        personas_ids=form.personas_ids,
+        title=form.title,
+        criticity=form.criticity,
+        description=form.description,
+    )
+    return ItemResponse(item=JourneyScenarioItem.model_validate(scenario))
+
+
+@router.get(
+    "/{scenario_id}",
+    operation_id="api.journeys.scenarios.get",
+    summary="Get a scenario",
+    description="Return a single scenario of the journey. Any member may read.",
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def get_scenario(
+    _: CurrentAccountUserDep, scenario: CurrentJourneyScenarioDep
+) -> ItemResponse[JourneyScenarioItem]:
+    return ItemResponse(item=JourneyScenarioItem.model_validate(scenario))
+
+
+@router.patch(
+    "/{scenario_id}",
+    operation_id="api.journeys.scenarios.update",
+    summary="Update a scenario",
+    description=(
+        "Partially update a scenario (type, personas, title, criticity, description). Any "
+        "referenced persona must belong to the account. Editing roles only."
+    ),
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def update_scenario(
+    form: JourneyScenarioPatchForm,
+    account: CurrentAccountDep,
+    scenario: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> ItemResponse[JourneyScenarioItem]:
+    updated = manager.update(account, scenario, form.model_dump(exclude_unset=True))
+    return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
+
+
+@router.post(
+    "/{scenario_id}/activate",
+    operation_id="api.journeys.scenarios.activate",
+    summary="Activate a scenario",
+    description="Set the scenario status to active. Editing roles only.",
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def activate_scenario(
+    scenario: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> ItemResponse[JourneyScenarioItem]:
+    updated = manager.set_status(scenario, JourneyScenarioStatus.ACTIVE)
+    return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
+
+
+@router.post(
+    "/{scenario_id}/archive",
+    operation_id="api.journeys.scenarios.archive",
+    summary="Archive a scenario",
+    description="Set the scenario status to archived. Editing roles only.",
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def archive_scenario(
+    scenario: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> ItemResponse[JourneyScenarioItem]:
+    updated = manager.set_status(scenario, JourneyScenarioStatus.ARCHIVED)
+    return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
+
+
+@router.delete(
+    "/{scenario_id}",
+    operation_id="api.journeys.scenarios.delete",
+    summary="Delete a scenario",
+    description=(
+        "Soft-delete a scenario; its steps, files and assertions are soft-deleted as well. "
+        "Editing roles only."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def delete_scenario(
+    scenario: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> None:
+    manager.soft_delete(scenario)

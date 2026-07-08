@@ -12,10 +12,13 @@ from fastapi import APIRouter
 from src.routes.api.accounts import router as accounts_router
 from src.routes.api.applications import router as applications_router
 from src.routes.api.auth import router as auth_router
+from src.routes.api.core import router as core_router
 from src.routes.api.features import router as features_router
 from src.routes.api.health import router as health_router
+from src.routes.api.journeys import router as journeys_router
 from src.routes.api.mcp import router as mcp_router
 from src.routes.api.me import router as me_router
+from src.routes.api.personas import router as personas_router
 
 router = APIRouter()
 
@@ -23,7 +26,10 @@ router = APIRouter()
 v1_router = APIRouter(prefix="/v1")
 v1_router.include_router(accounts_router)  # multi-tenant workspaces & members
 v1_router.include_router(applications_router)  # applications, environments, versions, deployments
-v1_router.include_router(features_router)  # account features & their files
+v1_router.include_router(features_router)  # account features, their files & journey links
+v1_router.include_router(personas_router)  # account personas
+v1_router.include_router(journeys_router)  # journeys, scenarios, steps, files, assertions
+v1_router.include_router(core_router)  # global action & assertion type catalogues
 router.include_router(v1_router)
 
 # Out-of-version endpoints, mounted at the root.

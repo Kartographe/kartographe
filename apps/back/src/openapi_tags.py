@@ -92,6 +92,51 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Files attached to a feature (screenshots, videos, documents).",
     },
     {
+        "name": "api.features.journeys",
+        "x-displayName": "Features › Journeys",
+        "description": "Journeys linked to a feature.",
+    },
+    {
+        "name": "api.personas",
+        "x-displayName": "Personas",
+        "description": "Create and manage the personas (user archetypes) of an account.",
+    },
+    {
+        "name": "api.journeys",
+        "x-displayName": "Journeys",
+        "description": "Create and manage user journeys (parcours) of an account.",
+    },
+    {
+        "name": "api.journeys.scenarios",
+        "x-displayName": "Journeys › Scenarios",
+        "description": "Scenarios inside a journey.",
+    },
+    {
+        "name": "api.journeys.scenarios.steps",
+        "x-displayName": "Journeys › Steps",
+        "description": "Steps inside a scenario (a tree of actions).",
+    },
+    {
+        "name": "api.journeys.scenarios.steps.files",
+        "x-displayName": "Journeys › Step files",
+        "description": "Files attached to a scenario step.",
+    },
+    {
+        "name": "api.journeys.scenarios.steps.assertions",
+        "x-displayName": "Journeys › Step assertions",
+        "description": "Assertions carried by a scenario step.",
+    },
+    {
+        "name": "api.core.actionTypes",
+        "x-displayName": "Core › Action types",
+        "description": "Global catalogue of the actions a scenario step can perform.",
+    },
+    {
+        "name": "api.core.assertionTypes",
+        "x-displayName": "Core › Assertion types",
+        "description": "Global catalogue of the assertions a scenario step can carry.",
+    },
+    {
         "name": "api.mcp.metadata",
         "x-displayName": "MCP › Discovery",
         "description": "OAuth authorization-server and protected-resource metadata for MCP clients.",

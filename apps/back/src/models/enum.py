@@ -243,3 +243,83 @@ class FeatureFileType(str, Enum):
 class FeatureFileStatus(str, Enum):
     UPLOADED = "uploaded"
     ARCHIVED = "archived"
+
+
+class PersonaType(str, Enum):
+    CUSTOMER = "customer"
+    BUSINESS = "business"
+    INTERNAL = "internal"
+    OTHER = "other"
+
+
+class PersonaStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ActionTypeCategory(str, Enum):
+    """Family of a step action."""
+
+    NAVIGATE = "navigate"
+    FORM = "form"
+    ASSERT = "assert"
+
+
+class AssertionTypeCategory(str, Enum):
+    """Family of a step assertion."""
+
+    BROWSER = "browser"
+    DATABASE = "database"
+
+
+class JourneyType(str, Enum):
+    BUSINESS = "business"
+    CUSTOMER = "customer"
+    INTERNAL = "internal"
+    OTHER = "other"
+
+
+class JourneyStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class JourneyScenarioType(str, Enum):
+    NOMINAL = "nominal"
+    ALTERNATIVE = "alternative"
+    ERROR = "error"
+    EDGE_CASE = "edge_case"
+
+
+class JourneyScenarioStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class JourneyScenarioCriticity(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class JourneyScenarioStepFileType(str, Enum):
+    SCREENSHOT = "screenshot"
+    VIDEO = "video"
+    DOCUMENT = "document"
+    INPUT = "input"
+    OTHER = "other"
+
+
+class JourneyScenarioStepFileStatus(str, Enum):
+    UPLOADED = "uploaded"
+    ARCHIVED = "archived"
+
+
+class JourneyScenarioStepAssertionStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"

@@ -8,10 +8,37 @@ listing query, its creation shape and its specific cascade set.
 
 from datetime import datetime
 
+from fastapi import HTTPException, status
 from sqlalchemy import update
 from sqlmodel import Session
 
 from src.utils.datetime import utc_now
+
+
+def validate_parameters(schema: dict | None, parameters: dict) -> None:
+    """Check `parameters` against an action/assertion `parameter_schema`.
+
+    The schema is a flat shape hint (`{"selector": "string", "value": "string"}`),
+    not a JSON-Schema document, so validation is deliberately light: the object's
+    keys must match the schema's keys exactly — no unknown and no missing keys.
+    An empty schema (`{}`) therefore requires empty parameters.
+    """
+    if not isinstance(parameters, dict):
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Parameters must be an object.")
+    allowed = set(schema or {})
+    provided = set(parameters)
+    unknown = provided - allowed
+    if unknown:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"Unknown parameter(s): {', '.join(sorted(unknown))}.",
+        )
+    missing = allowed - provided
+    if missing:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"Missing parameter(s): {', '.join(sorted(missing))}.",
+        )
 
 
 class BaseEntityManager:
