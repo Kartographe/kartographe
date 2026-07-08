@@ -3,14 +3,14 @@
   "type": "module",
   "packageManager": "pnpm@10.20.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "pnpm lingui:extract && vite",
+    "build": "pnpm lingui:extract && tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "check": "ultracite check",
     "fix": "ultracite fix",
     "api:sync": "node --env-file=.env.local scripts/api-sync.mjs",
-    "lingui:extract": "lingui extract",
+    "lingui:extract": "lingui extract --overwrite",
     "lingui:compile": "lingui compile"
   },
   "dependencies": {

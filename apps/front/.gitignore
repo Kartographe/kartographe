@@ -11,3 +11,6 @@ dist-ssr
 # Vite / TanStack
 .vite
 .tanstack
+
+# Lingui — catalogs are generated at build (pnpm lingui:extract), not tracked
+src/lib/lingui/locales/**/*.po
