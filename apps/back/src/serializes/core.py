@@ -2,7 +2,7 @@
 
 import uuid
 
-from src.models.enum import ActionTypeCategory, AssertionTypeCategory
+from src.models.enum import ActionTypeCategory, AssertionTypeCategory, DatabaseType
 from src.serializes._base import CamelBase
 
 
@@ -24,3 +24,12 @@ class AssertionTypeItem(CamelBase):
     parameter_schema: dict
     slug: str
     type: AssertionTypeCategory
+
+
+class DatabaseColumnTypeItem(CamelBase):
+    """A catalogued SQL column type for a given engine."""
+
+    database_type: DatabaseType
+    id: uuid.UUID
+    label: str
+    slug: str

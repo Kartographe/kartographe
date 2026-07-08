@@ -8,6 +8,8 @@ from sqlmodel import Session, select
 
 from src.models.action_type import ActionType
 from src.models.assertion_type import AssertionType
+from src.models.database_column_type import DatabaseColumnType
+from src.models.enum import DatabaseType
 
 
 class CoreManager:
@@ -31,5 +33,20 @@ class CoreManager:
                 select(AssertionType)
                 .where(AssertionType.enabled.is_(True))
                 .order_by(AssertionType.slug.asc())
+            ).all()
+        )
+
+    def list_database_column_types(
+        self, *, database_type: DatabaseType | None = None
+    ) -> list[DatabaseColumnType]:
+        """Every enabled column type, optionally filtered by engine, by slug."""
+        conditions = [DatabaseColumnType.enabled.is_(True)]
+        if database_type is not None:
+            conditions.append(DatabaseColumnType.database_type == database_type)
+        return list(
+            self.session.exec(
+                select(DatabaseColumnType)
+                .where(*conditions)
+                .order_by(DatabaseColumnType.slug.asc())
             ).all()
         )

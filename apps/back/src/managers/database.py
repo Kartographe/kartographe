@@ -1,0 +1,86 @@
+"""Database lifecycle: listing, creation, status flips and cascading delete."""
+
+from sqlmodel import func, select
+
+from src.filters._base import SortOrder
+from src.filters.databases import DatabaseSortField
+from src.managers._base import BaseEntityManager
+from src.models.account import Account
+from src.models.database import Database
+from src.models.database_table import DatabaseTable
+from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_version import DatabaseVersion
+from src.models.enum import DatabaseStatus, DatabaseType
+from src.models.user import User
+from src.utils.datetime import utc_now
+
+_SORT_COLUMNS = {
+    DatabaseSortField.DATE: Database.date,
+    DatabaseSortField.TITLE: Database.title,
+    DatabaseSortField.STATUS: Database.status,
+    DatabaseSortField.TYPE: Database.type,
+}
+
+
+class DatabaseManager(BaseEntityManager):
+    def list_for_account(
+        self,
+        account: Account,
+        *,
+        statuses: list[DatabaseStatus] | None = None,
+        types: list[DatabaseType] | None = None,
+        sort_by: DatabaseSortField = DatabaseSortField.DATE,
+        sort_order: SortOrder = SortOrder.DESC,
+        page: int = 1,
+        limit: int = 25,
+    ) -> tuple[list[Database], int]:
+        """One page of the account's databases. Returns `(rows, total)`."""
+        conditions = [Database.account_id == account.id, Database.enabled.is_(True)]
+        if statuses:
+            conditions.append(Database.status.in_(statuses))
+        if types:
+            conditions.append(Database.type.in_(types))
+
+        base = select(Database).where(*conditions)
+        total = self.session.exec(select(func.count()).select_from(base.subquery())).one()
+
+        column = _SORT_COLUMNS[sort_by]
+        ordering = column.asc() if sort_order == SortOrder.ASC else column.desc()
+        rows = self.session.exec(
+            base.order_by(ordering).offset((page - 1) * limit).limit(limit)
+        ).all()
+        return list(rows), total
+
+    def create(
+        self, account: Account, user: User, *, type: DatabaseType, title: str, description: dict | None
+    ) -> Database:
+        """Create a draft database owned by `user`."""
+        now = utc_now()
+        database = Database(
+            account_id=account.id,
+            owner_id=user.id,
+            date=now,
+            type=type,
+            status=DatabaseStatus.DRAFT,
+            status_date=now,
+            title=title,
+            description=description,
+        )
+        return self._persist(database)
+
+    def soft_delete(self, database: Database) -> None:
+        """Soft-delete the database with its versions, tables and columns."""
+        now = utc_now()
+        table_ids = self.session.exec(
+            select(DatabaseTable.id).where(
+                DatabaseTable.database_id == database.id, DatabaseTable.enabled.is_(True)
+            )
+        ).all()
+        self._disable(database, now)
+        self._bulk_disable(DatabaseVersion, DatabaseVersion.database_id == database.id, now=now)
+        self._bulk_disable(DatabaseTable, DatabaseTable.database_id == database.id, now=now)
+        if table_ids:
+            self._bulk_disable(
+                DatabaseTableColumn, DatabaseTableColumn.database_table_id.in_(table_ids), now=now
+            )
+        self.session.commit()

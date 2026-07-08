@@ -25,6 +25,10 @@ from src.managers.application_feature import ApplicationFeatureManager
 from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
 from src.managers.core import CoreManager
+from src.managers.database import DatabaseManager
+from src.managers.database_table import DatabaseTableManager
+from src.managers.database_table_column import DatabaseTableColumnManager
+from src.managers.database_version import DatabaseVersionManager
 from src.managers.feature import FeatureManager
 from src.managers.feature_file import FeatureFileManager
 from src.managers.feature_journey import FeatureJourneyManager
@@ -50,6 +54,11 @@ from src.models.application_feature import ApplicationFeature
 from src.models.application_version import ApplicationVersion
 from src.models.action_type import ActionType
 from src.models.assertion_type import AssertionType
+from src.models.database import Database
+from src.models.database_column_type import DatabaseColumnType
+from src.models.database_table import DatabaseTable
+from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_version import DatabaseVersion
 from src.models.enum import UserStatus
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
@@ -510,6 +519,102 @@ def get_current_assertion_type(assertion_type_id: uuid.UUID, session: SessionDep
 
 
 CurrentAssertionTypeDep = Annotated[AssertionType, Depends(get_current_assertion_type)]
+
+
+def get_current_database_column_type(
+    database_column_type_id: uuid.UUID, session: SessionDep
+) -> DatabaseColumnType:
+    column_type = session.get(DatabaseColumnType, database_column_type_id)
+    if column_type is None or not column_type.enabled:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Column type not found.")
+    return column_type
+
+
+CurrentDatabaseColumnTypeDep = Annotated[
+    DatabaseColumnType, Depends(get_current_database_column_type)
+]
+
+
+# --- Databases ----------------------------------------------------------
+
+def get_database_manager(session: SessionDep) -> DatabaseManager:
+    return DatabaseManager(session)
+
+
+DatabaseManagerDep = Annotated[DatabaseManager, Depends(get_database_manager)]
+
+
+def get_database_version_manager(session: SessionDep) -> DatabaseVersionManager:
+    return DatabaseVersionManager(session)
+
+
+DatabaseVersionManagerDep = Annotated[DatabaseVersionManager, Depends(get_database_version_manager)]
+
+
+def get_database_table_manager(session: SessionDep) -> DatabaseTableManager:
+    return DatabaseTableManager(session)
+
+
+DatabaseTableManagerDep = Annotated[DatabaseTableManager, Depends(get_database_table_manager)]
+
+
+def get_database_table_column_manager(session: SessionDep) -> DatabaseTableColumnManager:
+    return DatabaseTableColumnManager(session)
+
+
+DatabaseTableColumnManagerDep = Annotated[
+    DatabaseTableColumnManager, Depends(get_database_table_column_manager)
+]
+
+
+def get_current_database(
+    database_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Database:
+    database = session.get(Database, database_id)
+    if database is None or not database.enabled or database.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Database not found.")
+    return database
+
+
+CurrentDatabaseDep = Annotated[Database, Depends(get_current_database)]
+
+
+def get_current_database_version(
+    database_version_id: uuid.UUID, database: CurrentDatabaseDep, session: SessionDep
+) -> DatabaseVersion:
+    version = session.get(DatabaseVersion, database_version_id)
+    if version is None or not version.enabled or version.database_id != database.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Version not found.")
+    return version
+
+
+CurrentDatabaseVersionDep = Annotated[DatabaseVersion, Depends(get_current_database_version)]
+
+
+def get_current_database_table(
+    database_table_id: uuid.UUID, version: CurrentDatabaseVersionDep, session: SessionDep
+) -> DatabaseTable:
+    table = session.get(DatabaseTable, database_table_id)
+    if table is None or not table.enabled or table.database_version_id != version.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Table not found.")
+    return table
+
+
+CurrentDatabaseTableDep = Annotated[DatabaseTable, Depends(get_current_database_table)]
+
+
+def get_current_database_table_column(
+    database_table_column_id: uuid.UUID, table: CurrentDatabaseTableDep, session: SessionDep
+) -> DatabaseTableColumn:
+    column = session.get(DatabaseTableColumn, database_table_column_id)
+    if column is None or not column.enabled or column.database_table_id != table.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Column not found.")
+    return column
+
+
+CurrentDatabaseTableColumnDep = Annotated[
+    DatabaseTableColumn, Depends(get_current_database_table_column)
+]
 
 
 # --- Personas & journeys ------------------------------------------------

@@ -323,3 +323,33 @@ class JourneyScenarioStepAssertionStatus(str, Enum):
     DRAFT = "draft"
     ACTIVE = "active"
     ARCHIVED = "archived"
+
+
+class DatabaseType(str, Enum):
+    """Database engine — shared by the column-type catalogue and databases."""
+
+    MYSQL = "mysql"
+    POSTGRESQL = "postgresql"
+
+
+class DatabaseStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class DatabaseVersionStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class DatabaseTableType(str, Enum):
+    PHYSICAL = "physical"
+    LOGICAL = "logical"
+
+
+class DatabaseTableStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"

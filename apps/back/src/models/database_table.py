@@ -1,0 +1,34 @@
+"""The `database_table` table — a table within a database version."""
+
+import uuid
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import JSON
+from sqlmodel import Field, Relationship
+
+from src.models._base import BaseModel
+from src.models.enum import DatabaseTableStatus, DatabaseTableType
+
+if TYPE_CHECKING:
+    from src.models.user import User
+
+
+class DatabaseTable(BaseModel, table=True):
+    __tablename__ = "database_table"
+
+    account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
+    database_id: uuid.UUID = Field(foreign_key="database.id", index=True)
+    database_version_id: uuid.UUID = Field(foreign_key="database_version.id", index=True)
+    owner_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+
+    type: DatabaseTableType = Field(index=True)
+    date: datetime
+    status: DatabaseTableStatus = Field(index=True)
+    status_date: datetime
+    schema: str
+    name: str = Field(index=True)
+    # Rich-text (Tiptap JSON document), optional.
+    description: dict | None = Field(default=None, sa_type=JSON)
+
+    owner: "User" = Relationship()

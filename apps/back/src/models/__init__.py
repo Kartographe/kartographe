@@ -16,6 +16,11 @@ from src.models.application_environment_version import ApplicationEnvironmentVer
 from src.models.application_feature import ApplicationFeature
 from src.models.application_version import ApplicationVersion
 from src.models.assertion_type import AssertionType
+from src.models.database import Database
+from src.models.database_column_type import DatabaseColumnType
+from src.models.database_table import DatabaseTable
+from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_version import DatabaseVersion
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
 from src.models.feature_journey import FeatureJourney
@@ -45,6 +50,11 @@ __all__ = [
     "ApplicationVersion",
     "AssertionType",
     "BaseModel",
+    "Database",
+    "DatabaseColumnType",
+    "DatabaseTable",
+    "DatabaseTableColumn",
+    "DatabaseVersion",
     "Feature",
     "FeatureFile",
     "FeatureJourney",

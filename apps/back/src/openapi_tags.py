@@ -137,6 +137,31 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Global catalogue of the assertions a scenario step can carry.",
     },
     {
+        "name": "api.core.databaseColumnTypes",
+        "x-displayName": "Core › Column types",
+        "description": "Global catalogue of SQL column types per database engine.",
+    },
+    {
+        "name": "api.databases",
+        "x-displayName": "Databases",
+        "description": "Create and manage the databases tracked inside an account.",
+    },
+    {
+        "name": "api.databases.versions",
+        "x-displayName": "Databases › Versions",
+        "description": "Versions of a database's schema.",
+    },
+    {
+        "name": "api.databases.versions.tables",
+        "x-displayName": "Databases › Tables",
+        "description": "Tables within a database version.",
+    },
+    {
+        "name": "api.databases.versions.tables.columns",
+        "x-displayName": "Databases › Columns",
+        "description": "Columns of a database table.",
+    },
+    {
         "name": "api.mcp.metadata",
         "x-displayName": "MCP › Discovery",
         "description": "OAuth authorization-server and protected-resource metadata for MCP clients.",
