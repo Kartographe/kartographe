@@ -1,15 +1,24 @@
 import {
   ApiOutlined,
   HistoryOutlined,
+  MailOutlined,
   SafetyOutlined,
   SettingOutlined,
+  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-type MeRoute = "/me" | "/me/settings" | "/me/security" | "/me/mcp" | "/me/logs";
+type MeRoute =
+  | "/me"
+  | "/me/settings"
+  | "/me/security"
+  | "/me/mcp"
+  | "/me/accounts"
+  | "/me/invitations"
+  | "/me/logs";
 
 interface NavItem {
   to: MeRoute;
@@ -57,6 +66,8 @@ export function MeSideNav() {
     { to: "/me", label: t`Informations`, icon: <UserOutlined />, exact: true },
     { to: "/me/settings", label: t`Préférences`, icon: <SettingOutlined /> },
     { to: "/me/security", label: t`Sécurité`, icon: <SafetyOutlined /> },
+    { to: "/me/accounts", label: t`Comptes`, icon: <TeamOutlined /> },
+    { to: "/me/invitations", label: t`Invitations`, icon: <MailOutlined /> },
     { to: "/me/mcp", label: t`Applications`, icon: <ApiOutlined /> },
   ];
   const footerItems: NavItem[] = [

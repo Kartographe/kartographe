@@ -7,6 +7,12 @@ import type { components } from "@/api/generated/schema";
 type S = components["schemas"];
 
 export const dtoEnums = {
+  AccountStatus: ["active", "disabled", "blocked"] as const satisfies readonly S["AccountStatus"][],
+  AccountUserInvitationStatus: ["standby", "accepted", "refused", "expired", "cancelled"] as const satisfies readonly S["AccountUserInvitationStatus"][],
+  AccountUserInvitationType: ["simple"] as const satisfies readonly S["AccountUserInvitationType"][],
+  AccountUserRole: ["owner", "administrator", "product_owner", "qa_manager", "lead_developer", "developer", "data_analyst", "commentator"] as const satisfies readonly S["AccountUserRole"][],
+  AccountUserStatus: ["active", "disabled"] as const satisfies readonly S["AccountUserStatus"][],
+  AccountUserType: ["creator", "guest"] as const satisfies readonly S["AccountUserType"][],
   Language: ["fr-FR", "en-GB", "es-ES", "de-DE", "it-IT"] as const satisfies readonly S["Language"][],
   McpAuthorizationFlowType: ["device", "authorization_code"] as const satisfies readonly S["McpAuthorizationFlowType"][],
   McpGrantScope: ["read", "write"] as const satisfies readonly S["McpGrantScope"][],

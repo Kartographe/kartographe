@@ -4,6 +4,258 @@
  */
 
 export interface paths {
+    "/v1/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List my accounts
+         * @description List the workspaces the signed-in user is an active member of, with their role in each.
+         */
+        get: operations["api.accounts.list"];
+        put?: never;
+        /**
+         * Create an account
+         * @description Create a new workspace. The caller automatically becomes its owner.
+         */
+        post: operations["api.accounts.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an account
+         * @description Return a workspace the caller is a member of, including the caller's role.
+         */
+        get: operations["api.accounts.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete an account
+         * @description Soft-delete a deactivated account. Owners only; the account must be deactivated first.
+         */
+        delete: operations["api.accounts.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an account
+         * @description Partially update a workspace (name, language, time zone). Owners and administrators only.
+         */
+        patch: operations["api.accounts.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate an account
+         * @description Set the account status back to active. Owners only.
+         */
+        post: operations["api.accounts.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deactivate an account
+         * @description Disable the account (reversible). Owners only. Deletion requires deactivation first.
+         */
+        post: operations["api.accounts.deactivate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Leave an account
+         * @description Leave a workspace you are a member of. The last owner cannot leave.
+         */
+        post: operations["api.accounts.leave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List account members
+         * @description List every member of the account with their role, type and status. Any member may read.
+         */
+        get: operations["api.accounts.users.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/users/{account_user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an account member
+         * @description Return a single member of the account.
+         */
+        get: operations["api.accounts.users.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Remove a member
+         * @description Remove a member from the account. Owners/administrators only. You cannot remove yourself, and the last owner cannot be removed.
+         */
+        delete: operations["api.accounts.users.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Change a member's role
+         * @description Change a member's role. Owners/administrators only. You cannot change your own role, only an owner can grant the owner role, and the last owner cannot be demoted.
+         */
+        patch: operations["api.accounts.users.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/users/{account_user_id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Force a member out
+         * @description Deactivate a member's seat, keeping the row for audit. Owners/administrators only; you cannot target yourself (use the account leave endpoint).
+         */
+        post: operations["api.accounts.users.leave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List account invitations
+         * @description List all invitations of the account (pending and resolved). Owners/administrators only.
+         */
+        get: operations["api.accounts.invitations.list"];
+        put?: never;
+        /**
+         * Invite members
+         * @description Invite one or more emails to the account with a single role. Emails already pending are skipped; each new invitation is emailed. Only an owner can invite an owner. Returns the newly-created invitations.
+         */
+        post: operations["api.accounts.invitations.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/invitations/{invitation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an invitation
+         * @description Return a single invitation of the account.
+         */
+        get: operations["api.accounts.invitations.get"];
+        /**
+         * Change an invitation's role
+         * @description Change the role of a pending invitation. Only an owner can set the owner role.
+         */
+        put: operations["api.accounts.invitations.update"];
+        post?: never;
+        /**
+         * Cancel an invitation
+         * @description Cancel a pending invitation. Returns the cancelled invitation.
+         */
+        delete: operations["api.accounts.invitations.cancel"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/invitations/{invitation_id}/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend an invitation
+         * @description Re-send a standby or expired invitation with a fresh 7-day expiry (same link). The recipient is emailed again.
+         */
+        post: operations["api.accounts.invitations.resend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -644,6 +896,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List my invitations
+         * @description List invitations addressed to the signed-in user's email, optionally filtered by status.
+         */
+        get: operations["api.me.invitations.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/invitations/{invitation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one of my invitations
+         * @description Return a single invitation addressed to the signed-in user.
+         */
+        get: operations["api.me.invitations.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/invitations/{invitation_id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept an invitation
+         * @description Accept a pending invitation and join the account as a guest member.
+         */
+        post: operations["api.me.invitations.accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/invitations/{invitation_id}/refuse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refuse an invitation
+         * @description Decline a pending invitation.
+         */
+        post: operations["api.me.invitations.refuse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/.well-known/oauth-authorization-server": {
         parameters: {
             query?: never;
@@ -786,6 +1118,198 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * AccountCreateForm
+         * @description Create a workspace. The caller becomes its owner.
+         */
+        AccountCreateForm: {
+            /** Name */
+            name: string;
+            /** @default fr-FR */
+            language: components["schemas"]["Language"];
+            /**
+             * Timezone
+             * @default Europe/Paris
+             */
+            timeZone: string;
+        };
+        /**
+         * AccountInvitationItem
+         * @description A pending / resolved invitation, as seen from the account side.
+         */
+        AccountInvitationItem: {
+            /** Date */
+            date?: string | null;
+            /** Email */
+            email: string;
+            /** Expiredate */
+            expireDate?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner?: components["schemas"]["AccountInvitationOwnerItem"] | null;
+            role: components["schemas"]["AccountUserRole"];
+            status: components["schemas"]["AccountUserInvitationStatus"];
+            /** Statusdate */
+            statusDate?: string | null;
+            type: components["schemas"]["AccountUserInvitationType"];
+        };
+        /**
+         * AccountInvitationOwnerItem
+         * @description The member who sent the invitation.
+         */
+        AccountInvitationOwnerItem: {
+            /** Firstname */
+            firstName?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastname */
+            lastName?: string | null;
+            /** Pictureprofile */
+            pictureProfile?: string | null;
+        };
+        /**
+         * AccountItem
+         * @description A workspace, with the caller's membership context when available.
+         */
+        AccountItem: {
+            /** Createddate */
+            createdDate?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            language: components["schemas"]["Language"];
+            membership?: components["schemas"]["AccountUserContextItem"] | null;
+            /** Name */
+            name: string;
+            /** Pictureprofile */
+            pictureProfile?: string | null;
+            status: components["schemas"]["AccountStatus"];
+            /** Statusdate */
+            statusDate?: string | null;
+            /** Timezone */
+            timeZone: string;
+        };
+        /**
+         * AccountPatchForm
+         * @description Partial update of a workspace — only the keys sent are applied.
+         */
+        AccountPatchForm: {
+            /** Name */
+            name?: string | null;
+            language?: components["schemas"]["Language"] | null;
+            /** Timezone */
+            timeZone?: string | null;
+        };
+        /**
+         * AccountStatus
+         * @description Lifecycle of an account (workspace).
+         * @enum {string}
+         */
+        AccountStatus: "active" | "disabled" | "blocked";
+        /**
+         * AccountUserContextItem
+         * @description The requesting user's own membership context inside an account.
+         */
+        AccountUserContextItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            role: components["schemas"]["AccountUserRole"];
+            /** Startdate */
+            startDate?: string | null;
+            status: components["schemas"]["AccountUserStatus"];
+            type: components["schemas"]["AccountUserType"];
+        };
+        /**
+         * AccountUserInvitationStatus
+         * @description Lifecycle of a pending seat invitation.
+         * @enum {string}
+         */
+        AccountUserInvitationStatus: "standby" | "accepted" | "refused" | "expired" | "cancelled";
+        /**
+         * AccountUserInvitationType
+         * @enum {string}
+         */
+        AccountUserInvitationType: "simple";
+        /**
+         * AccountUserItem
+         * @description A member of an account.
+         */
+        AccountUserItem: {
+            /** Enddate */
+            endDate?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            role: components["schemas"]["AccountUserRole"];
+            /** Startdate */
+            startDate?: string | null;
+            status: components["schemas"]["AccountUserStatus"];
+            type: components["schemas"]["AccountUserType"];
+            user: components["schemas"]["AccountUserUserRefItem"];
+        };
+        /**
+         * AccountUserPatchForm
+         * @description Change a member's role.
+         */
+        AccountUserPatchForm: {
+            role: components["schemas"]["AccountUserRole"];
+        };
+        /**
+         * AccountUserRole
+         * @description Role a member holds inside an account.
+         *
+         *     Drives authorization: `owner`/`administrator` are the privileged roles that
+         *     may manage members, invitations and account settings. The same set is used
+         *     for invitation roles (you invite someone *as* one of these roles). Only an
+         *     `owner` may grant the `owner` role, and an account must always keep at least
+         *     one active `owner`.
+         * @enum {string}
+         */
+        AccountUserRole: "owner" | "administrator" | "product_owner" | "qa_manager" | "lead_developer" | "developer" | "data_analyst" | "commentator";
+        /**
+         * AccountUserStatus
+         * @description Membership state — `disabled` seats stay for audit (soft-left).
+         * @enum {string}
+         */
+        AccountUserStatus: "active" | "disabled";
+        /**
+         * AccountUserType
+         * @description How a membership came to be: the account creator vs. an invited guest.
+         * @enum {string}
+         */
+        AccountUserType: "creator" | "guest";
+        /**
+         * AccountUserUserRefItem
+         * @description Minimal identity of the user behind a seat.
+         */
+        AccountUserUserRefItem: {
+            /** Email */
+            email: string;
+            /** Firstname */
+            firstName?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastname */
+            lastName?: string | null;
+            /** Pictureprofile */
+            pictureProfile?: string | null;
+        };
+        /**
          * ActivateOtpForm
          * @description Confirm a freshly generated authenticator secret with a live code.
          */
@@ -829,6 +1353,17 @@ export interface components {
              * @default false
              */
             twoFactorEnabled: boolean;
+        };
+        /**
+         * CreateAccountInvitationsForm
+         * @description Invite one or more emails to the account with a single role.
+         *
+         *     Emails already pending on the account are silently skipped.
+         */
+        CreateAccountInvitationsForm: {
+            /** Emails */
+            emails: string[];
+            role: components["schemas"]["AccountUserRole"];
         };
         /**
          * CreatePasswordForm
@@ -918,6 +1453,22 @@ export interface components {
              */
             environment: string;
         };
+        /** ItemResponse[AccountInvitationItem] */
+        ItemResponse_AccountInvitationItem_: {
+            item: components["schemas"]["AccountInvitationItem"];
+        };
+        /** ItemResponse[AccountItem] */
+        ItemResponse_AccountItem_: {
+            item: components["schemas"]["AccountItem"];
+        };
+        /** ItemResponse[AccountUserItem] */
+        ItemResponse_AccountUserItem_: {
+            item: components["schemas"]["AccountUserItem"];
+        };
+        /** ItemResponse[MeInvitationItem] */
+        ItemResponse_MeInvitationItem_: {
+            item: components["schemas"]["MeInvitationItem"];
+        };
         /** ItemResponse[MeItem] */
         ItemResponse_MeItem_: {
             item: components["schemas"]["MeItem"];
@@ -964,6 +1515,46 @@ export interface components {
          * @enum {string}
          */
         Language: "fr-FR" | "en-GB" | "es-ES" | "de-DE" | "it-IT";
+        /** ListingResponse[AccountInvitationItem] */
+        ListingResponse_AccountInvitationItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["AccountInvitationItem"][];
+        };
+        /** ListingResponse[AccountItem] */
+        ListingResponse_AccountItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["AccountItem"][];
+        };
+        /** ListingResponse[AccountUserItem] */
+        ListingResponse_AccountUserItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["AccountUserItem"][];
+        };
+        /** ListingResponse[MeInvitationItem] */
+        ListingResponse_MeInvitationItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["MeInvitationItem"][];
+        };
         /** ListingResponse[MeMCPGrantItem] */
         ListingResponse_MeMCPGrantItem_: {
             /** Count */
@@ -1114,6 +1705,54 @@ export interface components {
          * @enum {string}
          */
         McpGrantScope: "read" | "write";
+        /**
+         * MeInvitationAccountItem
+         * @description The account the invitation grants access to.
+         */
+        MeInvitationAccountItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /**
+         * MeInvitationItem
+         * @description An invitation addressed to the signed-in user.
+         */
+        MeInvitationItem: {
+            account: components["schemas"]["MeInvitationAccountItem"];
+            /** Date */
+            date?: string | null;
+            /** Expiredate */
+            expireDate?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner?: components["schemas"]["MeInvitationOwnerItem"] | null;
+            role: components["schemas"]["AccountUserRole"];
+            status: components["schemas"]["AccountUserInvitationStatus"];
+            /** Statusdate */
+            statusDate?: string | null;
+            type: components["schemas"]["AccountUserInvitationType"];
+        };
+        /**
+         * MeInvitationOwnerItem
+         * @description Who sent the invitation (display name only).
+         */
+        MeInvitationOwnerItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name?: string | null;
+        };
         /**
          * MeItem
          * @description The signed-in user's own profile.
@@ -1576,6 +2215,13 @@ export interface components {
             nickname?: string | null;
         };
         /**
+         * UpdateAccountInvitationForm
+         * @description Change a pending invitation's role.
+         */
+        UpdateAccountInvitationForm: {
+            role: components["schemas"]["AccountUserRole"];
+        };
+        /**
          * UpdatePasswordForm
          * @description Change the existing password.
          */
@@ -1685,6 +2331,986 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "api.accounts.list": {
+        parameters: {
+            query?: {
+                role?: components["schemas"]["AccountUserRole"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_AccountItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The account must be deactivated first */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The account must keep at least one owner */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.users.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_AccountUserItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.users.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                account_user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountUserItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.users.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_user_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Would leave the account without an owner */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.users.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_user_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountUserPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountUserItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Would leave the account without an owner */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.users.leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_user_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or member not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Would leave the account without an owner */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAccountInvitationsForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAccountInvitationForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invitation is not in a state allowing this action */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invitation is not in a state allowing this action */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.invitations.resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountInvitationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invitation is not in a state allowing this action */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.health.check": {
         parameters: {
             query?: never;
@@ -3199,6 +4825,175 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.invitations.list": {
+        parameters: {
+            query?: {
+                invitation_status?: components["schemas"]["AccountUserInvitationStatus"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_MeInvitationItem_"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.invitations.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeInvitationItem_"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.invitations.accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invitation is no longer pending */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.invitations.refuse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invitation not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invitation is no longer pending */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
