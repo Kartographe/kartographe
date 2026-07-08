@@ -524,6 +524,263 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/mcp/authorize/by-user-code/{user_code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Look up a pending device-flow request by its user code
+         * @description Resolve the pending authorization behind a device-flow user code, for the consent screen.
+         */
+        get: operations["api.me.mcp.authorize.byUserCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/mcp/authorize/{request_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a pending authorization request
+         * @description Fetch the details shown on the consent screen for an authorization-code request.
+         */
+        get: operations["api.me.mcp.authorize.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/mcp/authorize/{request_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve an authorization request
+         * @description Grant the client the chosen scope. Returns a redirect URL for the auth-code flow, or null for device.
+         */
+        post: operations["api.me.mcp.authorize.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/mcp/authorize/{request_id}/deny": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deny an authorization request
+         * @description Refuse the client. Returns a redirect URL (with `error=access_denied`) for the auth-code flow, else null.
+         */
+        post: operations["api.me.mcp.authorize.deny"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/mcp/grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List connected MCP applications
+         * @description List the applications with an active grant on the account.
+         */
+        get: operations["api.me.mcp.grants.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/mcp/grants/{grant_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Revoke a connected application
+         * @description Revoke the grant, immediately invalidating the application's tokens.
+         */
+        delete: operations["api.me.mcp.grants.revoke"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/.well-known/oauth-authorization-server": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * OAuth authorization server metadata
+         * @description RFC 8414 discovery document describing the MCP OAuth endpoints and capabilities.
+         */
+        get: operations["api.mcp.metadata.authorizationServer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/.well-known/oauth-protected-resource": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** OAuth protected resource metadata */
+        get: operations["api.mcp.metadata.protectedResource"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mcp/oauth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register an MCP OAuth client
+         * @description Dynamic client registration (RFC 7591). Returns the client id (and secret for confidential clients).
+         */
+        post: operations["api.mcp.oauth.register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mcp/oauth/authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Authorization endpoint (redirects to the consent screen)
+         * @description Start the authorization-code + PKCE flow, then redirect the browser to the SPA consent page.
+         */
+        get: operations["api.mcp.oauth.authorize"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mcp/oauth/token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Token endpoint
+         * @description Exchange an authorization code, device code or refresh token for an access + refresh token pair.
+         */
+        post: operations["api.mcp.oauth.token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mcp/oauth/device/authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Device authorization endpoint
+         * @description Start the device flow (RFC 8628). Returns a device code and a user code to enter at the verification URI.
+         */
+        post: operations["api.mcp.oauth.device.authorize"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mcp/oauth/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revoke a token
+         * @description Revoke an access or refresh token (RFC 7009). Always returns 200, even for unknown tokens.
+         */
+        post: operations["api.mcp.oauth.revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -624,6 +881,11 @@ export interface components {
              */
             googleToken: string;
         };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /**
          * HealthResponse
          * @description Body of `GET /health` — liveness probe payload.
@@ -660,6 +922,14 @@ export interface components {
         ItemResponse_MeItem_: {
             item: components["schemas"]["MeItem"];
         };
+        /** ItemResponse[MeMCPAuthorizationRequestItem] */
+        ItemResponse_MeMCPAuthorizationRequestItem_: {
+            item: components["schemas"]["MeMCPAuthorizationRequestItem"];
+        };
+        /** ItemResponse[MeMCPAuthorizeResponse] */
+        ItemResponse_MeMCPAuthorizeResponse_: {
+            item: components["schemas"]["MeMCPAuthorizeResponse"];
+        };
         /** ItemResponse[OtpProvisioningItem] */
         ItemResponse_OtpProvisioningItem_: {
             item: components["schemas"]["OtpProvisioningItem"];
@@ -694,6 +964,16 @@ export interface components {
          * @enum {string}
          */
         Language: "fr-FR" | "en-GB" | "es-ES" | "de-DE" | "it-IT";
+        /** ListingResponse[MeMCPGrantItem] */
+        ListingResponse_MeMCPGrantItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["MeMCPGrantItem"][];
+        };
         /** ListingResponse[OtpMethodItem] */
         ListingResponse_OtpMethodItem_: {
             /** Count */
@@ -748,6 +1028,92 @@ export interface components {
              */
             rememberMe: boolean;
         };
+        /** MCPDeviceAuthorizationResponse */
+        MCPDeviceAuthorizationResponse: {
+            /** Device Code */
+            device_code: string;
+            /** User Code */
+            user_code: string;
+            /** Verification Uri */
+            verification_uri: string;
+            /** Verification Uri Complete */
+            verification_uri_complete: string;
+            /** Expires In */
+            expires_in: number;
+            /** Interval */
+            interval: number;
+        };
+        /** MCPDynamicClientRegistrationForm */
+        MCPDynamicClientRegistrationForm: {
+            /**
+             * Client Name
+             * @example Claude
+             */
+            client_name: string;
+            /** Redirect Uris */
+            redirect_uris?: string[];
+            /** Grant Types */
+            grant_types?: string[] | null;
+            /** Response Types */
+            response_types?: string[] | null;
+            /**
+             * Token Endpoint Auth Method
+             * @default none
+             */
+            token_endpoint_auth_method: string;
+            /** Software Id */
+            software_id?: string | null;
+            /** Software Version */
+            software_version?: string | null;
+        };
+        /** MCPDynamicClientRegistrationResponse */
+        MCPDynamicClientRegistrationResponse: {
+            /** Client Id */
+            client_id: string;
+            /** Client Secret */
+            client_secret?: string | null;
+            /** Client Id Issued At */
+            client_id_issued_at: number;
+            /** Client Secret Expires At */
+            client_secret_expires_at?: number | null;
+            /** Client Name */
+            client_name: string;
+            /** Redirect Uris */
+            redirect_uris: string[];
+            /** Grant Types */
+            grant_types: string[];
+            /** Response Types */
+            response_types: string[];
+            /** Token Endpoint Auth Method */
+            token_endpoint_auth_method: string;
+        };
+        /** MCPTokenResponse */
+        MCPTokenResponse: {
+            /** Access Token */
+            access_token: string;
+            /** Refresh Token */
+            refresh_token: string;
+            /**
+             * Token Type
+             * @default Bearer
+             */
+            token_type: string;
+            /** Expires In */
+            expires_in: number;
+            /** Scope */
+            scope: string;
+        };
+        /**
+         * McpAuthorizationFlowType
+         * @enum {string}
+         */
+        McpAuthorizationFlowType: "device" | "authorization_code";
+        /**
+         * McpGrantScope
+         * @description OAuth scope requested by / granted to an MCP client.
+         * @enum {string}
+         */
+        McpGrantScope: "read" | "write";
         /**
          * MeItem
          * @description The signed-in user's own profile.
@@ -782,6 +1148,66 @@ export interface components {
              * @default false
              */
             twoFactorEnabled: boolean;
+        };
+        /**
+         * MeMCPAuthorizationRequestItem
+         * @description A pending authorization shown on the consent screen.
+         */
+        MeMCPAuthorizationRequestItem: {
+            /** Clientname */
+            clientName: string;
+            /**
+             * Expiresat
+             * Format: date-time
+             */
+            expiresAt: string;
+            flowType: components["schemas"]["McpAuthorizationFlowType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Redirecturi */
+            redirectUri?: string | null;
+            requestedScope: components["schemas"]["McpGrantScope"];
+            /** State */
+            state?: string | null;
+        };
+        /** MeMCPAuthorizeApproveForm */
+        MeMCPAuthorizeApproveForm: {
+            scope: components["schemas"]["McpGrantScope"];
+        };
+        /**
+         * MeMCPAuthorizeResponse
+         * @description Result of approving/denying a request: a redirect URL for the auth-code
+         *     flow, or null for the device flow (which shows in-page success).
+         */
+        MeMCPAuthorizeResponse: {
+            /** Redirecturl */
+            redirectUrl?: string | null;
+        };
+        /**
+         * MeMCPGrantItem
+         * @description An active grant shown in the account's connected-applications list.
+         */
+        MeMCPGrantItem: {
+            /**
+             * Clientid
+             * Format: uuid
+             */
+            clientId: string;
+            /** Clientname */
+            clientName: string;
+            /** Connectedat */
+            connectedAt?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastusedat */
+            lastUsedAt?: string | null;
+            scope: components["schemas"]["McpGrantScope"];
         };
         /**
          * MePatchForm
@@ -1185,6 +1611,19 @@ export interface components {
          * @enum {string}
          */
         UserTheme: "system" | "light" | "dark";
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
         /**
          * ValidationErrorResponse
          * @description A `422` payload: a top-level message plus a per-field breakdown.
@@ -1195,10 +1634,47 @@ export interface components {
             /** Errors */
             errors: components["schemas"]["FieldError"][];
         };
+        /** Body_api.mcp.oauth.device.authorize */
+        authorize: {
+            /** Client Id */
+            client_id: string;
+            /** Scope */
+            scope?: string | null;
+        };
+        /** Body_api.mcp.oauth.revoke */
+        revoke: {
+            /** Token */
+            token: string;
+            /** Client Id */
+            client_id: string;
+            /** Token Type Hint */
+            token_type_hint?: string | null;
+            /** Client Secret */
+            client_secret?: string | null;
+        };
         /** Body_api.me.setPicture */
         setPicture: {
             /** File */
             file: string;
+        };
+        /** Body_api.mcp.oauth.token */
+        token: {
+            /** Grant Type */
+            grant_type: string;
+            /** Client Id */
+            client_id: string;
+            /** Client Secret */
+            client_secret?: string | null;
+            /** Code */
+            code?: string | null;
+            /** Code Verifier */
+            code_verifier?: string | null;
+            /** Redirect Uri */
+            redirect_uri?: string | null;
+            /** Device Code */
+            device_code?: string | null;
+            /** Refresh Token */
+            refresh_token?: string | null;
         };
     };
     responses: never;
@@ -2506,6 +2982,450 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.authorize.byUserCode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizationRequestItem_"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.authorize.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizationRequestItem_"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.authorize.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeMCPAuthorizeApproveForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizeResponse_"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.authorize.deny": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizeResponse_"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.grants.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_MeMCPGrantItem_"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.mcp.grants.revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                grant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.mcp.metadata.authorizationServer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "api.mcp.metadata.protectedResource": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    "api.mcp.oauth.register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MCPDynamicClientRegistrationForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MCPDynamicClientRegistrationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.mcp.oauth.authorize": {
+        parameters: {
+            query: {
+                client_id: string;
+                redirect_uri: string;
+                code_challenge: string;
+                response_type?: string;
+                code_challenge_method?: string;
+                scope?: string | null;
+                state?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.mcp.oauth.token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": components["schemas"]["token"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MCPTokenResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.mcp.oauth.device.authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": components["schemas"]["authorize"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MCPDeviceAuthorizationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.mcp.oauth.revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": components["schemas"]["revoke"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

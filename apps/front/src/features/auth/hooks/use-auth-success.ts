@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import type { components } from "@/api/generated/schema";
 import { useIntermediateStore } from "@/features/auth/stores/intermediate-store";
+import { consumePostLoginReturn } from "@/lib/auth/post-login-return";
 import { saveSession } from "@/lib/auth/token-storage";
 
 type AuthResponse = components["schemas"]["AuthResponse"];
@@ -29,6 +30,11 @@ export function useAuthSuccess() {
       return;
     }
     saveSession(data.item, remember);
+    const back = consumePostLoginReturn();
+    if (back) {
+      window.location.assign(back);
+      return;
+    }
     navigate({ to: "/" });
   };
 }

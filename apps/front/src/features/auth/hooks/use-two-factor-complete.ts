@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import type { components } from "@/api/generated/schema";
 import { useIntermediateStore } from "@/features/auth/stores/intermediate-store";
+import { consumePostLoginReturn } from "@/lib/auth/post-login-return";
 import { saveSession } from "@/lib/auth/token-storage";
 
 type TokenItem = components["schemas"]["TokenItem"];
@@ -12,6 +13,11 @@ export function useTwoFactorComplete() {
   return (item: TokenItem) => {
     saveSession(item, false);
     clear();
+    const back = consumePostLoginReturn();
+    if (back) {
+      window.location.assign(back);
+      return;
+    }
     navigate({ to: "/" });
   };
 }

@@ -8,6 +8,8 @@ type S = components["schemas"];
 
 export const dtoEnums = {
   Language: ["fr-FR", "en-GB", "es-ES", "de-DE", "it-IT"] as const satisfies readonly S["Language"][],
+  McpAuthorizationFlowType: ["device", "authorization_code"] as const satisfies readonly S["McpAuthorizationFlowType"][],
+  McpGrantScope: ["read", "write"] as const satisfies readonly S["McpGrantScope"][],
   UserAuthenticationLogStatus: ["success", "error", "forbidden"] as const satisfies readonly S["UserAuthenticationLogStatus"][],
   UserAuthenticationLogType: ["register", "activate", "activation_link", "email_password", "google_oauth", "two_factor_otp", "two_factor_u2f", "two_factor_recovery_code", "refresh_token", "forgot_password", "reset_password", "access"] as const satisfies readonly S["UserAuthenticationLogType"][],
   UserAuthenticationTwoFactorType: ["otp", "recovery_code", "u2f"] as const satisfies readonly S["UserAuthenticationTwoFactorType"][],

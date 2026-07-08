@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ConnectApplicationRouteImport } from './routes/connect-application'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -24,13 +25,20 @@ import { Route as AuthActivationRouteImport } from './routes/auth/activation'
 import { Route as Auth2faRouteImport } from './routes/auth/2fa'
 import { Route as AppMeRouteRouteImport } from './routes/_app/me/route'
 import { Route as AppMeIndexRouteImport } from './routes/_app/me/index'
+import { Route as OauthConsentRequestIdRouteImport } from './routes/oauth/consent/$requestId'
 import { Route as AppMeSettingsRouteImport } from './routes/_app/me/settings'
 import { Route as AppMeSecurityRouteImport } from './routes/_app/me/security'
+import { Route as AppMeMcpRouteImport } from './routes/_app/me/mcp'
 import { Route as AppMeLogsRouteImport } from './routes/_app/me/logs'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConnectApplicationRoute = ConnectApplicationRouteImport.update({
+  id: '/connect-application',
+  path: '/connect-application',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -102,6 +110,11 @@ const AppMeIndexRoute = AppMeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
+const OauthConsentRequestIdRoute = OauthConsentRequestIdRouteImport.update({
+  id: '/oauth/consent/$requestId',
+  path: '/oauth/consent/$requestId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppMeSettingsRoute = AppMeSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -110,6 +123,11 @@ const AppMeSettingsRoute = AppMeSettingsRouteImport.update({
 const AppMeSecurityRoute = AppMeSecurityRouteImport.update({
   id: '/security',
   path: '/security',
+  getParentRoute: () => AppMeRouteRoute,
+} as any)
+const AppMeMcpRoute = AppMeMcpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
 const AppMeLogsRoute = AppMeLogsRouteImport.update({
@@ -121,6 +139,7 @@ const AppMeLogsRoute = AppMeLogsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
+  '/connect-application': typeof ConnectApplicationRoute
   '/terms': typeof TermsRoute
   '/me': typeof AppMeRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
@@ -133,12 +152,15 @@ export interface FileRoutesByFullPath {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/me/logs': typeof AppMeLogsRoute
+  '/me/mcp': typeof AppMeMcpRoute
   '/me/security': typeof AppMeSecurityRoute
   '/me/settings': typeof AppMeSettingsRoute
+  '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me/': typeof AppMeIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
+  '/connect-application': typeof ConnectApplicationRoute
   '/terms': typeof TermsRoute
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
@@ -151,14 +173,17 @@ export interface FileRoutesByTo {
   '/auth/u2f': typeof AuthU2fRoute
   '/': typeof AppIndexRoute
   '/me/logs': typeof AppMeLogsRoute
+  '/me/mcp': typeof AppMeMcpRoute
   '/me/security': typeof AppMeSecurityRoute
   '/me/settings': typeof AppMeSettingsRoute
+  '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me': typeof AppMeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
+  '/connect-application': typeof ConnectApplicationRoute
   '/terms': typeof TermsRoute
   '/_app/me': typeof AppMeRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
@@ -172,8 +197,10 @@ export interface FileRoutesById {
   '/auth/u2f': typeof AuthU2fRoute
   '/_app/': typeof AppIndexRoute
   '/_app/me/logs': typeof AppMeLogsRoute
+  '/_app/me/mcp': typeof AppMeMcpRoute
   '/_app/me/security': typeof AppMeSecurityRoute
   '/_app/me/settings': typeof AppMeSettingsRoute
+  '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/_app/me/': typeof AppMeIndexRoute
 }
 export interface FileRouteTypes {
@@ -181,6 +208,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/auth'
     | '/'
+    | '/connect-application'
     | '/terms'
     | '/me'
     | '/auth/2fa'
@@ -193,12 +221,15 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/me/logs'
+    | '/me/mcp'
     | '/me/security'
     | '/me/settings'
+    | '/oauth/consent/$requestId'
     | '/me/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/connect-application'
     | '/terms'
     | '/auth/2fa'
     | '/auth/activation'
@@ -211,13 +242,16 @@ export interface FileRouteTypes {
     | '/auth/u2f'
     | '/'
     | '/me/logs'
+    | '/me/mcp'
     | '/me/security'
     | '/me/settings'
+    | '/oauth/consent/$requestId'
     | '/me'
   id:
     | '__root__'
     | '/auth'
     | '/_app'
+    | '/connect-application'
     | '/terms'
     | '/_app/me'
     | '/auth/2fa'
@@ -231,15 +265,19 @@ export interface FileRouteTypes {
     | '/auth/u2f'
     | '/_app/'
     | '/_app/me/logs'
+    | '/_app/me/mcp'
     | '/_app/me/security'
     | '/_app/me/settings'
+    | '/oauth/consent/$requestId'
     | '/_app/me/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  ConnectApplicationRoute: typeof ConnectApplicationRoute
   TermsRoute: typeof TermsRoute
+  OauthConsentRequestIdRoute: typeof OauthConsentRequestIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -249,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/connect-application': {
+      id: '/connect-application'
+      path: '/connect-application'
+      fullPath: '/connect-application'
+      preLoaderRoute: typeof ConnectApplicationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -349,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMeIndexRouteImport
       parentRoute: typeof AppMeRouteRoute
     }
+    '/oauth/consent/$requestId': {
+      id: '/oauth/consent/$requestId'
+      path: '/oauth/consent/$requestId'
+      fullPath: '/oauth/consent/$requestId'
+      preLoaderRoute: typeof OauthConsentRequestIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/me/settings': {
       id: '/_app/me/settings'
       path: '/settings'
@@ -361,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/security'
       fullPath: '/me/security'
       preLoaderRoute: typeof AppMeSecurityRouteImport
+      parentRoute: typeof AppMeRouteRoute
+    }
+    '/_app/me/mcp': {
+      id: '/_app/me/mcp'
+      path: '/mcp'
+      fullPath: '/me/mcp'
+      preLoaderRoute: typeof AppMeMcpRouteImport
       parentRoute: typeof AppMeRouteRoute
     }
     '/_app/me/logs': {
@@ -403,6 +462,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface AppMeRouteRouteChildren {
   AppMeLogsRoute: typeof AppMeLogsRoute
+  AppMeMcpRoute: typeof AppMeMcpRoute
   AppMeSecurityRoute: typeof AppMeSecurityRoute
   AppMeSettingsRoute: typeof AppMeSettingsRoute
   AppMeIndexRoute: typeof AppMeIndexRoute
@@ -410,6 +470,7 @@ interface AppMeRouteRouteChildren {
 
 const AppMeRouteRouteChildren: AppMeRouteRouteChildren = {
   AppMeLogsRoute: AppMeLogsRoute,
+  AppMeMcpRoute: AppMeMcpRoute,
   AppMeSecurityRoute: AppMeSecurityRoute,
   AppMeSettingsRoute: AppMeSettingsRoute,
   AppMeIndexRoute: AppMeIndexRoute,
@@ -434,7 +495,9 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  ConnectApplicationRoute: ConnectApplicationRoute,
   TermsRoute: TermsRoute,
+  OauthConsentRequestIdRoute: OauthConsentRequestIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

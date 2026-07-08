@@ -1,4 +1,5 @@
 import { redirect } from "@tanstack/react-router";
+import { stashPostLoginReturn } from "@/lib/auth/post-login-return";
 import {
   isAccessUsable,
   isRefreshUsable,
@@ -6,13 +7,19 @@ import {
 } from "@/lib/auth/token-storage";
 
 /**
- * Route guard for `beforeLoad` on the authenticated layout. Synchronous: it only
+ * Route guard for `beforeLoad` on authenticated routes. Synchronous: it only
  * checks that a usable token exists locally (the shell fetches `/me` and the API
- * middleware handles a stale token / 401 funnel). Redirects to login otherwise.
+ * middleware handles a stale token / 401 funnel). Redirects to login otherwise,
+ * remembering the target so login can send the user back (e.g. MCP consent).
  */
-export function requireSession(): void {
+export function requireSession({
+  location,
+}: {
+  location: { href: string };
+}): void {
   const session = loadSession();
   if (!(isAccessUsable(session) || isRefreshUsable(session))) {
+    stashPostLoginReturn(location.href);
     throw redirect({ to: "/auth/login" });
   }
 }
