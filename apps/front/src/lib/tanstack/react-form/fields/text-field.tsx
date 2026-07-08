@@ -10,6 +10,7 @@ interface TextFieldProps {
   type?: InputProps["type"];
   disabled?: boolean;
   prefix?: InputProps["prefix"];
+  addonBefore?: InputProps["addonBefore"];
 }
 
 export function TextField({
@@ -19,6 +20,7 @@ export function TextField({
   type,
   disabled,
   prefix,
+  addonBefore,
 }: TextFieldProps) {
   const field = useFieldContext<string>();
   const error = firstFieldError(field.state.meta.errors);
@@ -32,6 +34,7 @@ export function TextField({
       validateStatus={showError ? "error" : undefined}
     >
       <Input
+        addonBefore={addonBefore}
         autoComplete={autoComplete}
         disabled={disabled}
         id={field.name}

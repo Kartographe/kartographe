@@ -11,7 +11,7 @@ export function AppShell() {
   const toggle = useAppShellStore((state) => state.toggleCollapsed);
 
   return (
-    <Layout hasSider style={{ minHeight: "100dvh" }}>
+    <Layout hasSider style={{ height: "100dvh" }}>
       <Layout.Sider
         collapsed={collapsed}
         collapsedWidth={72}
@@ -57,12 +57,13 @@ export function AppShell() {
         </Flex>
       </Layout.Sider>
 
-      <Layout style={{ minHeight: "100dvh" }}>
+      <Layout style={{ height: "100dvh" }}>
         <Layout.Content
+          className="p-4 lg:p-8"
           style={{
             background: "var(--ant-color-bg-layout)",
+            height: "100%",
             overflowY: "auto",
-            padding: 24,
           }}
         >
           <Outlet />

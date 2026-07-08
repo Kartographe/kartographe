@@ -70,6 +70,18 @@ export function ProfileScreen() {
       <form.AppForm>
         <form.FormRoot>
           <Flex gap={12} vertical>
+            <form.AppField name="gender">
+              {(field) => (
+                <field.SelectField
+                  label={t`Civilité`}
+                  options={[
+                    { label: t`Non précisé`, value: "unknown" },
+                    { label: t`Madame`, value: "female" },
+                    { label: t`Monsieur`, value: "male" },
+                  ]}
+                />
+              )}
+            </form.AppField>
             <Flex gap={12}>
               <div className="flex-1">
                 <form.AppField name="firstName">
@@ -84,17 +96,12 @@ export function ProfileScreen() {
             </Flex>
             <Typography.Text type="secondary">{me.email}</Typography.Text>
             <form.AppField name="phone">
-              {(field) => <field.TextField label={t`Téléphone`} type="tel" />}
-            </form.AppField>
-            <form.AppField name="gender">
               {(field) => (
-                <field.SelectField
-                  label={t`Civilité`}
-                  options={[
-                    { label: t`Non précisé`, value: "unknown" },
-                    { label: t`Madame`, value: "female" },
-                    { label: t`Monsieur`, value: "male" },
-                  ]}
+                <field.TextField
+                  addonBefore="+33"
+                  label={t`Téléphone`}
+                  placeholder="6 12 34 56 78"
+                  type="tel"
                 />
               )}
             </form.AppField>

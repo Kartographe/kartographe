@@ -20,7 +20,7 @@ export function AuthLayout() {
         className="relative hidden flex-1 flex-col justify-between overflow-hidden p-12 text-white lg:flex"
         style={{
           background:
-            "linear-gradient(135deg, #4f46e5 0%, #6d3ad8 55%, #7c5cf0 100%)",
+            "linear-gradient(135deg, #001529 0%, #1677ff 65%, #13c2c2 100%)",
         }}
       >
         <Flex align="center" gap={12}>
