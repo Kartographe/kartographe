@@ -716,6 +716,438 @@ export interface paths {
         patch: operations["api.applications.features.update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/guards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List guards
+         * @description List the authentication guards of an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.guards.list"];
+        put?: never;
+        /**
+         * Create a guard
+         * @description Create an authentication guard. It starts as a draft owned by the caller. Dev roles only.
+         */
+        post: operations["api.applications.guards.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a guard
+         * @description Return a single guard of the application. Any member may read.
+         */
+        get: operations["api.applications.guards.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a guard
+         * @description Soft-delete a guard and detach it from every route that referenced it. Dev roles only.
+         */
+        delete: operations["api.applications.guards.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a guard
+         * @description Partially update a guard (type, title, field type/key/format). Dev roles only.
+         */
+        patch: operations["api.applications.guards.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a guard
+         * @description Set the guard status to active. Dev roles only.
+         */
+        post: operations["api.applications.guards.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a guard
+         * @description Set the guard status to archived. Dev roles only.
+         */
+        post: operations["api.applications.guards.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List roles
+         * @description List the authorization roles of an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.roles.list"];
+        put?: never;
+        /**
+         * Create a role
+         * @description Create an authorization role. It starts as a draft owned by the caller. Contributors only.
+         */
+        post: operations["api.applications.roles.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a role
+         * @description Return a single role of the application. Any member may read.
+         */
+        get: operations["api.applications.roles.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a role
+         * @description Soft-delete a role and detach it from every route that referenced it. Contributors only.
+         */
+        delete: operations["api.applications.roles.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a role
+         * @description Partially update a role (title, description). Contributors only.
+         */
+        patch: operations["api.applications.roles.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a role
+         * @description Set the role status to active. Contributors only.
+         */
+        post: operations["api.applications.roles.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a role
+         * @description Set the role status to archived. Contributors only.
+         */
+        post: operations["api.applications.roles.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List routes
+         * @description List the routes of an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.routes.list"];
+        put?: never;
+        /**
+         * Create a route
+         * @description Create a route. It starts as a draft owned by the caller. Referenced guards, roles and versions must belong to the application. Dev roles only.
+         */
+        post: operations["api.applications.routes.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a route
+         * @description Return a single route of the application. Any member may read.
+         */
+        get: operations["api.applications.routes.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a route
+         * @description Soft-delete a route; its responses, examples and table links are soft-deleted as well. Dev roles only.
+         */
+        delete: operations["api.applications.routes.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a route
+         * @description Partially update a route. Referenced guards, roles and versions must belong to the application. Dev roles only.
+         */
+        patch: operations["api.applications.routes.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a route
+         * @description Set the route status to active. Dev roles only.
+         */
+        post: operations["api.applications.routes.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a route
+         * @description Set the route status to archived. Dev roles only.
+         */
+        post: operations["api.applications.routes.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route responses
+         * @description List the documented responses of a route, in insertion order. Any member may read.
+         */
+        get: operations["api.applications.routes.responses.list"];
+        put?: never;
+        /**
+         * Create a route response
+         * @description Document a response of the route (status code, format, body schema). Dev roles only.
+         */
+        post: operations["api.applications.routes.responses.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses/{response_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a route response
+         * @description Return a single response of the route. Any member may read.
+         */
+        get: operations["api.applications.routes.responses.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a route response
+         * @description Soft-delete a response and the examples that reference it. Dev roles only.
+         */
+        delete: operations["api.applications.routes.responses.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a route response
+         * @description Partially update a response (status code, format, body schema). Dev roles only.
+         */
+        patch: operations["api.applications.routes.responses.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/examples": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route examples
+         * @description List the examples of a route, in insertion order. Any member may read.
+         */
+        get: operations["api.applications.routes.examples.list"];
+        put?: never;
+        /**
+         * Create a route example
+         * @description Create a request/response example. The referenced response must belong to the route. Dev roles only.
+         */
+        post: operations["api.applications.routes.examples.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/examples/{example_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a route example
+         * @description Return a single example of the route. Any member may read.
+         */
+        get: operations["api.applications.routes.examples.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a route example
+         * @description Soft-delete an example. Dev roles only.
+         */
+        delete: operations["api.applications.routes.examples.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a route example
+         * @description Partially update an example. A changed response reference must belong to the route. Dev roles only.
+         */
+        patch: operations["api.applications.routes.examples.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/tables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route tables
+         * @description List the database-table links of a route, in insertion order. Any member may read.
+         */
+        get: operations["api.applications.routes.tables.list"];
+        put?: never;
+        /**
+         * Link a database table
+         * @description Link the route to a database table of the account, recording the exchange part and the action performed. Dev roles only.
+         */
+        post: operations["api.applications.routes.tables.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/tables/{route_table_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a route table link
+         * @description Return a single database-table link of the route. Any member may read.
+         */
+        get: operations["api.applications.routes.tables.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a route table link
+         * @description Soft-delete a database-table link. Dev roles only.
+         */
+        delete: operations["api.applications.routes.tables.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a route table link
+         * @description Partially update a link (database table, type, action). A changed table must belong to the account. Dev roles only.
+         */
+        patch: operations["api.applications.routes.tables.update"];
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -1455,6 +1887,54 @@ export interface paths {
          */
         post: operations["api.journeys.scenarios.steps.assertions.archive"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/routes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List step routes
+         * @description List the application routes linked to a step, most recent first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.routes.list"];
+        put?: never;
+        /**
+         * Link an application route
+         * @description Link the step to an application route. The application must belong to the account and the route to that application. Dev roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.routes.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/routes/{step_route_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a step route
+         * @description Return a single route link of the step. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.routes.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Unlink an application route
+         * @description Soft-delete a route link. Dev roles only.
+         */
+        delete: operations["api.journeys.scenarios.steps.routes.delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3044,6 +3524,8 @@ export interface components {
             };
             /** Url */
             url?: string | null;
+            /** Openapiurl */
+            openapiUrl?: string | null;
         };
         /**
          * ApplicationEnvironmentItem
@@ -3064,6 +3546,8 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Openapiurl */
+            openapiUrl?: string | null;
             /**
              * Ownerid
              * Format: uuid
@@ -3095,6 +3579,8 @@ export interface components {
             } | null;
             /** Url */
             url?: string | null;
+            /** Openapiurl */
+            openapiUrl?: string | null;
         };
         /**
          * ApplicationEnvironmentType
@@ -3231,6 +3717,86 @@ export interface components {
             endApplicationVersionId?: string | null;
         };
         /**
+         * ApplicationGuardCreateForm
+         * @description Create an authentication guard. It starts as a draft owned by the caller.
+         */
+        ApplicationGuardCreateForm: {
+            type: components["schemas"]["ApplicationGuardType"];
+            /** Title */
+            title: string;
+            fieldType: components["schemas"]["ApplicationGuardFieldType"];
+            /** Fieldkey */
+            fieldKey: string;
+            fieldFormat?: components["schemas"]["ApplicationGuardFieldFormat"] | null;
+        };
+        /**
+         * ApplicationGuardFieldFormat
+         * @enum {string}
+         */
+        ApplicationGuardFieldFormat: "JWT";
+        /**
+         * ApplicationGuardFieldType
+         * @enum {string}
+         */
+        ApplicationGuardFieldType: "header" | "query" | "post_data" | "raw_data";
+        /**
+         * ApplicationGuardItem
+         * @description An authentication guard of an application.
+         */
+        ApplicationGuardItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            fieldFormat?: components["schemas"]["ApplicationGuardFieldFormat"] | null;
+            /** Fieldkey */
+            fieldKey: string;
+            fieldType: components["schemas"]["ApplicationGuardFieldType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationGuardStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationGuardType"];
+        };
+        /**
+         * ApplicationGuardPatchForm
+         * @description Partial update of a guard — only the keys sent are applied.
+         */
+        ApplicationGuardPatchForm: {
+            type?: components["schemas"]["ApplicationGuardType"] | null;
+            /** Title */
+            title?: string | null;
+            fieldType?: components["schemas"]["ApplicationGuardFieldType"] | null;
+            /** Fieldkey */
+            fieldKey?: string | null;
+            fieldFormat?: components["schemas"]["ApplicationGuardFieldFormat"] | null;
+        };
+        /**
+         * ApplicationGuardStatus
+         * @enum {string}
+         */
+        ApplicationGuardStatus: "draft" | "active" | "archived";
+        /**
+         * ApplicationGuardType
+         * @enum {string}
+         */
+        ApplicationGuardType: "header_bearer" | "header_basic" | "header_token" | "query_token";
+        /**
          * ApplicationItem
          * @description An application tracked inside an account.
          */
@@ -3273,6 +3839,430 @@ export interface components {
             description?: string | null;
             type?: components["schemas"]["ApplicationType"] | null;
         };
+        /**
+         * ApplicationRoleCreateForm
+         * @description Create an authorization role. It starts as a draft owned by the caller.
+         */
+        ApplicationRoleCreateForm: {
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationRoleItem
+         * @description An authorization role of an application.
+         */
+        ApplicationRoleItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationRoleStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+        };
+        /**
+         * ApplicationRolePatchForm
+         * @description Partial update of a role — only the keys sent are applied.
+         */
+        ApplicationRolePatchForm: {
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationRoleStatus
+         * @enum {string}
+         */
+        ApplicationRoleStatus: "draft" | "active" | "archived";
+        /**
+         * ApplicationRouteCreateForm
+         * @description Create a route. It starts as a draft owned by the caller. Guards and roles
+         *     must belong to the same application.
+         */
+        ApplicationRouteCreateForm: {
+            method: components["schemas"]["ApplicationRouteMethod"];
+            /** Path */
+            path: string;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Applicationguardids */
+            applicationGuardIds?: string[];
+            /** Applicationroleids */
+            applicationRoleIds?: string[];
+            /** Startdate */
+            startDate?: string | null;
+            /** Startapplicationversionid */
+            startApplicationVersionId?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Endapplicationversionid */
+            endApplicationVersionId?: string | null;
+            /** Acceptedformat */
+            acceptedFormat?: string[];
+            /** Queryparamsschema */
+            queryParamsSchema?: {
+                [key: string]: unknown;
+            };
+            /** Headerschema */
+            headerSchema?: {
+                [key: string]: unknown;
+            };
+            /** Bodyschema */
+            bodySchema?: {
+                [key: string]: unknown;
+            };
+            /** Rawschema */
+            rawSchema?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * ApplicationRouteExampleCreateForm
+         * @description Create a request/response example. The response must belong to the route.
+         */
+        ApplicationRouteExampleCreateForm: {
+            /**
+             * Applicationrouteresponseid
+             * Format: uuid
+             */
+            applicationRouteResponseId: string;
+            /** Queryparams */
+            queryParams?: {
+                [key: string]: unknown;
+            };
+            /** Headers */
+            headers?: {
+                [key: string]: unknown;
+            };
+            /** Body */
+            body?: {
+                [key: string]: unknown;
+            };
+            /** Raw */
+            raw?: {
+                [key: string]: unknown;
+            };
+            /** Response */
+            response?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * ApplicationRouteExampleItem
+         * @description A request/response example of a route.
+         */
+        ApplicationRouteExampleItem: {
+            /**
+             * Applicationrouteresponseid
+             * Format: uuid
+             */
+            applicationRouteResponseId: string;
+            /** Body */
+            body: {
+                [key: string]: unknown;
+            };
+            /** Headers */
+            headers: {
+                [key: string]: unknown;
+            };
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Queryparams */
+            queryParams: {
+                [key: string]: unknown;
+            };
+            /** Raw */
+            raw: {
+                [key: string]: unknown;
+            };
+            /** Response */
+            response: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * ApplicationRouteExamplePatchForm
+         * @description Partial update of an example — only the keys sent are applied.
+         */
+        ApplicationRouteExamplePatchForm: {
+            /** Applicationrouteresponseid */
+            applicationRouteResponseId?: string | null;
+            /** Queryparams */
+            queryParams?: {
+                [key: string]: unknown;
+            } | null;
+            /** Headers */
+            headers?: {
+                [key: string]: unknown;
+            } | null;
+            /** Body */
+            body?: {
+                [key: string]: unknown;
+            } | null;
+            /** Raw */
+            raw?: {
+                [key: string]: unknown;
+            } | null;
+            /** Response */
+            response?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationRouteItem
+         * @description An HTTP route exposed by an application.
+         */
+        ApplicationRouteItem: {
+            /** Acceptedformat */
+            acceptedFormat: string[];
+            /** Applicationguardids */
+            applicationGuardIds: string[];
+            /** Applicationroleids */
+            applicationRoleIds: string[];
+            /** Bodyschema */
+            bodySchema: {
+                [key: string]: unknown;
+            };
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Endapplicationversionid */
+            endApplicationVersionId?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Headerschema */
+            headerSchema: {
+                [key: string]: unknown;
+            };
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            method: components["schemas"]["ApplicationRouteMethod"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Path */
+            path: string;
+            /** Queryparamsschema */
+            queryParamsSchema: {
+                [key: string]: unknown;
+            };
+            /** Rawschema */
+            rawSchema: {
+                [key: string]: unknown;
+            };
+            /** Startapplicationversionid */
+            startApplicationVersionId?: string | null;
+            /** Startdate */
+            startDate?: string | null;
+            status: components["schemas"]["ApplicationRouteStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title?: string | null;
+        };
+        /**
+         * ApplicationRouteMethod
+         * @enum {string}
+         */
+        ApplicationRouteMethod: "POST" | "GET" | "PATCH" | "PUT" | "DELETE" | "QUERY";
+        /**
+         * ApplicationRoutePatchForm
+         * @description Partial update of a route — only the keys sent are applied.
+         */
+        ApplicationRoutePatchForm: {
+            method?: components["schemas"]["ApplicationRouteMethod"] | null;
+            /** Path */
+            path?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Applicationguardids */
+            applicationGuardIds?: string[] | null;
+            /** Applicationroleids */
+            applicationRoleIds?: string[] | null;
+            /** Startdate */
+            startDate?: string | null;
+            /** Startapplicationversionid */
+            startApplicationVersionId?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Endapplicationversionid */
+            endApplicationVersionId?: string | null;
+            /** Acceptedformat */
+            acceptedFormat?: string[] | null;
+            /** Queryparamsschema */
+            queryParamsSchema?: {
+                [key: string]: unknown;
+            } | null;
+            /** Headerschema */
+            headerSchema?: {
+                [key: string]: unknown;
+            } | null;
+            /** Bodyschema */
+            bodySchema?: {
+                [key: string]: unknown;
+            } | null;
+            /** Rawschema */
+            rawSchema?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationRouteResponseCreateForm
+         * @description Create a documented response of a route.
+         */
+        ApplicationRouteResponseCreateForm: {
+            /** Statuscode */
+            statusCode: number;
+            format: components["schemas"]["ApplicationRouteResponseFormat"];
+            /** Bodyschema */
+            bodySchema?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * ApplicationRouteResponseFormat
+         * @enum {string}
+         */
+        ApplicationRouteResponseFormat: "JSON" | "XML" | "HTML" | "TXT";
+        /**
+         * ApplicationRouteResponseItem
+         * @description A documented response of a route.
+         */
+        ApplicationRouteResponseItem: {
+            /** Bodyschema */
+            bodySchema: {
+                [key: string]: unknown;
+            };
+            format: components["schemas"]["ApplicationRouteResponseFormat"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Statuscode */
+            statusCode: number;
+        };
+        /**
+         * ApplicationRouteResponsePatchForm
+         * @description Partial update of a response — only the keys sent are applied.
+         */
+        ApplicationRouteResponsePatchForm: {
+            /** Statuscode */
+            statusCode?: number | null;
+            format?: components["schemas"]["ApplicationRouteResponseFormat"] | null;
+            /** Bodyschema */
+            bodySchema?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationRouteStatus
+         * @enum {string}
+         */
+        ApplicationRouteStatus: "draft" | "active" | "archived";
+        /**
+         * ApplicationRouteTableAction
+         * @enum {string}
+         */
+        ApplicationRouteTableAction: "read" | "create" | "update" | "delete";
+        /**
+         * ApplicationRouteTableCreateForm
+         * @description Link a route to a database table. The table must belong to the account.
+         */
+        ApplicationRouteTableCreateForm: {
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            type: components["schemas"]["ApplicationRouteTableType"];
+            action: components["schemas"]["ApplicationRouteTableAction"];
+        };
+        /**
+         * ApplicationRouteTableItem
+         * @description A link between a route and a database table.
+         */
+        ApplicationRouteTableItem: {
+            action: components["schemas"]["ApplicationRouteTableAction"];
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            type: components["schemas"]["ApplicationRouteTableType"];
+        };
+        /**
+         * ApplicationRouteTablePatchForm
+         * @description Partial update of a route/table link — only the keys sent are applied.
+         */
+        ApplicationRouteTablePatchForm: {
+            /** Databasetableid */
+            databaseTableId?: string | null;
+            type?: components["schemas"]["ApplicationRouteTableType"] | null;
+            action?: components["schemas"]["ApplicationRouteTableAction"] | null;
+        };
+        /**
+         * ApplicationRouteTableType
+         * @enum {string}
+         */
+        ApplicationRouteTableType: "query_params" | "query_data" | "query_header" | "response_data" | "response_header";
         /**
          * ApplicationSortField
          * @description Sortable columns for the applications listing.
@@ -3544,6 +4534,16 @@ export interface components {
              */
             unique: boolean;
             /**
+             * Systemfield
+             * @default false
+             */
+            systemField: boolean;
+            /**
+             * Rank
+             * @default 0
+             */
+            rank: number;
+            /**
              * Defaultvalue
              * @default
              */
@@ -3594,6 +4594,10 @@ export interface components {
              * Format: uuid
              */
             ownerId: string;
+            /** Rank */
+            rank: number;
+            /** Systemfield */
+            systemField: boolean;
             /** Unique */
             unique: boolean;
         };
@@ -3612,6 +4616,10 @@ export interface components {
             nullable?: boolean | null;
             /** Unique */
             unique?: boolean | null;
+            /** Systemfield */
+            systemField?: boolean | null;
+            /** Rank */
+            rank?: number | null;
             /** Defaultvalue */
             defaultValue?: string | null;
             /** Name */
@@ -4054,9 +5062,33 @@ export interface components {
         ItemResponse_ApplicationFeatureItem_: {
             item: components["schemas"]["ApplicationFeatureItem"];
         };
+        /** ItemResponse[ApplicationGuardItem] */
+        ItemResponse_ApplicationGuardItem_: {
+            item: components["schemas"]["ApplicationGuardItem"];
+        };
         /** ItemResponse[ApplicationItem] */
         ItemResponse_ApplicationItem_: {
             item: components["schemas"]["ApplicationItem"];
+        };
+        /** ItemResponse[ApplicationRoleItem] */
+        ItemResponse_ApplicationRoleItem_: {
+            item: components["schemas"]["ApplicationRoleItem"];
+        };
+        /** ItemResponse[ApplicationRouteExampleItem] */
+        ItemResponse_ApplicationRouteExampleItem_: {
+            item: components["schemas"]["ApplicationRouteExampleItem"];
+        };
+        /** ItemResponse[ApplicationRouteItem] */
+        ItemResponse_ApplicationRouteItem_: {
+            item: components["schemas"]["ApplicationRouteItem"];
+        };
+        /** ItemResponse[ApplicationRouteResponseItem] */
+        ItemResponse_ApplicationRouteResponseItem_: {
+            item: components["schemas"]["ApplicationRouteResponseItem"];
+        };
+        /** ItemResponse[ApplicationRouteTableItem] */
+        ItemResponse_ApplicationRouteTableItem_: {
+            item: components["schemas"]["ApplicationRouteTableItem"];
         };
         /** ItemResponse[ApplicationVersionItem] */
         ItemResponse_ApplicationVersionItem_: {
@@ -4117,6 +5149,10 @@ export interface components {
         /** ItemResponse[JourneyScenarioStepItem] */
         ItemResponse_JourneyScenarioStepItem_: {
             item: components["schemas"]["JourneyScenarioStepItem"];
+        };
+        /** ItemResponse[JourneyScenarioStepRouteItem] */
+        ItemResponse_JourneyScenarioStepRouteItem_: {
+            item: components["schemas"]["JourneyScenarioStepRouteItem"];
         };
         /** ItemResponse[MeInvitationItem] */
         ItemResponse_MeInvitationItem_: {
@@ -4522,6 +5558,53 @@ export interface components {
             } | null;
         };
         /**
+         * JourneyScenarioStepRouteCreateForm
+         * @description Link a scenario step to an application route of the same account.
+         */
+        JourneyScenarioStepRouteCreateForm: {
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Applicationrouteid
+             * Format: uuid
+             */
+            applicationRouteId: string;
+        };
+        /**
+         * JourneyScenarioStepRouteItem
+         * @description An application route linked to a scenario step.
+         */
+        JourneyScenarioStepRouteItem: {
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Applicationrouteid
+             * Format: uuid
+             */
+            applicationRouteId: string;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+        };
+        /**
          * JourneyScenarioType
          * @enum {string}
          */
@@ -4618,6 +5701,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["ApplicationFeatureItem"][];
         };
+        /** ListingResponse[ApplicationGuardItem] */
+        ListingResponse_ApplicationGuardItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationGuardItem"][];
+        };
         /** ListingResponse[ApplicationItem] */
         ListingResponse_ApplicationItem_: {
             /** Count */
@@ -4627,6 +5720,56 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["ApplicationItem"][];
+        };
+        /** ListingResponse[ApplicationRoleItem] */
+        ListingResponse_ApplicationRoleItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationRoleItem"][];
+        };
+        /** ListingResponse[ApplicationRouteExampleItem] */
+        ListingResponse_ApplicationRouteExampleItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationRouteExampleItem"][];
+        };
+        /** ListingResponse[ApplicationRouteItem] */
+        ListingResponse_ApplicationRouteItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationRouteItem"][];
+        };
+        /** ListingResponse[ApplicationRouteResponseItem] */
+        ListingResponse_ApplicationRouteResponseItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationRouteResponseItem"][];
+        };
+        /** ListingResponse[ApplicationRouteTableItem] */
+        ListingResponse_ApplicationRouteTableItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationRouteTableItem"][];
         };
         /** ListingResponse[ApplicationVersionItem] */
         ListingResponse_ApplicationVersionItem_: {
@@ -4777,6 +5920,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["JourneyScenarioStepItem"][];
+        };
+        /** ListingResponse[JourneyScenarioStepRouteItem] */
+        ListingResponse_JourneyScenarioStepRouteItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioStepRouteItem"][];
         };
         /** ListingResponse[MeInvitationItem] */
         ListingResponse_MeInvitationItem_: {
@@ -8488,6 +9641,1881 @@ export interface operations {
             };
         };
     };
+    "api.applications.guards.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationGuardCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                guard_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                guard_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                guard_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationGuardPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                guard_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.guards.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                guard_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRoleCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                role_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRolePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.roles.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+                route_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRoutePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.responses.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationRouteResponseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.responses.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteResponseCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteResponseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.responses.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                response_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteResponseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.responses.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                response_id: string;
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.responses.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                response_id: string;
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteResponsePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteResponseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.examples.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationRouteExampleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.examples.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteExampleCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteExampleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.examples.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                example_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteExampleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.examples.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                example_id: string;
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.examples.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+                example_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteExamplePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteExampleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.tables.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationRouteTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.tables.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteTableCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.tables.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_table_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.tables.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_table_id: string;
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.tables.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+                route_table_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationRouteTablePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.features.list": {
         parameters: {
             query?: {
@@ -11528,6 +14556,218 @@ export interface operations {
                 };
             };
             /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.routes.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioStepRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, link, application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.routes.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepRouteCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, link, application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.routes.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_route_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, link, application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.routes.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_route_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, link, application or route not found */
             404: {
                 headers: {
                     [name: string]: unknown;
