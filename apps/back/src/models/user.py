@@ -1,9 +1,8 @@
 """The `user` table — one row per human or machine account."""
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON, Column
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -44,13 +43,10 @@ class User(BaseModel, CreatedIpFields, ActivationIpFields, LastAuthenticationIpF
     # created_at/updated_at (which are never exposed).
     created_date: datetime | None = Field(default=None)
     activation_date: datetime | None = Field(default=None)
-    last_connected_date: datetime | None = Field(default=None)
+    last_authentication_date: datetime | None = Field(default=None)
 
     # Rotated (via `secrets.token_hex`) to revoke every issued access token.
     token_control: str | None = Field(default=None)
-
-    onboarding_enabled: bool = Field(default=True)
-    onboarding_details: dict[str, Any] | None = Field(default=None, sa_column=Column(JSON))
 
     authentications: list["UserAuthentication"] = Relationship(back_populates="user")
     two_factors: list["UserAuthenticationTwoFactor"] = Relationship(back_populates="user")

@@ -141,7 +141,7 @@ class AuthManager:
 
     def _authenticate(self, user: User, authentication: UserAuthentication, remember_me: bool) -> dict:
         now = _now()
-        user.last_connected_date = now
+        user.last_authentication_date = now
         user.last_authentication_ip = self.request_ip
         authentication.last_authentication_date = now
         authentication.last_authentication_ip = self.request_ip
