@@ -80,6 +80,30 @@ def reset_password_email(*, first_name: str | None, action_url: str) -> Rendered
     return RenderedEmail(subject=subject, html=html, text=text)
 
 
+def invitation_email(
+    *, inviter: str, account_name: str, role: str, action_url: str, expire_date: str
+) -> RenderedEmail:
+    subject = f"You've been invited to join {account_name} on Kartographe"
+    html = _render_html(
+        "invitation",
+        greeting="Hi,",
+        inviter=inviter,
+        account_name=account_name,
+        role=role,
+        action_url=action_url,
+        expire_date=expire_date,
+    )
+    text = (
+        "Hi,\n\n"
+        f"{inviter} invited you to join the workspace {account_name} on Kartographe "
+        f"as {role}.\n\n"
+        f"View the invitation: {action_url}\n\n"
+        f"This invitation expires on {expire_date}. "
+        "If you weren't expecting it, you can ignore this email.\n"
+    )
+    return RenderedEmail(subject=subject, html=html, text=text)
+
+
 def password_changed_email(*, first_name: str | None) -> RenderedEmail:
     subject = "Your Kartographe password was changed"
     html = _render_html("password_changed", greeting=_greeting(first_name))
