@@ -15,7 +15,7 @@ export function AuthLayout() {
   const setMode = useThemeStore((state) => state.setMode);
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-[100dvh] w-full">
       <aside
         className="relative hidden flex-1 flex-col justify-between overflow-hidden p-12 text-white lg:flex"
         style={{
