@@ -900,6 +900,646 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/journeys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature journeys
+         * @description List the journeys linked to a feature, most recent first. Any member may read.
+         */
+        get: operations["api.features.journeys.list"];
+        put?: never;
+        /**
+         * Link a journey
+         * @description Link an existing account journey to the feature. The journey must belong to the same account. Editing roles only.
+         */
+        post: operations["api.features.journeys.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/journeys/{feature_journey_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a feature journey
+         * @description Return a single journey link of the feature. Any member may read.
+         */
+        get: operations["api.features.journeys.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Unlink a journey
+         * @description Soft-delete a journey link. Editing roles only.
+         */
+        delete: operations["api.features.journeys.delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List personas
+         * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         */
+        get: operations["api.personas.list"];
+        put?: never;
+        /**
+         * Create a persona
+         * @description Create a persona. It starts as a draft. Editing roles only.
+         */
+        post: operations["api.personas.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a persona
+         * @description Return a single persona of the account. Any member may read.
+         */
+        get: operations["api.personas.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a persona
+         * @description Soft-delete a persona. Editing roles only.
+         */
+        delete: operations["api.personas.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a persona
+         * @description Partially update a persona (type, title, description). Editing roles only.
+         */
+        patch: operations["api.personas.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a persona
+         * @description Set the persona status to active. Editing roles only.
+         */
+        post: operations["api.personas.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a persona
+         * @description Set the persona status to archived. Editing roles only.
+         */
+        post: operations["api.personas.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journeys
+         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         */
+        get: operations["api.journeys.list"];
+        put?: never;
+        /**
+         * Create a journey
+         * @description Create a journey. It starts as a draft owned by the caller. Any referenced persona must belong to the account. Editing roles only.
+         */
+        post: operations["api.journeys.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a journey
+         * @description Return a single journey of the account. Any member may read.
+         */
+        get: operations["api.journeys.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a journey
+         * @description Soft-delete a journey; its scenarios, steps, files, assertions and feature links are soft-deleted as well. Editing roles only.
+         */
+        delete: operations["api.journeys.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a journey
+         * @description Partially update a journey (type, title, description, personas). Any referenced persona must belong to the account. Editing roles only.
+         */
+        patch: operations["api.journeys.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a journey
+         * @description Set the journey status to active. Editing roles only.
+         */
+        post: operations["api.journeys.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a journey
+         * @description Set the journey status to archived. Editing roles only.
+         */
+        post: operations["api.journeys.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List scenarios
+         * @description List the scenarios of a journey, most recent first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.list"];
+        put?: never;
+        /**
+         * Create a scenario
+         * @description Create a scenario. It starts as a draft owned by the caller. Any referenced persona must belong to the account. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a scenario
+         * @description Return a single scenario of the journey. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a scenario
+         * @description Soft-delete a scenario; its steps, files and assertions are soft-deleted as well. Editing roles only.
+         */
+        delete: operations["api.journeys.scenarios.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a scenario
+         * @description Partially update a scenario (type, personas, title, criticity, description). Any referenced persona must belong to the account. Editing roles only.
+         */
+        patch: operations["api.journeys.scenarios.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a scenario
+         * @description Set the scenario status to active. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a scenario
+         * @description Set the scenario status to archived. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List steps
+         * @description List the steps of a scenario, in insertion order. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.list"];
+        put?: never;
+        /**
+         * Create a step
+         * @description Create a step in the scenario. A parent step (if any) must belong to the same scenario, and `parameters` must match the action type's schema. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a step
+         * @description Return a single step of the scenario. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a step
+         * @description Soft-delete a step and its whole subtree (descendant steps, files and assertions). Editing roles only.
+         */
+        delete: operations["api.journeys.scenarios.steps.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a step
+         * @description Partially update a step (parent, title, description, action, optional, parameters). `parameters` must match the action type's schema. Editing roles only.
+         */
+        patch: operations["api.journeys.scenarios.steps.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List step files
+         * @description List the files attached to a step, most recent first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.files.list"];
+        put?: never;
+        /**
+         * Upload a step file
+         * @description Upload a file (multipart, field `file`) and attach it to the step. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.files.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files/{step_file_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a step file
+         * @description Return a single file of the step, including a time-limited `downloadUrl`. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.files.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a step file
+         * @description Soft-delete a file. Editing roles only.
+         */
+        delete: operations["api.journeys.scenarios.steps.files.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a step file
+         * @description Partially update a file's metadata (type, name, description). Editing roles only.
+         */
+        patch: operations["api.journeys.scenarios.steps.files.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files/{step_file_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restore a step file
+         * @description Restore an archived file to the uploaded state. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.files.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files/{step_file_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a step file
+         * @description Set the file status to archived. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.files.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List assertions
+         * @description List the assertions of a step, most recent first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.assertions.list"];
+        put?: never;
+        /**
+         * Create an assertion
+         * @description Attach an assertion to the step. `parameters` must match the assertion type's schema. It starts as a draft owned by the caller. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.assertions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an assertion
+         * @description Return a single assertion of the step. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.assertions.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete an assertion
+         * @description Soft-delete an assertion. Editing roles only.
+         */
+        delete: operations["api.journeys.scenarios.steps.assertions.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an assertion
+         * @description Partially update an assertion (assertion type, parameters). `parameters` must match the assertion type's schema. Editing roles only.
+         */
+        patch: operations["api.journeys.scenarios.steps.assertions.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate an assertion
+         * @description Set the assertion status to active. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.assertions.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive an assertion
+         * @description Set the assertion status to archived. Editing roles only.
+         */
+        post: operations["api.journeys.scenarios.steps.assertions.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/actionTypes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List action types
+         * @description List every available step action and the shape of its parameters.
+         */
+        get: operations["api.core.actionTypes.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/actionTypes/{action_type_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an action type
+         * @description Return a single action type and the shape of its parameters.
+         */
+        get: operations["api.core.actionTypes.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/assertionTypes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List assertion types
+         * @description List every available step assertion and the shape of its parameters.
+         */
+        get: operations["api.core.assertionTypes.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/assertionTypes/{assertion_type_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an assertion type
+         * @description Return a single assertion type and the shape of its parameters.
+         */
+        get: operations["api.core.assertionTypes.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1960,6 +2600,32 @@ export interface components {
             pictureProfile?: string | null;
         };
         /**
+         * ActionTypeCategory
+         * @description Family of a step action.
+         * @enum {string}
+         */
+        ActionTypeCategory: "navigate" | "form" | "assert";
+        /**
+         * ActionTypeItem
+         * @description A catalogued step action and the shape of its parameters.
+         */
+        ActionTypeItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Parameterschema */
+            parameterSchema: {
+                [key: string]: unknown;
+            };
+            /** Slug */
+            slug: string;
+            type: components["schemas"]["ActionTypeCategory"];
+        };
+        /**
          * ActivateOtpForm
          * @description Confirm a freshly generated authenticator secret with a live code.
          */
@@ -2332,6 +2998,32 @@ export interface components {
          */
         ApplicationVersionType: "alpha" | "beta" | "stable" | "dev";
         /**
+         * AssertionTypeCategory
+         * @description Family of a step assertion.
+         * @enum {string}
+         */
+        AssertionTypeCategory: "browser" | "database";
+        /**
+         * AssertionTypeItem
+         * @description A catalogued step assertion and the shape of its parameters.
+         */
+        AssertionTypeItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Parameterschema */
+            parameterSchema: {
+                [key: string]: unknown;
+            };
+            /** Slug */
+            slug: string;
+            type: components["schemas"]["AssertionTypeCategory"];
+        };
+        /**
          * AuthResponse
          * @description Login / SSO result.
          *
@@ -2500,6 +3192,44 @@ export interface components {
             type: components["schemas"]["FeatureType"];
         };
         /**
+         * FeatureJourneyCreateForm
+         * @description Link an existing account journey to a feature.
+         */
+        FeatureJourneyCreateForm: {
+            /**
+             * Journeyid
+             * Format: uuid
+             * @description An existing journey of the same account.
+             */
+            journeyId: string;
+        };
+        /**
+         * FeatureJourneyItem
+         * @description A journey linked to a feature.
+         */
+        FeatureJourneyItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Journeyid
+             * Format: uuid
+             */
+            journeyId: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+        };
+        /**
          * FeaturePatchForm
          * @description Partial update of a feature — only the keys sent are applied.
          */
@@ -2612,6 +3342,10 @@ export interface components {
         ItemResponse_AccountUserItem_: {
             item: components["schemas"]["AccountUserItem"];
         };
+        /** ItemResponse[ActionTypeItem] */
+        ItemResponse_ActionTypeItem_: {
+            item: components["schemas"]["ActionTypeItem"];
+        };
         /** ItemResponse[ApplicationEnvironmentItem] */
         ItemResponse_ApplicationEnvironmentItem_: {
             item: components["schemas"]["ApplicationEnvironmentItem"];
@@ -2632,6 +3366,10 @@ export interface components {
         ItemResponse_ApplicationVersionItem_: {
             item: components["schemas"]["ApplicationVersionItem"];
         };
+        /** ItemResponse[AssertionTypeItem] */
+        ItemResponse_AssertionTypeItem_: {
+            item: components["schemas"]["AssertionTypeItem"];
+        };
         /** ItemResponse[FeatureFileItem] */
         ItemResponse_FeatureFileItem_: {
             item: components["schemas"]["FeatureFileItem"];
@@ -2639,6 +3377,30 @@ export interface components {
         /** ItemResponse[FeatureItem] */
         ItemResponse_FeatureItem_: {
             item: components["schemas"]["FeatureItem"];
+        };
+        /** ItemResponse[FeatureJourneyItem] */
+        ItemResponse_FeatureJourneyItem_: {
+            item: components["schemas"]["FeatureJourneyItem"];
+        };
+        /** ItemResponse[JourneyItem] */
+        ItemResponse_JourneyItem_: {
+            item: components["schemas"]["JourneyItem"];
+        };
+        /** ItemResponse[JourneyScenarioItem] */
+        ItemResponse_JourneyScenarioItem_: {
+            item: components["schemas"]["JourneyScenarioItem"];
+        };
+        /** ItemResponse[JourneyScenarioStepAssertionItem] */
+        ItemResponse_JourneyScenarioStepAssertionItem_: {
+            item: components["schemas"]["JourneyScenarioStepAssertionItem"];
+        };
+        /** ItemResponse[JourneyScenarioStepFileItem] */
+        ItemResponse_JourneyScenarioStepFileItem_: {
+            item: components["schemas"]["JourneyScenarioStepFileItem"];
+        };
+        /** ItemResponse[JourneyScenarioStepItem] */
+        ItemResponse_JourneyScenarioStepItem_: {
+            item: components["schemas"]["JourneyScenarioStepItem"];
         };
         /** ItemResponse[MeInvitationItem] */
         ItemResponse_MeInvitationItem_: {
@@ -2659,6 +3421,10 @@ export interface components {
         /** ItemResponse[OtpProvisioningItem] */
         ItemResponse_OtpProvisioningItem_: {
             item: components["schemas"]["OtpProvisioningItem"];
+        };
+        /** ItemResponse[PersonaItem] */
+        ItemResponse_PersonaItem_: {
+            item: components["schemas"]["PersonaItem"];
         };
         /** ItemResponse[RecoveryCodesItem] */
         ItemResponse_RecoveryCodesItem_: {
@@ -2684,6 +3450,382 @@ export interface components {
         ItemResponse_U2FRegistrationOptionsItem_: {
             item: components["schemas"]["U2FRegistrationOptionsItem"];
         };
+        /**
+         * JourneyCreateForm
+         * @description Create a journey. It starts as a draft owned by the caller.
+         */
+        JourneyCreateForm: {
+            type: components["schemas"]["JourneyType"];
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Personasids */
+            personasIds?: string[];
+        };
+        /**
+         * JourneyItem
+         * @description A user journey tracked inside an account.
+         */
+        JourneyItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Personasids */
+            personasIds: string[];
+            status: components["schemas"]["JourneyStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["JourneyType"];
+        };
+        /**
+         * JourneyPatchForm
+         * @description Partial update of a journey — only the keys sent are applied.
+         */
+        JourneyPatchForm: {
+            type?: components["schemas"]["JourneyType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Personasids */
+            personasIds?: string[] | null;
+        };
+        /**
+         * JourneyScenarioCreateForm
+         * @description Create a scenario. It starts as a draft owned by the caller.
+         */
+        JourneyScenarioCreateForm: {
+            type: components["schemas"]["JourneyScenarioType"];
+            /** Personasids */
+            personasIds?: string[];
+            /** Title */
+            title: string;
+            criticity: components["schemas"]["JourneyScenarioCriticity"];
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * JourneyScenarioCriticity
+         * @enum {string}
+         */
+        JourneyScenarioCriticity: "low" | "medium" | "high" | "critical";
+        /**
+         * JourneyScenarioItem
+         * @description A scenario inside a journey.
+         */
+        JourneyScenarioItem: {
+            criticity: components["schemas"]["JourneyScenarioCriticity"];
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Personasids */
+            personasIds: string[];
+            status: components["schemas"]["JourneyScenarioStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["JourneyScenarioType"];
+        };
+        /**
+         * JourneyScenarioPatchForm
+         * @description Partial update of a scenario — only the keys sent are applied.
+         */
+        JourneyScenarioPatchForm: {
+            type?: components["schemas"]["JourneyScenarioType"] | null;
+            /** Personasids */
+            personasIds?: string[] | null;
+            /** Title */
+            title?: string | null;
+            criticity?: components["schemas"]["JourneyScenarioCriticity"] | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * JourneyScenarioStatus
+         * @enum {string}
+         */
+        JourneyScenarioStatus: "draft" | "active" | "archived";
+        /**
+         * JourneyScenarioStepAssertionCreateForm
+         * @description Attach an assertion to a step. Starts as a draft owned by the caller.
+         */
+        JourneyScenarioStepAssertionCreateForm: {
+            /**
+             * Assertiontypeid
+             * Format: uuid
+             */
+            assertionTypeId: string;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * JourneyScenarioStepAssertionItem
+         * @description An assertion carried by a step.
+         */
+        JourneyScenarioStepAssertionItem: {
+            /**
+             * Assertiontypeid
+             * Format: uuid
+             */
+            assertionTypeId: string;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            status: components["schemas"]["JourneyScenarioStepAssertionStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+        };
+        /**
+         * JourneyScenarioStepAssertionPatchForm
+         * @description Partial update of an assertion — only the keys sent are applied.
+         */
+        JourneyScenarioStepAssertionPatchForm: {
+            /** Assertiontypeid */
+            assertionTypeId?: string | null;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * JourneyScenarioStepAssertionStatus
+         * @enum {string}
+         */
+        JourneyScenarioStepAssertionStatus: "draft" | "active" | "archived";
+        /**
+         * JourneyScenarioStepCreateForm
+         * @description Create a step inside a scenario.
+         */
+        JourneyScenarioStepCreateForm: {
+            /** Parentjourneyscenariostepid */
+            parentJourneyScenarioStepId?: string | null;
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Actiontypeid */
+            actionTypeId?: string | null;
+            /**
+             * Optional
+             * @default false
+             */
+            optional: boolean;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * JourneyScenarioStepFileItem
+         * @description A file attached to a step.
+         *
+         *     `download_url` is a time-limited link, resolved by the manager only on the
+         *     single-file read.
+         */
+        JourneyScenarioStepFileItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Downloadurl */
+            downloadUrl?: string | null;
+            /** Fileextension */
+            fileExtension: string;
+            /** Filename */
+            fileName: string;
+            /** Filesize */
+            fileSize: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["JourneyScenarioStepFileStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            type: components["schemas"]["JourneyScenarioStepFileType"];
+        };
+        /**
+         * JourneyScenarioStepFilePatchForm
+         * @description Partial update of a step file's metadata.
+         */
+        JourneyScenarioStepFilePatchForm: {
+            type?: components["schemas"]["JourneyScenarioStepFileType"] | null;
+            /** Name */
+            name?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * JourneyScenarioStepFileStatus
+         * @enum {string}
+         */
+        JourneyScenarioStepFileStatus: "uploaded" | "archived";
+        /**
+         * JourneyScenarioStepFileType
+         * @enum {string}
+         */
+        JourneyScenarioStepFileType: "screenshot" | "video" | "document" | "input" | "other";
+        /**
+         * JourneyScenarioStepItem
+         * @description A step inside a scenario (nodes form a tree via `parentId`).
+         */
+        JourneyScenarioStepItem: {
+            /** Actiontypeid */
+            actionTypeId?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Optional */
+            optional: boolean;
+            /** Parameters */
+            parameters: {
+                [key: string]: unknown;
+            };
+            /** Parentjourneyscenariostepid */
+            parentJourneyScenarioStepId?: string | null;
+            /** Title */
+            title: string;
+        };
+        /**
+         * JourneyScenarioStepPatchForm
+         * @description Partial update of a step — only the keys sent are applied.
+         */
+        JourneyScenarioStepPatchForm: {
+            /** Parentjourneyscenariostepid */
+            parentJourneyScenarioStepId?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Actiontypeid */
+            actionTypeId?: string | null;
+            /** Optional */
+            optional?: boolean | null;
+            /** Parameters */
+            parameters?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * JourneyScenarioType
+         * @enum {string}
+         */
+        JourneyScenarioType: "nominal" | "alternative" | "error" | "edge_case";
+        /**
+         * JourneySortField
+         * @description Sortable columns for the journeys listing.
+         * @enum {string}
+         */
+        JourneySortField: "date" | "title" | "status" | "type";
+        /**
+         * JourneyStatus
+         * @enum {string}
+         */
+        JourneyStatus: "draft" | "active" | "archived";
+        /**
+         * JourneyType
+         * @enum {string}
+         */
+        JourneyType: "business" | "customer" | "internal" | "other";
         /**
          * Language
          * @description User interface / communication language (BCP 47 tags).
@@ -2719,6 +3861,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["AccountUserItem"][];
+        };
+        /** ListingResponse[ActionTypeItem] */
+        ListingResponse_ActionTypeItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ActionTypeItem"][];
         };
         /** ListingResponse[ApplicationEnvironmentItem] */
         ListingResponse_ApplicationEnvironmentItem_: {
@@ -2770,6 +3922,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["ApplicationVersionItem"][];
         };
+        /** ListingResponse[AssertionTypeItem] */
+        ListingResponse_AssertionTypeItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["AssertionTypeItem"][];
+        };
         /** ListingResponse[FeatureFileItem] */
         ListingResponse_FeatureFileItem_: {
             /** Count */
@@ -2789,6 +3951,66 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["FeatureItem"][];
+        };
+        /** ListingResponse[FeatureJourneyItem] */
+        ListingResponse_FeatureJourneyItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["FeatureJourneyItem"][];
+        };
+        /** ListingResponse[JourneyItem] */
+        ListingResponse_JourneyItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyItem"][];
+        };
+        /** ListingResponse[JourneyScenarioItem] */
+        ListingResponse_JourneyScenarioItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioItem"][];
+        };
+        /** ListingResponse[JourneyScenarioStepAssertionItem] */
+        ListingResponse_JourneyScenarioStepAssertionItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioStepAssertionItem"][];
+        };
+        /** ListingResponse[JourneyScenarioStepFileItem] */
+        ListingResponse_JourneyScenarioStepFileItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioStepFileItem"][];
+        };
+        /** ListingResponse[JourneyScenarioStepItem] */
+        ListingResponse_JourneyScenarioStepItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioStepItem"][];
         };
         /** ListingResponse[MeInvitationItem] */
         ListingResponse_MeInvitationItem_: {
@@ -2819,6 +4041,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["OtpMethodItem"][];
+        };
+        /** ListingResponse[PersonaItem] */
+        ListingResponse_PersonaItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["PersonaItem"][];
         };
         /** ListingResponse[SecurityKeyItem] */
         ListingResponse_SecurityKeyItem_: {
@@ -3165,6 +4397,72 @@ export interface components {
             /** Max */
             max: number;
         };
+        /**
+         * PersonaCreateForm
+         * @description Create a persona. It starts as a draft.
+         */
+        PersonaCreateForm: {
+            type: components["schemas"]["PersonaType"];
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * PersonaItem
+         * @description A persona tracked inside an account.
+         */
+        PersonaItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["PersonaStatus"];
+            /** Title */
+            title: string;
+            type: components["schemas"]["PersonaType"];
+        };
+        /**
+         * PersonaPatchForm
+         * @description Partial update of a persona — only the keys sent are applied.
+         */
+        PersonaPatchForm: {
+            type?: components["schemas"]["PersonaType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * PersonaSortField
+         * @description Sortable columns for the personas listing.
+         * @enum {string}
+         */
+        PersonaSortField: "date" | "title" | "status" | "type";
+        /**
+         * PersonaStatus
+         * @enum {string}
+         */
+        PersonaStatus: "draft" | "active" | "archived";
+        /**
+         * PersonaType
+         * @enum {string}
+         */
+        PersonaType: "customer" | "business" | "internal" | "other";
         /**
          * RecoveryCodesItem
          * @description One-time recovery codes — displayed once, never retrievable again.
@@ -3543,13 +4841,18 @@ export interface components {
             /** Scope */
             scope?: string | null;
         };
-        /** Body_api.features.files.create */
-        create: {
+        /** Body_api.accounts.setPicture */
+        fastapi___compat__v2__Body_api__accounts__setPicture: {
             /** File */
             file: string;
         };
-        /** Body_api.accounts.setPicture */
-        fastapi___compat__v2__Body_api__accounts__setPicture: {
+        /** Body_api.features.files.create */
+        fastapi___compat__v2__Body_api__features__files__create: {
+            /** File */
+            file: string;
+        };
+        /** Body_api.journeys.scenarios.steps.files.create */
+        fastapi___compat__v2__Body_api__journeys__scenarios__steps__files__create: {
             /** File */
             file: string;
         };
@@ -6842,7 +8145,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["create"];
+                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__features__files__create"];
             };
         };
         responses: {
@@ -7140,6 +8443,2445 @@ export interface operations {
                 };
             };
             /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.journeys.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_FeatureJourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature, journey or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.journeys.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeatureJourneyCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureJourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature, journey or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.journeys.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_journey_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureJourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature, journey or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.journeys.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_journey_id: string;
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature, journey or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.list": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["PersonaStatus"][] | null;
+                type?: components["schemas"]["PersonaType"][] | null;
+                sortBy?: components["schemas"]["PersonaSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonaCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonaPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.personas.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.list": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["JourneyStatus"][] | null;
+                type?: components["schemas"]["JourneyType"][] | null;
+                sortBy?: components["schemas"]["JourneySortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the action schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+                step_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the action schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__journeys__scenarios__steps__files__create"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description The uploaded file is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description File too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_file_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_file_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_file_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepFilePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_file_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.files.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_file_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepAssertionCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the assertion schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                assertion_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assertion_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assertion_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyScenarioStepAssertionPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the assertion schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assertion_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.assertions.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assertion_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.core.actionTypes.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ActionTypeItem_"];
+                };
+            };
+        };
+    };
+    "api.core.actionTypes.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                action_type_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ActionTypeItem_"];
+                };
+            };
+            /** @description Action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.core.assertionTypes.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_AssertionTypeItem_"];
+                };
+            };
+        };
+    };
+    "api.core.assertionTypes.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assertion_type_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AssertionTypeItem_"];
+                };
+            };
+            /** @description Assertion type not found */
             404: {
                 headers: {
                     [name: string]: unknown;
