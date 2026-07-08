@@ -1,5 +1,6 @@
-import { Card, Typography } from "antd";
+import { Card, Flex, Typography } from "antd";
 import type { ReactNode } from "react";
+import { Logo } from "@/components/logo";
 
 interface AuthCardProps {
   title: string;
@@ -16,6 +17,9 @@ export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
       variant="borderless"
     >
       <div className="mb-6 text-center">
+        <Flex justify="center" style={{ marginBottom: 16 }}>
+          <Logo size={44} />
+        </Flex>
         <Typography.Title level={4} style={{ marginBottom: 4 }}>
           {title}
         </Typography.Title>

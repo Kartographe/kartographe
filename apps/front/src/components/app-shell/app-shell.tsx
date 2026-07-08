@@ -6,6 +6,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { Link, Outlet } from "@tanstack/react-router";
 import { Avatar, Dropdown, Flex, Layout, Typography } from "antd";
+import { Logo } from "@/components/logo";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
 import { emitSessionExpired } from "@/lib/auth/auth-events";
 import { clearSession } from "@/lib/auth/token-storage";
@@ -36,8 +37,11 @@ export function AppShell() {
         }}
       >
         <Flex align="center" gap={24}>
-          <Link style={{ fontSize: 18, fontWeight: 700 }} to="/">
-            Kartographe
+          <Link to="/">
+            <Flex align="center" gap={10}>
+              <Logo size={30} />
+              <span style={{ fontSize: 18, fontWeight: 700 }}>Kartographe</span>
+            </Flex>
           </Link>
         </Flex>
         <Dropdown

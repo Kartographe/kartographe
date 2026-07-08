@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { Outlet } from "@tanstack/react-router";
-import { Segmented, Typography } from "antd";
+import { Flex, Segmented, Typography } from "antd";
+import { Logo } from "@/components/logo";
 import { type ThemeMode, useThemeStore } from "@/lib/theme/theme-store";
 
 /**
@@ -21,9 +22,12 @@ export function AuthLayout() {
             "linear-gradient(135deg, #4f46e5 0%, #6d3ad8 55%, #7c5cf0 100%)",
         }}
       >
-        <Typography.Title level={3} style={{ color: "#fff", margin: 0 }}>
-          Kartographe
-        </Typography.Title>
+        <Flex align="center" gap={12}>
+          <Logo size={40} />
+          <Typography.Title level={3} style={{ color: "#fff", margin: 0 }}>
+            Kartographe
+          </Typography.Title>
+        </Flex>
         <div className="max-w-md">
           <Typography.Title level={2} style={{ color: "#fff" }}>
             {t`Cartographiez, pilotez, gardez le cap.`}
