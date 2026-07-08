@@ -1,20 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { AccountDetail } from "@/features/accounts/account-detail";
 import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 
 export const Route = createFileRoute("/_app/accounts/$accountId")({
-  component: AccountWorkspaceRoute,
+  component: AccountWorkspaceLayout,
 });
 
-function AccountWorkspaceRoute() {
+function AccountWorkspaceLayout() {
   const { accountId } = Route.useParams();
   const setActiveId = useActiveAccountStore((state) => state.setAccountId);
 
-  // Keep the sidebar switcher in sync with the account being viewed.
+  // Keep the sidebar switcher + nav in sync with the account being viewed.
   useEffect(() => {
     setActiveId(accountId);
   }, [accountId, setActiveId]);
 
-  return <AccountDetail accountId={accountId} />;
+  return <Outlet />;
 }

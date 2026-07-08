@@ -13,3 +13,9 @@ body,
 body {
   margin: 0;
 }
+
+/* User menu popover: the menu supplies its own spacing — drop the inner
+   padding so items reach the edges. */
+.km-user-popover .ant-popover-inner {
+  padding: 0;
+}

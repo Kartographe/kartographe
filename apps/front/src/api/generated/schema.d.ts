@@ -13,7 +13,7 @@ export interface paths {
         };
         /**
          * List my accounts
-         * @description List the workspaces the signed-in user is an active member of, with their role in each.
+         * @description List the workspaces the signed-in user is an active member of, with their role in each. Filter by account status and/or membership role (repeat the query param for multiple values), sort by name/createdDate/status/role, and page through results.
          */
         get: operations["api.accounts.list"];
         put?: never;
@@ -54,6 +54,26 @@ export interface paths {
          * @description Partially update a workspace (name, language, time zone). Owners and administrators only.
          */
         patch: operations["api.accounts.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/picture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the account logo
+         * @description Upload the account logo (multipart, field `file`). The image is center-cropped to a square and resized server-side; the previous logo is replaced. Owners and administrators only.
+         */
+        post: operations["api.accounts.setPicture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/activate": {
@@ -1208,6 +1228,12 @@ export interface components {
             timeZone?: string | null;
         };
         /**
+         * AccountSortField
+         * @description Sortable columns for the accounts listing.
+         * @enum {string}
+         */
+        AccountSortField: "name" | "created_date" | "status" | "role";
+        /**
          * AccountStatus
          * @description Lifecycle of an account (workspace).
          * @enum {string}
@@ -1900,6 +1926,12 @@ export interface components {
             secret: string;
         };
         /**
+         * PageLimit
+         * @description Allowed page sizes — the front offers exactly these.
+         * @enum {integer}
+         */
+        PageLimit: 10 | 25 | 50 | 100;
+        /**
          * Pagination
          * @description Page cursor for a listing: 1-based, clamped to `[min, max]`.
          */
@@ -2068,6 +2100,11 @@ export interface components {
             /** Twofactorenabled */
             twoFactorEnabled: boolean;
         };
+        /**
+         * SortOrder
+         * @enum {string}
+         */
+        SortOrder: "asc" | "desc";
         /**
          * SuccessResponse
          * @description Body of an action endpoint that has nothing to return but success.
@@ -2287,6 +2324,16 @@ export interface components {
             /** Scope */
             scope?: string | null;
         };
+        /** Body_api.accounts.setPicture */
+        fastapi___compat__v2__Body_api__accounts__setPicture: {
+            /** File */
+            file: string;
+        };
+        /** Body_api.me.setPicture */
+        fastapi___compat__v2__Body_api__me__setPicture: {
+            /** File */
+            file: string;
+        };
         /** Body_api.mcp.oauth.revoke */
         revoke: {
             /** Token */
@@ -2297,11 +2344,6 @@ export interface components {
             token_type_hint?: string | null;
             /** Client Secret */
             client_secret?: string | null;
-        };
-        /** Body_api.me.setPicture */
-        setPicture: {
-            /** File */
-            file: string;
         };
         /** Body_api.mcp.oauth.token */
         token: {
@@ -2334,7 +2376,12 @@ export interface operations {
     "api.accounts.list": {
         parameters: {
             query?: {
-                role?: components["schemas"]["AccountUserRole"] | null;
+                status?: components["schemas"]["AccountStatus"][] | null;
+                role?: components["schemas"]["AccountUserRole"][] | null;
+                sortBy?: components["schemas"]["AccountSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
             };
             header?: never;
             path?: never;
@@ -2535,6 +2582,77 @@ export interface operations {
             };
             /** @description Account not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.setPicture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__accounts__setPicture"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountItem_"];
+                };
+            };
+            /** @description Unsupported image format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Image too large */
+            413: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3942,7 +4060,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["setPicture"];
+                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__me__setPicture"];
             };
         };
         responses: {

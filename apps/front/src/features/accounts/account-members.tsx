@@ -91,6 +91,7 @@ export function AccountMembers({
         {
           title: t`Membre`,
           dataIndex: ["user", "email"],
+          sorter: (a, b) => a.user.email.localeCompare(b.user.email),
           render: (_, member) => {
             const name = [member.user.firstName, member.user.lastName]
               .filter(Boolean)
@@ -115,6 +116,11 @@ export function AccountMembers({
         {
           title: t`Rôle`,
           dataIndex: "role",
+          filters: dtoEnums.AccountUserRole.map((value) => ({
+            text: t(ROLE_LABELS[value]),
+            value,
+          })),
+          onFilter: (value, member) => member.role === value,
           render: (role: Role, member) => {
             const canEdit =
               isAdmin &&
@@ -138,6 +144,11 @@ export function AccountMembers({
         {
           title: t`Type`,
           dataIndex: "type",
+          filters: [
+            { text: t(MEMBERSHIP_TYPE_LABELS.creator), value: "creator" },
+            { text: t(MEMBERSHIP_TYPE_LABELS.guest), value: "guest" },
+          ],
+          onFilter: (value, member) => member.type === value,
           render: (type: Member["type"]) => t(MEMBERSHIP_TYPE_LABELS[type]),
         },
         {
@@ -164,7 +175,12 @@ export function AccountMembers({
       ]}
       dataSource={members}
       loading={membersQuery.isLoading}
-      pagination={false}
+      pagination={{
+        defaultPageSize: 25,
+        hideOnSinglePage: true,
+        pageSizeOptions: [10, 25, 50, 100],
+        showSizeChanger: true,
+      }}
       rowKey="id"
       size="small"
     />

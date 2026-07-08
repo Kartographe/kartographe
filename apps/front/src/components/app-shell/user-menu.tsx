@@ -1,6 +1,7 @@
 import {
   DesktopOutlined,
   LogoutOutlined,
+  MailOutlined,
   MoonOutlined,
   SafetyOutlined,
   SunOutlined,
@@ -10,6 +11,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Avatar,
+  Badge,
   Divider,
   Flex,
   Menu,
@@ -19,6 +21,7 @@ import {
 } from "antd";
 import { useState } from "react";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
+import { usePendingInvitationsCount } from "@/features/accounts/use-pending-invitations";
 import { emitSessionExpired } from "@/lib/auth/auth-events";
 import { clearSession } from "@/lib/auth/token-storage";
 import { env } from "@/lib/env/env";
@@ -50,11 +53,12 @@ export function UserMenu({ collapsed }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const mode = useThemeStore((state) => state.mode);
   const setMode = useThemeStore((state) => state.setMode);
+  const pendingInvitations = usePendingInvitationsCount();
 
   const displayName =
     [me?.firstName, me?.lastName].filter(Boolean).join(" ") || me?.email || "";
 
-  function go(to: "/me" | "/me/security") {
+  function go(to: "/me" | "/me/security" | "/me/invitations") {
     navigate({ to });
     setOpen(false);
   }
@@ -74,6 +78,19 @@ export function UserMenu({ collapsed }: UserMenuProps) {
             icon: <UserOutlined />,
             label: t`Mon compte`,
             onClick: () => go("/me"),
+          },
+          {
+            key: "invitations",
+            icon: <MailOutlined />,
+            label: (
+              <Flex align="center" gap={8} justify="space-between">
+                <span>{t`Invitations`}</span>
+                {pendingInvitations > 0 ? (
+                  <Badge count={pendingInvitations} size="small" />
+                ) : null}
+              </Flex>
+            ),
+            onClick: () => go("/me/invitations"),
           },
           {
             key: "security",
@@ -133,6 +150,7 @@ export function UserMenu({ collapsed }: UserMenuProps) {
       onOpenChange={setOpen}
       open={open}
       placement="rightBottom"
+      rootClassName="km-user-popover"
       styles={{ content: { padding: 0 } }}
       trigger="click"
     >
@@ -146,13 +164,15 @@ export function UserMenu({ collapsed }: UserMenuProps) {
           padding: 8,
         }}
       >
-        <Avatar
-          icon={<UserOutlined />}
-          size={collapsed ? 32 : 36}
-          src={me?.pictureProfile ?? undefined}
-        >
-          {initials(me?.firstName, me?.lastName, me?.email)}
-        </Avatar>
+        <Badge dot={pendingInvitations > 0} offset={[-2, 2]}>
+          <Avatar
+            icon={<UserOutlined />}
+            size={collapsed ? 32 : 36}
+            src={me?.pictureProfile ?? undefined}
+          >
+            {initials(me?.firstName, me?.lastName, me?.email)}
+          </Avatar>
+        </Badge>
         {collapsed ? null : (
           <Flex style={{ minWidth: 0 }} vertical>
             <Typography.Text ellipsis strong>

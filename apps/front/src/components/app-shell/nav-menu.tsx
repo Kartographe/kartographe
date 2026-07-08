@@ -1,56 +1,149 @@
-import { DashboardOutlined } from "@ant-design/icons";
+import { ControlOutlined, DashboardOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { Menu } from "antd";
-import type { ItemType } from "antd/es/menu/interface";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Tooltip } from "antd";
+import type { ReactNode } from "react";
+import { $api } from "@/api/$api";
+import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 
-/**
- * Pick the menu key that best matches the current path: longest-prefix wins, and
- * the home key `/` matches only exactly (otherwise it would match everything).
- */
-function activeKey(pathname: string, keys: string[]): string | undefined {
-  const sorted = [...keys].sort((a, b) => b.length - a.length);
-  for (const key of sorted) {
-    if (key === "/") {
-      if (pathname === "/") {
-        return key;
-      }
-      continue;
-    }
-    if (pathname === key || pathname.startsWith(`${key}/`)) {
-      return key;
-    }
-  }
-  return undefined;
+interface NavItem {
+  to: string;
+  params?: Record<string, string>;
+  label: string;
+  icon: ReactNode;
+  exact?: boolean;
 }
 
-export function NavMenu() {
+function isActive(item: NavItem, resolved: string, pathname: string): boolean {
+  if (item.exact) {
+    return pathname === resolved;
+  }
+  return pathname === resolved || pathname.startsWith(`${resolved}/`);
+}
+
+function NavLink({
+  item,
+  pathname,
+  collapsed,
+}: {
+  item: NavItem;
+  pathname: string;
+  collapsed: boolean;
+}) {
+  const resolved = item.params
+    ? Object.entries(item.params).reduce(
+        (path, [key, value]) => path.replace(`$${key}`, value),
+        item.to
+      )
+    : item.to;
+  const active = isActive(item, resolved, pathname);
+  const link = (
+    <Link
+      params={item.params}
+      style={{
+        alignItems: "center",
+        background: active ? "var(--ant-color-primary-bg)" : "transparent",
+        borderRadius: 8,
+        color: active ? "var(--ant-color-primary)" : "var(--ant-color-text)",
+        display: "flex",
+        fontWeight: active ? 600 : 400,
+        gap: 10,
+        justifyContent: collapsed ? "center" : "flex-start",
+        padding: "8px 12px",
+      }}
+      to={item.to}
+    >
+      {item.icon}
+      {collapsed ? null : item.label}
+    </Link>
+  );
+  return collapsed ? (
+    <Tooltip placement="right" title={item.label}>
+      {link}
+    </Tooltip>
+  ) : (
+    link
+  );
+}
+
+export function NavMenu({ collapsed }: { collapsed: boolean }) {
   const { t } = useLingui();
-  const navigate = useNavigate();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
+  const activeId = useActiveAccountStore((state) => state.accountId);
 
-  const items: ItemType[] = [
+  const accountQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}",
+    { params: { path: { account_id: activeId ?? "" } } },
+    { enabled: !!activeId }
+  );
+  const role = accountQuery.data?.item.membership?.role;
+  const isAdmin = role === "owner" || role === "administrator";
+
+  // No account selected → empty nav (only the bottom user section shows).
+  if (!activeId) {
+    return <nav style={{ height: "100%" }} />;
+  }
+
+  const topItems: NavItem[] = [
     {
-      key: "/",
-      icon: <DashboardOutlined />,
+      to: "/accounts/$accountId",
+      params: { accountId: activeId },
       label: t`Tableau de bord`,
-      onClick: () => navigate({ to: "/" }),
+      icon: <DashboardOutlined />,
+      exact: true,
     },
   ];
-
-  const keys = items
-    .map((item) => (item && "key" in item ? String(item.key) : ""))
-    .filter(Boolean);
-  const selected = activeKey(pathname, keys);
+  const bottomItems: NavItem[] = isAdmin
+    ? [
+        {
+          to: "/accounts/$accountId/administration",
+          params: { accountId: activeId },
+          label: t`Administration`,
+          icon: <ControlOutlined />,
+        },
+      ]
+    : [];
 
   return (
-    <Menu
-      className="!border-r-0 !bg-transparent"
-      items={items}
-      mode="inline"
-      selectedKeys={selected ? [selected] : []}
-    />
+    <nav
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 4,
+        height: "100%",
+        padding: 8,
+      }}
+    >
+      {topItems.map((item) => (
+        <NavLink
+          collapsed={collapsed}
+          item={item}
+          key={item.to}
+          pathname={pathname}
+        />
+      ))}
+      {bottomItems.length > 0 ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            marginTop: "auto",
+          }}
+        >
+          {bottomItems.map((item) => (
+            <NavLink
+              collapsed={collapsed}
+              item={item}
+              key={item.to}
+              pathname={pathname}
+            />
+          ))}
+        </div>
+      ) : null}
+    </nav>
   );
 }

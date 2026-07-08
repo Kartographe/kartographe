@@ -7,6 +7,7 @@ import type { components } from "@/api/generated/schema";
 type S = components["schemas"];
 
 export const dtoEnums = {
+  AccountSortField: ["name", "created_date", "status", "role"] as const satisfies readonly S["AccountSortField"][],
   AccountStatus: ["active", "disabled", "blocked"] as const satisfies readonly S["AccountStatus"][],
   AccountUserInvitationStatus: ["standby", "accepted", "refused", "expired", "cancelled"] as const satisfies readonly S["AccountUserInvitationStatus"][],
   AccountUserInvitationType: ["simple"] as const satisfies readonly S["AccountUserInvitationType"][],
@@ -16,6 +17,7 @@ export const dtoEnums = {
   Language: ["fr-FR", "en-GB", "es-ES", "de-DE", "it-IT"] as const satisfies readonly S["Language"][],
   McpAuthorizationFlowType: ["device", "authorization_code"] as const satisfies readonly S["McpAuthorizationFlowType"][],
   McpGrantScope: ["read", "write"] as const satisfies readonly S["McpGrantScope"][],
+  SortOrder: ["asc", "desc"] as const satisfies readonly S["SortOrder"][],
   UserAuthenticationLogStatus: ["success", "error", "forbidden"] as const satisfies readonly S["UserAuthenticationLogStatus"][],
   UserAuthenticationLogType: ["register", "activate", "activation_link", "email_password", "google_oauth", "two_factor_otp", "two_factor_u2f", "two_factor_recovery_code", "refresh_token", "forgot_password", "reset_password", "access"] as const satisfies readonly S["UserAuthenticationLogType"][],
   UserAuthenticationTwoFactorType: ["otp", "recovery_code", "u2f"] as const satisfies readonly S["UserAuthenticationTwoFactorType"][],

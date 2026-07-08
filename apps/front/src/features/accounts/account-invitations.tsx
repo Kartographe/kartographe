@@ -6,8 +6,10 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { dtoEnums } from "@/api/generated/schema.enums";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
 import { InviteMembersModal } from "@/features/accounts/invite-members-modal";
+import { INVITATION_STATUS_LABELS } from "@/features/accounts/labels";
 import { InvitationStatusTag } from "@/features/accounts/status-tags";
 
 type Invitation = components["schemas"]["AccountInvitationItem"];
@@ -97,6 +99,7 @@ export function AccountInvitations({
             {
               title: t`Email`,
               dataIndex: "email",
+              sorter: (a, b) => a.email.localeCompare(b.email),
               render: (email: string) => (
                 <Typography.Text>{email}</Typography.Text>
               ),
@@ -111,6 +114,11 @@ export function AccountInvitations({
             {
               title: t`Statut`,
               dataIndex: "status",
+              filters: dtoEnums.AccountUserInvitationStatus.map((value) => ({
+                text: t(INVITATION_STATUS_LABELS[value]),
+                value,
+              })),
+              onFilter: (value, invitation) => invitation.status === value,
               render: (status: Invitation["status"]) => (
                 <InvitationStatusTag status={status} />
               ),
@@ -118,6 +126,9 @@ export function AccountInvitations({
             {
               title: t`Expire le`,
               dataIndex: "expireDate",
+              sorter: (a, b) =>
+                new Date(a.expireDate ?? 0).getTime() -
+                new Date(b.expireDate ?? 0).getTime(),
               render: (value: string | null) =>
                 value ? dayjs(value).format("DD/MM/YYYY") : "—",
             },
@@ -151,7 +162,12 @@ export function AccountInvitations({
           ]}
           dataSource={invitations}
           loading={invitationsQuery.isLoading}
-          pagination={false}
+          pagination={{
+            defaultPageSize: 25,
+            hideOnSinglePage: true,
+            pageSizeOptions: [10, 25, 50, 100],
+            showSizeChanger: true,
+          }}
           rowKey="id"
           size="small"
         />

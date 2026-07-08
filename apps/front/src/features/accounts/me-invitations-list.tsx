@@ -4,7 +4,9 @@ import { Button, Empty, Flex, Space, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { dtoEnums } from "@/api/generated/schema.enums";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
+import { INVITATION_STATUS_LABELS } from "@/features/accounts/labels";
 import { InvitationStatusTag } from "@/features/accounts/status-tags";
 
 type Invitation = components["schemas"]["MeInvitationItem"];
@@ -83,6 +85,10 @@ export function MeInvitationsList() {
             {
               title: t`Reçue le`,
               dataIndex: "date",
+              sorter: (a, b) =>
+                new Date(a.date ?? 0).getTime() -
+                new Date(b.date ?? 0).getTime(),
+              defaultSortOrder: "descend",
               render: (value: string | null) =>
                 value ? dayjs(value).format("DD/MM/YYYY") : "—",
             },
@@ -95,6 +101,11 @@ export function MeInvitationsList() {
             {
               title: t`Statut`,
               dataIndex: "status",
+              filters: dtoEnums.AccountUserInvitationStatus.map((value) => ({
+                text: t(INVITATION_STATUS_LABELS[value]),
+                value,
+              })),
+              onFilter: (value, invitation) => invitation.status === value,
               render: (status: Invitation["status"]) => (
                 <InvitationStatusTag status={status} />
               ),
@@ -125,7 +136,12 @@ export function MeInvitationsList() {
           ]}
           dataSource={invitations}
           loading={pending}
-          pagination={false}
+          pagination={{
+            defaultPageSize: 25,
+            hideOnSinglePage: true,
+            pageSizeOptions: [10, 25, 50, 100],
+            showSizeChanger: true,
+          }}
           rowKey="id"
           size="small"
         />

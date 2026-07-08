@@ -31,8 +31,15 @@ import { Route as AppMeSecurityRouteImport } from './routes/_app/me/security'
 import { Route as AppMeMcpRouteImport } from './routes/_app/me/mcp'
 import { Route as AppMeLogsRouteImport } from './routes/_app/me/logs'
 import { Route as AppMeInvitationsRouteImport } from './routes/_app/me/invitations'
-import { Route as AppAccountsAccountIdRouteImport } from './routes/_app/accounts/$accountId'
+import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/accounts/$accountId/route'
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
+import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
+import { Route as AppAccountsAccountIdAdministrationRouteRouteImport } from './routes/_app/accounts/$accountId/administration/route'
+import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
+import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
+import { Route as AppAccountsAccountIdAdministrationInvitationsRouteImport } from './routes/_app/accounts/$accountId/administration/invitations'
+import { Route as AppAccountsAccountIdAdministrationInformationRouteImport } from './routes/_app/accounts/$accountId/administration/information'
+import { Route as AppAccountsAccountIdAdministrationAdvancedRouteImport } from './routes/_app/accounts/$accountId/administration/advanced'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -143,16 +150,59 @@ const AppMeInvitationsRoute = AppMeInvitationsRouteImport.update({
   path: '/invitations',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
-const AppAccountsAccountIdRoute = AppAccountsAccountIdRouteImport.update({
-  id: '/accounts/$accountId',
-  path: '/accounts/$accountId',
-  getParentRoute: () => AppRoute,
-} as any)
+const AppAccountsAccountIdRouteRoute =
+  AppAccountsAccountIdRouteRouteImport.update({
+    id: '/accounts/$accountId',
+    path: '/accounts/$accountId',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppMeAccountsIndexRoute = AppMeAccountsIndexRouteImport.update({
   id: '/accounts/',
   path: '/accounts/',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
+const AppAccountsAccountIdIndexRoute =
+  AppAccountsAccountIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationRouteRoute =
+  AppAccountsAccountIdAdministrationRouteRouteImport.update({
+    id: '/administration',
+    path: '/administration',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationIndexRoute =
+  AppAccountsAccountIdAdministrationIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationMembersRoute =
+  AppAccountsAccountIdAdministrationMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationInvitationsRoute =
+  AppAccountsAccountIdAdministrationInvitationsRouteImport.update({
+    id: '/invitations',
+    path: '/invitations',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationInformationRoute =
+  AppAccountsAccountIdAdministrationInformationRouteImport.update({
+    id: '/information',
+    path: '/information',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationAdvancedRoute =
+  AppAccountsAccountIdAdministrationAdvancedRouteImport.update({
+    id: '/advanced',
+    path: '/advanced',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -169,7 +219,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
-  '/accounts/$accountId': typeof AppAccountsAccountIdRoute
+  '/accounts/$accountId': typeof AppAccountsAccountIdRouteRouteWithChildren
   '/me/invitations': typeof AppMeInvitationsRoute
   '/me/logs': typeof AppMeLogsRoute
   '/me/mcp': typeof AppMeMcpRoute
@@ -177,7 +227,14 @@ export interface FileRoutesByFullPath {
   '/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me/': typeof AppMeIndexRoute
+  '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  '/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts/': typeof AppMeAccountsIndexRoute
+  '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
+  '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
+  '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
+  '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -193,7 +250,6 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/': typeof AppIndexRoute
-  '/accounts/$accountId': typeof AppAccountsAccountIdRoute
   '/me/invitations': typeof AppMeInvitationsRoute
   '/me/logs': typeof AppMeLogsRoute
   '/me/mcp': typeof AppMeMcpRoute
@@ -201,7 +257,13 @@ export interface FileRoutesByTo {
   '/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me': typeof AppMeIndexRoute
+  '/accounts/$accountId': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts': typeof AppMeAccountsIndexRoute
+  '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
+  '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
+  '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
+  '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -220,7 +282,7 @@ export interface FileRoutesById {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/_app/': typeof AppIndexRoute
-  '/_app/accounts/$accountId': typeof AppAccountsAccountIdRoute
+  '/_app/accounts/$accountId': typeof AppAccountsAccountIdRouteRouteWithChildren
   '/_app/me/invitations': typeof AppMeInvitationsRoute
   '/_app/me/logs': typeof AppMeLogsRoute
   '/_app/me/mcp': typeof AppMeMcpRoute
@@ -228,7 +290,14 @@ export interface FileRoutesById {
   '/_app/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/_app/me/': typeof AppMeIndexRoute
+  '/_app/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  '/_app/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/_app/me/accounts/': typeof AppMeAccountsIndexRoute
+  '/_app/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
+  '/_app/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
+  '/_app/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
+  '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -255,7 +324,14 @@ export interface FileRouteTypes {
     | '/me/settings'
     | '/oauth/consent/$requestId'
     | '/me/'
+    | '/accounts/$accountId/administration'
+    | '/accounts/$accountId/'
     | '/me/accounts/'
+    | '/accounts/$accountId/administration/advanced'
+    | '/accounts/$accountId/administration/information'
+    | '/accounts/$accountId/administration/invitations'
+    | '/accounts/$accountId/administration/members'
+    | '/accounts/$accountId/administration/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -271,7 +347,6 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/'
-    | '/accounts/$accountId'
     | '/me/invitations'
     | '/me/logs'
     | '/me/mcp'
@@ -279,7 +354,13 @@ export interface FileRouteTypes {
     | '/me/settings'
     | '/oauth/consent/$requestId'
     | '/me'
+    | '/accounts/$accountId'
     | '/me/accounts'
+    | '/accounts/$accountId/administration/advanced'
+    | '/accounts/$accountId/administration/information'
+    | '/accounts/$accountId/administration/invitations'
+    | '/accounts/$accountId/administration/members'
+    | '/accounts/$accountId/administration'
   id:
     | '__root__'
     | '/auth'
@@ -305,7 +386,14 @@ export interface FileRouteTypes {
     | '/_app/me/settings'
     | '/oauth/consent/$requestId'
     | '/_app/me/'
+    | '/_app/accounts/$accountId/administration'
+    | '/_app/accounts/$accountId/'
     | '/_app/me/accounts/'
+    | '/_app/accounts/$accountId/administration/advanced'
+    | '/_app/accounts/$accountId/administration/information'
+    | '/_app/accounts/$accountId/administration/invitations'
+    | '/_app/accounts/$accountId/administration/members'
+    | '/_app/accounts/$accountId/administration/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -476,7 +564,7 @@ declare module '@tanstack/react-router' {
       id: '/_app/accounts/$accountId'
       path: '/accounts/$accountId'
       fullPath: '/accounts/$accountId'
-      preLoaderRoute: typeof AppAccountsAccountIdRouteImport
+      preLoaderRoute: typeof AppAccountsAccountIdRouteRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/me/accounts/': {
@@ -485,6 +573,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/me/accounts/'
       preLoaderRoute: typeof AppMeAccountsIndexRouteImport
       parentRoute: typeof AppMeRouteRoute
+    }
+    '/_app/accounts/$accountId/': {
+      id: '/_app/accounts/$accountId/'
+      path: '/'
+      fullPath: '/accounts/$accountId/'
+      preLoaderRoute: typeof AppAccountsAccountIdIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/administration': {
+      id: '/_app/accounts/$accountId/administration'
+      path: '/administration'
+      fullPath: '/accounts/$accountId/administration'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationRouteRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/': {
+      id: '/_app/accounts/$accountId/administration/'
+      path: '/'
+      fullPath: '/accounts/$accountId/administration/'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/members': {
+      id: '/_app/accounts/$accountId/administration/members'
+      path: '/members'
+      fullPath: '/accounts/$accountId/administration/members'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationMembersRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/invitations': {
+      id: '/_app/accounts/$accountId/administration/invitations'
+      path: '/invitations'
+      fullPath: '/accounts/$accountId/administration/invitations'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationInvitationsRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/information': {
+      id: '/_app/accounts/$accountId/administration/information'
+      path: '/information'
+      fullPath: '/accounts/$accountId/administration/information'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationInformationRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/advanced': {
+      id: '/_app/accounts/$accountId/administration/advanced'
+      path: '/advanced'
+      fullPath: '/accounts/$accountId/administration/advanced'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationAdvancedRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
     }
   }
 }
@@ -541,16 +678,60 @@ const AppMeRouteRouteWithChildren = AppMeRouteRoute._addFileChildren(
   AppMeRouteRouteChildren,
 )
 
+interface AppAccountsAccountIdAdministrationRouteRouteChildren {
+  AppAccountsAccountIdAdministrationAdvancedRoute: typeof AppAccountsAccountIdAdministrationAdvancedRoute
+  AppAccountsAccountIdAdministrationInformationRoute: typeof AppAccountsAccountIdAdministrationInformationRoute
+  AppAccountsAccountIdAdministrationInvitationsRoute: typeof AppAccountsAccountIdAdministrationInvitationsRoute
+  AppAccountsAccountIdAdministrationMembersRoute: typeof AppAccountsAccountIdAdministrationMembersRoute
+  AppAccountsAccountIdAdministrationIndexRoute: typeof AppAccountsAccountIdAdministrationIndexRoute
+}
+
+const AppAccountsAccountIdAdministrationRouteRouteChildren: AppAccountsAccountIdAdministrationRouteRouteChildren =
+  {
+    AppAccountsAccountIdAdministrationAdvancedRoute:
+      AppAccountsAccountIdAdministrationAdvancedRoute,
+    AppAccountsAccountIdAdministrationInformationRoute:
+      AppAccountsAccountIdAdministrationInformationRoute,
+    AppAccountsAccountIdAdministrationInvitationsRoute:
+      AppAccountsAccountIdAdministrationInvitationsRoute,
+    AppAccountsAccountIdAdministrationMembersRoute:
+      AppAccountsAccountIdAdministrationMembersRoute,
+    AppAccountsAccountIdAdministrationIndexRoute:
+      AppAccountsAccountIdAdministrationIndexRoute,
+  }
+
+const AppAccountsAccountIdAdministrationRouteRouteWithChildren =
+  AppAccountsAccountIdAdministrationRouteRoute._addFileChildren(
+    AppAccountsAccountIdAdministrationRouteRouteChildren,
+  )
+
+interface AppAccountsAccountIdRouteRouteChildren {
+  AppAccountsAccountIdAdministrationRouteRoute: typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  AppAccountsAccountIdIndexRoute: typeof AppAccountsAccountIdIndexRoute
+}
+
+const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChildren =
+  {
+    AppAccountsAccountIdAdministrationRouteRoute:
+      AppAccountsAccountIdAdministrationRouteRouteWithChildren,
+    AppAccountsAccountIdIndexRoute: AppAccountsAccountIdIndexRoute,
+  }
+
+const AppAccountsAccountIdRouteRouteWithChildren =
+  AppAccountsAccountIdRouteRoute._addFileChildren(
+    AppAccountsAccountIdRouteRouteChildren,
+  )
+
 interface AppRouteChildren {
   AppMeRouteRoute: typeof AppMeRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppAccountsAccountIdRoute: typeof AppAccountsAccountIdRoute
+  AppAccountsAccountIdRouteRoute: typeof AppAccountsAccountIdRouteRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppMeRouteRoute: AppMeRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppAccountsAccountIdRoute: AppAccountsAccountIdRoute,
+  AppAccountsAccountIdRouteRoute: AppAccountsAccountIdRouteRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
