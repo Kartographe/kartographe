@@ -9,8 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthRecoveryRouteImport } from './routes/auth/recovery'
@@ -19,16 +20,22 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotRouteImport } from './routes/auth/forgot'
 import { Route as AuthActivationRouteImport } from './routes/auth/activation'
 import { Route as Auth2faRouteImport } from './routes/auth/2fa'
+import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
+import { Route as AppAccountSecurityRouteImport } from './routes/_app/account/security'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const AuthResetRoute = AuthResetRouteImport.update({
   id: '/reset',
@@ -70,10 +77,20 @@ const Auth2faRoute = Auth2faRouteImport.update({
   path: '/2fa',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
+  id: '/account/security',
+  path: '/account/security',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/': typeof AppIndexRoute
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -82,9 +99,10 @@ export interface FileRoutesByFullPath {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/account/security': typeof AppAccountSecurityRoute
+  '/account/': typeof AppAccountIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
@@ -94,11 +112,14 @@ export interface FileRoutesByTo {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/': typeof AppIndexRoute
+  '/account/security': typeof AppAccountSecurityRoute
+  '/account': typeof AppAccountIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/_app': typeof AppRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -107,12 +128,15 @@ export interface FileRoutesById {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/account/security': typeof AppAccountSecurityRoute
+  '/_app/account/': typeof AppAccountIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/auth'
+    | '/'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -121,9 +145,10 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/account/security'
+    | '/account/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/auth'
     | '/auth/2fa'
     | '/auth/activation'
@@ -133,10 +158,13 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/'
+    | '/account/security'
+    | '/account'
   id:
     | '__root__'
-    | '/'
     | '/auth'
+    | '/_app'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -145,15 +173,25 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/_app/'
+    | '/_app/account/security'
+    | '/_app/account/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -161,12 +199,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/auth/reset': {
       id: '/auth/reset'
@@ -224,6 +262,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth2faRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/account/': {
+      id: '/_app/account/'
+      path: '/account'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AppAccountIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/account/security': {
+      id: '/_app/account/security'
+      path: '/account/security'
+      fullPath: '/account/security'
+      preLoaderRoute: typeof AppAccountSecurityRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -253,9 +305,23 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppAccountSecurityRoute: typeof AppAccountSecurityRoute
+  AppAccountIndexRoute: typeof AppAccountIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppAccountSecurityRoute: AppAccountSecurityRoute,
+  AppAccountIndexRoute: AppAccountIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

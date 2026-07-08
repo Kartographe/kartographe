@@ -339,7 +339,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * List active authenticators
+         * @description List the authenticators (TOTP) currently active on the account.
+         */
+        get: operations["api.me.security.otp.list"];
         put?: never;
         /**
          * Start authenticator (TOTP) setup
@@ -670,6 +674,16 @@ export interface components {
          * @enum {string}
          */
         Language: "fr-FR" | "en-GB" | "es-ES" | "de-DE" | "it-IT";
+        /** ListingResponse[OtpMethodItem] */
+        ListingResponse_OtpMethodItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["OtpMethodItem"][];
+        };
         /** ListingResponse[SecurityKeyItem] */
         ListingResponse_SecurityKeyItem_: {
             /** Count */
@@ -765,6 +779,19 @@ export interface components {
             theme?: components["schemas"]["UserTheme"] | null;
             /** Phone */
             phone?: string | null;
+        };
+        /**
+         * OtpMethodItem
+         * @description An active authenticator registered on the account.
+         */
+        OtpMethodItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Registeredat */
+            registeredAt?: string | null;
         };
         /**
          * OtpProvisioningItem
@@ -1897,6 +1924,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.otp.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_OtpMethodItem_"];
                 };
             };
             /** @description Authentication required */
