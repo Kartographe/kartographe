@@ -1460,6 +1460,334 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List databases
+         * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         */
+        get: operations["api.databases.list"];
+        put?: never;
+        /**
+         * Create a database
+         * @description Create a database. It starts as a draft owned by the caller. Owners, administrators, lead developers and data analysts only.
+         */
+        post: operations["api.databases.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a database
+         * @description Return a single database of the account. Any member may read.
+         */
+        get: operations["api.databases.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a database
+         * @description Soft-delete a database; its versions, tables and columns are soft-deleted as well. Data roles only.
+         */
+        delete: operations["api.databases.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a database
+         * @description Partially update a database (type, title, description). Data roles only.
+         */
+        patch: operations["api.databases.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a database
+         * @description Set the database status to active. Data roles only.
+         */
+        post: operations["api.databases.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a database
+         * @description Set the database status to archived. Data roles only.
+         */
+        post: operations["api.databases.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database versions
+         * @description List the versions of a database, most recent first. Any member may read.
+         */
+        get: operations["api.databases.versions.list"];
+        put?: never;
+        /**
+         * Create a database version
+         * @description Create a version. It starts as a draft. Data roles only.
+         */
+        post: operations["api.databases.versions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a database version
+         * @description Return a single version of the database. Any member may read.
+         */
+        get: operations["api.databases.versions.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a database version
+         * @description Soft-delete a version; its tables and columns are soft-deleted as well. Data roles only.
+         */
+        delete: operations["api.databases.versions.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a database version
+         * @description Partially update a version (version tuple). Data roles only.
+         */
+        patch: operations["api.databases.versions.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a database version
+         * @description Make this the active version. The previously active version is archived and its `endDate` stamped; this version's `startDate` is stamped. Data roles only.
+         */
+        post: operations["api.databases.versions.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a database version
+         * @description Archive the version, stamping its `endDate`. Data roles only.
+         */
+        post: operations["api.databases.versions.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List tables
+         * @description List the tables of a database version, most recent first. Any member may read.
+         */
+        get: operations["api.databases.versions.tables.list"];
+        put?: never;
+        /**
+         * Create a table
+         * @description Create a table, optionally with its columns in one call. Each column references a catalogued column type and may model a foreign key. Data roles only.
+         */
+        post: operations["api.databases.versions.tables.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a table
+         * @description Return a single table of the version, including its columns. Any member may read.
+         */
+        get: operations["api.databases.versions.tables.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a table
+         * @description Soft-delete a table; its columns are soft-deleted as well. Data roles only.
+         */
+        delete: operations["api.databases.versions.tables.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a table
+         * @description Partially update a table (type, schema, name, description). If `columns` is sent, it fully replaces the table's columns. Data roles only.
+         */
+        patch: operations["api.databases.versions.tables.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a table
+         * @description Set the table status to active. Data roles only.
+         */
+        post: operations["api.databases.versions.tables.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a table
+         * @description Set the table status to archived. Data roles only.
+         */
+        post: operations["api.databases.versions.tables.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List columns
+         * @description List the columns of a table, in insertion order. Any member may read.
+         */
+        get: operations["api.databases.versions.tables.columns.list"];
+        put?: never;
+        /**
+         * Create a column
+         * @description Create a column on the table. It references a catalogued column type and may model a foreign key to another table of the account. Data roles only.
+         */
+        post: operations["api.databases.versions.tables.columns.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a column
+         * @description Return a single column of the table. Any member may read.
+         */
+        get: operations["api.databases.versions.tables.columns.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a column
+         * @description Soft-delete a column. Data roles only.
+         */
+        delete: operations["api.databases.versions.tables.columns.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a column
+         * @description Partially update a column (type, foreign key, nullable, unique, default, name, description). Data roles only.
+         */
+        patch: operations["api.databases.versions.tables.columns.update"];
+        trace?: never;
+    };
     "/v1/core/actionTypes": {
         parameters: {
             query?: never;
@@ -1532,6 +1860,46 @@ export interface paths {
          * @description Return a single assertion type and the shape of its parameters.
          */
         get: operations["api.core.assertionTypes.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/databaseColumnTypes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database column types
+         * @description List the available SQL column types, optionally filtered by database engine.
+         */
+        get: operations["api.core.databaseColumnTypes.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/core/databaseColumnTypes/{database_column_type_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a database column type
+         * @description Return a single SQL column type.
+         */
+        get: operations["api.core.databaseColumnTypes.get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3065,6 +3433,334 @@ export interface components {
             password: string;
         };
         /**
+         * DatabaseColumnTypeItem
+         * @description A catalogued SQL column type for a given engine.
+         */
+        DatabaseColumnTypeItem: {
+            databaseType: components["schemas"]["DatabaseType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Slug */
+            slug: string;
+        };
+        /**
+         * DatabaseCreateForm
+         * @description Create a database. It starts as a draft owned by the caller.
+         */
+        DatabaseCreateForm: {
+            type: components["schemas"]["DatabaseType"];
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseItem
+         * @description A database tracked inside an account.
+         */
+        DatabaseItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["DatabaseStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["DatabaseType"];
+        };
+        /**
+         * DatabasePatchForm
+         * @description Partial update of a database — only the keys sent are applied.
+         */
+        DatabasePatchForm: {
+            type?: components["schemas"]["DatabaseType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseSortField
+         * @description Sortable columns for the databases listing.
+         * @enum {string}
+         */
+        DatabaseSortField: "date" | "title" | "status" | "type";
+        /**
+         * DatabaseStatus
+         * @enum {string}
+         */
+        DatabaseStatus: "draft" | "active" | "archived";
+        /**
+         * DatabaseTableColumnCreateForm
+         * @description Create a column (standalone, or nested in a table create/update).
+         */
+        DatabaseTableColumnCreateForm: {
+            /**
+             * Databasecolumntypeid
+             * Format: uuid
+             */
+            databaseColumnTypeId: string;
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /** Foreignkeydatabasetablecolumnid */
+            foreignKeyDatabaseTableColumnId?: string | null;
+            /**
+             * Nullable
+             * @default false
+             */
+            nullable: boolean;
+            /**
+             * Unique
+             * @default false
+             */
+            unique: boolean;
+            /**
+             * Defaultvalue
+             * @default
+             */
+            defaultValue: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableColumnItem
+         * @description A column of a database table.
+         */
+        DatabaseTableColumnItem: {
+            /**
+             * Databasecolumntypeid
+             * Format: uuid
+             */
+            databaseColumnTypeId: string;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Defaultvalue */
+            defaultValue: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Foreignkeydatabasetablecolumnid */
+            foreignKeyDatabaseTableColumnId?: string | null;
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Nullable */
+            nullable: boolean;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Unique */
+            unique: boolean;
+        };
+        /**
+         * DatabaseTableColumnPatchForm
+         * @description Partial update of a column — only the keys sent are applied.
+         */
+        DatabaseTableColumnPatchForm: {
+            /** Databasecolumntypeid */
+            databaseColumnTypeId?: string | null;
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /** Foreignkeydatabasetablecolumnid */
+            foreignKeyDatabaseTableColumnId?: string | null;
+            /** Nullable */
+            nullable?: boolean | null;
+            /** Unique */
+            unique?: boolean | null;
+            /** Defaultvalue */
+            defaultValue?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableCreateForm
+         * @description Create a table, optionally with its columns in one call.
+         */
+        DatabaseTableCreateForm: {
+            type: components["schemas"]["DatabaseTableType"];
+            /** Schema */
+            schema: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Columns */
+            columns?: components["schemas"]["DatabaseTableColumnCreateForm"][];
+        };
+        /**
+         * DatabaseTableItem
+         * @description A table within a database version.
+         *
+         *     `columns` is resolved by the manager on the single-table read and on
+         *     create; the listing omits it.
+         */
+        DatabaseTableItem: {
+            /** Columns */
+            columns?: components["schemas"]["DatabaseTableColumnItem"][] | null;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Schema */
+            schema: string;
+            status: components["schemas"]["DatabaseTableStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            type: components["schemas"]["DatabaseTableType"];
+        };
+        /**
+         * DatabaseTablePatchForm
+         * @description Partial update of a table. If `columns` is sent, it fully replaces the
+         *     table's current columns.
+         */
+        DatabaseTablePatchForm: {
+            type?: components["schemas"]["DatabaseTableType"] | null;
+            /** Schema */
+            schema?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Columns */
+            columns?: components["schemas"]["DatabaseTableColumnCreateForm"][] | null;
+        };
+        /**
+         * DatabaseTableStatus
+         * @enum {string}
+         */
+        DatabaseTableStatus: "draft" | "active" | "archived";
+        /**
+         * DatabaseTableType
+         * @enum {string}
+         */
+        DatabaseTableType: "physical" | "logical";
+        /**
+         * DatabaseType
+         * @description Database engine — shared by the column-type catalogue and databases.
+         * @enum {string}
+         */
+        DatabaseType: "mysql" | "postgresql";
+        /**
+         * DatabaseVersionCreateForm
+         * @description Create a database version. It starts as a draft.
+         */
+        DatabaseVersionCreateForm: {
+            /**
+             * Version
+             * @description Version tuple, e.g. [1, 2, 3].
+             */
+            version: number[];
+        };
+        /**
+         * DatabaseVersionItem
+         * @description A version of a database's schema (semantic version as an int tuple).
+         */
+        DatabaseVersionItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Enddate */
+            endDate?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Startdate */
+            startDate?: string | null;
+            status: components["schemas"]["DatabaseVersionStatus"];
+            /** Version */
+            version: number[];
+        };
+        /**
+         * DatabaseVersionPatchForm
+         * @description Partial update of a version — only the keys sent are applied.
+         */
+        DatabaseVersionPatchForm: {
+            /** Version */
+            version?: number[] | null;
+        };
+        /**
+         * DatabaseVersionStatus
+         * @enum {string}
+         */
+        DatabaseVersionStatus: "draft" | "active" | "archived";
+        /**
          * ErrorResponse
          * @description A business error: a single human-readable message.
          */
@@ -3369,6 +4065,26 @@ export interface components {
         /** ItemResponse[AssertionTypeItem] */
         ItemResponse_AssertionTypeItem_: {
             item: components["schemas"]["AssertionTypeItem"];
+        };
+        /** ItemResponse[DatabaseColumnTypeItem] */
+        ItemResponse_DatabaseColumnTypeItem_: {
+            item: components["schemas"]["DatabaseColumnTypeItem"];
+        };
+        /** ItemResponse[DatabaseItem] */
+        ItemResponse_DatabaseItem_: {
+            item: components["schemas"]["DatabaseItem"];
+        };
+        /** ItemResponse[DatabaseTableColumnItem] */
+        ItemResponse_DatabaseTableColumnItem_: {
+            item: components["schemas"]["DatabaseTableColumnItem"];
+        };
+        /** ItemResponse[DatabaseTableItem] */
+        ItemResponse_DatabaseTableItem_: {
+            item: components["schemas"]["DatabaseTableItem"];
+        };
+        /** ItemResponse[DatabaseVersionItem] */
+        ItemResponse_DatabaseVersionItem_: {
+            item: components["schemas"]["DatabaseVersionItem"];
         };
         /** ItemResponse[FeatureFileItem] */
         ItemResponse_FeatureFileItem_: {
@@ -3931,6 +4647,56 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["AssertionTypeItem"][];
+        };
+        /** ListingResponse[DatabaseColumnTypeItem] */
+        ListingResponse_DatabaseColumnTypeItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseColumnTypeItem"][];
+        };
+        /** ListingResponse[DatabaseItem] */
+        ListingResponse_DatabaseItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseItem"][];
+        };
+        /** ListingResponse[DatabaseTableColumnItem] */
+        ListingResponse_DatabaseTableColumnItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseTableColumnItem"][];
+        };
+        /** ListingResponse[DatabaseTableItem] */
+        ListingResponse_DatabaseTableItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseTableItem"][];
+        };
+        /** ListingResponse[DatabaseVersionItem] */
+        ListingResponse_DatabaseVersionItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseVersionItem"][];
         };
         /** ListingResponse[FeatureFileItem] */
         ListingResponse_FeatureFileItem_: {
@@ -10781,6 +11547,1365 @@ export interface operations {
             };
         };
     };
+    "api.databases.list": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["DatabaseStatus"][] | null;
+                type?: components["schemas"]["DatabaseType"][] | null;
+                sortBy?: components["schemas"]["DatabaseSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabasePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseVersionCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseVersionPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTablePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.columns.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.columns.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableColumnCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.columns.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.columns.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.versions.tables.columns.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+                database_table_column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableColumnPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.core.actionTypes.list": {
         parameters: {
             query?: never;
@@ -10882,6 +13007,77 @@ export interface operations {
                 };
             };
             /** @description Assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.core.databaseColumnTypes.list": {
+        parameters: {
+            query?: {
+                databaseType?: components["schemas"]["DatabaseType"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseColumnTypeItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.core.databaseColumnTypes.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_column_type_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseColumnTypeItem_"];
+                };
+            };
+            /** @description Column type not found */
             404: {
                 headers: {
                     [name: string]: unknown;
