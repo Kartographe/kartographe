@@ -22,5 +22,7 @@ for file in "$ASSETS_DIR"/*.js; do
     -e "s|##VITE_APP_URL##|${VITE_APP_URL}|g" \
     -e "s|##VITE_API_URL##|${VITE_API_URL}|g" \
     -e "s|##VITE_MCP_URL##|${VITE_MCP_URL}|g" \
+    -e "s|##VITE_TURNSTILE_SITE_KEY##|${VITE_TURNSTILE_SITE_KEY}|g" \
+    -e "s|##VITE_GOOGLE_CLIENT_ID##|${VITE_GOOGLE_CLIENT_ID}|g" \
     "$file"
 done
