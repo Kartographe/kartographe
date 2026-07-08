@@ -6,6 +6,9 @@ Every persistent model must be imported here so that:
 """
 
 from src.models._base import BaseModel
+from src.models.account import Account
+from src.models.account_user import AccountUser
+from src.models.account_user_invitation import AccountUserInvitation
 from src.models.user import User
 from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
@@ -15,6 +18,9 @@ from src.models.user_mcp_client import UserMcpClient
 from src.models.user_mcp_grant import UserMcpGrant
 
 __all__ = [
+    "Account",
+    "AccountUser",
+    "AccountUserInvitation",
     "BaseModel",
     "User",
     "UserAuthentication",

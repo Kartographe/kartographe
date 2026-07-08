@@ -117,3 +117,59 @@ class McpAuthorizationRequestStatus(str, Enum):
     DENIED = "denied"
     EXPIRED = "expired"
     CONSUMED = "consumed"
+
+
+class AccountStatus(str, Enum):
+    """Lifecycle of an account (workspace)."""
+
+    ACTIVE = "active"
+    DISABLED = "disabled"
+    BLOCKED = "blocked"
+
+
+class AccountUserRole(str, Enum):
+    """Role a member holds inside an account.
+
+    Drives authorization: `owner`/`administrator` are the privileged roles that
+    may manage members, invitations and account settings. The same set is used
+    for invitation roles (you invite someone *as* one of these roles). Only an
+    `owner` may grant the `owner` role, and an account must always keep at least
+    one active `owner`.
+    """
+
+    OWNER = "owner"
+    ADMINISTRATOR = "administrator"
+    PRODUCT_OWNER = "product_owner"
+    QA_MANAGER = "qa_manager"
+    LEAD_DEVELOPER = "lead_developer"
+    DEVELOPER = "developer"
+    DATA_ANALYST = "data_analyst"
+    COMMENTATOR = "commentator"
+
+
+class AccountUserType(str, Enum):
+    """How a membership came to be: the account creator vs. an invited guest."""
+
+    CREATOR = "creator"
+    GUEST = "guest"
+
+
+class AccountUserStatus(str, Enum):
+    """Membership state — `disabled` seats stay for audit (soft-left)."""
+
+    ACTIVE = "active"
+    DISABLED = "disabled"
+
+
+class AccountUserInvitationType(str, Enum):
+    SIMPLE = "simple"
+
+
+class AccountUserInvitationStatus(str, Enum):
+    """Lifecycle of a pending seat invitation."""
+
+    STANDBY = "standby"
+    ACCEPTED = "accepted"
+    REFUSED = "refused"
+    EXPIRED = "expired"
+    CANCELLED = "cancelled"
