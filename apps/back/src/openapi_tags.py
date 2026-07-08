@@ -16,6 +16,11 @@ API_TAGS: list[dict[str, str]] = [
         "x-displayName": "Health",
         "description": "Liveness probe used by uptime monitors.",
     },
+    {
+        "name": "api.auth",
+        "x-displayName": "Authentication",
+        "description": "Sign up, sign in, activation, password reset and two-factor verification.",
+    },
 ]
 
 

@@ -48,21 +48,31 @@ class Settings(BaseSettings):
     webauthn_origins: list[str] = Field(default=["http://localhost:5173"])
 
     # Google SSO — the OAuth client id the front uses; the backend verifies the
-    # ID token's `aud` against it.
+    # ID token's `aud` against it. Feature is active only when this is set.
     google_client_id: str | None = Field(default=None)
 
-    # Cloudflare Turnstile anti-bot on the `/auth/*` surface. Disabled by
-    # default so local dev needs no Cloudflare keys; the guard becomes a no-op.
-    turnstile_enabled: bool = Field(default=False)
+    # Cloudflare Turnstile anti-bot on the `/auth/*` surface. Active only when a
+    # secret is configured; otherwise the guard is a no-op (local dev needs no
+    # Cloudflare keys).
     turnstile_secret: str | None = Field(default=None)
     turnstile_verify_url: str = Field(
         default="https://challenges.cloudflare.com/turnstile/v0/siteverify",
     )
 
-    # Transactional email. When disabled (default), the manager logs the link
-    # instead of sending — enough for local dev and self-hosting without an SMTP
-    # provider configured yet.
-    email_enabled: bool = Field(default=False)
+    @property
+    def turnstile_enabled(self) -> bool:
+        """Turnstile is enforced only when a verification secret is present."""
+        return bool(self.turnstile_secret)
+
+    @property
+    def google_enabled(self) -> bool:
+        """Google sign-in is available only when a client id is configured."""
+        return bool(self.google_client_id)
+
+    # Transactional email. `SERVICE_EMAIL_TYPE` selects the backend
+    # (`smtp` today); when unset, nothing is sent — the manager still runs, so
+    # local dev and bare self-hosting work without an email provider.
+    service_email_type: str | None = Field(default=None)
     email_emitter_address: str = Field(default="no-reply@kartographe.local")
     email_emitter_name: str = Field(default="Kartographe")
     smtp_host: str | None = Field(default=None)

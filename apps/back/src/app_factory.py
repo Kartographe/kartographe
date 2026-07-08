@@ -89,7 +89,9 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
                 app,
                 name=f"{settings.app_name} MCP",
                 description="MCP server exposing the Kartographe platform as tools for AI agents.",
-                exclude_tags=["api.health"],
+                # `/health` is ops-only; `/auth/*` is an unversioned public
+                # surface that must not be driven by an AI agent.
+                exclude_tags=["api.health", "api.auth"],
             )
             mcp.mount_http(mount_path=settings.mcp_mount_path)
             # Expose to the lifespan closure so the StreamableHTTP session

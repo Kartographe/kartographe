@@ -9,6 +9,7 @@ Two mounting points:
 
 from fastapi import APIRouter
 
+from src.routes.api.auth import router as auth_router
 from src.routes.api.health import router as health_router
 
 router = APIRouter()
@@ -18,5 +19,6 @@ router = APIRouter()
 v1_router = APIRouter(prefix="/v1")
 router.include_router(v1_router)
 
-# Out-of-version ops endpoints.
-router.include_router(health_router)
+# Out-of-version endpoints, mounted at the root.
+router.include_router(health_router)  # ops liveness probe
+router.include_router(auth_router)  # authentication (lock-step with the API)
