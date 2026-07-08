@@ -84,6 +84,8 @@ def create_column(
         foreign_key_database_table_column_id=form.foreign_key_database_table_column_id,
         nullable=form.nullable,
         unique=form.unique,
+        system_field=form.system_field,
+        rank=form.rank,
         default_value=form.default_value,
         name=form.name,
         description=form.description,

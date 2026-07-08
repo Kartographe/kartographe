@@ -20,7 +20,7 @@ from src.utils.datetime import utc_now
 
 class DatabaseTableColumnManager(BaseEntityManager):
     def list_for_table(self, table: DatabaseTable) -> list[DatabaseTableColumn]:
-        """Every enabled column of the table, in insertion order."""
+        """Every enabled column of the table, ordered by rank then insertion."""
         return list(
             self.session.exec(
                 select(DatabaseTableColumn)
@@ -28,7 +28,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
                     DatabaseTableColumn.database_table_id == table.id,
                     DatabaseTableColumn.enabled.is_(True),
                 )
-                .order_by(DatabaseTableColumn.created_at.asc())
+                .order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
             ).all()
         )
 
@@ -76,6 +76,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
         foreign_key_database_table_column_id: uuid.UUID | None,
         nullable: bool,
         unique: bool,
+        system_field: bool,
+        rank: int,
         default_value: str,
         name: str,
         description: dict | None,
@@ -102,6 +104,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
             date=utc_now(),
             nullable=nullable,
             unique=unique,
+            system_field=system_field,
+            rank=rank,
             default_value=default_value,
             name=name,
             description=description,

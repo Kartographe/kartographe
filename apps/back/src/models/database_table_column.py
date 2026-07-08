@@ -36,6 +36,10 @@ class DatabaseTableColumn(BaseModel, table=True):
     date: datetime
     nullable: bool = Field(default=False)
     unique: bool = Field(default=False)
+    # Whether the column is a framework/system field (e.g. id, timestamps).
+    system_field: bool = Field(default=False)
+    # Display/sort order of the column within its table.
+    rank: int = Field(default=0, index=True)
     default_value: str
     name: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.

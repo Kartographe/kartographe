@@ -33,6 +33,7 @@ class ApplicationEnvironmentItem(CamelBase):
     date: datetime
     description: dict
     id: uuid.UUID
+    openapi_url: str | None = None
     owner_id: uuid.UUID
     status: ApplicationStatus
     status_date: datetime

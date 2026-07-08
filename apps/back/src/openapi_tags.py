@@ -82,6 +82,36 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Features attached to an application and their presence window.",
     },
     {
+        "name": "api.applications.guards",
+        "x-displayName": "Applications › Guards",
+        "description": "Authentication guards of an application.",
+    },
+    {
+        "name": "api.applications.roles",
+        "x-displayName": "Applications › Roles",
+        "description": "Authorization roles of an application.",
+    },
+    {
+        "name": "api.applications.routes",
+        "x-displayName": "Applications › Routes",
+        "description": "HTTP routes exposed by an application and their contract.",
+    },
+    {
+        "name": "api.applications.routes.responses",
+        "x-displayName": "Applications › Route responses",
+        "description": "Documented responses of an application route.",
+    },
+    {
+        "name": "api.applications.routes.examples",
+        "x-displayName": "Applications › Route examples",
+        "description": "Request/response examples of an application route.",
+    },
+    {
+        "name": "api.applications.routes.tables",
+        "x-displayName": "Applications › Route tables",
+        "description": "Database tables read or written by an application route.",
+    },
+    {
         "name": "api.features",
         "x-displayName": "Features",
         "description": "Create and manage the features tracked at the account level.",
@@ -125,6 +155,11 @@ API_TAGS: list[dict[str, str]] = [
         "name": "api.journeys.scenarios.steps.assertions",
         "x-displayName": "Journeys › Step assertions",
         "description": "Assertions carried by a scenario step.",
+    },
+    {
+        "name": "api.journeys.scenarios.steps.routes",
+        "x-displayName": "Journeys › Step routes",
+        "description": "Application routes exercised by a scenario step.",
     },
     {
         "name": "api.core.actionTypes",

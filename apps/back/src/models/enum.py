@@ -353,3 +353,70 @@ class DatabaseTableStatus(str, Enum):
     DRAFT = "draft"
     ACTIVE = "active"
     ARCHIVED = "archived"
+
+
+class ApplicationGuardType(str, Enum):
+    HEADER_BEARER = "header_bearer"
+    HEADER_BASIC = "header_basic"
+    HEADER_TOKEN = "header_token"
+    QUERY_TOKEN = "query_token"
+
+
+class ApplicationGuardStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ApplicationGuardFieldType(str, Enum):
+    HEADER = "header"
+    QUERY = "query"
+    POST_DATA = "post_data"
+    RAW_DATA = "raw_data"
+
+
+class ApplicationGuardFieldFormat(str, Enum):
+    JWT = "JWT"
+
+
+class ApplicationRoleStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ApplicationRouteStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ApplicationRouteMethod(str, Enum):
+    POST = "POST"
+    GET = "GET"
+    PATCH = "PATCH"
+    PUT = "PUT"
+    DELETE = "DELETE"
+    QUERY = "QUERY"
+
+
+class ApplicationRouteResponseFormat(str, Enum):
+    JSON = "JSON"
+    XML = "XML"
+    HTML = "HTML"
+    TXT = "TXT"
+
+
+class ApplicationRouteTableType(str, Enum):
+    QUERY_PARAMS = "query_params"
+    QUERY_DATA = "query_data"
+    QUERY_HEADER = "query_header"
+    RESPONSE_DATA = "response_data"
+    RESPONSE_HEADER = "response_header"
+
+
+class ApplicationRouteTableAction(str, Enum):
+    READ = "read"
+    CREATE = "create"
+    UPDATE = "update"
+    DELETE = "delete"

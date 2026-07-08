@@ -97,3 +97,13 @@ class FeatureJourneyItem(CamelBase):
     id: uuid.UUID
     journey_id: uuid.UUID
     owner_id: uuid.UUID
+
+
+class JourneyScenarioStepRouteItem(CamelBase):
+    """An application route linked to a scenario step."""
+
+    application_id: uuid.UUID
+    application_route_id: uuid.UUID
+    date: datetime
+    id: uuid.UUID
+    owner_id: uuid.UUID

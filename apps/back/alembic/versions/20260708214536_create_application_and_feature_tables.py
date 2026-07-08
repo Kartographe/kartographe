@@ -83,6 +83,7 @@ def upgrade() -> None:
     sa.Column('title', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sa.JSON(), nullable=False),
     sa.Column('url', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('openapi_url', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.ForeignKeyConstraint(['account_id'], ['account.id'], ),
     sa.ForeignKeyConstraint(['application_id'], ['application.id'], ),
     sa.ForeignKeyConstraint(['owner_id'], ['user.id'], ),

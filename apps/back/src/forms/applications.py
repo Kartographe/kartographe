@@ -42,6 +42,7 @@ class ApplicationEnvironmentCreateForm(CamelBase):
     title: str = Field(min_length=1, max_length=255)
     description: dict = Field(description="Rich-text content as a document object.")
     url: str | None = Field(default=None, max_length=2048)
+    openapi_url: str | None = Field(default=None, max_length=2048)
 
 
 class ApplicationEnvironmentPatchForm(CamelBase):
@@ -51,6 +52,7 @@ class ApplicationEnvironmentPatchForm(CamelBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     url: str | None = Field(default=None, max_length=2048)
+    openapi_url: str | None = Field(default=None, max_length=2048)
 
 
 # --- ApplicationVersion --------------------------------------------------

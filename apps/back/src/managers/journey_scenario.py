@@ -14,6 +14,7 @@ from src.models.journey_scenario import JourneyScenario
 from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
+from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.user import User
 from src.utils.datetime import utc_now
 
@@ -76,6 +77,7 @@ class JourneyScenarioManager(BaseEntityManager):
             JourneyScenarioStep,
             JourneyScenarioStepFile,
             JourneyScenarioStepAssertion,
+            JourneyScenarioStepRoute,
         ):
             self._bulk_disable(model, model.journey_scenario_id == scenario.id, now=now)
         self.session.commit()

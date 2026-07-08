@@ -13,6 +13,12 @@ from src.routes.api.applications.applications import router as applications_rout
 from src.routes.api.applications.environment_versions import router as environment_versions_router
 from src.routes.api.applications.environments import router as environments_router
 from src.routes.api.applications.features import router as features_router
+from src.routes.api.applications.guards import router as guards_router
+from src.routes.api.applications.roles import router as roles_router
+from src.routes.api.applications.route_examples import router as route_examples_router
+from src.routes.api.applications.route_responses import router as route_responses_router
+from src.routes.api.applications.route_tables import router as route_tables_router
+from src.routes.api.applications.routes import router as routes_router
 from src.routes.api.applications.versions import router as versions_router
 
 router = APIRouter()
@@ -21,3 +27,9 @@ router.include_router(environments_router)
 router.include_router(versions_router)
 router.include_router(environment_versions_router)
 router.include_router(features_router)
+router.include_router(guards_router)
+router.include_router(roles_router)
+router.include_router(routes_router)
+router.include_router(route_responses_router)
+router.include_router(route_examples_router)
+router.include_router(route_tables_router)

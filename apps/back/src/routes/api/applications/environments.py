@@ -77,7 +77,13 @@ def create_environment(
     _: Annotated[AccountUser, Depends(_DEV_LEAD)],
 ) -> ItemResponse[ApplicationEnvironmentItem]:
     environment = manager.create(
-        application, user, type=form.type, title=form.title, description=form.description, url=form.url
+        application,
+        user,
+        type=form.type,
+        title=form.title,
+        description=form.description,
+        url=form.url,
+        openapi_url=form.openapi_url,
     )
     return ItemResponse(item=ApplicationEnvironmentItem.model_validate(environment))
 

@@ -22,6 +22,12 @@ from src.managers.application import ApplicationManager
 from src.managers.application_environment import ApplicationEnvironmentManager
 from src.managers.application_environment_version import ApplicationEnvironmentVersionManager
 from src.managers.application_feature import ApplicationFeatureManager
+from src.managers.application_guard import ApplicationGuardManager
+from src.managers.application_role import ApplicationRoleManager
+from src.managers.application_route import ApplicationRouteManager
+from src.managers.application_route_example import ApplicationRouteExampleManager
+from src.managers.application_route_response import ApplicationRouteResponseManager
+from src.managers.application_route_table import ApplicationRouteTableManager
 from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
 from src.managers.core import CoreManager
@@ -37,6 +43,7 @@ from src.managers.journey_scenario import JourneyScenarioManager
 from src.managers.journey_scenario_step import JourneyScenarioStepManager
 from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAssertionManager
 from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
+from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteManager
 from src.managers.persona import PersonaManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
@@ -51,6 +58,12 @@ from src.models.application import Application
 from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
+from src.models.application_guard import ApplicationGuard
+from src.models.application_role import ApplicationRole
+from src.models.application_route import ApplicationRoute
+from src.models.application_route_example import ApplicationRouteExample
+from src.models.application_route_response import ApplicationRouteResponse
+from src.models.application_route_table import ApplicationRouteTable
 from src.models.application_version import ApplicationVersion
 from src.models.action_type import ActionType
 from src.models.assertion_type import AssertionType
@@ -68,6 +81,7 @@ from src.models.journey_scenario import JourneyScenario
 from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
+from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.persona import Persona
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
@@ -468,6 +482,134 @@ CurrentApplicationFeatureDep = Annotated[
 ]
 
 
+# --- Application guards, roles & routes ---------------------------------
+
+def get_application_guard_manager(session: SessionDep) -> ApplicationGuardManager:
+    return ApplicationGuardManager(session)
+
+
+ApplicationGuardManagerDep = Annotated[ApplicationGuardManager, Depends(get_application_guard_manager)]
+
+
+def get_application_role_manager(session: SessionDep) -> ApplicationRoleManager:
+    return ApplicationRoleManager(session)
+
+
+ApplicationRoleManagerDep = Annotated[ApplicationRoleManager, Depends(get_application_role_manager)]
+
+
+def get_application_route_manager(session: SessionDep) -> ApplicationRouteManager:
+    return ApplicationRouteManager(session)
+
+
+ApplicationRouteManagerDep = Annotated[ApplicationRouteManager, Depends(get_application_route_manager)]
+
+
+def get_application_route_response_manager(session: SessionDep) -> ApplicationRouteResponseManager:
+    return ApplicationRouteResponseManager(session)
+
+
+ApplicationRouteResponseManagerDep = Annotated[
+    ApplicationRouteResponseManager, Depends(get_application_route_response_manager)
+]
+
+
+def get_application_route_example_manager(session: SessionDep) -> ApplicationRouteExampleManager:
+    return ApplicationRouteExampleManager(session)
+
+
+ApplicationRouteExampleManagerDep = Annotated[
+    ApplicationRouteExampleManager, Depends(get_application_route_example_manager)
+]
+
+
+def get_application_route_table_manager(session: SessionDep) -> ApplicationRouteTableManager:
+    return ApplicationRouteTableManager(session)
+
+
+ApplicationRouteTableManagerDep = Annotated[
+    ApplicationRouteTableManager, Depends(get_application_route_table_manager)
+]
+
+
+def get_current_application_guard(
+    guard_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationGuard:
+    guard = session.get(ApplicationGuard, guard_id)
+    if guard is None or not guard.enabled or guard.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Guard not found.")
+    return guard
+
+
+CurrentApplicationGuardDep = Annotated[ApplicationGuard, Depends(get_current_application_guard)]
+
+
+def get_current_application_role(
+    role_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationRole:
+    role = session.get(ApplicationRole, role_id)
+    if role is None or not role.enabled or role.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Role not found.")
+    return role
+
+
+CurrentApplicationRoleDep = Annotated[ApplicationRole, Depends(get_current_application_role)]
+
+
+def get_current_application_route(
+    route_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationRoute:
+    route = session.get(ApplicationRoute, route_id)
+    if route is None or not route.enabled or route.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Route not found.")
+    return route
+
+
+CurrentApplicationRouteDep = Annotated[ApplicationRoute, Depends(get_current_application_route)]
+
+
+def get_current_application_route_response(
+    response_id: uuid.UUID, route: CurrentApplicationRouteDep, session: SessionDep
+) -> ApplicationRouteResponse:
+    response = session.get(ApplicationRouteResponse, response_id)
+    if response is None or not response.enabled or response.application_route_id != route.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Response not found.")
+    return response
+
+
+CurrentApplicationRouteResponseDep = Annotated[
+    ApplicationRouteResponse, Depends(get_current_application_route_response)
+]
+
+
+def get_current_application_route_example(
+    example_id: uuid.UUID, route: CurrentApplicationRouteDep, session: SessionDep
+) -> ApplicationRouteExample:
+    example = session.get(ApplicationRouteExample, example_id)
+    if example is None or not example.enabled or example.application_route_id != route.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Example not found.")
+    return example
+
+
+CurrentApplicationRouteExampleDep = Annotated[
+    ApplicationRouteExample, Depends(get_current_application_route_example)
+]
+
+
+def get_current_application_route_table(
+    route_table_id: uuid.UUID, route: CurrentApplicationRouteDep, session: SessionDep
+) -> ApplicationRouteTable:
+    link = session.get(ApplicationRouteTable, route_table_id)
+    if link is None or not link.enabled or link.application_route_id != route.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Route table not found.")
+    return link
+
+
+CurrentApplicationRouteTableDep = Annotated[
+    ApplicationRouteTable, Depends(get_current_application_route_table)
+]
+
+
 def get_current_feature(
     feature_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
 ) -> Feature:
@@ -771,3 +913,28 @@ def get_current_feature_journey(
 
 
 CurrentFeatureJourneyDep = Annotated[FeatureJourney, Depends(get_current_feature_journey)]
+
+
+def get_journey_scenario_step_route_manager(
+    session: SessionDep,
+) -> JourneyScenarioStepRouteManager:
+    return JourneyScenarioStepRouteManager(session)
+
+
+JourneyScenarioStepRouteManagerDep = Annotated[
+    JourneyScenarioStepRouteManager, Depends(get_journey_scenario_step_route_manager)
+]
+
+
+def get_current_journey_scenario_step_route(
+    step_route_id: uuid.UUID, step: CurrentJourneyScenarioStepDep, session: SessionDep
+) -> JourneyScenarioStepRoute:
+    link = session.get(JourneyScenarioStepRoute, step_route_id)
+    if link is None or not link.enabled or link.journey_scenario_step_id != step.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Step route not found.")
+    return link
+
+
+CurrentJourneyScenarioStepRouteDep = Annotated[
+    JourneyScenarioStepRoute, Depends(get_current_journey_scenario_step_route)
+]

@@ -44,6 +44,8 @@ class DatabaseTableColumnItem(CamelBase):
     name: str
     nullable: bool
     owner_id: uuid.UUID
+    rank: int
+    system_field: bool
     unique: bool
 
 

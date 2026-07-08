@@ -34,6 +34,7 @@ class ApplicationEnvironmentManager(BaseEntityManager):
         title: str,
         description: dict,
         url: str | None,
+        openapi_url: str | None,
     ) -> ApplicationEnvironment:
         """Create a draft environment owned by `user`."""
         now = utc_now()
@@ -48,6 +49,7 @@ class ApplicationEnvironmentManager(BaseEntityManager):
             title=title,
             description=description,
             url=url,
+            openapi_url=openapi_url,
         )
         return self._persist(environment)
 
