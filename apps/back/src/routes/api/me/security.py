@@ -12,6 +12,7 @@ from src.forms.me_security import (
 from src.serializes._base import ItemResponse, ListingResponse, SuccessResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.me_security import (
+    OtpMethodItem,
     OtpProvisioningItem,
     RecoveryCodesItem,
     SecurityKeyItem,
@@ -63,6 +64,18 @@ def create_password(form: CreatePasswordForm, user: CurrentUserDep, manager: MeS
 def update_password(form: UpdatePasswordForm, user: CurrentUserDep, manager: MeSecurityManagerDep) -> SuccessResponse:
     manager.update_password(user, old_password=form.old_password, new_password=form.new_password)
     return SuccessResponse()
+
+
+@router.get(
+    "/otp",
+    operation_id="api.me.security.otp.list",
+    summary="List active authenticators",
+    description="List the authenticators (TOTP) currently active on the account.",
+    response_model=ListingResponse[OtpMethodItem],
+    responses=_UNAUTHORIZED,
+)
+def list_otp(user: CurrentUserDep, manager: MeSecurityManagerDep) -> ListingResponse[OtpMethodItem]:
+    return ListingResponse.single_page(manager.list_otp(user))
 
 
 @router.post(

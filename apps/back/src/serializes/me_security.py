@@ -21,6 +21,13 @@ class SecurityOverviewItem(CamelBase):
     two_factor_enabled: bool
 
 
+class OtpMethodItem(CamelBase):
+    """An active authenticator registered on the account."""
+
+    id: uuid.UUID
+    registered_at: datetime | None = None
+
+
 class OtpProvisioningItem(CamelBase):
     """A pending authenticator secret — shown once, then confirmed with a code."""
 

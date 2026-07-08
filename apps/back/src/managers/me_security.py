@@ -33,6 +33,7 @@ from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
 from src.models.user_authentication_two_factor import UserAuthenticationTwoFactor
 from src.serializes.me_security import (
+    OtpMethodItem,
     OtpProvisioningItem,
     RecoveryCodesItem,
     SecurityKeyItem,
@@ -139,6 +140,12 @@ class MeSecurityManager:
         self.session.add(user)
 
     # ------------------------------------------------------------------- otp
+
+    def list_otp(self, user: User) -> list[OtpMethodItem]:
+        return [
+            OtpMethodItem(id=factor.id, registered_at=factor.activation_date or factor.date)
+            for factor in self._factors(user, UserAuthenticationTwoFactorType.OTP)
+        ]
 
     def generate_otp(self, user: User) -> OtpProvisioningItem:
         # Replace any half-finished secret so only one pending OTP exists.
