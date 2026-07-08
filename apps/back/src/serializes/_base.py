@@ -1,0 +1,54 @@
+"""Shared serializer base + response envelopes.
+
+Every output schema in `src/serializes/` inherits `CamelBase` so the exposed
+JSON is camelCase while the Python code stays snake_case (PEP 8). Responses are
+never the bare model — they are wrapped in one of the envelopes below so the
+front always reads `response.item` / `response.items`, leaving room to add
+metadata later without breaking the contract.
+"""
+
+from typing import Generic, TypeVar
+
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
+
+T = TypeVar("T")
+
+
+class CamelBase(BaseModel):
+    """Base for all serializers: camelCase aliases, populate by field name too."""
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+    )
+
+
+class ItemResponse(CamelBase, Generic[T]):
+    """Single-resource envelope: `{ "item": … }`."""
+
+    item: T
+
+
+class Pagination(CamelBase):
+    """Page cursor for a listing: 1-based, clamped to `[min, max]`."""
+
+    min: int = 1
+    current: int
+    max: int
+
+
+class ListingResponse(CamelBase, Generic[T]):
+    """Collection envelope: `{ count, limit, page, items[] }`."""
+
+    count: int
+    limit: int
+    page: Pagination
+    items: list[T]
+
+
+class SuccessResponse(CamelBase):
+    """Body of an action endpoint that has nothing to return but success."""
+
+    status: str = "ok"

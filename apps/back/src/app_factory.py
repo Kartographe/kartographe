@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse
 from scalar_fastapi import get_scalar_api_reference
 from starlette.middleware.cors import CORSMiddleware
@@ -8,6 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
 from src.settings import get_settings
+from src.utils.validation_errors import validation_error_handler
 
 
 def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
@@ -59,6 +61,10 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Normalise 422s into the `{ detail, errors[] }` envelope (and stop leaking
+    # submitted values such as plaintext passwords).
+    app.add_exception_handler(RequestValidationError, validation_error_handler)
 
     app.include_router(router)
 
