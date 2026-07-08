@@ -9,11 +9,15 @@
     "typecheck": "tsc -b",
     "check": "ultracite check",
     "fix": "ultracite fix",
-    "api:sync": "node --env-file=.env.local scripts/api-sync.mjs"
+    "api:sync": "node --env-file=.env.local scripts/api-sync.mjs",
+    "lingui:extract": "lingui extract",
+    "lingui:compile": "lingui compile"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.1.0",
     "@ant-design/icons": "^6.2.3",
+    "@lingui/core": "^6.5.0",
+    "@lingui/react": "^6.5.0",
     "@t3-oss/env-core": "^0.13.10",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.159.5",
@@ -30,6 +34,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.13",
+    "@lingui/babel-plugin-lingui-macro": "^6.5.0",
+    "@lingui/cli": "^6.5.0",
+    "@lingui/vite-plugin": "^6.5.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@tanstack/react-router-devtools": "^1.159.5",
