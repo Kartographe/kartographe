@@ -58,4 +58,9 @@ class EmailService:
         self._backend = _build_backend()
 
     def send(self, *, to: str, email: RenderedEmail) -> None:
-        self._backend.send(to=to, email=email)
+        # Best-effort: a misconfigured or down mail server must never break the
+        # business flow that triggered the email (signup, password reset, …).
+        try:
+            self._backend.send(to=to, email=email)
+        except Exception:
+            logger.exception("Failed to send email to %s (subject=%s)", to, email.subject)
