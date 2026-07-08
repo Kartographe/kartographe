@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Card, Divider, Flex, Skeleton, Typography } from "antd";
+import { Alert, Divider, Flex, Skeleton, Typography } from "antd";
 import { z } from "zod";
 import { $api } from "@/api/$api";
 import { ProfilePicture } from "@/features/account/components/profile-picture";
@@ -75,73 +75,71 @@ export function ProfileScreen() {
       <Typography.Title level={3} style={{ margin: 0 }}>
         {t`Mon profil`}
       </Typography.Title>
-      <Card>
-        <ProfilePicture src={me.pictureProfile} />
-        <Divider />
-        <form.AppForm>
-          <form.FormRoot>
-            <Flex gap={12} vertical>
-              <Flex gap={12}>
-                <div className="flex-1">
-                  <form.AppField name="firstName">
-                    {(field) => <field.TextField label={t`Prénom`} />}
-                  </form.AppField>
-                </div>
-                <div className="flex-1">
-                  <form.AppField name="lastName">
-                    {(field) => <field.TextField label={t`Nom`} />}
-                  </form.AppField>
-                </div>
-              </Flex>
-              <Typography.Text type="secondary">{me.email}</Typography.Text>
-              <form.AppField name="phone">
-                {(field) => <field.TextField label={t`Téléphone`} type="tel" />}
-              </form.AppField>
-              <form.AppField name="gender">
-                {(field) => (
-                  <field.SelectField
-                    label={t`Civilité`}
-                    options={[
-                      { label: t`Non précisé`, value: "unknown" },
-                      { label: t`Madame`, value: "female" },
-                      { label: t`Monsieur`, value: "male" },
-                    ]}
-                  />
-                )}
-              </form.AppField>
-              <form.AppField name="language">
-                {(field) => (
-                  <field.SelectField
-                    label={t`Langue`}
-                    options={[
-                      { label: "Français", value: "fr-FR" },
-                      { label: "English", value: "en-GB" },
-                      { label: "Español", value: "es-ES" },
-                      { label: "Deutsch", value: "de-DE" },
-                      { label: "Italiano", value: "it-IT" },
-                    ]}
-                  />
-                )}
-              </form.AppField>
-              <form.AppField name="theme">
-                {(field) => (
-                  <field.SelectField
-                    label={t`Thème`}
-                    options={[
-                      { label: t`Système`, value: "system" },
-                      { label: t`Clair`, value: "light" },
-                      { label: t`Sombre`, value: "dark" },
-                    ]}
-                  />
-                )}
-              </form.AppField>
-              <div>
-                <form.SubmitButton>{t`Enregistrer`}</form.SubmitButton>
+      <ProfilePicture src={me.pictureProfile} />
+      <Divider />
+      <form.AppForm>
+        <form.FormRoot>
+          <Flex gap={12} vertical>
+            <Flex gap={12}>
+              <div className="flex-1">
+                <form.AppField name="firstName">
+                  {(field) => <field.TextField label={t`Prénom`} />}
+                </form.AppField>
+              </div>
+              <div className="flex-1">
+                <form.AppField name="lastName">
+                  {(field) => <field.TextField label={t`Nom`} />}
+                </form.AppField>
               </div>
             </Flex>
-          </form.FormRoot>
-        </form.AppForm>
-      </Card>
+            <Typography.Text type="secondary">{me.email}</Typography.Text>
+            <form.AppField name="phone">
+              {(field) => <field.TextField label={t`Téléphone`} type="tel" />}
+            </form.AppField>
+            <form.AppField name="gender">
+              {(field) => (
+                <field.SelectField
+                  label={t`Civilité`}
+                  options={[
+                    { label: t`Non précisé`, value: "unknown" },
+                    { label: t`Madame`, value: "female" },
+                    { label: t`Monsieur`, value: "male" },
+                  ]}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="language">
+              {(field) => (
+                <field.SelectField
+                  label={t`Langue`}
+                  options={[
+                    { label: "Français", value: "fr-FR" },
+                    { label: "English", value: "en-GB" },
+                    { label: "Español", value: "es-ES" },
+                    { label: "Deutsch", value: "de-DE" },
+                    { label: "Italiano", value: "it-IT" },
+                  ]}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="theme">
+              {(field) => (
+                <field.SelectField
+                  label={t`Thème`}
+                  options={[
+                    { label: t`Système`, value: "system" },
+                    { label: t`Clair`, value: "light" },
+                    { label: t`Sombre`, value: "dark" },
+                  ]}
+                />
+              )}
+            </form.AppField>
+            <div>
+              <form.SubmitButton>{t`Enregistrer`}</form.SubmitButton>
+            </div>
+          </Flex>
+        </form.FormRoot>
+      </form.AppForm>
     </Flex>
   );
 }

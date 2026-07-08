@@ -1,83 +1,73 @@
-import {
-  LogoutOutlined,
-  SafetyOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { useLingui } from "@lingui/react/macro";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Link, Outlet } from "@tanstack/react-router";
-import { Avatar, Dropdown, Flex, Layout, Typography } from "antd";
+import { Button, Divider, Flex, Layout } from "antd";
+import { useAppShellStore } from "@/components/app-shell/app-shell-store";
+import { NavMenu } from "@/components/app-shell/nav-menu";
+import { UserMenu } from "@/components/app-shell/user-menu";
 import { Logo } from "@/components/logo";
-import { useCurrentUser } from "@/features/account/hooks/use-current-user";
-import { emitSessionExpired } from "@/lib/auth/auth-events";
-import { clearSession } from "@/lib/auth/token-storage";
 
 export function AppShell() {
-  const { t } = useLingui();
-  const meQuery = useCurrentUser();
-  const me = meQuery.data?.item;
-
-  const displayName =
-    [me?.firstName, me?.lastName].filter(Boolean).join(" ") || me?.email || "";
-
-  function logout() {
-    clearSession();
-    emitSessionExpired("manual");
-  }
+  const collapsed = useAppShellStore((state) => state.collapsed);
+  const toggle = useAppShellStore((state) => state.toggleCollapsed);
 
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <Layout.Header
+    <Layout hasSider style={{ minHeight: "100dvh" }}>
+      <Layout.Sider
+        collapsed={collapsed}
+        collapsedWidth={72}
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           background: "var(--ant-color-bg-container)",
-          borderBottom: "1px solid var(--ant-color-border-secondary)",
-          paddingInline: 24,
+          borderInlineEnd: "1px solid var(--ant-color-border-secondary)",
         }}
+        trigger={null}
+        width={256}
       >
-        <Flex align="center" gap={24}>
+        <Flex style={{ height: "100dvh" }} vertical>
           <Link to="/">
-            <Flex align="center" gap={10}>
+            <Flex
+              align="center"
+              gap={10}
+              justify={collapsed ? "center" : "flex-start"}
+              style={{ height: 56, paddingInline: 16 }}
+            >
               <Logo size={30} />
-              <span style={{ fontSize: 18, fontWeight: 700 }}>Kartographe</span>
+              {collapsed ? null : (
+                <span style={{ fontSize: 18, fontWeight: 700 }}>
+                  Kartographe
+                </span>
+              )}
             </Flex>
           </Link>
+          <Divider style={{ margin: 0 }} />
+
+          <div style={{ flex: 1, overflowY: "auto" }}>
+            <NavMenu />
+          </div>
+
+          <Divider style={{ margin: 0 }} />
+          <Flex gap={4} style={{ padding: 8 }} vertical>
+            <Button
+              aria-label="toggle-sidebar"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={toggle}
+              type="text"
+            />
+            <UserMenu collapsed={collapsed} />
+          </Flex>
         </Flex>
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: "profile",
-                icon: <UserOutlined />,
-                label: <Link to="/account">{t`Mon profil`}</Link>,
-              },
-              {
-                key: "security",
-                icon: <SafetyOutlined />,
-                label: <Link to="/account/security">{t`Sécurité`}</Link>,
-              },
-              { type: "divider" },
-              {
-                key: "logout",
-                icon: <LogoutOutlined />,
-                label: t`Se déconnecter`,
-                onClick: logout,
-              },
-            ],
+      </Layout.Sider>
+
+      <Layout style={{ minHeight: "100dvh" }}>
+        <Layout.Content
+          style={{
+            background: "var(--ant-color-bg-layout)",
+            overflowY: "auto",
+            padding: 24,
           }}
         >
-          <Flex align="center" gap={8} style={{ cursor: "pointer" }}>
-            <Avatar icon={<UserOutlined />} src={me?.pictureProfile} />
-            <Typography.Text>{displayName}</Typography.Text>
-          </Flex>
-        </Dropdown>
-      </Layout.Header>
-      <Layout.Content style={{ padding: 24 }}>
-        <div style={{ margin: "0 auto", maxWidth: 900 }}>
           <Outlet />
-        </div>
-      </Layout.Content>
+        </Layout.Content>
+      </Layout>
     </Layout>
   );
 }

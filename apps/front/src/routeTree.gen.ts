@@ -22,6 +22,7 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotRouteImport } from './routes/auth/forgot'
 import { Route as AuthActivationRouteImport } from './routes/auth/activation'
 import { Route as Auth2faRouteImport } from './routes/auth/2fa'
+import { Route as AppAccountRouteRouteImport } from './routes/_app/account/route'
 import { Route as AppAccountIndexRouteImport } from './routes/_app/account/index'
 import { Route as AppAccountSecurityRouteImport } from './routes/_app/account/security'
 
@@ -89,21 +90,27 @@ const Auth2faRoute = Auth2faRouteImport.update({
   path: '/2fa',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
-  id: '/account/',
-  path: '/account/',
+const AppAccountRouteRoute = AppAccountRouteRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountIndexRoute = AppAccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAccountRouteRoute,
+} as any)
 const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
-  id: '/account/security',
-  path: '/account/security',
-  getParentRoute: () => AppRoute,
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AppAccountRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AppAccountRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -137,6 +144,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
   '/terms': typeof TermsRoute
+  '/_app/account': typeof AppAccountRouteRouteWithChildren
   '/auth/2fa': typeof Auth2faRoute
   '/auth/activation': typeof AuthActivationRoute
   '/auth/forgot': typeof AuthForgotRoute
@@ -156,6 +164,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/'
     | '/terms'
+    | '/account'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_app'
     | '/terms'
+    | '/_app/account'
     | '/auth/2fa'
     | '/auth/activation'
     | '/auth/forgot'
@@ -301,19 +311,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth2faRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_app/account': {
+      id: '/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AppAccountRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/account/': {
       id: '/_app/account/'
-      path: '/account'
+      path: '/'
       fullPath: '/account/'
       preLoaderRoute: typeof AppAccountIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAccountRouteRoute
     }
     '/_app/account/security': {
       id: '/_app/account/security'
-      path: '/account/security'
+      path: '/security'
       fullPath: '/account/security'
       preLoaderRoute: typeof AppAccountSecurityRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppAccountRouteRoute
     }
   }
 }
@@ -346,16 +363,28 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface AppRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
+interface AppAccountRouteRouteChildren {
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppAccountIndexRoute: typeof AppAccountIndexRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
+const AppAccountRouteRouteChildren: AppAccountRouteRouteChildren = {
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppAccountIndexRoute: AppAccountIndexRoute,
+}
+
+const AppAccountRouteRouteWithChildren = AppAccountRouteRoute._addFileChildren(
+  AppAccountRouteRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAccountRouteRoute: typeof AppAccountRouteRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAccountRouteRoute: AppAccountRouteRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
