@@ -18,7 +18,14 @@ export function useAuthSuccess() {
     if (data.twoFactorEnabled) {
       const types = data.twoFactorAvailableTypes ?? [];
       setChallenge(data.item.accessToken, types);
-      navigate({ to: types.includes("otp") ? "/auth/otp" : "/auth/2fa" });
+      // Prefer the lowest-friction factor; fall back to the chooser.
+      let target: "/auth/u2f" | "/auth/otp" | "/auth/2fa" = "/auth/2fa";
+      if (types.includes("u2f")) {
+        target = "/auth/u2f";
+      } else if (types.includes("otp")) {
+        target = "/auth/otp";
+      }
+      navigate({ to: target });
       return;
     }
     saveSession(data.item, remember);

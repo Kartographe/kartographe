@@ -24,6 +24,11 @@ export function TwoFactorChoiceScreen() {
       title={t`Vérification en deux étapes`}
     >
       <Flex gap={12} vertical>
+        {availableTypes.includes("u2f") ? (
+          <Button block onClick={() => navigate({ to: "/auth/u2f" })}>
+            {t`Clé de sécurité`}
+          </Button>
+        ) : null}
         {availableTypes.includes("otp") ? (
           <Button block onClick={() => navigate({ to: "/auth/otp" })}>
             {t`Application d'authentification`}

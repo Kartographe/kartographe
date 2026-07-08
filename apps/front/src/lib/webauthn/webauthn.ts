@@ -78,3 +78,49 @@ export async function createSecurityKeyCredential(
     clientExtensionResults: credential.getClientExtensionResults(),
   };
 }
+
+interface RequestOptions {
+  challenge: string;
+  allowCredentials?: { id: string; type: string; transports?: string[] }[];
+  [key: string]: unknown;
+}
+
+/**
+ * Run `navigator.credentials.get` from the server's assertion options and
+ * return the assertion as the base64url JSON the backend expects.
+ */
+export async function getSecurityKeyAssertion(
+  options: RequestOptions
+): Promise<Record<string, unknown>> {
+  const publicKey: PublicKeyCredentialRequestOptions = {
+    ...(options as unknown as PublicKeyCredentialRequestOptions),
+    challenge: base64urlToArrayBuffer(options.challenge),
+    allowCredentials: (options.allowCredentials ?? []).map((cred) => ({
+      ...cred,
+      id: base64urlToArrayBuffer(cred.id),
+    })) as PublicKeyCredentialDescriptor[],
+  };
+
+  const credential = (await navigator.credentials.get({
+    publicKey,
+  })) as PublicKeyCredential | null;
+  if (!credential) {
+    throw new Error("No assertion");
+  }
+  const response = credential.response as AuthenticatorAssertionResponse;
+
+  return {
+    id: credential.id,
+    rawId: arrayBufferToBase64url(credential.rawId),
+    type: credential.type,
+    response: {
+      clientDataJSON: arrayBufferToBase64url(response.clientDataJSON),
+      authenticatorData: arrayBufferToBase64url(response.authenticatorData),
+      signature: arrayBufferToBase64url(response.signature),
+      userHandle: response.userHandle
+        ? arrayBufferToBase64url(response.userHandle)
+        : null,
+    },
+    clientExtensionResults: credential.getClientExtensionResults(),
+  };
+}

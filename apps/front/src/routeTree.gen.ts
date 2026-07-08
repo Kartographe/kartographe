@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthU2fRouteImport } from './routes/auth/u2f'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthRecoveryRouteImport } from './routes/auth/recovery'
@@ -36,6 +37,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const AuthU2fRoute = AuthU2fRouteImport.update({
+  id: '/u2f',
+  path: '/u2f',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthResetRoute = AuthResetRouteImport.update({
   id: '/reset',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/auth/u2f': typeof AuthU2fRoute
   '/account/security': typeof AppAccountSecurityRoute
   '/account/': typeof AppAccountIndexRoute
 }
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/auth/u2f': typeof AuthU2fRoute
   '/': typeof AppIndexRoute
   '/account/security': typeof AppAccountSecurityRoute
   '/account': typeof AppAccountIndexRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/auth/recovery': typeof AuthRecoveryRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
+  '/auth/u2f': typeof AuthU2fRoute
   '/_app/': typeof AppIndexRoute
   '/_app/account/security': typeof AppAccountSecurityRoute
   '/_app/account/': typeof AppAccountIndexRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/auth/u2f'
     | '/account/security'
     | '/account/'
   fileRoutesByTo: FileRoutesByTo
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/auth/u2f'
     | '/'
     | '/account/security'
     | '/account'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/auth/recovery'
     | '/auth/register'
     | '/auth/reset'
+    | '/auth/u2f'
     | '/_app/'
     | '/_app/account/security'
     | '/_app/account/'
@@ -205,6 +217,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/auth/u2f': {
+      id: '/auth/u2f'
+      path: '/u2f'
+      fullPath: '/auth/u2f'
+      preLoaderRoute: typeof AuthU2fRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/reset': {
       id: '/auth/reset'
@@ -288,6 +307,7 @@ interface AuthRouteRouteChildren {
   AuthRecoveryRoute: typeof AuthRecoveryRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthResetRoute: typeof AuthResetRoute
+  AuthU2fRoute: typeof AuthU2fRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
@@ -299,6 +319,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthRecoveryRoute: AuthRecoveryRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetRoute: AuthResetRoute,
+  AuthU2fRoute: AuthU2fRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
