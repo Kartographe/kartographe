@@ -288,6 +288,26 @@ export interface paths {
         patch: operations["api.me.update"];
         trace?: never;
     };
+    "/me/picture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the signed-in user's profile picture
+         * @description Upload a profile picture (multipart, field `file`). The image is center-cropped to a square and resized server-side; the previous picture is replaced.
+         */
+        post: operations["api.me.setPicture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/security": {
         parameters: {
             query?: never;
@@ -1175,6 +1195,11 @@ export interface components {
             /** Errors */
             errors: components["schemas"]["FieldError"][];
         };
+        /** Body_api.me.setPicture */
+        setPicture: {
+            /** File */
+            file: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -1788,6 +1813,66 @@ export interface operations {
             };
             /** @description Authentication required */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.setPicture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["setPicture"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeItem_"];
+                };
+            };
+            /** @description Unsupported image format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Image too large */
+            413: {
                 headers: {
                     [name: string]: unknown;
                 };

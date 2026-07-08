@@ -1,8 +1,9 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Card, Flex, Skeleton, Typography } from "antd";
+import { Alert, Card, Divider, Flex, Skeleton, Typography } from "antd";
 import { z } from "zod";
 import { $api } from "@/api/$api";
+import { ProfilePicture } from "@/features/account/components/profile-picture";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 import { useThemeStore } from "@/lib/theme/theme-store";
@@ -75,6 +76,8 @@ export function ProfileScreen() {
         {t`Mon profil`}
       </Typography.Title>
       <Card>
+        <ProfilePicture src={me.pictureProfile} />
+        <Divider />
         <form.AppForm>
           <form.FormRoot>
             <Flex gap={12} vertical>
