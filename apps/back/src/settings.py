@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     # block so Scalar's "Try it" points at the right host.
     api_base_url: str = Field(default="http://localhost:8000")
 
+    # Public base URL of the front SPA — used to build the links embedded in
+    # transactional emails (activation, password reset) that must land the user
+    # on a browser page, not on the API.
+    app_url: str = Field(default="http://localhost:5173")
+
     database_url: str = Field(
         default="postgresql+psycopg2://app_user:app_password@localhost:5431/app_db",
     )
@@ -27,7 +32,44 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256")
     jwt_issuer: str = Field(default="kartographe")
     jwt_access_ttl_seconds: int = Field(default=3600)
-    jwt_refresh_ttl_seconds: int = Field(default=604800)
+    jwt_refresh_ttl_seconds: int = Field(default=86400)
+    # Longer refresh TTL granted when the user ticks "remember me" at login.
+    jwt_refresh_long_ttl_seconds: int = Field(default=604800)
+
+    # TOTP (authenticator app) — the issuer label shown in the user's
+    # authenticator next to the account.
+    otp_issuer: str = Field(default="Kartographe")
+
+    # WebAuthn / U2F (security keys). `rp_id` must be the registrable domain
+    # (no scheme/port); `origins` are the exact browser origins allowed to
+    # register/assert.
+    webauthn_rp_id: str = Field(default="localhost")
+    webauthn_rp_name: str = Field(default="Kartographe")
+    webauthn_origins: list[str] = Field(default=["http://localhost:5173"])
+
+    # Google SSO — the OAuth client id the front uses; the backend verifies the
+    # ID token's `aud` against it.
+    google_client_id: str | None = Field(default=None)
+
+    # Cloudflare Turnstile anti-bot on the `/auth/*` surface. Disabled by
+    # default so local dev needs no Cloudflare keys; the guard becomes a no-op.
+    turnstile_enabled: bool = Field(default=False)
+    turnstile_secret: str | None = Field(default=None)
+    turnstile_verify_url: str = Field(
+        default="https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    )
+
+    # Transactional email. When disabled (default), the manager logs the link
+    # instead of sending — enough for local dev and self-hosting without an SMTP
+    # provider configured yet.
+    email_enabled: bool = Field(default=False)
+    email_emitter_address: str = Field(default="no-reply@kartographe.local")
+    email_emitter_name: str = Field(default="Kartographe")
+    smtp_host: str | None = Field(default=None)
+    smtp_port: int = Field(default=587)
+    smtp_user: str | None = Field(default=None)
+    smtp_password: str | None = Field(default=None)
+    smtp_use_tls: bool = Field(default=True)
 
     # Serve the FastAPI-MCP transport (`/mcp`) and expose the `/v1/*` routes
     # as MCP tools.

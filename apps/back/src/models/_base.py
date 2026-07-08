@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, func
+from sqlalchemy import DateTime, func
 from sqlmodel import Field, SQLModel
 
 
@@ -20,6 +20,12 @@ class BaseModel(SQLModel):
     Not a table itself (`table=False`) — concrete models subclass it and add
     `table=True`. The column order here is mirrored by the Alembic autogenerate
     hook so migrations stay stable: `id`, `enabled`, then the timestamps.
+
+    The timestamp columns use `sa_type` + `sa_column_kwargs` rather than a
+    shared `sa_column=Column(...)`: a single `Column` instance cannot be
+    attached to more than one table, so sharing one across every subclass raises
+    "Column already assigned to Table". Passing kwargs makes SQLModel build a
+    fresh `Column` per model.
     """
 
     id: uuid.UUID = Field(default_factory=uuid7, primary_key=True)
@@ -27,13 +33,16 @@ class BaseModel(SQLModel):
 
     created_at: datetime | None = Field(
         default=None,
-        sa_column=Column(DateTime(timezone=True), server_default=func.now(), nullable=False),
+        sa_type=DateTime(timezone=True),
+        sa_column_kwargs={"server_default": func.now(), "nullable": False},
     )
     updated_at: datetime | None = Field(
         default=None,
-        sa_column=Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False),
+        sa_type=DateTime(timezone=True),
+        sa_column_kwargs={"server_default": func.now(), "onupdate": func.now(), "nullable": False},
     )
     deleted_at: datetime | None = Field(
         default=None,
-        sa_column=Column(DateTime(timezone=True), nullable=True),
+        sa_type=DateTime(timezone=True),
+        sa_column_kwargs={"nullable": True},
     )

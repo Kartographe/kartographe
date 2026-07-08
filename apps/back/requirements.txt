@@ -3,9 +3,16 @@ uvicorn[standard]
 sqlmodel
 pydantic>=2.0,<3.0
 pydantic-settings
+email-validator
 alembic
 psycopg2-binary
 python-dotenv
 pyjwt
+argon2-cffi
+pyotp
+webauthn
+google-auth
+requests
+httpx
 scalar-fastapi
 fastapi-mcp
