@@ -6,6 +6,7 @@ import { NavMenu } from "@/components/app-shell/nav-menu";
 import { UserMenu } from "@/components/app-shell/user-menu";
 import { Logo } from "@/components/logo";
 import { LogoHorizontal } from "@/components/logo-horizontal";
+import { AccountSwitcher } from "@/features/accounts/account-switcher";
 
 export function AppShell() {
   const collapsed = useAppShellStore((state) => state.collapsed);
@@ -33,6 +34,9 @@ export function AppShell() {
               {collapsed ? <Logo size={30} /> : <LogoHorizontal height={26} />}
             </Flex>
           </Link>
+          <Divider style={{ margin: 0 }} />
+
+          <AccountSwitcher collapsed={collapsed} />
           <Divider style={{ margin: 0 }} />
 
           <div style={{ flex: 1, overflowY: "auto" }}>
