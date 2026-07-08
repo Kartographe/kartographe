@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MCPGrantsList } from "@/features/mcp/mcp-grants-list";
+import { MCPScreen } from "@/features/mcp/mcp-screen";
 
 export const Route = createFileRoute("/_app/me/mcp")({
-  component: MCPGrantsList,
+  component: MCPScreen,
 });
