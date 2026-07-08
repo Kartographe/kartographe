@@ -4,6 +4,10 @@ from datetime import datetime
 from sqlalchemy import DateTime, func
 from sqlmodel import Field, SQLModel
 
+# Side-effect import: patches SQLAlchemy's Enum to use snake_case PG type names
+# and store member values. Must run before any table class is defined.
+import src.models._enum_type  # noqa: F401,E402  (import-for-side-effect)
+
 
 def uuid7() -> uuid.UUID:
     """Time-ordered UUIDv7 (RFC 9562), native to Python 3.14's `uuid` module.

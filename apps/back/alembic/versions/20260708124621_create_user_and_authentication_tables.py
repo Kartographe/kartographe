@@ -1,8 +1,8 @@
 """create user and authentication tables
 
-Revision ID: 54ca4dbca5b2
+Revision ID: 20260708124621
 Revises: 
-Create Date: 2026-07-08 14:41:00.852706
+Create Date: 2026-07-08 14:46:21.739899
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 
-revision: str = '54ca4dbca5b2'
+revision: str = '20260708124621'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -35,11 +35,11 @@ def upgrade() -> None:
     sa.Column('created_ip', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('created_city', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('created_country', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('gender', sa.Enum('UNKNOWN', 'MALE', 'FEMALE', name='usergender'), nullable=False),
-    sa.Column('type', sa.Enum('PHYSICAL', 'APPLICATION', name='usertype'), nullable=False),
-    sa.Column('status', sa.Enum('ACTIVE', 'REMOVED', 'BLOCKED', name='userstatus'), nullable=False),
-    sa.Column('language', sa.Enum('FRENCH', 'ENGLISH', 'SPANISH', 'GERMAN', 'ITALIAN', name='language'), nullable=False),
-    sa.Column('theme', sa.Enum('SYSTEM', 'LIGHT', 'DARK', name='usertheme'), nullable=False),
+    sa.Column('gender', sa.Enum('unknown', 'male', 'female', name='user_gender'), nullable=False),
+    sa.Column('type', sa.Enum('physical', 'application', name='user_type'), nullable=False),
+    sa.Column('status', sa.Enum('active', 'removed', 'blocked', name='user_status'), nullable=False),
+    sa.Column('language', sa.Enum('fr-FR', 'en-GB', 'es-ES', 'de-DE', 'it-IT', name='language'), nullable=False),
+    sa.Column('theme', sa.Enum('system', 'light', 'dark', name='user_theme'), nullable=False),
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('phone', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('first_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
@@ -78,8 +78,8 @@ def upgrade() -> None:
     sa.Column('created_ip', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('created_city', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('created_country', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('type', sa.Enum('EMAIL_PASSWORD', 'GOOGLE_OAUTH', name='userauthenticationtype'), nullable=False),
-    sa.Column('status', sa.Enum('NOT_VERIFIED', 'ACTIVE', 'BLOCKED', name='userauthenticationstatus'), nullable=False),
+    sa.Column('type', sa.Enum('email_password', 'google_oauth', name='user_authentication_type'), nullable=False),
+    sa.Column('status', sa.Enum('not_verified', 'active', 'blocked', name='user_authentication_status'), nullable=False),
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('value', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=True),
@@ -109,8 +109,8 @@ def upgrade() -> None:
     sa.Column('activation_ip', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('activation_city', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('activation_country', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('type', sa.Enum('OTP', 'RECOVERY_CODE', 'U2F', name='userauthenticationtwofactortype'), nullable=False),
-    sa.Column('status', sa.Enum('NOT_VERIFIED', 'ACTIVE', 'USED', 'DISABLED', 'BLOCKED', name='userauthenticationtwofactorstatus'), nullable=False),
+    sa.Column('type', sa.Enum('otp', 'recovery_code', 'u2f', name='user_authentication_two_factor_type'), nullable=False),
+    sa.Column('status', sa.Enum('not_verified', 'active', 'used', 'disabled', 'blocked', name='user_authentication_two_factor_status'), nullable=False),
     sa.Column('value', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('data', sa.JSON(), nullable=True),
     sa.Column('date', sa.DateTime(), nullable=True),
@@ -137,8 +137,8 @@ def upgrade() -> None:
     sa.Column('authentication_ip', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('authentication_city', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('authentication_country', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('type', sa.Enum('REGISTER', 'ACTIVATE', 'ACTIVATION_LINK', 'EMAIL_PASSWORD', 'GOOGLE_OAUTH', 'TWO_FACTOR_OTP', 'TWO_FACTOR_U2F', 'TWO_FACTOR_RECOVERY_CODE', 'REFRESH_TOKEN', 'FORGOT_PASSWORD', 'RESET_PASSWORD', 'ACCESS', name='userauthenticationlogtype'), nullable=False),
-    sa.Column('status', sa.Enum('SUCCESS', 'ERROR', 'FORBIDDEN', name='userauthenticationlogstatus'), nullable=False),
+    sa.Column('type', sa.Enum('register', 'activate', 'activation_link', 'email_password', 'google_oauth', 'two_factor_otp', 'two_factor_u2f', 'two_factor_recovery_code', 'refresh_token', 'forgot_password', 'reset_password', 'access', name='user_authentication_log_type'), nullable=False),
+    sa.Column('status', sa.Enum('success', 'error', 'forbidden', name='user_authentication_log_status'), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_authentication_id'], ['user_authentication.id'], ),
     sa.ForeignKeyConstraint(['user_authentication_two_factor_id'], ['user_authentication_two_factor.id'], ),
@@ -188,4 +188,21 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_user_created_ip'), table_name='user')
     op.drop_index(op.f('ix_user_activation_ip'), table_name='user')
     op.drop_table('user')
+    # Alembic's autogenerate drops the tables but not the native Postgres enum
+    # types they used — drop them explicitly so the migration is fully
+    # reversible (otherwise a re-upgrade fails on "type already exists").
+    for enum_name in (
+        'user_authentication_log_status',
+        'user_authentication_log_type',
+        'user_authentication_two_factor_status',
+        'user_authentication_two_factor_type',
+        'user_authentication_status',
+        'user_authentication_type',
+        'user_theme',
+        'user_status',
+        'user_type',
+        'user_gender',
+        'language',
+    ):
+        op.execute(f'DROP TYPE IF EXISTS {enum_name}')
     # ### end Alembic commands ###

@@ -64,13 +64,17 @@ def _reorder_columns_in_ops(ops_container):
 
 
 def generate_rev_id():
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M")
-    return timestamp
+    # `YYYYMMDDHHMMSS` — sorts chronologically so `alembic history` and the
+    # versions/ folder read in the order migrations were authored. Seconds
+    # precision keeps two migrations authored in the same minute distinct.
+    return datetime.utcnow().strftime("%Y%m%d%H%M%S")
 
 
 def process_revision_directives(context, revision, directives):
     if directives:
         script = directives[0]
+        # Timestamp-based revision id instead of the default random hash.
+        script.rev_id = generate_rev_id()
         if script.upgrade_ops is not None:
             _reorder_columns_in_ops(script.upgrade_ops)
 
