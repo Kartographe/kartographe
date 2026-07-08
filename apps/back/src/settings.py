@@ -101,6 +101,13 @@ class Settings(BaseSettings):
     mcp_enabled: bool = Field(default=True)
     mcp_mount_path: str = Field(default="/mcp")
 
+    # MCP OAuth authorization server TTLs (seconds).
+    mcp_oauth_device_code_ttl_seconds: int = Field(default=900)  # 15 min
+    mcp_oauth_device_polling_interval_seconds: int = Field(default=5)
+    mcp_oauth_authorization_code_ttl_seconds: int = Field(default=600)  # 10 min
+    mcp_oauth_access_token_ttl_seconds: int = Field(default=3600)  # 1 h
+    mcp_oauth_refresh_token_ttl_seconds: int = Field(default=2592000)  # 30 days
+
     # Gate on `GET /docs` (the Scalar HTML reference). `openapi.json` stays
     # reachable regardless — only the HTML viewer is gated.
     docs_enabled: bool = Field(default=True)

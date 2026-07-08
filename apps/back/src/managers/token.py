@@ -23,21 +23,23 @@ import jwt
 
 from src.models.user import User
 from src.models.user_authentication import UserAuthentication
+from src.models.user_mcp_grant import UserMcpGrant
 from src.settings import get_settings
 
 _SUBJECT = "user"
+_MCP_SUBJECT = "mcp-grant"
 
 
 def _now() -> int:
     return int(time.time())
 
 
-def _encode(audience: str, ttl: int, extra: dict) -> str:
+def _encode(audience: str, ttl: int, extra: dict, *, subject: str = _SUBJECT) -> str:
     settings = get_settings()
     now = _now()
     claims = {
         "iss": settings.jwt_issuer,
-        "sub": _SUBJECT,
+        "sub": subject,
         "aud": audience,
         "iat": now,
         "nbf": now,
@@ -47,7 +49,7 @@ def _encode(audience: str, ttl: int, extra: dict) -> str:
     return jwt.encode(claims, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
-def _decode(token: str, audience: str) -> tuple[dict | None, bool]:
+def _decode(token: str, audience: str, *, subject: str = _SUBJECT) -> tuple[dict | None, bool]:
     """Return `(payload, expired)`. `payload` is None on any invalid token;
     `expired` is True only when the token was well-formed but past `exp`."""
     settings = get_settings()
@@ -64,7 +66,7 @@ def _decode(token: str, audience: str) -> tuple[dict | None, bool]:
         return None, True
     except jwt.PyJWTError:
         return None, False
-    if payload.get("sub") != _SUBJECT:
+    if payload.get("sub") != subject:
         return None, False
     return payload, False
 
@@ -203,3 +205,43 @@ class ActivationTokenManager(_TemporaryAuthenticationTokenManager):
 
 class ResetTokenManager(_TemporaryAuthenticationTokenManager):
     AUDIENCE = "auth-reset-password"
+
+
+class McpAccessTokenManager:
+    """Access token for an MCP grant (audience `mcp-access`).
+
+    Embeds `grant.id` + `grant_control` so the transport can reload the grant and
+    reject tokens superseded by a refresh or a revocation.
+    """
+
+    AUDIENCE = "mcp-access"
+
+    def __init__(self, grant: UserMcpGrant):
+        self.grant = grant
+
+    def _claims(self) -> dict:
+        return {
+            "grant": {"id": str(self.grant.id), "control": self.grant.grant_control},
+            "user": {"id": str(self.grant.user_id)},
+            "client": {"id": str(self.grant.client_id)},
+            "scope": self.grant.scope.value,
+        }
+
+    def _ttl(self) -> int:
+        return get_settings().mcp_oauth_access_token_ttl_seconds
+
+    def generate(self) -> str:
+        return _encode(self.AUDIENCE, self._ttl(), self._claims(), subject=_MCP_SUBJECT)
+
+    @classmethod
+    def decode(cls, token: str) -> tuple[dict | None, bool]:
+        return _decode(token, cls.AUDIENCE, subject=_MCP_SUBJECT)
+
+
+class McpRefreshTokenManager(McpAccessTokenManager):
+    """Refresh token for an MCP grant (audience `mcp-refresh`, longer TTL)."""
+
+    AUDIENCE = "mcp-refresh"
+
+    def _ttl(self) -> int:
+        return get_settings().mcp_oauth_refresh_token_ttl_seconds
