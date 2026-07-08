@@ -24,10 +24,582 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a new account
+         * @description Register a new email/password account. Always succeeds (a taken email is not revealed) and sends an activation email the user must confirm before signing in.
+         */
+        post: operations["api.auth.register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm an account from its activation link
+         * @description Activate a newly registered account using the token from the activation email.
+         */
+        post: operations["api.auth.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/resendActivation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Re-send the activation email
+         * @description Ask for a fresh activation email. Always succeeds, whether or not the email has a pending account.
+         */
+        post: operations["api.auth.resendActivation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign in with email and password
+         * @description Authenticate with email and password. On success returns an access + refresh token pair. When the account has a second factor, returns a short-lived intermediate token and the list of factors to complete (`twoFactorEnabled: true`).
+         */
+        post: operations["api.auth.login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password/forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request a password-reset email
+         * @description Send a password-reset link to the given email. Always succeeds so registered emails aren't revealed.
+         */
+        post: operations["api.auth.password.forgot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/password/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a new password from a reset link
+         * @description Set a new password using the token from the reset email. Invalidates all existing sessions.
+         */
+        post: operations["api.auth.password.reset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/sso/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign in with Google
+         * @description Authenticate with a Google ID token obtained in the browser. Creates the account on first sign-in. Returns the same shape as email login (may require a second factor).
+         */
+        post: operations["api.auth.sso.google"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/twoFactor/otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete login with an authenticator code
+         * @description Second-factor step: exchange the intermediate token and a 6-digit authenticator code for a full session.
+         */
+        post: operations["api.auth.twoFactor.otp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/twoFactor/recoveryCode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete login with a recovery code
+         * @description Second-factor fallback: exchange the intermediate token and a one-time recovery code for a full session.
+         */
+        post: operations["api.auth.twoFactor.recoveryCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/twoFactor/u2f/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get security-key assertion options
+         * @description Start a security-key login: returns the WebAuthn options for `navigator.credentials.get` plus a token binding them to this login.
+         */
+        post: operations["api.auth.twoFactor.u2f.options"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/twoFactor/u2f": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete login with a security key
+         * @description Second-factor step: verify the browser's WebAuthn assertion and return a full session.
+         */
+        post: operations["api.auth.twoFactor.u2f"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Exchange a refresh token for a new token pair
+         * @description Trade a valid refresh token for a fresh access + refresh pair. Call it when the access token has expired.
+         */
+        post: operations["api.auth.refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the signed-in user's profile
+         * @description Return the profile of the currently authenticated user.
+         */
+        get: operations["api.me.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update the signed-in user's profile
+         * @description Partially update the current user's profile — only the fields sent are changed.
+         */
+        patch: operations["api.me.update"];
+        trace?: never;
+    };
+    "/me/security": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the account's security overview
+         * @description Return whether a password, Google link, authenticator, recovery codes and security keys are set.
+         */
+        get: operations["api.me.security.overview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a password on the account
+         * @description Set a password on an account that doesn't have one yet (e.g. created via Google).
+         */
+        post: operations["api.me.security.password.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Change the account password
+         * @description Change the password. Requires the current password and signs out other sessions.
+         */
+        patch: operations["api.me.security.password.update"];
+        trace?: never;
+    };
+    "/me/security/otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start authenticator (TOTP) setup
+         * @description Generate a new authenticator secret and its provisioning URI (render as a QR code). Confirm it with a code to activate.
+         */
+        post: operations["api.me.security.otp.generate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/otp/{otp_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm and activate an authenticator
+         * @description Confirm the pending authenticator with a live 6-digit code. Returns a fresh set of one-time recovery codes.
+         */
+        post: operations["api.me.security.otp.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/otp/{otp_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove an authenticator
+         * @description Disable a registered authenticator.
+         */
+        delete: operations["api.me.security.otp.disable"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/recovery-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Regenerate recovery codes
+         * @description Replace all recovery codes with a fresh set. The old codes stop working immediately.
+         */
+        post: operations["api.me.security.recoveryCodes.regenerate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/u2f": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List registered security keys
+         * @description List the WebAuthn security keys registered on the account.
+         */
+        get: operations["api.me.security.u2f.list"];
+        put?: never;
+        /**
+         * Register a security key
+         * @description Finish registering a security key with the browser's attestation and an optional label.
+         */
+        post: operations["api.me.security.u2f.register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/u2f/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get security-key registration options
+         * @description Start registering a security key: returns WebAuthn options for `navigator.credentials.create` plus a binding token.
+         */
+        post: operations["api.me.security.u2f.options"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/security/u2f/{u2f_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a security key
+         * @description Unregister a security key.
+         */
+        delete: operations["api.me.security.u2f.disable"];
+        options?: never;
+        head?: never;
+        /**
+         * Rename a security key
+         * @description Change the label of a registered security key.
+         */
+        patch: operations["api.me.security.u2f.rename"];
+        trace?: never;
+    };
+    "/me/security/logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List recent authentication activity
+         * @description Return the most recent authentication-log entries for the account (newest first).
+         */
+        get: operations["api.me.security.logs.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActivateOtpForm
+         * @description Confirm a freshly generated authenticator secret with a live code.
+         */
+        ActivateOtpForm: {
+            /**
+             * Code
+             * @description The current 6-digit authenticator code.
+             * @example 123456
+             */
+            code: string;
+        };
+        /**
+         * ActivationForm
+         * @description Confirm an account from the link sent by email.
+         */
+        ActivationForm: {
+            /**
+             * Token
+             * @description Activation token from the email link.
+             */
+            token: string;
+        };
+        /**
+         * AuthResponse
+         * @description Login / SSO result.
+         *
+         *     When `twoFactorEnabled` is false, `item` carries the full access + refresh
+         *     pair and the login is complete. When true, `item` carries a short-lived
+         *     intermediate token to replay against one of `twoFactorAvailableTypes`.
+         */
+        AuthResponse: {
+            item: components["schemas"]["TokenItem"];
+            /**
+             * Twofactoravailabletypes
+             * @description Second factors to choose from when 2FA is required.
+             */
+            twoFactorAvailableTypes?: components["schemas"]["UserAuthenticationTwoFactorType"][];
+            /**
+             * Twofactorenabled
+             * @description Whether a second factor is still required.
+             * @default false
+             */
+            twoFactorEnabled: boolean;
+        };
+        /**
+         * CreatePasswordForm
+         * @description Set a password on an account that has none yet (e.g. Google-only).
+         */
+        CreatePasswordForm: {
+            /** Password */
+            password: string;
+        };
+        /**
+         * ErrorResponse
+         * @description A business error: a single human-readable message.
+         */
+        ErrorResponse: {
+            /** Detail */
+            detail: string;
+        };
+        /**
+         * FieldError
+         * @description One invalid field in a validation error.
+         */
+        FieldError: {
+            /** Field */
+            field: string;
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+        };
+        /**
+         * ForgotPasswordForm
+         * @description Request a password-reset email.
+         */
+        ForgotPasswordForm: {
+            /**
+             * Email
+             * Format: email
+             * @description Email to send the reset link to.
+             */
+            email: string;
+        };
+        /**
+         * GoogleSsoForm
+         * @description Sign in / link via Google.
+         */
+        GoogleSsoForm: {
+            /**
+             * Googletoken
+             * @description The Google ID token obtained in the browser.
+             */
+            googleToken: string;
+        };
         /**
          * HealthResponse
          * @description Body of `GET /health` — liveness probe payload.
@@ -60,6 +632,522 @@ export interface components {
              */
             environment: string;
         };
+        /** ItemResponse[MeItem] */
+        ItemResponse_MeItem_: {
+            item: components["schemas"]["MeItem"];
+        };
+        /** ItemResponse[OtpProvisioningItem] */
+        ItemResponse_OtpProvisioningItem_: {
+            item: components["schemas"]["OtpProvisioningItem"];
+        };
+        /** ItemResponse[RecoveryCodesItem] */
+        ItemResponse_RecoveryCodesItem_: {
+            item: components["schemas"]["RecoveryCodesItem"];
+        };
+        /** ItemResponse[SecurityKeyItem] */
+        ItemResponse_SecurityKeyItem_: {
+            item: components["schemas"]["SecurityKeyItem"];
+        };
+        /** ItemResponse[SecurityOverviewItem] */
+        ItemResponse_SecurityOverviewItem_: {
+            item: components["schemas"]["SecurityOverviewItem"];
+        };
+        /** ItemResponse[TokenItem] */
+        ItemResponse_TokenItem_: {
+            item: components["schemas"]["TokenItem"];
+        };
+        /** ItemResponse[U2FAssertionOptionsItem] */
+        ItemResponse_U2FAssertionOptionsItem_: {
+            item: components["schemas"]["U2FAssertionOptionsItem"];
+        };
+        /** ItemResponse[U2FRegistrationOptionsItem] */
+        ItemResponse_U2FRegistrationOptionsItem_: {
+            item: components["schemas"]["U2FRegistrationOptionsItem"];
+        };
+        /**
+         * Language
+         * @description User interface / communication language (BCP 47 tags).
+         * @enum {string}
+         */
+        Language: "fr-FR" | "en-GB" | "es-ES" | "de-DE" | "it-IT";
+        /** ListingResponse[SecurityKeyItem] */
+        ListingResponse_SecurityKeyItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["SecurityKeyItem"][];
+        };
+        /** ListingResponse[SecurityLogItem] */
+        ListingResponse_SecurityLogItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["SecurityLogItem"][];
+        };
+        /**
+         * LoginForm
+         * @description Email/password login.
+         */
+        LoginForm: {
+            /**
+             * Email
+             * Format: email
+             * @description Account email.
+             * @example ada@example.com
+             */
+            email: string;
+            /**
+             * Password
+             * @description Account password.
+             */
+            password: string;
+            /**
+             * Rememberme
+             * @description Keep the session alive longer on this device.
+             * @default false
+             */
+            rememberMe: boolean;
+        };
+        /**
+         * MeItem
+         * @description The signed-in user's own profile.
+         */
+        MeItem: {
+            /** Email */
+            email: string;
+            /** Firstname */
+            firstName?: string | null;
+            gender: components["schemas"]["UserGender"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            language: components["schemas"]["Language"];
+            /** Lastname */
+            lastName?: string | null;
+            /** Phone */
+            phone?: string | null;
+            /** Pictureprofile */
+            pictureProfile?: string | null;
+            /**
+             * Registeredat
+             * @description When the account was created.
+             */
+            registeredAt?: string | null;
+            theme: components["schemas"]["UserTheme"];
+            /**
+             * Twofactorenabled
+             * @description Whether at least one second factor is active.
+             * @default false
+             */
+            twoFactorEnabled: boolean;
+        };
+        /**
+         * MePatchForm
+         * @description Partial update of the signed-in user's profile.
+         *
+         *     Every field is optional; only the keys actually sent are applied.
+         */
+        MePatchForm: {
+            /** Firstname */
+            firstName?: string | null;
+            /** Lastname */
+            lastName?: string | null;
+            gender?: components["schemas"]["UserGender"] | null;
+            language?: components["schemas"]["Language"] | null;
+            theme?: components["schemas"]["UserTheme"] | null;
+            /** Phone */
+            phone?: string | null;
+        };
+        /**
+         * OtpProvisioningItem
+         * @description A pending authenticator secret — shown once, then confirmed with a code.
+         */
+        OtpProvisioningItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Provisioninguri
+             * @description `otpauth://` URI to render as a QR code.
+             */
+            provisioningUri: string;
+            /**
+             * Secret
+             * @description The base32 secret, for manual entry.
+             */
+            secret: string;
+        };
+        /**
+         * Pagination
+         * @description Page cursor for a listing: 1-based, clamped to `[min, max]`.
+         */
+        Pagination: {
+            /**
+             * Min
+             * @default 1
+             */
+            min: number;
+            /** Current */
+            current: number;
+            /** Max */
+            max: number;
+        };
+        /**
+         * RecoveryCodesItem
+         * @description One-time recovery codes — displayed once, never retrievable again.
+         */
+        RecoveryCodesItem: {
+            /** Codes */
+            codes: string[];
+        };
+        /**
+         * RefreshTokenForm
+         * @description Trade a refresh token for a fresh access token.
+         */
+        RefreshTokenForm: {
+            /**
+             * Granttype
+             * @description Always `refresh_token`.
+             * @example refresh_token
+             */
+            grantType: string;
+            /**
+             * Refreshtoken
+             * @description A valid refresh token.
+             */
+            refreshToken: string;
+        };
+        /**
+         * RegisterForm
+         * @description Sign-up payload for a new email/password account.
+         */
+        RegisterForm: {
+            /**
+             * Email
+             * Format: email
+             * @description Email address the account is created with.
+             * @example ada@example.com
+             */
+            email: string;
+            /**
+             * Firstname
+             * @description Given name.
+             * @example Ada
+             */
+            firstName: string;
+            /**
+             * Lastname
+             * @description Family name.
+             * @example Lovelace
+             */
+            lastName: string;
+            /**
+             * @description Salutation preference.
+             * @default unknown
+             */
+            gender: components["schemas"]["UserGender"];
+            /**
+             * @description Preferred interface / email language.
+             * @default fr-FR
+             */
+            language: components["schemas"]["Language"];
+            /**
+             * Password
+             * @description At least 8 characters.
+             * @example correct-horse-battery-staple
+             */
+            password: string;
+        };
+        /**
+         * RenameSecurityKeyForm
+         * @description Rename a registered security key.
+         */
+        RenameSecurityKeyForm: {
+            /** Nickname */
+            nickname: string;
+        };
+        /**
+         * ResendActivationForm
+         * @description Ask for a fresh activation email.
+         */
+        ResendActivationForm: {
+            /**
+             * Email
+             * Format: email
+             * @description Email of the account to re-send activation to.
+             */
+            email: string;
+        };
+        /**
+         * ResetPasswordForm
+         * @description Set a new password from a reset link.
+         */
+        ResetPasswordForm: {
+            /**
+             * Token
+             * @description Reset token from the email link.
+             */
+            token: string;
+            /**
+             * Password
+             * @description The new password, at least 8 characters.
+             */
+            password: string;
+        };
+        /**
+         * SecurityKeyItem
+         * @description A registered WebAuthn security key.
+         */
+        SecurityKeyItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastusedat */
+            lastUsedAt?: string | null;
+            /** Nickname */
+            nickname?: string | null;
+            /** Registeredat */
+            registeredAt?: string | null;
+        };
+        /**
+         * SecurityLogItem
+         * @description One authentication-log entry.
+         */
+        SecurityLogItem: {
+            /** Date */
+            date?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Ip */
+            ip?: string | null;
+            status: components["schemas"]["UserAuthenticationLogStatus"];
+            type: components["schemas"]["UserAuthenticationLogType"];
+        };
+        /**
+         * SecurityOverviewItem
+         * @description Snapshot of the account's credentials and second factors.
+         */
+        SecurityOverviewItem: {
+            /** Googlelinked */
+            googleLinked: boolean;
+            /** Haspassword */
+            hasPassword: boolean;
+            /** Otpenabled */
+            otpEnabled: boolean;
+            /** Recoverycodesremaining */
+            recoveryCodesRemaining: number;
+            /** Securitykeyscount */
+            securityKeysCount: number;
+            /** Twofactorenabled */
+            twoFactorEnabled: boolean;
+        };
+        /**
+         * SuccessResponse
+         * @description Body of an action endpoint that has nothing to return but success.
+         */
+        SuccessResponse: {
+            /**
+             * Status
+             * @default ok
+             */
+            status: string;
+        };
+        /**
+         * TokenItem
+         * @description A bearer token pair. `refreshToken` is absent for intermediate tokens.
+         */
+        TokenItem: {
+            /**
+             * Accesstoken
+             * @description Bearer token to send as `Authorization: Bearer <token>`.
+             */
+            accessToken: string;
+            /**
+             * Expiresin
+             * @description Access-token lifetime in seconds.
+             * @example 3600
+             */
+            expiresIn: number;
+            /**
+             * Refreshtoken
+             * @description Token used to obtain a new access token.
+             */
+            refreshToken?: string | null;
+            /**
+             * Refreshtokenexpiresin
+             * @description Refresh-token lifetime in seconds.
+             */
+            refreshTokenExpiresIn?: number | null;
+            /**
+             * Tokentype
+             * @description Always `Bearer`.
+             * @default Bearer
+             */
+            tokenType: string;
+        };
+        /**
+         * TwoFactorForm
+         * @description Second-factor step: exchange the intermediate token for a full session.
+         */
+        TwoFactorForm: {
+            /**
+             * Token
+             * @description Intermediate token returned by the login step.
+             */
+            token: string;
+            /**
+             * Value
+             * @description The 6-digit code (authenticator) or a recovery code.
+             * @example 123456
+             */
+            value: string;
+        };
+        /**
+         * U2FAssertionOptionsForm
+         * @description Start a security-key login: request the WebAuthn assertion options.
+         */
+        U2FAssertionOptionsForm: {
+            /**
+             * Token
+             * @description Intermediate token returned by the login step.
+             */
+            token: string;
+        };
+        /**
+         * U2FAssertionOptionsItem
+         * @description WebAuthn assertion options plus the token tying them to this login.
+         */
+        U2FAssertionOptionsItem: {
+            /**
+             * Assertiontoken
+             * @description Token to send back with the browser's assertion.
+             */
+            assertionToken: string;
+            /**
+             * Options
+             * @description `PublicKeyCredentialRequestOptions` for `navigator.credentials.get`.
+             */
+            options: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * U2FAssertionVerifyForm
+         * @description Finish a security-key login with the browser's assertion.
+         */
+        U2FAssertionVerifyForm: {
+            /**
+             * Assertiontoken
+             * @description Assertion token returned by the options step.
+             */
+            assertionToken: string;
+            /**
+             * Credential
+             * @description The raw WebAuthn `PublicKeyCredential` from the browser.
+             */
+            credential: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * U2FRegistrationOptionsItem
+         * @description WebAuthn creation options plus the token binding them to this session.
+         */
+        U2FRegistrationOptionsItem: {
+            /**
+             * Options
+             * @description `PublicKeyCredentialCreationOptions` for `navigator.credentials.create`.
+             */
+            options: {
+                [key: string]: unknown;
+            };
+            /** Registrationtoken */
+            registrationToken: string;
+        };
+        /**
+         * U2FRegistrationVerifyForm
+         * @description Finish registering a security key with the browser's attestation.
+         */
+        U2FRegistrationVerifyForm: {
+            /**
+             * Registrationtoken
+             * @description Token returned by the registration-options step.
+             */
+            registrationToken: string;
+            /**
+             * Credential
+             * @description The raw WebAuthn `PublicKeyCredential` from the browser.
+             */
+            credential: {
+                [key: string]: unknown;
+            };
+            /**
+             * Nickname
+             * @description A label for this key.
+             */
+            nickname?: string | null;
+        };
+        /**
+         * UpdatePasswordForm
+         * @description Change the existing password.
+         */
+        UpdatePasswordForm: {
+            /** Oldpassword */
+            oldPassword: string;
+            /** Newpassword */
+            newPassword: string;
+        };
+        /**
+         * UserAuthenticationLogStatus
+         * @enum {string}
+         */
+        UserAuthenticationLogStatus: "success" | "error" | "forbidden";
+        /**
+         * UserAuthenticationLogType
+         * @description The auth event a log row records.
+         * @enum {string}
+         */
+        UserAuthenticationLogType: "register" | "activate" | "activation_link" | "email_password" | "google_oauth" | "two_factor_otp" | "two_factor_u2f" | "two_factor_recovery_code" | "refresh_token" | "forgot_password" | "reset_password" | "access";
+        /**
+         * UserAuthenticationTwoFactorType
+         * @enum {string}
+         */
+        UserAuthenticationTwoFactorType: "otp" | "recovery_code" | "u2f";
+        /**
+         * UserGender
+         * @enum {string}
+         */
+        UserGender: "unknown" | "male" | "female";
+        /**
+         * UserTheme
+         * @enum {string}
+         */
+        UserTheme: "system" | "light" | "dark";
+        /**
+         * ValidationErrorResponse
+         * @description A `422` payload: a top-level message plus a per-field breakdown.
+         */
+        ValidationErrorResponse: {
+            /** Detail */
+            detail: string;
+            /** Errors */
+            errors: components["schemas"]["FieldError"][];
+        };
     };
     responses: never;
     parameters: never;
@@ -85,6 +1173,1189 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActivationForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invalid or expired activation link */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.resendActivation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResendActivationForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description Invalid email or password */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not activated or unavailable */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.password.forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.password.reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invalid or expired reset link */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.sso.google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoogleSsoForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthResponse"];
+                };
+            };
+            /** @description Google sign-in failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Google sign-in is not configured */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.twoFactor.otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TokenItem_"];
+                };
+            };
+            /** @description Invalid code */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Verification session expired */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.twoFactor.recoveryCode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwoFactorForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TokenItem_"];
+                };
+            };
+            /** @description Invalid code */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Verification session expired */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.twoFactor.u2f.options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["U2FAssertionOptionsForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_U2FAssertionOptionsItem_"];
+                };
+            };
+            /** @description Verification session expired */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.twoFactor.u2f": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["U2FAssertionVerifyForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TokenItem_"];
+                };
+            };
+            /** @description Invalid code */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Verification session expired */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.auth.refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshTokenForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TokenItem_"];
+                };
+            };
+            /** @description Invalid or expired refresh token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_MeItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_SecurityOverviewItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.password.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePasswordForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A password is already set */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.password.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePasswordForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.otp.generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_OtpProvisioningItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.otp.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                otp_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActivateOtpForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_RecoveryCodesItem_"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.otp.disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                otp_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.recoveryCodes.regenerate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_RecoveryCodesItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.u2f.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_SecurityKeyItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.u2f.register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["U2FRegistrationVerifyForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_SecurityKeyItem_"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.u2f.options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_U2FRegistrationOptionsItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.u2f.disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                u2f_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.u2f.rename": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                u2f_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenameSecurityKeyForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_SecurityKeyItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
+        };
+    };
+    "api.me.security.logs.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_SecurityLogItem_"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Some fields contain invalid values */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
                 };
             };
         };

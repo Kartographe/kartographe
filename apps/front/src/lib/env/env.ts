@@ -13,6 +13,8 @@ export const env = createEnv({
     VITE_APP_URL: z.url().default("http://localhost:5173/"),
     VITE_API_URL: z.url(),
     VITE_MCP_URL: z.url().optional(),
+    VITE_TURNSTILE_SITE_KEY: z.string().optional(),
+    VITE_GOOGLE_CLIENT_ID: z.string().optional(),
   },
   runtimeEnv: import.meta.env,
   emptyStringAsUndefined: true,

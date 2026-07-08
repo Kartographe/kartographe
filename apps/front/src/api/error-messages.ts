@@ -21,3 +21,29 @@ export function extractApiErrorDetail(error: unknown): string {
   }
   return DEFAULT_ERROR;
 }
+
+interface FieldError {
+  field: string;
+  code: string;
+  message: string;
+}
+
+/**
+ * Map a `422` `{ errors: [{ field, code, message }] }` payload to a
+ * `{ fieldName: message }` record, for surfacing per-field errors on a form.
+ * Returns an empty object for any other error shape.
+ */
+export function extractApiFieldErrors(error: unknown): Record<string, string> {
+  const result: Record<string, string> = {};
+  if (error && typeof error === "object") {
+    const errors = (error as { errors?: unknown }).errors;
+    if (Array.isArray(errors)) {
+      for (const item of errors as FieldError[]) {
+        if (item?.field && item?.message && !(item.field in result)) {
+          result[item.field] = item.message;
+        }
+      }
+    }
+  }
+  return result;
+}
