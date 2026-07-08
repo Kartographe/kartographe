@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from string import Template
 
+from src.settings import get_settings
+
 _TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
@@ -21,9 +23,15 @@ class RenderedEmail:
     text: str
 
 
+def _logo_url() -> str:
+    """Absolute URL to the brand badge served by the front (for the `<img>`)."""
+    return f"{get_settings().app_url.rstrip('/')}/favicon.svg"
+
+
 def _render_html(name: str, /, **context: str) -> str:
     raw = (_TEMPLATES_DIR / f"{name}.html").read_text(encoding="utf-8")
-    return Template(raw).safe_substitute(**context)
+    # `logo_url` is injected into every template so the header shows the logo.
+    return Template(raw).safe_substitute(logo_url=_logo_url(), **context)
 
 
 def _greeting(first_name: str | None) -> str:
