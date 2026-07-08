@@ -3,6 +3,7 @@
 CLAUDE.md
 
 .env
+.env.local
 .env.mcp
 .mcp.json
 
@@ -13,3 +14,6 @@ __pycache__/
 venv/
 .pytest_cache/
 .mypy_cache/
+
+# Uploaded files (local storage backend)
+apps/back/storage/

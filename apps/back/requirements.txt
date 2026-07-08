@@ -14,5 +14,8 @@ webauthn
 google-auth
 requests
 httpx
+python-multipart
+pillow
+boto3
 scalar-fastapi
 fastapi-mcp

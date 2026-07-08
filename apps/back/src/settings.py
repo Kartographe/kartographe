@@ -81,6 +81,21 @@ class Settings(BaseSettings):
     smtp_password: str | None = Field(default=None)
     smtp_use_tls: bool = Field(default=True)
 
+    # File storage. `STORAGE_BACKEND` selects local disk or S3-compatible object
+    # storage. In local mode files are written under `STORAGE_LOCAL_ROOT` and
+    # served from a static mount at `STORAGE_PUBLIC_URL_BASE`. In s3 mode a
+    # bucket is required; `STORAGE_S3_ENDPOINT_URL` targets AWS S3 / Scaleway /
+    # MinIO, and `STORAGE_S3_PUBLIC_URL_BASE` is an optional CDN base.
+    storage_backend: str = Field(default="local")
+    storage_local_root: str = Field(default="storage")
+    storage_public_url_base: str = Field(default="/uploads")
+    storage_s3_bucket: str | None = Field(default=None)
+    storage_s3_region: str | None = Field(default=None)
+    storage_s3_access_key: str | None = Field(default=None)
+    storage_s3_secret_key: str | None = Field(default=None)
+    storage_s3_endpoint_url: str | None = Field(default=None)
+    storage_s3_public_url_base: str | None = Field(default=None)
+
     # Serve the FastAPI-MCP transport (`/mcp`) and expose the `/v1/*` routes
     # as MCP tools.
     mcp_enabled: bool = Field(default=True)

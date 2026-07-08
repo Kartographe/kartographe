@@ -32,6 +32,9 @@ services:
       - database:db
     networks:
       - kartograph-net
+    volumes:
+      # Persist locally-stored uploads (STORAGE_BACKEND=local) across restarts.
+      - api-storage:/app/storage
 
   app:
     container_name: app.kartographe
@@ -53,6 +56,7 @@ services:
 
 volumes:
   database-data:
+  api-storage:
 
 networks:
   kartograph-net:

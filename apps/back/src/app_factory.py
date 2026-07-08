@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import APIRouter, FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse
-from scalar_fastapi import get_scalar_api_reference
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
+from scalar_fastapi import get_scalar_api_reference
 
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
@@ -67,6 +69,25 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     app.add_exception_handler(RequestValidationError, validation_error_handler)
 
     app.include_router(router)
+
+    # In local storage mode, serve uploaded files from a static mount. Mark them
+    # `no-store` (so an updated avatar isn't served stale) and CORP cross-origin
+    # (so the front on another origin can load them via `<img>` / fetch).
+    if settings.storage_backend == "local":
+        uploads_dir = Path(__file__).resolve().parent.parent / settings.storage_local_root
+        uploads_dir.mkdir(parents=True, exist_ok=True)
+        mount_path = "/" + settings.storage_public_url_base.strip("/")
+        app.mount(mount_path, StaticFiles(directory=uploads_dir), name="uploads")
+
+        _uploads_prefix = mount_path + "/"
+
+        @app.middleware("http")
+        async def _no_store_on_uploads(request, call_next):
+            response = await call_next(request)
+            if request.url.path.startswith(_uploads_prefix):
+                response.headers["cache-control"] = "no-store"
+                response.headers.setdefault("cross-origin-resource-policy", "cross-origin")
+            return response
 
     # Scalar HTML reference at `GET /docs`. `openapi.json` stays reachable
     # regardless so MCP clients / SDK generators keep working — only the HTML

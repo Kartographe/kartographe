@@ -1,11 +1,16 @@
 """Current-user profile logic."""
 
+from fastapi import UploadFile
 from sqlmodel import Session, func, select
 
+from src.managers.files import FileManager
 from src.models.enum import UserAuthenticationTwoFactorStatus, UserAuthenticationTwoFactorType
 from src.models.user import User
 from src.models.user_authentication_two_factor import UserAuthenticationTwoFactor
 from src.serializes.me import MeItem
+
+# Avatars are normalised to a square of this side (px) before storage.
+_PROFILE_PICTURE_SIZE = 512
 
 
 class MeManager:
@@ -14,6 +19,7 @@ class MeManager:
 
     def __init__(self, session: Session):
         self.session = session
+        self._files = FileManager()
 
     def _two_factor_enabled(self, user: User) -> bool:
         count = self.session.exec(
@@ -38,7 +44,7 @@ class MeManager:
             language=user.language,
             theme=user.theme,
             phone=user.phone,
-            picture_profile=user.picture_profile,
+            picture_profile=self._files.public_url_for(user.picture_profile),
             registered_at=user.created_date,
             two_factor_enabled=self._two_factor_enabled(user),
         )
@@ -48,4 +54,14 @@ class MeManager:
             if key in fields:
                 setattr(user, key, fields[key])
         self.session.add(user)
+        return user
+
+    def set_profile_picture(self, user: User, file: UploadFile) -> User:
+        """Store a square-cropped avatar and replace the previous one."""
+        previous_key = user.picture_profile
+        key = self._files.save_image(file, prefix=f"users/{user.id}/profile", square_size=_PROFILE_PICTURE_SIZE)
+        user.picture_profile = key
+        self.session.add(user)
+        if previous_key and previous_key != key:
+            self._files.delete(previous_key)
         return user
