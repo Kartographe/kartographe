@@ -1,8 +1,8 @@
 import { DesktopOutlined, MoonOutlined, SunOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Outlet } from "@tanstack/react-router";
-import { Flex, Segmented, Typography } from "antd";
-import { Logo } from "@/components/logo";
+import { Segmented, Typography } from "antd";
+import { LogoHorizontal } from "@/components/logo-horizontal";
 import { type ThemeMode, useThemeStore } from "@/lib/theme/theme-store";
 
 /**
@@ -15,7 +15,7 @@ export function AuthLayout() {
   const setMode = useThemeStore((state) => state.setMode);
 
   return (
-    <div className="flex min-h-[100dvh] w-full">
+    <div className="flex h-full w-full">
       <aside
         className="relative hidden flex-1 flex-col justify-between overflow-hidden p-12 text-white lg:flex"
         style={{
@@ -23,12 +23,7 @@ export function AuthLayout() {
             "linear-gradient(135deg, #001529 0%, #1677ff 65%, #13c2c2 100%)",
         }}
       >
-        <Flex align="center" gap={12}>
-          <Logo size={40} />
-          <Typography.Title level={3} style={{ color: "#fff", margin: 0 }}>
-            Kartographe
-          </Typography.Title>
-        </Flex>
+        <LogoHorizontal height={38} onDark />
         <div className="max-w-md">
           <Typography.Title level={2} style={{ color: "#fff" }}>
             {t`Gardez le contrôle.`}
@@ -51,22 +46,24 @@ export function AuthLayout() {
       </aside>
 
       <main
-        className="flex flex-1 flex-col items-center justify-center gap-6 p-6"
+        className="flex h-full flex-1 flex-col items-center overflow-y-auto p-4 sm:p-6"
         style={{ background: "var(--ant-color-bg-layout)" }}
       >
-        <div className="w-full max-w-md">
-          <Outlet />
+        <div className="my-auto flex w-full max-w-md flex-col items-center gap-6 py-6">
+          <div className="w-full">
+            <Outlet />
+          </div>
+          <Segmented<ThemeMode>
+            aria-label={t`Thème`}
+            onChange={setMode}
+            options={[
+              { value: "light", icon: <SunOutlined />, title: t`Clair` },
+              { value: "dark", icon: <MoonOutlined />, title: t`Sombre` },
+              { value: "auto", icon: <DesktopOutlined />, title: t`Auto` },
+            ]}
+            value={mode}
+          />
         </div>
-        <Segmented<ThemeMode>
-          aria-label={t`Thème`}
-          onChange={setMode}
-          options={[
-            { value: "light", icon: <SunOutlined />, title: t`Clair` },
-            { value: "dark", icon: <MoonOutlined />, title: t`Sombre` },
-            { value: "auto", icon: <DesktopOutlined />, title: t`Auto` },
-          ]}
-          value={mode}
-        />
       </main>
     </div>
   );

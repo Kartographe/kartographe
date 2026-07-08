@@ -110,28 +110,21 @@ export function RegisterScreen() {
                 />
               )}
             </form.AppField>
-            <Flex gap={12}>
-              <div className="flex-1">
-                <form.AppField name="firstName">
-                  {(field) => (
-                    <field.TextField
-                      autoComplete="given-name"
-                      label={t`Prénom`}
-                    />
-                  )}
-                </form.AppField>
-              </div>
-              <div className="flex-1">
-                <form.AppField name="lastName">
-                  {(field) => (
-                    <field.TextField
-                      autoComplete="family-name"
-                      label={t`Nom`}
-                    />
-                  )}
-                </form.AppField>
-              </div>
-            </Flex>
+            <div className="grid grid-cols-1 gap-x-3 sm:grid-cols-2">
+              <form.AppField name="firstName">
+                {(field) => (
+                  <field.TextField
+                    autoComplete="given-name"
+                    label={t`Prénom`}
+                  />
+                )}
+              </form.AppField>
+              <form.AppField name="lastName">
+                {(field) => (
+                  <field.TextField autoComplete="family-name" label={t`Nom`} />
+                )}
+              </form.AppField>
+            </div>
             <form.AppField name="email">
               {(field) => (
                 <field.TextField

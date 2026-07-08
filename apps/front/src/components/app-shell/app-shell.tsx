@@ -5,6 +5,7 @@ import { useAppShellStore } from "@/components/app-shell/app-shell-store";
 import { NavMenu } from "@/components/app-shell/nav-menu";
 import { UserMenu } from "@/components/app-shell/user-menu";
 import { Logo } from "@/components/logo";
+import { LogoHorizontal } from "@/components/logo-horizontal";
 
 export function AppShell() {
   const collapsed = useAppShellStore((state) => state.collapsed);
@@ -26,16 +27,10 @@ export function AppShell() {
           <Link to="/">
             <Flex
               align="center"
-              gap={10}
               justify={collapsed ? "center" : "flex-start"}
               style={{ height: 56, paddingInline: 16 }}
             >
-              <Logo size={30} />
-              {collapsed ? null : (
-                <span style={{ fontSize: 18, fontWeight: 700 }}>
-                  Kartographe
-                </span>
-              )}
+              {collapsed ? <Logo size={30} /> : <LogoHorizontal height={26} />}
             </Flex>
           </Link>
           <Divider style={{ margin: 0 }} />
