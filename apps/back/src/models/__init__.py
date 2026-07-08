@@ -10,6 +10,9 @@ from src.models.user import User
 from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
 from src.models.user_authentication_two_factor import UserAuthenticationTwoFactor
+from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
+from src.models.user_mcp_client import UserMcpClient
+from src.models.user_mcp_grant import UserMcpGrant
 
 __all__ = [
     "BaseModel",
@@ -17,4 +20,7 @@ __all__ = [
     "UserAuthentication",
     "UserAuthenticationLog",
     "UserAuthenticationTwoFactor",
+    "UserMcpAuthorizationRequest",
+    "UserMcpClient",
+    "UserMcpGrant",
 ]

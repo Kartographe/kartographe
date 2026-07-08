@@ -92,3 +92,28 @@ class UserAuthenticationLogStatus(str, Enum):
     SUCCESS = "success"
     ERROR = "error"
     FORBIDDEN = "forbidden"
+
+
+class McpGrantScope(str, Enum):
+    """OAuth scope requested by / granted to an MCP client."""
+
+    READ = "read"
+    WRITE = "write"
+
+
+class McpGrantStatus(str, Enum):
+    ACTIVE = "active"
+    REVOKED = "revoked"
+
+
+class McpAuthorizationFlowType(str, Enum):
+    DEVICE = "device"
+    AUTHORIZATION_CODE = "authorization_code"
+
+
+class McpAuthorizationRequestStatus(str, Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    DENIED = "denied"
+    EXPIRED = "expired"
+    CONSUMED = "consumed"
