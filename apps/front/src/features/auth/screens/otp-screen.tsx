@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Alert, Flex } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { $api } from "@/api/$api";
 import { AuthCard } from "@/features/auth/components/auth-card";
@@ -17,13 +17,16 @@ export function OtpScreen() {
   const token = useIntermediateStore((state) => state.token);
   const complete = useTwoFactorComplete();
   const [error, setError] = useState<string | null>(null);
+  // Once we complete, `token` is cleared — don't let the guard below bounce to
+  // login instead of the post-login redirect.
+  const completedRef = useRef(false);
 
   const otpMutation = $api.useMutation("post", "/auth/twoFactor/otp", {
     meta: { noErrorToast: true },
   });
 
   useEffect(() => {
-    if (!token) {
+    if (!(token || completedRef.current)) {
       navigate({ to: "/auth/login" });
     }
   }, [token, navigate]);
@@ -41,6 +44,7 @@ export function OtpScreen() {
         const data = await otpMutation.mutateAsync({
           body: { token: token ?? "", value: value.value },
         });
+        completedRef.current = true;
         complete(data.item);
       } catch {
         setError(t`Code invalide.`);

@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Alert, Button, Flex, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { $api } from "@/api/$api";
 import { extractApiErrorDetail } from "@/api/error-messages";
 import { AuthCard } from "@/features/auth/components/auth-card";
@@ -16,6 +16,7 @@ export function U2fScreen() {
   const complete = useTwoFactorComplete();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const completedRef = useRef(false);
 
   const optionsMutation = $api.useMutation(
     "post",
@@ -26,7 +27,7 @@ export function U2fScreen() {
   });
 
   useEffect(() => {
-    if (!token) {
+    if (!(token || completedRef.current)) {
       navigate({ to: "/auth/login" });
     }
   }, [token, navigate]);
@@ -50,6 +51,7 @@ export function U2fScreen() {
           credential,
         },
       });
+      completedRef.current = true;
       complete(data.item);
     } catch (assertError) {
       if (
