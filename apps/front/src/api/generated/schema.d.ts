@@ -276,6 +276,630 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List applications
+         * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         */
+        get: operations["api.applications.list"];
+        put?: never;
+        /**
+         * Create an application
+         * @description Create an application. It starts as a draft owned by the caller. Owners/administrators only.
+         */
+        post: operations["api.applications.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an application
+         * @description Return a single application of the account. Any member may read.
+         */
+        get: operations["api.applications.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete an application
+         * @description Soft-delete an application. Its environments, versions, deployments and feature links are soft-deleted as well. Owners/administrators only.
+         */
+        delete: operations["api.applications.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an application
+         * @description Partially update an application (title, description, type). Owners/administrators only.
+         */
+        patch: operations["api.applications.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate an application
+         * @description Set the application status to active. Owners/administrators only.
+         */
+        post: operations["api.applications.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive an application
+         * @description Set the application status to archived. Owners/administrators only.
+         */
+        post: operations["api.applications.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List environments
+         * @description List the environments of an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.environments.list"];
+        put?: never;
+        /**
+         * Create an environment
+         * @description Create a deployment environment. It starts as a draft owned by the caller. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an environment
+         * @description Return a single environment of the application. Any member may read.
+         */
+        get: operations["api.applications.environments.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete an environment
+         * @description Soft-delete an environment; its deployment records are soft-deleted as well. Owners, administrators and lead developers only.
+         */
+        delete: operations["api.applications.environments.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an environment
+         * @description Partially update an environment (type, title, description, url). Owners, administrators and lead developers only.
+         */
+        patch: operations["api.applications.environments.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate an environment
+         * @description Set the environment status to active. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environments.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive an environment
+         * @description Set the environment status to archived. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environments.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List versions
+         * @description List the versions of an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.versions.list"];
+        put?: never;
+        /**
+         * Create a version
+         * @description Create a version. It starts as a draft owned by the caller. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.versions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a version
+         * @description Return a single version of the application. Any member may read.
+         */
+        get: operations["api.applications.versions.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a version
+         * @description Soft-delete a version; deployment records referencing it are soft-deleted as well. Owners, administrators and lead developers only.
+         */
+        delete: operations["api.applications.versions.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a version
+         * @description Partially update a version (type, title, version, description). Owners, administrators and lead developers only.
+         */
+        patch: operations["api.applications.versions.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a version
+         * @description Set the version status to active. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.versions.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a version
+         * @description Set the version status to archived. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.versions.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List deployments
+         * @description List the deployment records of an environment, most recent first. Any member may read.
+         */
+        get: operations["api.applications.environmentVersions.list"];
+        put?: never;
+        /**
+         * Deploy a version
+         * @description Record a deployment of a version onto the environment. It starts in the standby state, owned by the caller. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environmentVersions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/{environment_version_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a deployment
+         * @description Return a single deployment record of the environment. Any member may read.
+         */
+        get: operations["api.applications.environmentVersions.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a deployment
+         * @description Soft-delete a single deployment record. Owners, administrators and lead developers only.
+         */
+        delete: operations["api.applications.environmentVersions.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a deployment
+         * @description Update a deployment's state and/or its details. Owners, administrators and lead developers only.
+         */
+        patch: operations["api.applications.environmentVersions.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/{environment_version_id}/finished": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a deployment finished
+         * @description Mark the deployment as finished. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environmentVersions.finished"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/{environment_version_id}/error": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a deployment failed
+         * @description Mark the deployment as failed, with a required explanation. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environmentVersions.error"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/{environment_version_id}/cancelled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a deployment
+         * @description Mark the deployment as cancelled. Owners, administrators and lead developers only.
+         */
+        post: operations["api.applications.environmentVersions.cancelled"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List application features
+         * @description List the features attached to an application, most recent first. Any member may read.
+         */
+        get: operations["api.applications.features.list"];
+        put?: never;
+        /**
+         * Attach a feature
+         * @description Attach an existing account feature to the application. The feature must belong to the same account. Every contributing role may attach features.
+         */
+        post: operations["api.applications.features.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/features/{application_feature_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an application feature
+         * @description Return a single feature link of the application. Any member may read.
+         */
+        get: operations["api.applications.features.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Detach a feature
+         * @description Soft-delete a feature link. Every contributing role may detach features.
+         */
+        delete: operations["api.applications.features.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an application feature
+         * @description Update the feature's presence window (start/end dates and versions). Any referenced version must belong to the application. Every contributing role may edit.
+         */
+        patch: operations["api.applications.features.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List features
+         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         */
+        get: operations["api.features.list"];
+        put?: never;
+        /**
+         * Create a feature
+         * @description Create a feature. It starts as a draft owned by the caller. Every contributing role may create features.
+         */
+        post: operations["api.features.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a feature
+         * @description Return a single feature of the account. Any member may read.
+         */
+        get: operations["api.features.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a feature
+         * @description Soft-delete a feature; its files and application links are soft-deleted as well. Every contributing role may delete features.
+         */
+        delete: operations["api.features.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a feature
+         * @description Partially update a feature (title, description, type). Every contributing role may edit features.
+         */
+        patch: operations["api.features.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate a feature
+         * @description Set the feature status to active. Every contributing role may do this.
+         */
+        post: operations["api.features.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a feature
+         * @description Set the feature status to archived. Every contributing role may do this.
+         */
+        post: operations["api.features.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature files
+         * @description List the files attached to a feature, most recent first. Any member may read.
+         */
+        get: operations["api.features.files.list"];
+        put?: never;
+        /**
+         * Upload a feature file
+         * @description Upload a file (multipart, field `file`) and attach it to the feature. Every contributing role may upload files.
+         */
+        post: operations["api.features.files.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a feature file
+         * @description Return a single file of the feature, including a time-limited `downloadUrl`. Any member may read.
+         */
+        get: operations["api.features.files.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a feature file
+         * @description Soft-delete a file. Every contributing role may delete files.
+         */
+        delete: operations["api.features.files.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a feature file
+         * @description Partially update a file's metadata (type, name, description). Every contributing role may edit files.
+         */
+        patch: operations["api.features.files.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restore a feature file
+         * @description Restore an archived file to the uploaded state. Every contributing role may do this.
+         */
+        post: operations["api.features.files.activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive a feature file
+         * @description Set the file status to archived. Every contributing role may do this.
+         */
+        post: operations["api.features.files.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1359,6 +1983,355 @@ export interface components {
             token: string;
         };
         /**
+         * ApplicationCreateForm
+         * @description Create an application. It starts as a draft owned by the caller.
+         */
+        ApplicationCreateForm: {
+            /** Title */
+            title: string;
+            /** Description */
+            description?: string | null;
+            type: components["schemas"]["ApplicationType"];
+        };
+        /**
+         * ApplicationEnvironmentCreateForm
+         * @description Create a deployment environment. It starts as a draft owned by the caller.
+         */
+        ApplicationEnvironmentCreateForm: {
+            type: components["schemas"]["ApplicationEnvironmentType"];
+            /** Title */
+            title: string;
+            /**
+             * Description
+             * @description Rich-text content as a document object.
+             */
+            description: {
+                [key: string]: unknown;
+            };
+            /** Url */
+            url?: string | null;
+        };
+        /**
+         * ApplicationEnvironmentItem
+         * @description A deployment environment of an application.
+         */
+        ApplicationEnvironmentItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description: {
+                [key: string]: unknown;
+            };
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationEnvironmentType"];
+            /** Url */
+            url?: string | null;
+        };
+        /**
+         * ApplicationEnvironmentPatchForm
+         * @description Partial update of an environment — only the keys sent are applied.
+         */
+        ApplicationEnvironmentPatchForm: {
+            type?: components["schemas"]["ApplicationEnvironmentType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Url */
+            url?: string | null;
+        };
+        /**
+         * ApplicationEnvironmentType
+         * @enum {string}
+         */
+        ApplicationEnvironmentType: "production" | "pre-production" | "test" | "features" | "hotfix" | "other";
+        /**
+         * ApplicationEnvironmentVersionCreateForm
+         * @description Deploy a version onto an environment. Starts in the standby state.
+         */
+        ApplicationEnvironmentVersionCreateForm: {
+            /**
+             * Applicationversionid
+             * Format: uuid
+             * @description The version to deploy onto this environment.
+             */
+            applicationVersionId: string;
+        };
+        /**
+         * ApplicationEnvironmentVersionErrorForm
+         * @description Mark a deployment as failed, with a required explanation.
+         */
+        ApplicationEnvironmentVersionErrorForm: {
+            /** Statusdetails */
+            statusDetails: string;
+        };
+        /**
+         * ApplicationEnvironmentVersionItem
+         * @description A version deployed onto an environment (a deployment record).
+         */
+        ApplicationEnvironmentVersionItem: {
+            /**
+             * Applicationversionid
+             * Format: uuid
+             */
+            applicationVersionId: string;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationEnvironmentVersionStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Statusdetails */
+            statusDetails?: string | null;
+        };
+        /**
+         * ApplicationEnvironmentVersionPatchForm
+         * @description Partial update of a deployment — its state and/or details.
+         */
+        ApplicationEnvironmentVersionPatchForm: {
+            status?: components["schemas"]["ApplicationEnvironmentVersionStatus"] | null;
+            /** Statusdetails */
+            statusDetails?: string | null;
+        };
+        /**
+         * ApplicationEnvironmentVersionStatus
+         * @description Deployment state of a version on an environment.
+         * @enum {string}
+         */
+        ApplicationEnvironmentVersionStatus: "standby" | "finished" | "error" | "cancelled";
+        /**
+         * ApplicationFeatureCreateForm
+         * @description Attach an existing account feature to this application.
+         */
+        ApplicationFeatureCreateForm: {
+            /**
+             * Featureid
+             * Format: uuid
+             * @description An existing feature of the same account.
+             */
+            featureId: string;
+        };
+        /**
+         * ApplicationFeatureItem
+         * @description A feature attached to an application, with its presence window.
+         */
+        ApplicationFeatureItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Endapplicationversionid */
+            endApplicationVersionId?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /**
+             * Featureid
+             * Format: uuid
+             */
+            featureId: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Startapplicationversionid */
+            startApplicationVersionId?: string | null;
+            /** Startdate */
+            startDate?: string | null;
+        };
+        /**
+         * ApplicationFeaturePatchForm
+         * @description Partial update of the feature's presence window on the application.
+         */
+        ApplicationFeaturePatchForm: {
+            /** Startdate */
+            startDate?: string | null;
+            /** Startapplicationversionid */
+            startApplicationVersionId?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Endapplicationversionid */
+            endApplicationVersionId?: string | null;
+        };
+        /**
+         * ApplicationItem
+         * @description An application tracked inside an account.
+         */
+        ApplicationItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationType"];
+        };
+        /**
+         * ApplicationPatchForm
+         * @description Partial update of an application — only the keys sent are applied.
+         */
+        ApplicationPatchForm: {
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: string | null;
+            type?: components["schemas"]["ApplicationType"] | null;
+        };
+        /**
+         * ApplicationSortField
+         * @description Sortable columns for the applications listing.
+         * @enum {string}
+         */
+        ApplicationSortField: "date" | "title" | "status" | "type";
+        /**
+         * ApplicationStatus
+         * @description Shared draft→active→archived lifecycle for applications, their
+         *     environments and their versions.
+         * @enum {string}
+         */
+        ApplicationStatus: "draft" | "active" | "archived";
+        /**
+         * ApplicationType
+         * @enum {string}
+         */
+        ApplicationType: "backoffice" | "customer" | "public" | "mixed" | "other";
+        /**
+         * ApplicationVersionCreateForm
+         * @description Create a version. It starts as a draft owned by the caller.
+         */
+        ApplicationVersionCreateForm: {
+            type: components["schemas"]["ApplicationVersionType"];
+            /** Title */
+            title: string;
+            /**
+             * Version
+             * @description Version tuple, e.g. [1, 2, 3].
+             */
+            version: number[];
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationVersionItem
+         * @description A released version of an application (semantic version as an int tuple).
+         */
+        ApplicationVersionItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationVersionType"];
+            /** Version */
+            version: number[];
+        };
+        /**
+         * ApplicationVersionPatchForm
+         * @description Partial update of a version — only the keys sent are applied.
+         */
+        ApplicationVersionPatchForm: {
+            type?: components["schemas"]["ApplicationVersionType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Version */
+            version?: number[] | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationVersionType
+         * @enum {string}
+         */
+        ApplicationVersionType: "alpha" | "beta" | "stable" | "dev";
+        /**
          * AuthResponse
          * @description Login / SSO result.
          *
@@ -1407,6 +2380,154 @@ export interface components {
             /** Detail */
             detail: string;
         };
+        /**
+         * FeatureCreateForm
+         * @description Create a feature. It starts as a draft owned by the caller.
+         */
+        FeatureCreateForm: {
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            type: components["schemas"]["FeatureType"];
+        };
+        /**
+         * FeatureFileItem
+         * @description A file attached to a feature (screenshot, video, document, …).
+         *
+         *     `download_url` is a time-limited link on object storage, or the direct path
+         *     on local storage — resolved by the manager, only on the single-file read.
+         */
+        FeatureFileItem: {
+            /** Applicationid */
+            applicationId?: string | null;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Downloadurl */
+            downloadUrl?: string | null;
+            /** Fileextension */
+            fileExtension: string;
+            /** Filename */
+            fileName: string;
+            /** Filesize */
+            fileSize: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["FeatureFileStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            type: components["schemas"]["FeatureFileType"];
+        };
+        /**
+         * FeatureFilePatchForm
+         * @description Partial update of a file's metadata — its type, name and/or description.
+         *
+         *     The binary content itself is immutable once uploaded.
+         */
+        FeatureFilePatchForm: {
+            type?: components["schemas"]["FeatureFileType"] | null;
+            /** Name */
+            name?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * FeatureFileStatus
+         * @enum {string}
+         */
+        FeatureFileStatus: "uploaded" | "archived";
+        /**
+         * FeatureFileType
+         * @enum {string}
+         */
+        FeatureFileType: "screenshot" | "video" | "document" | "other";
+        /**
+         * FeatureItem
+         * @description A feature tracked at the account level.
+         */
+        FeatureItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["FeatureStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["FeatureType"];
+        };
+        /**
+         * FeaturePatchForm
+         * @description Partial update of a feature — only the keys sent are applied.
+         */
+        FeaturePatchForm: {
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            type?: components["schemas"]["FeatureType"] | null;
+        };
+        /**
+         * FeatureSortField
+         * @description Sortable columns for the features listing.
+         * @enum {string}
+         */
+        FeatureSortField: "date" | "title" | "status" | "type";
+        /**
+         * FeatureStatus
+         * @enum {string}
+         */
+        FeatureStatus: "draft" | "active" | "archived";
+        /**
+         * FeatureType
+         * @enum {string}
+         */
+        FeatureType: "technical" | "product" | "qa" | "data" | "ops" | "it" | "other";
         /**
          * FieldError
          * @description One invalid field in a validation error.
@@ -1491,6 +2612,34 @@ export interface components {
         ItemResponse_AccountUserItem_: {
             item: components["schemas"]["AccountUserItem"];
         };
+        /** ItemResponse[ApplicationEnvironmentItem] */
+        ItemResponse_ApplicationEnvironmentItem_: {
+            item: components["schemas"]["ApplicationEnvironmentItem"];
+        };
+        /** ItemResponse[ApplicationEnvironmentVersionItem] */
+        ItemResponse_ApplicationEnvironmentVersionItem_: {
+            item: components["schemas"]["ApplicationEnvironmentVersionItem"];
+        };
+        /** ItemResponse[ApplicationFeatureItem] */
+        ItemResponse_ApplicationFeatureItem_: {
+            item: components["schemas"]["ApplicationFeatureItem"];
+        };
+        /** ItemResponse[ApplicationItem] */
+        ItemResponse_ApplicationItem_: {
+            item: components["schemas"]["ApplicationItem"];
+        };
+        /** ItemResponse[ApplicationVersionItem] */
+        ItemResponse_ApplicationVersionItem_: {
+            item: components["schemas"]["ApplicationVersionItem"];
+        };
+        /** ItemResponse[FeatureFileItem] */
+        ItemResponse_FeatureFileItem_: {
+            item: components["schemas"]["FeatureFileItem"];
+        };
+        /** ItemResponse[FeatureItem] */
+        ItemResponse_FeatureItem_: {
+            item: components["schemas"]["FeatureItem"];
+        };
         /** ItemResponse[MeInvitationItem] */
         ItemResponse_MeInvitationItem_: {
             item: components["schemas"]["MeInvitationItem"];
@@ -1570,6 +2719,76 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["AccountUserItem"][];
+        };
+        /** ListingResponse[ApplicationEnvironmentItem] */
+        ListingResponse_ApplicationEnvironmentItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationEnvironmentItem"][];
+        };
+        /** ListingResponse[ApplicationEnvironmentVersionItem] */
+        ListingResponse_ApplicationEnvironmentVersionItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationEnvironmentVersionItem"][];
+        };
+        /** ListingResponse[ApplicationFeatureItem] */
+        ListingResponse_ApplicationFeatureItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationFeatureItem"][];
+        };
+        /** ListingResponse[ApplicationItem] */
+        ListingResponse_ApplicationItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationItem"][];
+        };
+        /** ListingResponse[ApplicationVersionItem] */
+        ListingResponse_ApplicationVersionItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationVersionItem"][];
+        };
+        /** ListingResponse[FeatureFileItem] */
+        ListingResponse_FeatureFileItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["FeatureFileItem"][];
+        };
+        /** ListingResponse[FeatureItem] */
+        ListingResponse_FeatureItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["FeatureItem"][];
         };
         /** ListingResponse[MeInvitationItem] */
         ListingResponse_MeInvitationItem_: {
@@ -2323,6 +3542,11 @@ export interface components {
             client_id: string;
             /** Scope */
             scope?: string | null;
+        };
+        /** Body_api.features.files.create */
+        create: {
+            /** File */
+            file: string;
         };
         /** Body_api.accounts.setPicture */
         fastapi___compat__v2__Body_api__accounts__setPicture: {
@@ -3411,6 +4635,2512 @@ export interface operations {
             };
             /** @description Invitation is not in a state allowing this action */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.list": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["ApplicationStatus"][] | null;
+                type?: components["schemas"]["ApplicationType"][] | null;
+                sortBy?: components["schemas"]["ApplicationSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationEnvironmentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                environment_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationEnvironmentPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environments.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationVersionCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                version_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                version_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                version_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationVersionPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                version_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.versions.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                version_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                environment_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+                environment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationEnvironmentVersionCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationEnvironmentVersionPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.finished": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.error": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationEnvironmentVersionErrorForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.environmentVersions.cancelled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                environment_version_id: string;
+                environment_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.features.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.features.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationFeatureCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.features.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_feature_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.features.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_feature_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.features.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+                application_feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationFeaturePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.list": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["FeatureStatus"][] | null;
+                type?: components["schemas"]["FeatureType"][] | null;
+                sortBy?: components["schemas"]["FeatureSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeatureCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeaturePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["create"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description The uploaded file is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description File too large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_file_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_file_id: string;
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_file_id: string;
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeatureFilePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_file_id: string;
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.features.files.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_file_id: string;
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureFileItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature or file not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
