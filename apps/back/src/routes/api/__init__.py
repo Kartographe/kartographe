@@ -11,6 +11,7 @@ from fastapi import APIRouter
 
 from src.routes.api.auth import router as auth_router
 from src.routes.api.health import router as health_router
+from src.routes.api.me import router as me_router
 
 router = APIRouter()
 
@@ -22,3 +23,4 @@ router.include_router(v1_router)
 # Out-of-version endpoints, mounted at the root.
 router.include_router(health_router)  # ops liveness probe
 router.include_router(auth_router)  # authentication (lock-step with the API)
+router.include_router(me_router)  # current-user profile & security

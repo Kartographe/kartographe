@@ -16,9 +16,11 @@ from sqlmodel import Session, select
 
 from src.database import get_session
 from src.managers.auth import AuthManager
+from src.managers.me import MeManager
+from src.managers.me_security import MeSecurityManager
+from src.managers.token import UserTokenManager
 from src.models.enum import UserStatus
 from src.models.user import User
-from src.managers.token import UserTokenManager
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
@@ -78,3 +80,17 @@ def get_auth_manager(session: SessionDep, request_ip: RequestIp) -> AuthManager:
 
 
 AuthManagerDep = Annotated[AuthManager, Depends(get_auth_manager)]
+
+
+def get_me_manager(session: SessionDep) -> MeManager:
+    return MeManager(session)
+
+
+MeManagerDep = Annotated[MeManager, Depends(get_me_manager)]
+
+
+def get_me_security_manager(session: SessionDep) -> MeSecurityManager:
+    return MeSecurityManager(session)
+
+
+MeSecurityManagerDep = Annotated[MeSecurityManager, Depends(get_me_security_manager)]

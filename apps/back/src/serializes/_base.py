@@ -47,6 +47,16 @@ class ListingResponse(CamelBase, Generic[T]):
     page: Pagination
     items: list[T]
 
+    @classmethod
+    def single_page(cls, items: list) -> "ListingResponse":
+        """Wrap an already-materialised, non-paginated list in the envelope."""
+        return cls(
+            count=len(items),
+            limit=len(items) or 1,
+            page=Pagination(min=1, current=1, max=1),
+            items=items,
+        )
+
 
 class SuccessResponse(CamelBase):
     """Body of an action endpoint that has nothing to return but success."""

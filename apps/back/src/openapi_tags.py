@@ -21,6 +21,16 @@ API_TAGS: list[dict[str, str]] = [
         "x-displayName": "Authentication",
         "description": "Sign up, sign in, activation, password reset and two-factor verification.",
     },
+    {
+        "name": "api.me",
+        "x-displayName": "Current user",
+        "description": "The signed-in user's own profile.",
+    },
+    {
+        "name": "api.me.security",
+        "x-displayName": "Current user — security",
+        "description": "Password, authenticator, recovery codes, security keys and activity log.",
+    },
 ]
 
 

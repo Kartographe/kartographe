@@ -144,6 +144,32 @@ class U2FChallengeTokenManager:
         return _decode(token, cls.AUDIENCE)
 
 
+class U2FRegistrationTokenManager:
+    """5-minute token binding a WebAuthn *registration* challenge to a user.
+
+    Used by the security area to enrol a new key (distinct audience from the
+    login-time assertion challenge so the two can't be swapped).
+    """
+
+    AUDIENCE = "me-two-factor-u2f-register"
+    TTL = 300
+
+    def __init__(self, user: User, challenge: str | None = None):
+        self.user = user
+        self.challenge = challenge
+
+    def generate(self) -> str:
+        return _encode(
+            self.AUDIENCE,
+            self.TTL,
+            {"user": {"id": str(self.user.id)}, "u2f": {"challenge": self.challenge}},
+        )
+
+    @classmethod
+    def decode(cls, token: str) -> tuple[dict | None, bool]:
+        return _decode(token, cls.AUDIENCE)
+
+
 class _TemporaryAuthenticationTokenManager:
     """Base for emailed one-shot links tied to a `UserAuthentication` row."""
 
