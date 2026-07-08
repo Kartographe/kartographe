@@ -10,12 +10,15 @@ interface SubmitButtonProps {
 
 export function SubmitButton({ children, block, disabled }: SubmitButtonProps) {
   const form = useFormContext();
+  // Only block while submitting (or when the caller explicitly disables it):
+  // validation runs on submit and surfaces field errors, so the button stays
+  // clickable rather than mysteriously greyed out.
   return (
-    <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-      {([canSubmit, isSubmitting]) => (
+    <form.Subscribe selector={(state) => state.isSubmitting}>
+      {(isSubmitting) => (
         <Button
           block={block}
-          disabled={disabled || !canSubmit}
+          disabled={disabled}
           htmlType="submit"
           loading={isSubmitting}
           type="primary"

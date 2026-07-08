@@ -7,6 +7,7 @@ import { $api } from "@/api/$api";
 import { turnstileHeaders } from "@/api/turnstile";
 import { AuthCard } from "@/features/auth/components/auth-card";
 import { TurnstileWidget } from "@/features/auth/components/turnstile-widget";
+import { isTurnstileEnabled } from "@/features/auth/turnstile";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -43,6 +44,10 @@ export function RegisterScreen() {
     },
     onSubmit: async ({ value }) => {
       setError(null);
+      if (isTurnstileEnabled() && !turnstileToken) {
+        setError(t`Veuillez compléter la vérification de sécurité.`);
+        return;
+      }
       try {
         await registerMutation.mutateAsync({
           body: {
@@ -78,9 +83,6 @@ export function RegisterScreen() {
       </AuthCard>
     );
   }
-
-  const turnstileReady =
-    !import.meta.env.VITE_TURNSTILE_SITE_KEY || turnstileToken !== null;
 
   return (
     <AuthCard
@@ -155,9 +157,7 @@ export function RegisterScreen() {
               )}
             </form.AppField>
             <TurnstileWidget onToken={setTurnstileToken} />
-            <form.SubmitButton block disabled={!turnstileReady}>
-              {t`Créer mon compte`}
-            </form.SubmitButton>
+            <form.SubmitButton block>{t`Créer mon compte`}</form.SubmitButton>
           </Flex>
         </form.FormRoot>
       </form.AppForm>

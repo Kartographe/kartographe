@@ -9,6 +9,7 @@ import { AuthCard } from "@/features/auth/components/auth-card";
 import { GoogleButton } from "@/features/auth/components/google-button";
 import { TurnstileWidget } from "@/features/auth/components/turnstile-widget";
 import { useAuthSuccess } from "@/features/auth/hooks/use-auth-success";
+import { isTurnstileEnabled } from "@/features/auth/turnstile";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -33,6 +34,10 @@ export function LoginScreen() {
     },
     onSubmit: async ({ value }) => {
       setError(null);
+      if (isTurnstileEnabled() && !turnstileToken) {
+        setError(t`Veuillez compléter la vérification de sécurité.`);
+        return;
+      }
       try {
         const data = await loginMutation.mutateAsync({
           body: value,
@@ -46,9 +51,6 @@ export function LoginScreen() {
       }
     },
   });
-
-  const turnstileReady =
-    !import.meta.env.VITE_TURNSTILE_SITE_KEY || turnstileToken !== null;
 
   return (
     <AuthCard
@@ -75,26 +77,26 @@ export function LoginScreen() {
                 />
               )}
             </form.AppField>
-            <form.AppField name="password">
-              {(field) => (
-                <field.PasswordField
-                  autoComplete="current-password"
-                  label={t`Mot de passe`}
-                />
-              )}
-            </form.AppField>
-            <Flex justify="space-between">
-              <form.AppField name="rememberMe">
+            <div>
+              <form.AppField name="password">
                 {(field) => (
-                  <field.CheckboxField>{t`Se souvenir de moi`}</field.CheckboxField>
+                  <field.PasswordField
+                    autoComplete="current-password"
+                    label={t`Mot de passe`}
+                  />
                 )}
               </form.AppField>
-              <Link to="/auth/forgot">{t`Mot de passe oublié ?`}</Link>
-            </Flex>
+              <Flex justify="flex-end" style={{ marginTop: -12 }}>
+                <Link to="/auth/forgot">{t`Mot de passe oublié ?`}</Link>
+              </Flex>
+            </div>
+            <form.AppField name="rememberMe">
+              {(field) => (
+                <field.CheckboxField>{t`Se souvenir de moi`}</field.CheckboxField>
+              )}
+            </form.AppField>
             <TurnstileWidget onToken={setTurnstileToken} />
-            <form.SubmitButton block disabled={!turnstileReady}>
-              {t`Se connecter`}
-            </form.SubmitButton>
+            <form.SubmitButton block>{t`Se connecter`}</form.SubmitButton>
             <GoogleButton onError={setError} />
           </Flex>
         </form.FormRoot>

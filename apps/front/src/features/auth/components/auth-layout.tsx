@@ -1,3 +1,4 @@
+import { DesktopOutlined, MoonOutlined, SunOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Outlet } from "@tanstack/react-router";
 import { Flex, Segmented, Typography } from "antd";
@@ -30,10 +31,10 @@ export function AuthLayout() {
         </Flex>
         <div className="max-w-md">
           <Typography.Title level={2} style={{ color: "#fff" }}>
-            {t`Cartographiez, pilotez, gardez le cap.`}
+            {t`Gardez le contrôle.`}
           </Typography.Title>
           <Typography.Paragraph style={{ color: "rgba(255,255,255,0.85)" }}>
-            {t`Votre espace Kartographe, auto-hébergeable et souverain.`}
+            {t`Kartographe est auto-hébergé : vos données, votre infrastructure, vos règles. Sans dépendance à un tiers.`}
           </Typography.Paragraph>
         </div>
         <span
@@ -57,13 +58,13 @@ export function AuthLayout() {
           <Outlet />
         </div>
         <Segmented<ThemeMode>
+          aria-label={t`Thème`}
           onChange={setMode}
           options={[
-            { label: t`Clair`, value: "light" },
-            { label: t`Sombre`, value: "dark" },
-            { label: t`Auto`, value: "auto" },
+            { value: "light", icon: <SunOutlined />, title: t`Clair` },
+            { value: "dark", icon: <MoonOutlined />, title: t`Sombre` },
+            { value: "auto", icon: <DesktopOutlined />, title: t`Auto` },
           ]}
-          size="small"
           value={mode}
         />
       </main>

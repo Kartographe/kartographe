@@ -7,6 +7,7 @@ import { $api } from "@/api/$api";
 import { turnstileHeaders } from "@/api/turnstile";
 import { AuthCard } from "@/features/auth/components/auth-card";
 import { TurnstileWidget } from "@/features/auth/components/turnstile-widget";
+import { isTurnstileEnabled } from "@/features/auth/turnstile";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
 export function ForgotScreen() {
@@ -26,6 +27,10 @@ export function ForgotScreen() {
     },
     onSubmit: async ({ value }) => {
       setError(null);
+      if (isTurnstileEnabled() && !turnstileToken) {
+        setError(t`Veuillez compléter la vérification de sécurité.`);
+        return;
+      }
       try {
         await forgotMutation.mutateAsync({
           body: value,
@@ -53,9 +58,6 @@ export function ForgotScreen() {
     );
   }
 
-  const turnstileReady =
-    !import.meta.env.VITE_TURNSTILE_SITE_KEY || turnstileToken !== null;
-
   return (
     <AuthCard
       footer={<Link to="/auth/login">{t`Retour à la connexion`}</Link>}
@@ -76,9 +78,7 @@ export function ForgotScreen() {
               )}
             </form.AppField>
             <TurnstileWidget onToken={setTurnstileToken} />
-            <form.SubmitButton block disabled={!turnstileReady}>
-              {t`Envoyer le lien`}
-            </form.SubmitButton>
+            <form.SubmitButton block>{t`Envoyer le lien`}</form.SubmitButton>
           </Flex>
         </form.FormRoot>
       </form.AppForm>

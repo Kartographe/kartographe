@@ -87,11 +87,17 @@ export function GoogleButton({ onError }: GoogleButtonProps) {
           callback: (response) =>
             handleCredentialRef.current(response.credential),
         });
+        // Match the block submit button's width (GIS caps the button at 400px).
+        const width = Math.max(
+          200,
+          Math.min(400, Math.floor(containerRef.current.offsetWidth))
+        );
         window.google.accounts.id.renderButton(containerRef.current, {
           theme: "outline",
           size: "large",
-          width: 336,
+          width,
           text: "signin_with",
+          logo_alignment: "center",
         });
       })
       .catch(() => {

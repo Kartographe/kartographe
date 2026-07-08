@@ -6,6 +6,7 @@ import { $api } from "@/api/$api";
 import { turnstileHeaders } from "@/api/turnstile";
 import { AuthCard } from "@/features/auth/components/auth-card";
 import { TurnstileWidget } from "@/features/auth/components/turnstile-widget";
+import { isTurnstileEnabled } from "@/features/auth/turnstile";
 
 interface ActivationScreenProps {
   token?: string;
@@ -23,8 +24,7 @@ export function ActivationScreen({ token }: ActivationScreenProps) {
     meta: { noErrorToast: true },
   });
 
-  const turnstileReady =
-    !import.meta.env.VITE_TURNSTILE_SITE_KEY || turnstileToken !== null;
+  const turnstileReady = !isTurnstileEnabled() || turnstileToken !== null;
 
   useEffect(() => {
     if (startedRef.current || !token || !turnstileReady) {
