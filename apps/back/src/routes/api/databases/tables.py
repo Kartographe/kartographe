@@ -87,6 +87,7 @@ def create_table(
         schema=form.table_schema,
         name=form.name,
         description=form.description,
+        color=form.color,
         column_forms=form.columns,
         tag_ids=form.tag_ids,
     )
@@ -114,8 +115,8 @@ def get_table(
     operation_id="api.databases.versions.tables.update",
     summary="Update a table",
     description=(
-        "Partially update a table (type, schema, name, description). If `columns` is sent, it "
-        "fully replaces the table's columns. Data roles only."
+        "Partially update a table (type, schema, name, description, color). If `columns` is sent, "
+        "it fully replaces the table's columns. Data roles only."
     ),
     response_model=ItemResponse[DatabaseTableItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},

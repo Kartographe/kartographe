@@ -67,7 +67,7 @@ export const dtoEnums = {
   ServiceStatus: ["draft", "active", "archived"] as const satisfies readonly S["ServiceStatus"][],
   ServiceType: ["internal", "external", "third_party", "other"] as const satisfies readonly S["ServiceType"][],
   SortOrder: ["asc", "desc"] as const satisfies readonly S["SortOrder"][],
-  TagEntityType: ["application", "application_route", "application_guard", "feature", "journey", "journey_scenario", "journey_scenario_step", "persona", "database", "database_table"] as const satisfies readonly S["TagEntityType"][],
+  TagEntityType: ["application", "application_route", "application_guard", "feature", "journey", "journey_scenario", "journey_scenario_step", "persona", "database", "database_table", "database_table_column"] as const satisfies readonly S["TagEntityType"][],
   UserAuthenticationLogStatus: ["success", "error", "forbidden"] as const satisfies readonly S["UserAuthenticationLogStatus"][],
   UserAuthenticationLogType: ["register", "activate", "activation_link", "email_password", "google_oauth", "two_factor_otp", "two_factor_u2f", "two_factor_recovery_code", "refresh_token", "forgot_password", "reset_password", "access"] as const satisfies readonly S["UserAuthenticationLogType"][],
   UserAuthenticationTwoFactorType: ["otp", "recovery_code", "u2f"] as const satisfies readonly S["UserAuthenticationTwoFactorType"][],

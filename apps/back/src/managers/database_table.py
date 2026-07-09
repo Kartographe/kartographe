@@ -74,6 +74,8 @@ class DatabaseTableManager(BaseEntityManager):
                 default_value=column_form.default_value,
                 name=column_form.name,
                 description=column_form.description,
+                color=column_form.color,
+                tag_ids=column_form.tag_ids,
                 commit=False,
             )
 
@@ -86,6 +88,7 @@ class DatabaseTableManager(BaseEntityManager):
         schema: str,
         name: str,
         description: dict | None,
+        color: str | None,
         column_forms,
         tag_ids: list[uuid.UUID],
     ) -> DatabaseTable:
@@ -103,6 +106,7 @@ class DatabaseTableManager(BaseEntityManager):
             table_schema=schema,
             name=name,
             description=description,
+            color=color,
             tag_ids=tag_ids,
         )
         self.session.add(table)

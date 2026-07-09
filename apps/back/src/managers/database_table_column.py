@@ -104,6 +104,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
         default_value: str,
         name: str,
         description: dict | None,
+        color: str | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
         commit: bool = True,
     ) -> DatabaseTableColumn:
         """Create a column on `table` after validating its references.
@@ -132,6 +134,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
             default_value=default_value,
             name=name,
             description=description,
+            color=color,
+            tag_ids=tag_ids or [],
         )
         self.session.add(column)
         if commit:

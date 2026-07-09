@@ -32,6 +32,8 @@ class DatabaseTable(BaseModel, table=True):
     name: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
+    # Display color as a `#rgb`/`#rrggbb` hex string; unset means "no color".
+    color: str | None = Field(default=None)
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     owner: "User" = Relationship()

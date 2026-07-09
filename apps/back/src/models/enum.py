@@ -497,3 +497,4 @@ class TagEntityType(str, Enum):
     PERSONA = "persona"
     DATABASE = "database"
     DATABASE_TABLE = "database_table"
+    DATABASE_TABLE_COLUMN = "database_table_column"

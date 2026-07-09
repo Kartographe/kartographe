@@ -89,6 +89,8 @@ def create_column(
         default_value=form.default_value,
         name=form.name,
         description=form.description,
+        color=form.color,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=DatabaseTableColumnItem.model_validate(column))
 
@@ -113,7 +115,7 @@ def get_column(
     summary="Update a column",
     description=(
         "Partially update a column (type, foreign key, nullable, unique, default, name, "
-        "description). Data roles only."
+        "description, color, tags). Data roles only."
     ),
     response_model=ItemResponse[DatabaseTableColumnItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},

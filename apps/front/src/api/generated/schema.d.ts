@@ -2291,7 +2291,7 @@ export interface paths {
         head?: never;
         /**
          * Update a table
-         * @description Partially update a table (type, schema, name, description). If `columns` is sent, it fully replaces the table's columns. Data roles only.
+         * @description Partially update a table (type, schema, name, description, color). If `columns` is sent, it fully replaces the table's columns. Data roles only.
          */
         patch: operations["api.databases.versions.tables.update"];
         trace?: never;
@@ -2383,7 +2383,7 @@ export interface paths {
         head?: never;
         /**
          * Update a column
-         * @description Partially update a column (type, foreign key, nullable, unique, default, name, description). Data roles only.
+         * @description Partially update a column (type, foreign key, nullable, unique, default, name, description, color, tags). Data roles only.
          */
         patch: operations["api.databases.versions.tables.columns.update"];
         trace?: never;
@@ -5222,12 +5222,18 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Color */
+            color?: string | null;
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * DatabaseTableColumnItem
          * @description A column of a database table.
          */
         DatabaseTableColumnItem: {
+            /** Color */
+            color?: string | null;
             /**
              * Databasecolumntypeid
              * Format: uuid
@@ -5266,6 +5272,8 @@ export interface components {
             rank: number;
             /** Systemfield */
             systemField: boolean;
+            /** Tagids */
+            tagIds: string[];
             /** Unique */
             unique: boolean;
         };
@@ -5296,6 +5304,10 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Color */
+            color?: string | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * DatabaseTableCreateForm
@@ -5311,6 +5323,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Color */
+            color?: string | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnCreateForm"][];
             /** Tagids */
@@ -5324,6 +5338,8 @@ export interface components {
          *     and on create/update.
          */
         DatabaseTableItem: {
+            /** Color */
+            color?: string | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnItem"][] | null;
             /**
@@ -5374,6 +5390,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Color */
+            color?: string | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnCreateForm"][] | null;
             /** Tagids */
@@ -7511,7 +7529,7 @@ export interface components {
          * @description The kind of entity a tag can be attached to.
          * @enum {string}
          */
-        TagEntityType: "application" | "application_route" | "application_guard" | "feature" | "journey" | "journey_scenario" | "journey_scenario_step" | "persona" | "database" | "database_table";
+        TagEntityType: "application" | "application_route" | "application_guard" | "feature" | "journey" | "journey_scenario" | "journey_scenario_step" | "persona" | "database" | "database_table" | "database_table_column";
         /**
          * TagItem
          * @description A colored label attachable to an account's entities.

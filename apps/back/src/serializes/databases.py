@@ -37,6 +37,7 @@ class DatabaseVersionItem(CamelBase):
 class DatabaseTableColumnItem(CamelBase):
     """A column of a database table."""
 
+    color: str | None = None
     database_column_type_id: uuid.UUID
     date: datetime
     default_value: str
@@ -49,6 +50,7 @@ class DatabaseTableColumnItem(CamelBase):
     owner_id: uuid.UUID
     rank: int
     system_field: bool
+    tag_ids: list[uuid.UUID]
     unique: bool
 
 
@@ -59,6 +61,7 @@ class DatabaseTableItem(CamelBase):
     and on create/update.
     """
 
+    color: str | None = None
     columns: list[DatabaseTableColumnItem] | None = None
     date: datetime
     description: dict | None = None

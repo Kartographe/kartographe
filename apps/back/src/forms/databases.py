@@ -7,6 +7,9 @@ from pydantic import Field
 from src.forms._base import CamelBase
 from src.models.enum import DatabaseTableType, DatabaseType
 
+# A `#rgb` or `#rrggbb` color. `None` clears the color; the field is optional.
+HEX_COLOR_PATTERN = r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+
 # --- Database ------------------------------------------------------------
 
 
@@ -59,6 +62,8 @@ class DatabaseTableColumnCreateForm(CamelBase):
     default_value: str = Field(default="", max_length=1024)
     name: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class DatabaseTableColumnPatchForm(CamelBase):
@@ -74,6 +79,8 @@ class DatabaseTableColumnPatchForm(CamelBase):
     default_value: str | None = Field(default=None, max_length=1024)
     name: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- DatabaseTable -------------------------------------------------------
@@ -86,6 +93,7 @@ class DatabaseTableCreateForm(CamelBase):
     table_schema: str = Field(alias="schema", min_length=1, max_length=255)
     name: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     columns: list[DatabaseTableColumnCreateForm] = Field(default_factory=list)
     tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
@@ -98,5 +106,6 @@ class DatabaseTablePatchForm(CamelBase):
     table_schema: str | None = Field(default=None, alias="schema", min_length=1, max_length=255)
     name: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     columns: list[DatabaseTableColumnCreateForm] | None = Field(default=None)
     tag_ids: list[uuid.UUID] | None = Field(default=None)

@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON
+from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -44,6 +44,9 @@ class DatabaseTableColumn(BaseModel, table=True):
     name: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
+    # Display color as a `#rgb`/`#rrggbb` hex string; unset means "no color".
+    color: str | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     column_type: "DatabaseColumnType" = Relationship()
     owner: "User" = Relationship()
