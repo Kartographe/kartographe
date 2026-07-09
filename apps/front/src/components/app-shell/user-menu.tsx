@@ -82,14 +82,11 @@ export function UserMenu({ collapsed }: UserMenuProps) {
           {
             key: "invitations",
             icon: <MailOutlined />,
-            label: (
-              <Flex align="center" gap={8} justify="space-between">
-                <span>{t`Invitations`}</span>
-                {pendingInvitations > 0 ? (
-                  <Badge count={pendingInvitations} size="small" />
-                ) : null}
-              </Flex>
-            ),
+            label: t`Invitations`,
+            extra:
+              pendingInvitations > 0 ? (
+                <Badge count={pendingInvitations} size="small" />
+              ) : undefined,
             onClick: () => go("/me/invitations"),
           },
           {
