@@ -22,6 +22,10 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import {
+  isIdentifier,
+  stripNonIdentifier,
+} from "@/features/databases/identifier";
 import { ColorSwatch } from "@/features/databases/tables/color-swatch";
 import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
 
@@ -33,23 +37,13 @@ const TABLES_KEY = [
   "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables",
 ];
 
-/** The subset of a column that the inline row edits. */
+/** The subset of a column the draft row asks for; the rest gets defaults. */
 interface Draft {
   name: string;
   databaseColumnTypeId: string;
   nullable: boolean;
   unique: boolean;
   systemField: boolean;
-}
-
-function draftOf(column: Column): Draft {
-  return {
-    name: column.name,
-    databaseColumnTypeId: column.databaseColumnTypeId,
-    nullable: column.nullable,
-    unique: column.unique,
-    systemField: column.systemField,
-  };
 }
 
 const EMPTY_DRAFT: Draft = {
@@ -60,21 +54,11 @@ const EMPTY_DRAFT: Draft = {
   systemField: false,
 };
 
-function sameDraft(a: Draft, b: Draft): boolean {
-  return (
-    a.name === b.name &&
-    a.databaseColumnTypeId === b.databaseColumnTypeId &&
-    a.nullable === b.nullable &&
-    a.unique === b.unique &&
-    a.systemField === b.systemField
-  );
-}
-
 function isComplete(draft: Draft): boolean {
-  return draft.name.trim().length > 0 && draft.databaseColumnTypeId.length > 0;
+  return isIdentifier(draft.name) && draft.databaseColumnTypeId.length > 0;
 }
 
-/** The editable part of a row, shared by an existing column and a new one. */
+/** The fields of the draft row. Existing columns are read-only. */
 function DraftFields({
   draft,
   onChange,
@@ -91,9 +75,12 @@ function DraftFields({
     <>
       <Input
         disabled={disabled}
-        onChange={(event) => onChange({ ...draft, name: event.target.value })}
+        onChange={(event) =>
+          onChange({ ...draft, name: stripNonIdentifier(event.target.value) })
+        }
         placeholder={t`Nom`}
         size="small"
+        status={draft.name && !isIdentifier(draft.name) ? "error" : undefined}
         style={{ width: 180 }}
         value={draft.name}
       />
@@ -141,10 +128,6 @@ function DraftFields({
 }
 
 interface ColumnRowProps {
-  accountId: string;
-  databaseId: string;
-  versionId: string;
-  tableId: string;
   column: Column;
   columnTypes: ColumnTypeLookup;
   onComment: () => void;
@@ -152,16 +135,8 @@ interface ColumnRowProps {
   onDelete: () => void;
 }
 
-/**
- * An existing column, editable in place. Name, type and the three flags are
- * changed here; the colour, the foreign key and the description stay behind the
- * edit modal, which has the room to explain them.
- */
+/** An existing column, read-only. Editing goes through the modal. */
 function ColumnRow({
-  accountId,
-  databaseId,
-  versionId,
-  tableId,
   column,
   columnTypes,
   onComment,
@@ -169,64 +144,20 @@ function ColumnRow({
   onDelete,
 }: ColumnRowProps) {
   const { t } = useLingui();
-  const queryClient = useQueryClient();
-  const [draft, setDraft] = useState<Draft>(draftOf(column));
-
-  const updateMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}",
-    { meta: { successMessage: t`Colonne mise à jour` } }
-  );
-
-  const dirty = !sameDraft(draft, draftOf(column));
-
-  async function save() {
-    await updateMutation.mutateAsync({
-      params: {
-        path: {
-          account_id: accountId,
-          database_id: databaseId,
-          database_version_id: versionId,
-          database_table_id: tableId,
-          database_table_column_id: column.id,
-        },
-      },
-      body: draft,
-    });
-    queryClient.invalidateQueries({ queryKey: TABLES_KEY });
-  }
 
   return (
     <Flex align="center" gap={8}>
       <ColorSwatch color={column.color} size={10} />
-      <DraftFields
-        columnTypes={columnTypes}
-        draft={draft}
-        onChange={setDraft}
-      />
+      <Typography.Text code style={{ minWidth: 160 }}>
+        {column.name}
+      </Typography.Text>
+      <Typography.Text style={{ flex: 1 }} type="secondary">
+        {columnTypes.label(column.databaseColumnTypeId)}
+      </Typography.Text>
       {column.foreignKeyDatabaseTableId ? <Tag color="blue">FK</Tag> : null}
-
-      {dirty ? (
-        <>
-          <Tooltip title={t`Enregistrer`}>
-            <Button
-              disabled={!isComplete(draft)}
-              icon={<CheckOutlined />}
-              loading={updateMutation.isPending}
-              onClick={save}
-              size="small"
-              type="primary"
-            />
-          </Tooltip>
-          <Tooltip title={t`Annuler`}>
-            <Button
-              icon={<CloseOutlined />}
-              onClick={() => setDraft(draftOf(column))}
-              size="small"
-            />
-          </Tooltip>
-        </>
-      ) : null}
+      {column.unique ? <Tag color="gold">{t`Unique`}</Tag> : null}
+      {column.nullable ? <Tag>{t`Nullable`}</Tag> : null}
+      {column.systemField ? <Tag>{t`Système`}</Tag> : null}
 
       <Tooltip title={t`Commentaires`}>
         <Button icon={<CommentOutlined />} onClick={onComment} size="small" />
@@ -257,7 +188,11 @@ interface TableColumnsProps {
   onDelete: (column: Column) => void;
 }
 
-/** A table's columns: each editable in place, with a draft row to add one. */
+/**
+ * A table's columns, read-only, with a draft row below them to add one. The
+ * draft row asks only for what a column cannot exist without; everything else
+ * — colour, foreign key, description — is set afterwards through the modal.
+ */
 export function TableColumns({
   accountId,
   databaseId,
@@ -314,16 +249,12 @@ export function TableColumns({
 
       {columns.map((column) => (
         <ColumnRow
-          accountId={accountId}
           column={column}
           columnTypes={columnTypes}
-          databaseId={databaseId}
           key={column.id}
           onComment={() => onComment(column)}
           onDelete={() => onDelete(column)}
           onEdit={() => onEdit(column)}
-          tableId={table.id}
-          versionId={versionId}
         />
       ))}
 
