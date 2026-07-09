@@ -46,7 +46,7 @@ export function DeploymentsScreen({
   const { t } = useLingui();
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
-  const displayName = useAccountUserMap(accountId);
+  const users = useAccountUserMap(accountId);
 
   const [environmentId, setEnvironmentId] = useState<string | undefined>();
   const [deployOpen, setDeployOpen] = useState(false);
@@ -248,7 +248,7 @@ export function DeploymentsScreen({
             {
               title: t`Déployé par`,
               dataIndex: "ownerId",
-              render: (ownerId: string) => displayName(ownerId),
+              render: (ownerId: string) => users.name(ownerId),
             },
             {
               title: t`Démarré le`,

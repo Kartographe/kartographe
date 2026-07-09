@@ -25,7 +25,7 @@ export function ApplicationOverview({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
-  const displayName = useAccountUserMap(accountId);
+  const users = useAccountUserMap(accountId);
 
   const activateMutation = $api.useMutation(
     "post",
@@ -94,7 +94,7 @@ export function ApplicationOverview({
           {application.description || "—"}
         </Descriptions.Item>
         <Descriptions.Item label={t`Propriétaire`}>
-          {displayName(application.ownerId)}
+          {users.name(application.ownerId)}
         </Descriptions.Item>
         <Descriptions.Item label={t`Créée le`}>
           {dayjs(application.date).format("DD/MM/YYYY HH:mm")}

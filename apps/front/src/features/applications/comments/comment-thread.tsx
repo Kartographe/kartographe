@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import type { AccountUserLookup } from "@/features/accounts/use-account-user-map";
+import { CommentAvatar } from "@/features/applications/comments/comment-avatar";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import {
   asRichText,
@@ -19,7 +21,7 @@ type Comment = components["schemas"]["CommentItem"];
 interface CommentThreadProps {
   accountId: string;
   comment: Comment;
-  displayName: (userId: string) => string;
+  users: AccountUserLookup;
   onChanged: () => void;
   /** Replies cannot themselves be replied to. */
   isReply?: boolean;
@@ -28,7 +30,7 @@ interface CommentThreadProps {
 export function CommentThread({
   accountId,
   comment,
-  displayName,
+  users,
   onChanged,
   isReply = false,
 }: CommentThreadProps) {
@@ -74,6 +76,7 @@ export function CommentThread({
 
   const replies = repliesQuery.data?.items ?? [];
   const isRemoved = comment.status === "removed";
+  const author = users.user(comment.ownerId);
 
   function invalidateReplies() {
     queryClient.invalidateQueries({
@@ -131,116 +134,127 @@ export function CommentThread({
   }
 
   return (
-    <Flex
-      gap={8}
-      style={{
-        borderLeft: isReply
-          ? "2px solid var(--ant-color-border-secondary)"
-          : undefined,
-        paddingInlineStart: isReply ? 12 : 0,
-      }}
-      vertical
-    >
-      <Flex align="center" gap={8}>
-        <Typography.Text strong>{displayName(comment.ownerId)}</Typography.Text>
-        <Typography.Text style={{ fontSize: 12 }} type="secondary">
-          {dayjs(comment.date).format("DD/MM/YYYY HH:mm")}
-        </Typography.Text>
-        {isRemoved ? <Tag color="default">{t`Retiré`}</Tag> : null}
-      </Flex>
+    <Flex gap={12}>
+      <CommentAvatar size={isReply ? 28 : 36} user={author} />
 
-      {editing ? (
-        <Flex gap={8} vertical>
-          <RichTextEditor onChange={setDraft} value={draft} />
-          <Space>
-            <Button
-              disabled={isRichTextEmpty(draft)}
-              loading={updateMutation.isPending}
-              onClick={submitEdit}
-              size="small"
-              type="primary"
-            >
-              {t`Enregistrer`}
-            </Button>
-            <Button onClick={() => setEditing(false)} size="small">
-              {t`Annuler`}
-            </Button>
-          </Space>
+      <Flex gap={8} style={{ flex: 1, minWidth: 0 }} vertical>
+        <Flex align="baseline" gap={8} wrap>
+          <Typography.Text strong>
+            {users.name(comment.ownerId)}
+          </Typography.Text>
+          <Typography.Text style={{ fontSize: 12 }} type="secondary">
+            {dayjs(comment.date).format("DD/MM/YYYY HH:mm")}
+          </Typography.Text>
+          {isRemoved ? <Tag>{t`Retiré`}</Tag> : null}
         </Flex>
-      ) : (
-        <div>
-          {isRemoved ? (
-            <Typography.Text type="secondary">
-              {t`Ce commentaire a été retiré.`}
-            </Typography.Text>
-          ) : (
-            <RichTextView value={comment.value} />
-          )}
-        </div>
-      )}
 
-      {isRemoved || editing ? null : (
-        <Space size="small">
-          {isReply ? null : (
-            <Button
-              onClick={() => setReplying(!replying)}
-              size="small"
-              type="link"
-            >
-              {t`Répondre`}
-            </Button>
-          )}
-          <Button onClick={() => setEditing(true)} size="small" type="link">
-            {t`Modifier`}
-          </Button>
-          <Button onClick={remove} size="small" type="link">
-            {t`Retirer`}
-          </Button>
-          <Button danger onClick={confirmDelete} size="small" type="link">
-            {t`Supprimer`}
-          </Button>
-        </Space>
-      )}
+        {editing ? (
+          <Flex gap={8} vertical>
+            <RichTextEditor onChange={setDraft} value={draft} />
+            <Space>
+              <Button
+                disabled={isRichTextEmpty(draft)}
+                loading={updateMutation.isPending}
+                onClick={submitEdit}
+                size="small"
+                type="primary"
+              >
+                {t`Enregistrer`}
+              </Button>
+              <Button onClick={() => setEditing(false)} size="small">
+                {t`Annuler`}
+              </Button>
+            </Space>
+          </Flex>
+        ) : (
+          <div
+            style={{
+              background: "var(--ant-color-fill-quaternary)",
+              borderRadius: 8,
+              padding: "8px 12px",
+            }}
+          >
+            {isRemoved ? (
+              <Typography.Text italic type="secondary">
+                {t`Ce commentaire a été retiré.`}
+              </Typography.Text>
+            ) : (
+              <RichTextView value={comment.value} />
+            )}
+          </div>
+        )}
 
-      {replying ? (
-        <Flex gap={8} vertical>
-          <RichTextEditor
-            key={replyEditorKey}
-            onChange={setReplyDraft}
-            placeholder={t`Votre réponse`}
-            value={replyDraft}
-          />
-          <Space>
-            <Button
-              disabled={isRichTextEmpty(replyDraft)}
-              loading={replyMutation.isPending}
-              onClick={submitReply}
-              size="small"
-              type="primary"
-            >
-              {t`Publier`}
+        {isRemoved || editing ? null : (
+          <Flex gap={4}>
+            {isReply ? null : (
+              <Button
+                onClick={() => setReplying(!replying)}
+                size="small"
+                type="text"
+              >
+                {t`Répondre`}
+              </Button>
+            )}
+            <Button onClick={() => setEditing(true)} size="small" type="text">
+              {t`Modifier`}
             </Button>
-            <Button onClick={() => setReplying(false)} size="small">
-              {t`Annuler`}
+            <Button onClick={remove} size="small" type="text">
+              {t`Retirer`}
             </Button>
-          </Space>
-        </Flex>
-      ) : null}
+            <Button danger onClick={confirmDelete} size="small" type="text">
+              {t`Supprimer`}
+            </Button>
+          </Flex>
+        )}
 
-      {replies.length > 0 ? (
-        <Flex gap={16} style={{ marginInlineStart: 16 }} vertical>
-          {replies.map((reply) => (
-            <CommentThread
-              accountId={accountId}
-              comment={reply}
-              displayName={displayName}
-              isReply
-              key={reply.id}
-              onChanged={invalidateReplies}
+        {replying ? (
+          <Flex gap={8} vertical>
+            <RichTextEditor
+              key={replyEditorKey}
+              onChange={setReplyDraft}
+              placeholder={t`Votre réponse`}
+              value={replyDraft}
             />
-          ))}
-        </Flex>
-      ) : null}
+            <Space>
+              <Button
+                disabled={isRichTextEmpty(replyDraft)}
+                loading={replyMutation.isPending}
+                onClick={submitReply}
+                size="small"
+                type="primary"
+              >
+                {t`Publier`}
+              </Button>
+              <Button onClick={() => setReplying(false)} size="small">
+                {t`Annuler`}
+              </Button>
+            </Space>
+          </Flex>
+        ) : null}
+
+        {replies.length > 0 ? (
+          <Flex
+            gap={20}
+            style={{
+              borderInlineStart: "2px solid var(--ant-color-border-secondary)",
+              marginTop: 4,
+              paddingInlineStart: 16,
+            }}
+            vertical
+          >
+            {replies.map((reply) => (
+              <CommentThread
+                accountId={accountId}
+                comment={reply}
+                isReply
+                key={reply.id}
+                onChanged={invalidateReplies}
+                users={users}
+              />
+            ))}
+          </Flex>
+        ) : null}
+      </Flex>
     </Flex>
   );
 }

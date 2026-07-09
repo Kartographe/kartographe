@@ -1,9 +1,11 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Divider, Empty, Flex, Spin, Typography } from "antd";
+import { Badge, Button, Divider, Empty, Flex, Spin, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
+import { useCurrentUser } from "@/features/account/hooks/use-current-user";
 import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { CommentAvatar } from "@/features/applications/comments/comment-avatar";
 import { CommentThread } from "@/features/applications/comments/comment-thread";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { EMPTY_RICH_TEXT, isRichTextEmpty } from "@/lib/rich-text/rich-text";
@@ -23,7 +25,8 @@ export function CommentsScreen({
 }) {
   const { t } = useLingui();
   const queryClient = useQueryClient();
-  const displayName = useAccountUserMap(accountId);
+  const users = useAccountUserMap(accountId);
+  const me = useCurrentUser().data?.item;
   const [draft, setDraft] = useState<RichTextDocument>(EMPTY_RICH_TEXT);
   // The editor is uncontrolled once mounted — remount it to clear the draft.
   const [editorKey, setEditorKey] = useState(0);
@@ -58,27 +61,39 @@ export function CommentsScreen({
   }
 
   return (
-    <Flex gap={16} vertical>
-      <Typography.Title level={4} style={{ margin: 0 }}>
-        {t`Commentaires`}
-      </Typography.Title>
+    <Flex gap={20} vertical>
+      <Flex align="center" gap={12}>
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t`Commentaires`}
+        </Typography.Title>
+        {comments.length > 0 ? (
+          <Badge
+            color="var(--ant-color-fill-secondary)"
+            count={comments.length}
+            style={{ color: "var(--ant-color-text)" }}
+          />
+        ) : null}
+      </Flex>
 
-      <Flex gap={8} vertical>
-        <RichTextEditor
-          key={editorKey}
-          onChange={setDraft}
-          placeholder={t`Écrire un commentaire`}
-          value={draft}
-        />
-        <Button
-          disabled={isRichTextEmpty(draft)}
-          loading={createMutation.isPending}
-          onClick={publish}
-          style={{ alignSelf: "flex-end" }}
-          type="primary"
-        >
-          {t`Publier`}
-        </Button>
+      <Flex gap={12}>
+        <CommentAvatar user={me ? { ...me } : undefined} />
+        <Flex gap={8} style={{ flex: 1, minWidth: 0 }} vertical>
+          <RichTextEditor
+            key={editorKey}
+            onChange={setDraft}
+            placeholder={t`Écrire un commentaire`}
+            value={draft}
+          />
+          <Button
+            disabled={isRichTextEmpty(draft)}
+            loading={createMutation.isPending}
+            onClick={publish}
+            style={{ alignSelf: "flex-end" }}
+            type="primary"
+          >
+            {t`Publier`}
+          </Button>
+        </Flex>
       </Flex>
 
       <Divider style={{ margin: 0 }} />
@@ -93,14 +108,14 @@ export function CommentsScreen({
         <Empty description={t`Aucun commentaire`} />
       ) : null}
 
-      <Flex gap={24} vertical>
+      <Flex gap={28} vertical>
         {comments.map((comment) => (
           <CommentThread
             accountId={accountId}
             comment={comment}
-            displayName={displayName}
             key={comment.id}
             onChanged={invalidate}
+            users={users}
           />
         ))}
       </Flex>
