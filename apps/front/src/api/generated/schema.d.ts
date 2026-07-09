@@ -3065,7 +3065,7 @@ export interface paths {
         };
         /**
          * List comments
-         * @description List every comment of the account, most recent first. Any member may read.
+         * @description List the comments of the account, most recent first. Filter by entity type, entity id, owner and/or status (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and sort by date/status/statusDate. Any member may read.
          */
         get: operations["api.comments.list"];
         put?: never;
@@ -5372,6 +5372,12 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /**
+         * CommentSortField
+         * @description Sortable columns for the comments listing.
+         * @enum {string}
+         */
+        CommentSortField: "date" | "status" | "status_date";
         /**
          * CommentStatus
          * @enum {string}
@@ -20702,7 +20708,16 @@ export interface operations {
     };
     "api.comments.list": {
         parameters: {
-            query?: never;
+            query?: {
+                entityType?: components["schemas"]["CommentEntityType"][] | null;
+                entityId?: string[] | null;
+                ownerId?: string[] | null;
+                status?: components["schemas"]["CommentStatus"][] | null;
+                lbound?: string | null;
+                ubound?: string | null;
+                sortBy?: components["schemas"]["CommentSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+            };
             header?: never;
             path: {
                 account_id: string;
