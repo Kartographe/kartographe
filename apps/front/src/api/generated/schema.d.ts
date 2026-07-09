@@ -2360,6 +2360,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reorder columns
+         * @description Reorder the columns of a table. Send `columnIds` — every column of the table in its new order — or `ranks`, mapping a column id to its new position, which may cover only the columns that move. Returns the table's columns in their new order. Data roles and developers only.
+         */
+        post: operations["api.databases.versions.tables.columns.reorder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}": {
         parameters: {
             query?: never;
@@ -2386,6 +2406,250 @@ export interface paths {
          * @description Partially update a column (type, foreign key, nullable, unique, default, name, description, color, tags). Data roles only.
          */
         patch: operations["api.databases.versions.tables.columns.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database migrations
+         * @description List the migrations leaving this database, most recent first. Any member may read.
+         */
+        get: operations["api.databases.migrations.list"];
+        put?: never;
+        /**
+         * Create a database migration
+         * @description Plan a migration leaving a version of this database towards a version of any database of the account. It starts as a draft. Data roles only.
+         */
+        post: operations["api.databases.migrations.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a database migration
+         * @description Return a single migration of the database. Any member may read.
+         */
+        get: operations["api.databases.migrations.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a database migration
+         * @description Soft-delete a migration; its column steps are soft-deleted as well. Data roles only.
+         */
+        delete: operations["api.databases.migrations.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a database migration
+         * @description Partially update a migration (type, title, description, source version, destination database and version). Data roles only.
+         */
+        patch: operations["api.databases.migrations.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move a migration back to draft
+         * @description Set the migration status back to draft. Data roles only.
+         */
+        post: operations["api.databases.migrations.draft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/validated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate a migration
+         * @description Set the migration status to validated. Data roles only.
+         */
+        post: operations["api.databases.migrations.validated"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/completed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete a migration
+         * @description Set the migration status to completed. Data roles only.
+         */
+        post: operations["api.databases.migrations.completed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/cancelled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a migration
+         * @description Set the migration status to cancelled. Data roles only.
+         */
+        post: operations["api.databases.migrations.cancelled"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration columns
+         * @description List the column steps of a migration, in insertion order. Any member may read.
+         */
+        get: operations["api.databases.migrations.columns.list"];
+        put?: never;
+        /**
+         * Create a migration column
+         * @description Add a column step to the migration. Source endpoints must belong to the migration's source version, destination endpoints to its destination version. It starts as a draft. Data roles and developers only.
+         */
+        post: operations["api.databases.migrations.columns.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a migration column
+         * @description Return a single column step of the migration. Any member may read.
+         */
+        get: operations["api.databases.migrations.columns.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a migration column
+         * @description Soft-delete a column step of the migration. Data roles and developers only.
+         */
+        delete: operations["api.databases.migrations.columns.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a migration column
+         * @description Partially update a column step (type, source and destination endpoints, transformation method, description). Data roles and developers only.
+         */
+        patch: operations["api.databases.migrations.columns.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move a migration column back to draft
+         * @description Set the column step status back to draft. Data roles only.
+         */
+        post: operations["api.databases.migrations.columns.draft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/to_be_confirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit a migration column for confirmation
+         * @description Set the column step status to awaiting confirmation. Data roles only.
+         */
+        post: operations["api.databases.migrations.columns.toBeConfirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/confirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm a migration column
+         * @description Set the column step status to confirmed. Data roles only.
+         */
+        post: operations["api.databases.migrations.columns.confirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/comments": {
@@ -2454,6 +2718,54 @@ export interface paths {
          * @description Post a comment on a database column. Any member may post.
          */
         post: operations["api.databases.versions.tables.columns.comments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration comments
+         * @description List the root comments on a database migration, oldest first. Any member may read.
+         */
+        get: operations["api.databases.migrations.comments.list"];
+        put?: never;
+        /**
+         * Comment on a migration
+         * @description Post a comment on a database migration. Any member may post.
+         */
+        post: operations["api.databases.migrations.comments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration column comments
+         * @description List the root comments on a migration column step, oldest first. Any member may read.
+         */
+        get: operations["api.databases.migrations.columns.comments.list"];
+        put?: never;
+        /**
+         * Comment on a migration column
+         * @description Post a comment on a migration column step. Any member may post.
+         */
+        post: operations["api.databases.migrations.columns.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5007,7 +5319,7 @@ export interface components {
          * @description The kind of entity a comment can be attached to.
          * @enum {string}
          */
-        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "service" | "service_action";
+        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action";
         /**
          * CommentItem
          * @description A threaded comment on an account entity.
@@ -5151,6 +5463,221 @@ export interface components {
             title: string;
             type: components["schemas"]["DatabaseType"];
         };
+        /**
+         * DatabaseMigrationColumnCreateForm
+         * @description Create a column step on a migration. It starts as a draft.
+         *
+         *     A creation step only needs its destination endpoints, a deletion step only
+         *     its source ones, and a migration step both. A column endpoint always requires
+         *     the table endpoint on the same side.
+         */
+        DatabaseMigrationColumnCreateForm: {
+            type: components["schemas"]["DatabaseMigrationColumnType"];
+            /** Sourcedatabasetableid */
+            sourceDatabaseTableId?: string | null;
+            /** Sourcedatabasetablecolumnid */
+            sourceDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetableid */
+            destinationDatabaseTableId?: string | null;
+            /** Destinationdatabasetablecolumnid */
+            destinationDatabaseTableColumnId?: string | null;
+            /**
+             * Transformationmethod
+             * @description How the value is reshaped on its way across.
+             */
+            transformationMethod?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseMigrationColumnItem
+         * @description One column-level step of a migration.
+         *
+         *     A creation only carries destination endpoints, a deletion only source ones,
+         *     and a migration carries both.
+         */
+        DatabaseMigrationColumnItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Destinationdatabasetablecolumnid */
+            destinationDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetableid */
+            destinationDatabaseTableId?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Sourcedatabasetablecolumnid */
+            sourceDatabaseTableColumnId?: string | null;
+            /** Sourcedatabasetableid */
+            sourceDatabaseTableId?: string | null;
+            status: components["schemas"]["DatabaseMigrationColumnStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Transformationmethod */
+            transformationMethod?: string | null;
+            type: components["schemas"]["DatabaseMigrationColumnType"];
+        };
+        /**
+         * DatabaseMigrationColumnPatchForm
+         * @description Partial update of a column step — only the keys sent are applied.
+         */
+        DatabaseMigrationColumnPatchForm: {
+            type?: components["schemas"]["DatabaseMigrationColumnType"] | null;
+            /** Sourcedatabasetableid */
+            sourceDatabaseTableId?: string | null;
+            /** Sourcedatabasetablecolumnid */
+            sourceDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetableid */
+            destinationDatabaseTableId?: string | null;
+            /** Destinationdatabasetablecolumnid */
+            destinationDatabaseTableColumnId?: string | null;
+            /** Transformationmethod */
+            transformationMethod?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseMigrationColumnStatus
+         * @enum {string}
+         */
+        DatabaseMigrationColumnStatus: "draft" | "to_be_confirmed" | "confirmed";
+        /**
+         * DatabaseMigrationColumnType
+         * @description What happens to the column across the migration.
+         * @enum {string}
+         */
+        DatabaseMigrationColumnType: "migration" | "deletion" | "creation";
+        /**
+         * DatabaseMigrationCreateForm
+         * @description Create a migration leaving the database in the path. It starts as a draft.
+         */
+        DatabaseMigrationCreateForm: {
+            type: components["schemas"]["DatabaseMigrationType"];
+            /** Title */
+            title: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Sourcedatabaseversionid
+             * Format: uuid
+             * @description Version of the database in the path the migration leaves from.
+             */
+            sourceDatabaseVersionId: string;
+            /**
+             * Destinationdatabaseid
+             * Format: uuid
+             * @description Database the migration lands on. May be the database in the path.
+             */
+            destinationDatabaseId: string;
+            /**
+             * Destinationdatabaseversionid
+             * Format: uuid
+             * @description Version of the destination database the migration lands on.
+             */
+            destinationDatabaseVersionId: string;
+        };
+        /**
+         * DatabaseMigrationItem
+         * @description A planned move from a version of one database to a version of another.
+         */
+        DatabaseMigrationItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Destinationdatabaseid
+             * Format: uuid
+             */
+            destinationDatabaseId: string;
+            /**
+             * Destinationdatabaseversionid
+             * Format: uuid
+             */
+            destinationDatabaseVersionId: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Sourcedatabaseid
+             * Format: uuid
+             */
+            sourceDatabaseId: string;
+            /**
+             * Sourcedatabaseversionid
+             * Format: uuid
+             */
+            sourceDatabaseVersionId: string;
+            status: components["schemas"]["DatabaseMigrationStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Title */
+            title: string;
+            type: components["schemas"]["DatabaseMigrationType"];
+        };
+        /**
+         * DatabaseMigrationPatchForm
+         * @description Partial update of a migration — only the keys sent are applied.
+         */
+        DatabaseMigrationPatchForm: {
+            type?: components["schemas"]["DatabaseMigrationType"] | null;
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Sourcedatabaseversionid */
+            sourceDatabaseVersionId?: string | null;
+            /** Destinationdatabaseid */
+            destinationDatabaseId?: string | null;
+            /** Destinationdatabaseversionid */
+            destinationDatabaseVersionId?: string | null;
+        };
+        /**
+         * DatabaseMigrationStatus
+         * @enum {string}
+         */
+        DatabaseMigrationStatus: "draft" | "validated" | "completed" | "cancelled";
+        /**
+         * DatabaseMigrationType
+         * @description Scale of a migration between two database versions.
+         * @enum {string}
+         */
+        DatabaseMigrationType: "minor" | "major";
         /**
          * DatabasePatchForm
          * @description Partial update of a database — only the keys sent are applied.
@@ -5308,6 +5835,28 @@ export interface components {
             color?: string | null;
             /** Tagids */
             tagIds?: string[] | null;
+        };
+        /**
+         * DatabaseTableColumnReorderForm
+         * @description Reorder the columns of a table. Send exactly one of the two shapes.
+         *
+         *     `columnIds` is the table's columns in their new order, and must list every
+         *     column of the table exactly once. `ranks` maps a column to its new position
+         *     and may cover only the columns that move.
+         */
+        DatabaseTableColumnReorderForm: {
+            /**
+             * Columnids
+             * @description Every column of the table, in their new order.
+             */
+            columnIds?: string[] | null;
+            /**
+             * Ranks
+             * @description New position of each column, keyed by column id.
+             */
+            ranks?: {
+                [key: string]: number;
+            } | null;
         };
         /**
          * DatabaseTableCreateForm
@@ -5807,6 +6356,14 @@ export interface components {
         /** ItemResponse[DatabaseItem] */
         ItemResponse_DatabaseItem_: {
             item: components["schemas"]["DatabaseItem"];
+        };
+        /** ItemResponse[DatabaseMigrationColumnItem] */
+        ItemResponse_DatabaseMigrationColumnItem_: {
+            item: components["schemas"]["DatabaseMigrationColumnItem"];
+        };
+        /** ItemResponse[DatabaseMigrationItem] */
+        ItemResponse_DatabaseMigrationItem_: {
+            item: components["schemas"]["DatabaseMigrationItem"];
         };
         /** ItemResponse[DatabaseTableColumnItem] */
         ItemResponse_DatabaseTableColumnItem_: {
@@ -6552,6 +7109,26 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["DatabaseItem"][];
+        };
+        /** ListingResponse[DatabaseMigrationColumnItem] */
+        ListingResponse_DatabaseMigrationColumnItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseMigrationColumnItem"][];
+        };
+        /** ListingResponse[DatabaseMigrationItem] */
+        ListingResponse_DatabaseMigrationItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseMigrationItem"][];
         };
         /** ListingResponse[DatabaseTableColumnItem] */
         ListingResponse_DatabaseTableColumnItem_: {
@@ -17425,6 +18002,62 @@ export interface operations {
             };
         };
     };
+    "api.databases.versions.tables.columns.reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableColumnReorderForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.databases.versions.tables.columns.get": {
         parameters: {
             query?: never;
@@ -17567,6 +18200,889 @@ export interface operations {
                 };
             };
             /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseMigrationCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+                database_migration_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseMigrationPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.validated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.completed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.cancelled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseMigrationColumnCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+                database_migration_column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseMigrationColumnPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.toBeConfirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.confirmed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -17835,6 +19351,184 @@ export interface operations {
                 };
             };
             /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.comments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.databases.migrations.columns.comments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration column not found */
             404: {
                 headers: {
                     [name: string]: unknown;
