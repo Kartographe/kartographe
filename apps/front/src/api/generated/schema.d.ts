@@ -285,7 +285,7 @@ export interface paths {
         };
         /**
          * List applications
-         * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.applications.list"];
         put?: never;
@@ -1205,7 +1205,7 @@ export interface paths {
         };
         /**
          * List features
-         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.features.list"];
         put?: never;
@@ -1461,7 +1461,7 @@ export interface paths {
         };
         /**
          * List personas
-         * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.personas.list"];
         put?: never;
@@ -1577,7 +1577,7 @@ export interface paths {
         };
         /**
          * List journeys
-         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.journeys.list"];
         put?: never;
@@ -2117,7 +2117,7 @@ export interface paths {
         };
         /**
          * List databases
-         * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.databases.list"];
         put?: never;

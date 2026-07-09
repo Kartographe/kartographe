@@ -1,4 +1,5 @@
 import {
+  ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
   InboxOutlined,
@@ -35,6 +36,8 @@ import {
   JOURNEY_TYPE_LABELS,
 } from "@/features/journeys/labels";
 import { usePersonas } from "@/features/journeys/use-personas";
+import { TagsCell } from "@/features/tags/tags-cell";
+import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Journey = components["schemas"]["JourneyItem"];
 type Status = components["schemas"]["JourneyStatus"];
@@ -65,6 +68,9 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+
+  const tagFilters = useTagFilters(accountId, "journey");
 
   const journeysQuery = $api.useQuery(
     "get",
@@ -79,6 +85,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
+          ...(tagIds.length ? { tagIds } : {}),
         },
       },
     }
@@ -102,7 +109,8 @@ export function JourneysList({ accountId }: { accountId: string }) {
 
   const journeys = journeysQuery.data?.items ?? [];
   const total = journeysQuery.data?.count ?? 0;
-  const hasFilters = statuses.length > 0 || types.length > 0;
+  const hasFilters =
+    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -160,6 +168,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
     setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
+    setTagIds((filters.tags as string[] | null) ?? []);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -214,14 +223,6 @@ export function JourneysList({ accountId }: { accountId: string }) {
             dataIndex: "title",
             sorter: true,
             sortOrder: antdOrder("title"),
-            render: (title: string, journey) => (
-              <Link
-                params={{ accountId, journeyId: journey.id }}
-                to="/accounts/$accountId/journeys/$journeyId"
-              >
-                <Typography.Text strong>{title}</Typography.Text>
-              </Link>
-            ),
           },
           {
             title: t`Personas`,
@@ -268,6 +269,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
             render: (status: Status) => <JourneyStatusTag status={status} />,
           },
           {
+            title: t`Tags`,
+            key: "tags",
+            dataIndex: "tags",
+            filters: tagFilters,
+            filteredValue: tagIds.length ? tagIds : null,
+            render: (tags: Journey["tags"]) => <TagsCell tags={tags} />,
+          },
+          {
             title: t`Créé le`,
             key: "date",
             dataIndex: "date",
@@ -282,6 +291,18 @@ export function JourneysList({ accountId }: { accountId: string }) {
             align: "right",
             render: (_, journey) => (
               <Space>
+                <Link
+                  params={{ accountId, journeyId: journey.id }}
+                  to="/accounts/$accountId/journeys/$journeyId"
+                >
+                  <Button
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
+                    size="small"
+                  >
+                    {t`Accéder`}
+                  </Button>
+                </Link>
                 <Tooltip title={t`Modifier`}>
                   <Button
                     icon={<EditOutlined />}

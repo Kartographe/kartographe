@@ -34,6 +34,8 @@ import {
   PersonaStatusTag,
   PersonaTypeTag,
 } from "@/features/personas/persona-tags";
+import { TagsCell } from "@/features/tags/tags-cell";
+import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -66,6 +68,9 @@ export function PersonasList({ accountId }: { accountId: string }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+
+  const tagFilters = useTagFilters(accountId, "persona");
 
   const personasQuery = $api.useQuery(
     "get",
@@ -80,6 +85,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
           sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
+          ...(tagIds.length ? { tagIds } : {}),
         },
       },
     }
@@ -103,7 +109,8 @@ export function PersonasList({ accountId }: { accountId: string }) {
 
   const personas = personasQuery.data?.items ?? [];
   const total = personasQuery.data?.count ?? 0;
-  const hasFilters = statuses.length > 0 || types.length > 0;
+  const hasFilters =
+    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -161,6 +168,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
     setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
+    setTagIds((filters.tags as string[] | null) ?? []);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -244,6 +252,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
             })),
             filteredValue: statuses.length ? statuses : null,
             render: (status: Status) => <PersonaStatusTag status={status} />,
+          },
+          {
+            title: t`Tags`,
+            key: "tags",
+            dataIndex: "tags",
+            filters: tagFilters,
+            filteredValue: tagIds.length ? tagIds : null,
+            render: (tags: Persona["tags"]) => <TagsCell tags={tags} />,
           },
           {
             title: t`Créé le`,

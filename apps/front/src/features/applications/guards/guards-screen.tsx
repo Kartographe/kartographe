@@ -1,6 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Empty, Flex, Table, Tag, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
@@ -12,6 +13,8 @@ import {
 import { GuardFormModal } from "@/features/applications/guards/guard-form-modal";
 import { GUARD_FIELD_TYPE_LABELS } from "@/features/applications/labels";
 import { RowActions } from "@/features/applications/row-actions";
+import { TagsCell } from "@/features/tags/tags-cell";
+import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Guard = components["schemas"]["ApplicationGuardItem"];
 
@@ -32,13 +35,15 @@ export function GuardsScreen({
   const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Guard | undefined>(undefined);
+  const [tagIds, setTagIds] = useState<string[]>([]);
 
+  const tagFilters = useTagFilters(accountId, "application_guard");
   const path = { account_id: accountId, application_id: applicationId };
 
   const guardsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/applications/{application_id}/guards",
-    { params: { path } }
+    { params: { path, query: tagIds.length ? { tagIds } : {} } }
   );
   const activateMutation = $api.useMutation(
     "post",
@@ -61,6 +66,10 @@ export function GuardsScreen({
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
+
+  const onChange: TableProps<Guard>["onChange"] = (_pagination, filters) => {
+    setTagIds((filters.tags as string[] | null) ?? []);
+  };
 
   async function toggleStatus(guard: Guard) {
     const params = { path: { ...path, guard_id: guard.id } };
@@ -106,7 +115,7 @@ export function GuardsScreen({
         </Button>
       </Flex>
 
-      {guards.length === 0 && !guardsQuery.isLoading ? (
+      {guards.length === 0 && !guardsQuery.isLoading && !tagIds.length ? (
         <Empty description={t`Aucun guard`} />
       ) : (
         <Table<Guard>
@@ -147,6 +156,14 @@ export function GuardsScreen({
               ),
             },
             {
+              title: t`Tags`,
+              key: "tags",
+              dataIndex: "tags",
+              filters: tagFilters,
+              filteredValue: tagIds.length ? tagIds : null,
+              render: (tags: Guard["tags"]) => <TagsCell tags={tags} />,
+            },
+            {
               title: "",
               key: "actions",
               align: "right",
@@ -165,6 +182,7 @@ export function GuardsScreen({
           ]}
           dataSource={guards}
           loading={guardsQuery.isLoading}
+          onChange={onChange}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
           size="small"
