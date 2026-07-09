@@ -1,7 +1,10 @@
+import { useLingui } from "@lingui/react/macro";
 import { useEffect, useRef } from "react";
 import { $api } from "@/api/$api";
 import { extractApiErrorDetail } from "@/api/error-messages";
+import { turnstileHeaders } from "@/api/turnstile";
 import { useAuthSuccess } from "@/features/auth/hooks/use-auth-success";
+import { isTurnstileEnabled } from "@/features/auth/turnstile";
 import { env } from "@/lib/env/env";
 
 interface GoogleAccountsId {
@@ -44,13 +47,16 @@ function loadGoogleScript(): Promise<void> {
 
 interface GoogleButtonProps {
   onError: (message: string) => void;
+  turnstileToken: string | null;
 }
 
 /**
  * "Sign in with Google" — rendered only when `VITE_GOOGLE_CLIENT_ID` is set.
- * Exchanges the Google ID token for a Kartographe session via `/auth/sso/google`.
+ * Exchanges the Google ID token for a Kartographe session via `/auth/sso/google`,
+ * which is Turnstile-gated like the other `/auth/*` entry points.
  */
-export function GoogleButton({ onError }: GoogleButtonProps) {
+export function GoogleButton({ onError, turnstileToken }: GoogleButtonProps) {
+  const { t } = useLingui();
   const clientId = env.VITE_GOOGLE_CLIENT_ID;
   const containerRef = useRef<HTMLDivElement>(null);
   const onAuthSuccess = useAuthSuccess();
@@ -62,9 +68,14 @@ export function GoogleButton({ onError }: GoogleButtonProps) {
     // replaced below
   });
   handleCredentialRef.current = async (credential: string) => {
+    if (isTurnstileEnabled() && !turnstileToken) {
+      onError(t`Veuillez compléter la vérification de sécurité.`);
+      return;
+    }
     try {
       const data = await ssoMutation.mutateAsync({
         body: { googleToken: credential },
+        headers: turnstileHeaders(turnstileToken),
       });
       onAuthSuccess(data, false);
     } catch (error) {

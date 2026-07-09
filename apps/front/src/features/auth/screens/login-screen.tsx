@@ -97,7 +97,7 @@ export function LoginScreen() {
             </form.AppField>
             <TurnstileWidget onToken={setTurnstileToken} />
             <form.SubmitButton block>{t`Se connecter`}</form.SubmitButton>
-            <GoogleButton onError={setError} />
+            <GoogleButton onError={setError} turnstileToken={turnstileToken} />
           </Flex>
         </form.FormRoot>
       </form.AppForm>
