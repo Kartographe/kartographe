@@ -2060,6 +2060,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List scenario comments
+         * @description List the root comments on a journey scenario, oldest first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.comments.list"];
+        put?: never;
+        /**
+         * Comment on a scenario
+         * @description Post a comment on a journey scenario. Any member may post.
+         */
+        post: operations["api.journeys.scenarios.comments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List step comments
+         * @description List the root comments on a scenario step, oldest first. Any member may read.
+         */
+        get: operations["api.journeys.scenarios.steps.comments.list"];
+        put?: never;
+        /**
+         * Comment on a step
+         * @description Post a comment on a scenario step. Any member may post.
+         */
+        post: operations["api.journeys.scenarios.steps.comments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases": {
         parameters: {
             query?: never;
@@ -5375,7 +5423,7 @@ export interface components {
          * @description The kind of entity a comment can be attached to.
          * @enum {string}
          */
-        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action";
+        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step";
         /**
          * CommentItem
          * @description A threaded comment on an account entity.
@@ -16952,6 +17000,184 @@ export interface operations {
                 };
             };
             /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.comments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.journeys.scenarios.steps.comments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
             404: {
                 headers: {
                     [name: string]: unknown;
