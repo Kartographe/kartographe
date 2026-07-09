@@ -427,6 +427,7 @@ class CommentEntityType(str, Enum):
 
     FEATURE = "feature"
     APPLICATION = "application"
+    APPLICATION_ROUTE = "application_route"
     JOURNEY = "journey"
     PERSONA = "persona"
     DATABASE = "database"

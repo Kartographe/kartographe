@@ -177,6 +177,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Comments posted on an application.",
     },
     {
+        "name": "api.applications.routes.comments",
+        "x-displayName": "Applications › Route comments",
+        "description": "Comments posted on an application route.",
+    },
+    {
         "name": "api.features.comments",
         "x-displayName": "Features › Comments",
         "description": "Comments posted on a feature.",

@@ -16,6 +16,7 @@ from src.routes.api.applications.environments import router as environments_rout
 from src.routes.api.applications.features import router as features_router
 from src.routes.api.applications.guards import router as guards_router
 from src.routes.api.applications.roles import router as roles_router
+from src.routes.api.applications.route_comments import router as route_comments_router
 from src.routes.api.applications.route_examples import router as route_examples_router
 from src.routes.api.applications.route_responses import router as route_responses_router
 from src.routes.api.applications.route_tables import router as route_tables_router
@@ -35,3 +36,4 @@ router.include_router(route_responses_router)
 router.include_router(route_examples_router)
 router.include_router(route_tables_router)
 router.include_router(comments_router)
+router.include_router(route_comments_router)
