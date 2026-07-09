@@ -10,11 +10,12 @@ const ROW_GAP = 48;
 /** A table referencing more than this many hops is almost certainly a cycle. */
 const MAX_DEPTH = 32;
 
+type Column = components["schemas"]["DatabaseTableColumnItem"];
+
 export interface GraphEdge {
   id: string;
   source: string;
   target: string;
-  label: string;
 }
 
 export interface GraphNode {
@@ -24,8 +25,12 @@ export interface GraphNode {
   y: number;
 }
 
-function nodeHeight(table: DatabaseTable): number {
-  return HEADER_HEIGHT + (table.columns?.length ?? 0) * ROW_HEIGHT;
+/** Which of a table's columns the node actually draws. */
+export type ColumnFilter = (column: Column) => boolean;
+
+function nodeHeight(table: DatabaseTable, isVisible: ColumnFilter): number {
+  const rows = (table.columns ?? []).filter(isVisible).length;
+  return HEADER_HEIGHT + rows * ROW_HEIGHT;
 }
 
 /**
@@ -70,8 +75,16 @@ function computeDepths(tables: DatabaseTable[]): Map<string, number> {
   return depths;
 }
 
-/** Places tables in FK-depth columns and derives one edge per foreign key. */
-export function layoutSchema(tables: DatabaseTable[]): {
+/**
+ * Places tables in FK-depth columns and derives one edge per foreign key.
+ *
+ * `isVisible` only sizes the nodes: a relationship holds whether or not the
+ * column carrying it is drawn, so edges always come from the full column set.
+ */
+export function layoutSchema(
+  tables: DatabaseTable[],
+  isVisible: ColumnFilter
+): {
   nodes: GraphNode[];
   edges: GraphEdge[];
 } {
@@ -94,7 +107,7 @@ export function layoutSchema(tables: DatabaseTable[]): {
         x: depth * (NODE_WIDTH + COLUMN_GAP),
         y,
       });
-      y += nodeHeight(table) + ROW_GAP;
+      y += nodeHeight(table, isVisible) + ROW_GAP;
     }
   }
 
@@ -111,7 +124,6 @@ export function layoutSchema(tables: DatabaseTable[]): {
         id: `${table.id}:${column.id}`,
         source: table.id,
         target: targetId,
-        label: column.name,
       });
     }
   }

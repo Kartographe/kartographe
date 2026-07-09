@@ -302,7 +302,13 @@ export function TablesScreen({
   }));
 
   return (
-    <Flex gap={16} vertical>
+    // The diagram claims the panel's remaining height; the list keeps growing
+    // with its content and lets the panel scroll.
+    <Flex
+      gap={16}
+      style={view === "graph" ? { height: "100%", minHeight: 0 } : undefined}
+      vertical
+    >
       <Flex align="center" gap={12} justify="space-between" wrap>
         <Flex align="center" gap={12}>
           <Typography.Title level={4} style={{ margin: 0 }}>
