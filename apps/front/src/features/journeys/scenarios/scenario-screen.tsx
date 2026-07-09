@@ -9,7 +9,6 @@ import {
   Segmented,
   Space,
   Tag,
-  Tree,
   Typography,
 } from "antd";
 import { useState } from "react";
@@ -24,7 +23,7 @@ import { ScenarioFormModal } from "@/features/journeys/scenarios/scenario-form-m
 import { StepDrawer } from "@/features/journeys/steps/step-drawer";
 import { StepFlow } from "@/features/journeys/steps/step-flow";
 import { StepFormModal } from "@/features/journeys/steps/step-form-modal";
-import { useActionTypes } from "@/features/journeys/steps/use-action-types";
+import { StepList } from "@/features/journeys/steps/step-list";
 import { usePersonas } from "@/features/journeys/use-personas";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -55,9 +54,9 @@ export function ScenarioScreen({
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
   const personas = usePersonas(accountId);
-  const actionTypes = useActionTypes();
-
-  const [view, setView] = useState<"graph" | "list">("graph");
+  // The list is what the scenario is written in; the graph is there to read the
+  // branching back.
+  const [view, setView] = useState<"list" | "graph">("list");
   const [editScenarioOpen, setEditScenarioOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const [stepForm, setStepForm] = useState<StepFormState | null>(null);
@@ -103,33 +102,6 @@ export function ScenarioScreen({
         invalidate();
       },
     });
-  }
-
-  /** The steps, as the nested list the graph draws as a tree. */
-  function treeData(parentId: string | null): {
-    key: string;
-    title: React.ReactNode;
-    children: ReturnType<typeof treeData>;
-  }[] {
-    return steps
-      .filter((step) => (step.parentJourneyScenarioStepId ?? null) === parentId)
-      .map((step) => ({
-        key: step.id,
-        title: (
-          <Space>
-            <Typography.Text>{step.title}</Typography.Text>
-            {actionTypes.label(step.actionTypeId) ? (
-              <Tag color="blue" style={{ marginInlineEnd: 0 }}>
-                {actionTypes.label(step.actionTypeId)}
-              </Tag>
-            ) : null}
-            {step.optional ? (
-              <Tag style={{ marginInlineEnd: 0 }}>{t`Optionnelle`}</Tag>
-            ) : null}
-          </Space>
-        ),
-        children: treeData(step.id),
-      }));
   }
 
   const addButton = (
@@ -198,27 +170,27 @@ export function ScenarioScreen({
       ) : (
         <Flex gap={12} vertical>
           <Segmented
-            onChange={(value) => setView(value as "graph" | "list")}
+            onChange={(value) => setView(value as "list" | "graph")}
             options={[
-              { label: t`Graphe`, value: "graph" },
               { label: t`Liste`, value: "list" },
+              { label: t`Graphe`, value: "graph" },
             ]}
             style={{ alignSelf: "flex-start" }}
             value={view}
           />
 
-          {view === "graph" ? (
-            <StepFlow
+          {view === "list" ? (
+            <StepList
+              onAddChild={(step) => setStepForm({ parentId: step.id })}
               onSelect={(step) => setSelectedId(step.id)}
               selectedId={selectedId}
               steps={steps}
             />
           ) : (
-            <Tree
-              defaultExpandAll
-              onSelect={(keys) => setSelectedId(keys[0] as string | undefined)}
-              selectedKeys={selectedId ? [selectedId] : []}
-              treeData={treeData(null)}
+            <StepFlow
+              onSelect={(step) => setSelectedId(step.id)}
+              selectedId={selectedId}
+              steps={steps}
             />
           )}
         </Flex>
