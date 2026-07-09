@@ -64,6 +64,11 @@ export function RouteCommentsDrawer({
       destroyOnHidden
       onClose={onClose}
       open={!!route}
+      // The body owns the scroll internally (history scrolls, composer stays
+      // pinned), so it must not scroll as a whole.
+      styles={{
+        body: { display: "flex", flexDirection: "column", overflow: "hidden" },
+      }}
       title={
         route ? (
           <Flex align="center" gap={12} style={{ minWidth: 0 }}>
@@ -79,6 +84,7 @@ export function RouteCommentsDrawer({
       <CommentsFeed
         accountId={accountId}
         comments={commentsQuery.data?.items ?? []}
+        fillHeight
         isLoading={commentsQuery.isLoading}
         isPublishing={createMutation.isPending}
         onChanged={invalidate}

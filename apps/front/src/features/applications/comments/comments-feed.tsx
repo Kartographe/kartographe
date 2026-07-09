@@ -21,6 +21,12 @@ interface CommentsFeedProps {
   onPublish: (value: RichTextDocument) => Promise<void>;
   /** Called after a comment is edited, removed or deleted. */
   onChanged: () => void;
+  /**
+   * Claim the parent's full height, scroll the history on its own and pin the
+   * composer to the bottom. For containers with a height to fill (the drawer);
+   * a page-flow caller leaves this off and grows with its content.
+   */
+  fillHeight?: boolean;
 }
 
 /** Oldest first, so the newest comment sits just above the composer. */
@@ -45,6 +51,7 @@ export function CommentsFeed({
   isPublishing,
   onPublish,
   onChanged,
+  fillHeight = false,
 }: CommentsFeedProps) {
   const { t } = useLingui();
   const users = useAccountUserMap(accountId);
@@ -65,8 +72,8 @@ export function CommentsFeed({
     resetComposer();
   }
 
-  return (
-    <Flex gap={20} vertical>
+  const history = (
+    <>
       {isLoading ? (
         <Flex align="center" justify="center" style={{ minHeight: 120 }}>
           <Spin />
@@ -90,10 +97,27 @@ export function CommentsFeed({
           ))}
         </Flex>
       ) : null}
+    </>
+  );
+
+  return (
+    <Flex
+      gap={20}
+      style={fillHeight ? { height: "100%", minHeight: 0 } : undefined}
+      vertical
+    >
+      {/* `minHeight: 0` lets this flex child shrink below its content and scroll. */}
+      <div
+        style={
+          fillHeight ? { flex: 1, minHeight: 0, overflowY: "auto" } : undefined
+        }
+      >
+        {history}
+      </div>
 
       <Divider style={{ margin: 0 }} />
 
-      <Flex gap={12}>
+      <Flex gap={12} style={fillHeight ? { flexShrink: 0 } : undefined}>
         <CommentAvatar user={me ? { ...me } : undefined} />
         <Flex style={{ flex: 1, minWidth: 0 }}>
           {isComposing ? (
