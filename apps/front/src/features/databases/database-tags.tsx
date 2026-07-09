@@ -13,6 +13,9 @@ import {
   TABLE_TYPE_COLORS,
   TABLE_TYPE_DESCRIPTIONS,
   TABLE_TYPE_LABELS,
+  VERSION_STATUS_COLORS,
+  VERSION_STATUS_DESCRIPTIONS,
+  VERSION_STATUS_LABELS,
 } from "@/features/databases/labels";
 
 type S = components["schemas"];
@@ -61,6 +64,21 @@ export function TableTypeTag({ type }: { type: S["DatabaseTableType"] }) {
       descriptions={TABLE_TYPE_DESCRIPTIONS}
       labels={TABLE_TYPE_LABELS}
       value={type}
+    />
+  );
+}
+
+export function VersionStatusTag({
+  status,
+}: {
+  status: S["DatabaseVersionStatus"];
+}) {
+  return (
+    <EnumTag
+      colors={VERSION_STATUS_COLORS}
+      descriptions={VERSION_STATUS_DESCRIPTIONS}
+      labels={VERSION_STATUS_LABELS}
+      value={status}
     />
   );
 }

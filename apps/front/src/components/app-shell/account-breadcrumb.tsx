@@ -4,6 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Breadcrumb } from "antd";
 import { $api } from "@/api/$api";
+import { formatVersion } from "@/features/databases/labels";
 
 /** Static path segments → their crumb label. */
 const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
@@ -23,7 +24,6 @@ const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
   services: msg`Services`,
   actions: msg`Actions`,
   databases: msg`Bases de données`,
-  tables: msg`Tables`,
 };
 
 interface Crumb {
@@ -32,25 +32,41 @@ interface Crumb {
   href: string;
 }
 
+interface PathIds {
+  applicationId?: string;
+  serviceId?: string;
+  databaseId?: string;
+  versionId?: string;
+}
+
 /**
- * Resolves the id sitting right after its collection — `.../applications/{id}`,
- * `.../services/{id}`, `.../databases/{id}` — to that entity's title. Deeper ids
- * (a route, an action, a table) never reach the URL, so one lookup per
- * collection is enough.
+ * Picks out the entity ids a path carries. Only an id sitting right after its
+ * collection counts — plus the version nested under a database. Ids below that
+ * (a route, an action, a table) never reach the URL.
+ */
+function pathIds(rest: string[]): PathIds {
+  const [collection, id, sub, subId] = rest;
+  const databaseId = collection === "databases" ? id : undefined;
+  return {
+    applicationId: collection === "applications" ? id : undefined,
+    serviceId: collection === "services" ? id : undefined,
+    databaseId,
+    versionId: databaseId && sub === "versions" ? subId : undefined,
+  };
+}
+
+/**
+ * Resolves each id found in the path to the title it stands for.
  *
- * Returns a map from the id found in the path to its label; empty when the path
- * points at no entity.
+ * Returns a map from the id to its label; empty when the path points at no
+ * entity.
  */
 function useEntityLabels(
   accountId: string,
   rest: string[]
 ): Map<string, string> {
   const { t } = useLingui();
-
-  const applicationId =
-    rest[0] === "applications" && rest[1] ? rest[1] : undefined;
-  const serviceId = rest[0] === "services" && rest[1] ? rest[1] : undefined;
-  const databaseId = rest[0] === "databases" && rest[1] ? rest[1] : undefined;
+  const { applicationId, serviceId, databaseId, versionId } = pathIds(rest);
 
   const applicationQuery = $api.useQuery(
     "get",
@@ -80,22 +96,36 @@ function useEntityLabels(
     },
     { enabled: !!databaseId }
   );
+  const versionQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}",
+    {
+      params: {
+        path: {
+          account_id: accountId,
+          database_id: databaseId ?? "",
+          database_version_id: versionId ?? "",
+        },
+      },
+    },
+    { enabled: !!versionId }
+  );
+
+  const versionItem = versionQuery.data?.item;
+  // Each pair is (id in the path, label to show); a missing id is skipped, and
+  // an unresolved title falls back to the entity's generic name.
+  const resolved: [string | undefined, string][] = [
+    [applicationId, applicationQuery.data?.item.title ?? t`Application`],
+    [serviceId, serviceQuery.data?.item.title ?? t`Service`],
+    [databaseId, databaseQuery.data?.item.title ?? t`Base de données`],
+    [versionId, versionItem ? formatVersion(versionItem.version) : t`Version`],
+  ];
 
   const labels = new Map<string, string>();
-  if (applicationId) {
-    labels.set(
-      applicationId,
-      applicationQuery.data?.item.title ?? t`Application`
-    );
-  }
-  if (serviceId) {
-    labels.set(serviceId, serviceQuery.data?.item.title ?? t`Service`);
-  }
-  if (databaseId) {
-    labels.set(
-      databaseId,
-      databaseQuery.data?.item.title ?? t`Base de données`
-    );
+  for (const [id, label] of resolved) {
+    if (id) {
+      labels.set(id, label);
+    }
   }
   return labels;
 }

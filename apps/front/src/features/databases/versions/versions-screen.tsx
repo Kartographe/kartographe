@@ -1,0 +1,250 @@
+import {
+  DeleteOutlined,
+  EditOutlined,
+  InboxOutlined,
+  PlusOutlined,
+  RocketOutlined,
+} from "@ant-design/icons";
+import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import {
+  App,
+  Button,
+  Empty,
+  Flex,
+  Space,
+  Table,
+  Tooltip,
+  Typography,
+} from "antd";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { $api } from "@/api/$api";
+import type { components } from "@/api/generated/schema";
+import { VersionStatusTag } from "@/features/databases/database-tags";
+import { formatVersion } from "@/features/databases/labels";
+import { VersionFormModal } from "@/features/databases/versions/version-form-modal";
+
+type DatabaseVersion = components["schemas"]["DatabaseVersionItem"];
+
+const LIST_KEY = [
+  "get",
+  "/v1/accounts/{account_id}/databases/{database_id}/versions",
+];
+
+export function VersionsScreen({
+  accountId,
+  databaseId,
+}: {
+  accountId: string;
+  databaseId: string;
+}) {
+  const { t } = useLingui();
+  const { modal } = App.useApp();
+  const queryClient = useQueryClient();
+  // `null` = closed, `undefined` = open in create mode.
+  const [form, setForm] = useState<DatabaseVersion | undefined | null>(null);
+
+  const path = { account_id: accountId, database_id: databaseId };
+
+  const versionsQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions",
+    { params: { path } }
+  );
+  const activateMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/activate",
+    { meta: { successMessage: t`Version activée` } }
+  );
+  const archiveMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/archive",
+    { meta: { successMessage: t`Version archivée` } }
+  );
+  const deleteMutation = $api.useMutation(
+    "delete",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}",
+    { meta: { successMessage: t`Version supprimée` } }
+  );
+
+  const versions = versionsQuery.data?.items ?? [];
+
+  function invalidate() {
+    queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  async function toggleStatus(version: DatabaseVersion) {
+    const params = { path: { ...path, database_version_id: version.id } };
+    if (version.status === "archived") {
+      await activateMutation.mutateAsync({ params });
+    } else {
+      await archiveMutation.mutateAsync({ params });
+    }
+    invalidate();
+  }
+
+  function confirmDelete(version: DatabaseVersion) {
+    modal.confirm({
+      title: t`Supprimer ${formatVersion(version.version)} ?`,
+      content: t`Ses tables et colonnes seront supprimées également. Cette action est irréversible.`,
+      okText: t`Supprimer`,
+      okButtonProps: { danger: true },
+      cancelText: t`Annuler`,
+      onOk: async () => {
+        await deleteMutation.mutateAsync({
+          params: { path: { ...path, database_version_id: version.id } },
+        });
+        invalidate();
+      },
+    });
+  }
+
+  const formModal =
+    form === null ? null : (
+      <VersionFormModal
+        accountId={accountId}
+        databaseId={databaseId}
+        key={form?.id ?? "create"}
+        onClose={() => setForm(null)}
+        open
+        version={form}
+      />
+    );
+
+  if (!versionsQuery.isLoading && versions.length === 0) {
+    return (
+      <Flex gap={16} vertical>
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t`Versions`}
+        </Typography.Title>
+        <Empty
+          description={t`Cette base n'a aucune version. Créez-en une pour y décrire vos tables.`}
+        >
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => setForm(undefined)}
+            type="primary"
+          >
+            {t`Créer une version`}
+          </Button>
+        </Empty>
+        {formModal}
+      </Flex>
+    );
+  }
+
+  return (
+    <Flex gap={16} vertical>
+      <Flex align="center" justify="space-between">
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t`Versions`}
+        </Typography.Title>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => setForm(undefined)}
+          type="primary"
+        >
+          {t`Créer une version`}
+        </Button>
+      </Flex>
+
+      <Table<DatabaseVersion>
+        columns={[
+          {
+            title: t`Version`,
+            key: "version",
+            render: (_, version) => (
+              <Link
+                params={{ accountId, databaseId, versionId: version.id }}
+                to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
+              >
+                <Typography.Text strong>
+                  {formatVersion(version.version)}
+                </Typography.Text>
+              </Link>
+            ),
+          },
+          {
+            title: t`Statut`,
+            key: "status",
+            dataIndex: "status",
+            render: (status: DatabaseVersion["status"]) => (
+              <VersionStatusTag status={status} />
+            ),
+          },
+          {
+            title: t`Début`,
+            key: "startDate",
+            dataIndex: "startDate",
+            render: (value: string | null) =>
+              value ? dayjs(value).format("DD/MM/YYYY") : "—",
+          },
+          {
+            title: t`Fin`,
+            key: "endDate",
+            dataIndex: "endDate",
+            render: (value: string | null) =>
+              value ? dayjs(value).format("DD/MM/YYYY") : "—",
+          },
+          {
+            title: t`Créée le`,
+            key: "date",
+            dataIndex: "date",
+            render: (value: string | null) =>
+              value ? dayjs(value).format("DD/MM/YYYY") : "—",
+          },
+          {
+            title: "",
+            key: "actions",
+            align: "right",
+            render: (_, version) => (
+              <Space>
+                <Tooltip title={t`Modifier`}>
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => setForm(version)}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip
+                  title={
+                    version.status === "archived" ? t`Activer` : t`Archiver`
+                  }
+                >
+                  <Button
+                    icon={
+                      version.status === "archived" ? (
+                        <RocketOutlined />
+                      ) : (
+                        <InboxOutlined />
+                      )
+                    }
+                    onClick={() => toggleStatus(version)}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title={t`Supprimer`}>
+                  <Button
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() => confirmDelete(version)}
+                    size="small"
+                  />
+                </Tooltip>
+              </Space>
+            ),
+          },
+        ]}
+        dataSource={versions}
+        loading={versionsQuery.isLoading}
+        pagination={false}
+        rowKey="id"
+        size="small"
+      />
+
+      {formModal}
+    </Flex>
+  );
+}

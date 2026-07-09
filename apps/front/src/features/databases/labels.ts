@@ -103,7 +103,40 @@ export const VERSION_STATUS_LABELS: Record<
   archived: msg`Archivée`,
 };
 
+export const VERSION_STATUS_DESCRIPTIONS: Record<
+  S["DatabaseVersionStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Schéma en cours de conception, non encore déployé.`,
+  active: msg`Schéma actuellement en production.`,
+  archived: msg`Schéma d'une version passée, conservé pour l'historique.`,
+};
+
+export const VERSION_STATUS_COLORS: Record<S["DatabaseVersionStatus"], string> =
+  {
+    draft: "default",
+    active: "success",
+    archived: "warning",
+  };
+
+/** A dotted list of non-negative integers: `1`, `1.2`, `1.2.0`. */
+const VERSION_PATTERN = /^\d+(\.\d+)*$/;
+const LEADING_V = /^v/i;
+
 /** `[1, 2, 0]` → `v1.2.0`. */
 export function formatVersion(version: number[]): string {
   return `v${version.join(".")}`;
+}
+
+/**
+ * `"1.2.0"` → `[1, 2, 0]`, or `null` when the input is not a dotted list of
+ * non-negative integers. A leading `v` is tolerated, since that is how the
+ * version is rendered everywhere else.
+ */
+export function parseVersion(input: string): number[] | null {
+  const trimmed = input.trim().replace(LEADING_V, "");
+  if (!VERSION_PATTERN.test(trimmed)) {
+    return null;
+  }
+  return trimmed.split(".").map(Number);
 }

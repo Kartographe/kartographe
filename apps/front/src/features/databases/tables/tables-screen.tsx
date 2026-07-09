@@ -15,7 +15,6 @@ import {
   Empty,
   Flex,
   Segmented,
-  Select,
   Spin,
   Tag,
   Tooltip,
@@ -27,6 +26,7 @@ import type { components } from "@/api/generated/schema";
 import {
   TableStatusTag,
   TableTypeTag,
+  VersionStatusTag,
 } from "@/features/databases/database-tags";
 import { formatVersion } from "@/features/databases/labels";
 import { ColumnCommentsDrawer } from "@/features/databases/tables/column-comments-drawer";
@@ -38,6 +38,7 @@ import { useColumnTypes } from "@/features/databases/use-column-types";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Database = components["schemas"]["DatabaseItem"];
+type DatabaseVersion = components["schemas"]["DatabaseVersionItem"];
 type DatabaseTable = components["schemas"]["DatabaseTableItem"];
 type Column = components["schemas"]["DatabaseTableColumnItem"];
 
@@ -61,16 +62,17 @@ interface ColumnEdit {
 export function TablesScreen({
   accountId,
   database,
+  version,
 }: {
   accountId: string;
   database: Database;
+  version: DatabaseVersion;
 }) {
   const { t } = useLingui();
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
   const columnTypes = useColumnTypes(database.type);
 
-  const [versionId, setVersionId] = useState<string | undefined>(undefined);
   const [view, setView] = useState<"list" | "graph">("list");
   const [tableForm, setTableForm] = useState<DatabaseTable | undefined | null>(
     null
@@ -83,30 +85,17 @@ export function TablesScreen({
     ColumnTarget | undefined
   >(undefined);
 
-  const versionsQuery = $api.useQuery(
-    "get",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions",
-    { params: { path: { account_id: accountId, database_id: database.id } } }
-  );
-  const versions = versionsQuery.data?.items ?? [];
-  // Default to the active version; a database with only drafts falls back to
-  // whichever the API listed first.
-  const selectedId =
-    versionId ??
-    versions.find((version) => version.status === "active")?.id ??
-    versions[0]?.id;
-
+  const selectedId = version.id;
   const path = {
     account_id: accountId,
     database_id: database.id,
-    database_version_id: selectedId ?? "",
+    database_version_id: selectedId,
   };
 
   const tablesQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables",
-    { params: { path } },
-    { enabled: !!selectedId }
+    { params: { path } }
   );
   const activateMutation = $api.useMutation(
     "post",
@@ -312,25 +301,6 @@ export function TablesScreen({
     ),
   }));
 
-  if (versionsQuery.isLoading) {
-    return (
-      <Flex align="center" justify="center" style={{ minHeight: 240 }}>
-        <Spin />
-      </Flex>
-    );
-  }
-
-  if (!selectedId) {
-    return (
-      <Flex gap={16} vertical>
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t`Tables`}
-        </Typography.Title>
-        <Empty description={t`Cette base n'a aucune version`} />
-      </Flex>
-    );
-  }
-
   return (
     <Flex gap={16} vertical>
       <Flex align="center" gap={12} justify="space-between" wrap>
@@ -338,15 +308,10 @@ export function TablesScreen({
           <Typography.Title level={4} style={{ margin: 0 }}>
             {t`Tables`}
           </Typography.Title>
-          <Select
-            onChange={setVersionId}
-            options={versions.map((version) => ({
-              value: version.id,
-              label: formatVersion(version.version),
-            }))}
-            style={{ minWidth: 140 }}
-            value={selectedId}
-          />
+          <Typography.Text code>
+            {formatVersion(version.version)}
+          </Typography.Text>
+          <VersionStatusTag status={version.status} />
         </Flex>
         <Flex align="center" gap={12}>
           <Segmented

@@ -1,7 +1,7 @@
 import {
+  BranchesOutlined,
   CommentOutlined,
   InfoCircleOutlined,
-  TableOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -73,7 +73,8 @@ export function DatabaseSideNav({
       icon: <InfoCircleOutlined />,
       exact: true,
     },
-    { to: `${BASE}/tables`, label: t`Tables`, icon: <TableOutlined /> },
+    // Not `exact`: stays lit while browsing a version's tables underneath.
+    { to: `${BASE}/versions`, label: t`Versions`, icon: <BranchesOutlined /> },
     {
       to: `${BASE}/comments`,
       label: t`Commentaires`,
