@@ -1,9 +1,12 @@
 import { createFormHook } from "@tanstack/react-form";
 import { CheckboxField } from "@/lib/tanstack/react-form/fields/checkbox-field";
+import { MultiSelectField } from "@/lib/tanstack/react-form/fields/multi-select-field";
 import { OtpField } from "@/lib/tanstack/react-form/fields/otp-field";
 import { PasswordField } from "@/lib/tanstack/react-form/fields/password-field";
+import { RichTextField } from "@/lib/tanstack/react-form/fields/rich-text-field";
 import { SelectField } from "@/lib/tanstack/react-form/fields/select-field";
 import { TextField } from "@/lib/tanstack/react-form/fields/text-field";
+import { TextAreaField } from "@/lib/tanstack/react-form/fields/textarea-field";
 import { FormRoot } from "@/lib/tanstack/react-form/form/form-root";
 import { SubmitButton } from "@/lib/tanstack/react-form/form/submit-button";
 import {
@@ -21,9 +24,12 @@ export const { useAppForm, withForm } = createFormHook({
   formContext,
   fieldComponents: {
     TextField,
+    TextAreaField,
+    RichTextField,
     PasswordField,
     OtpField,
     SelectField,
+    MultiSelectField,
     CheckboxField,
   },
   formComponents: {

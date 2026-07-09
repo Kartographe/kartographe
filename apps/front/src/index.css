@@ -19,3 +19,40 @@ body {
 .km-user-popover .ant-popover-inner {
   padding: 0;
 }
+
+/* Tiptap: ProseMirror ships no styling of its own. */
+.km-rich-text {
+  min-height: 120px;
+  outline: none;
+  padding: 8px 12px;
+}
+
+.km-rich-text-view {
+  min-height: 0;
+  padding: 0;
+}
+
+.km-rich-text > * + * {
+  margin-top: 0.5em;
+}
+
+.km-rich-text ul,
+.km-rich-text ol {
+  padding-inline-start: 1.25em;
+}
+
+.km-rich-text ul {
+  list-style: disc;
+}
+
+.km-rich-text ol {
+  list-style: decimal;
+}
+
+/* Placeholder for an empty document (single empty paragraph). */
+.km-rich-text[data-placeholder]:has(> p:only-child:empty)::before {
+  color: var(--ant-color-text-placeholder);
+  content: attr(data-placeholder);
+  pointer-events: none;
+  position: absolute;
+}
