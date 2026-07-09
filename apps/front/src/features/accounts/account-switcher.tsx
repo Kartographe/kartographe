@@ -10,10 +10,10 @@ import { Button, Dropdown, Flex, Typography } from "antd";
 import { type ReactNode, useEffect, useState } from "react";
 import { $api } from "@/api/$api";
 import { AccountAvatar } from "@/features/accounts/account-avatar";
-import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 import { CreateAccountModal } from "@/features/accounts/create-account-modal";
 import { ROLE_LABELS } from "@/features/accounts/labels";
 import { SearchModal } from "@/features/accounts/search-modal";
+import { useCurrentAccountId } from "@/features/accounts/use-current-account-id";
 
 export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
   const { t } = useLingui();
@@ -21,8 +21,7 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
   const [createOpen, setCreateOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const activeId = useActiveAccountStore((state) => state.accountId);
-  const setActiveId = useActiveAccountStore((state) => state.setAccountId);
+  const activeId = useCurrentAccountId();
 
   const accountsQuery = $api.useQuery("get", "/v1/accounts", {
     params: { query: { limit: 100 } },
@@ -45,8 +44,8 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active]);
 
+  // The `$accountId` layout records the visit — no need to set it here.
   function openAccount(accountId: string) {
-    setActiveId(accountId);
     navigate({ to: "/accounts/$accountId", params: { accountId } });
   }
 

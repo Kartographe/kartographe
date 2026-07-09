@@ -1,5 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import type { components } from "@/api/generated/schema";
+import { resolveLoginAccount } from "@/features/accounts/resolve-login-account";
 import { useIntermediateStore } from "@/features/auth/stores/intermediate-store";
 import { consumePostLoginReturn } from "@/lib/auth/post-login-return";
 import { saveSession } from "@/lib/auth/token-storage";
@@ -13,9 +15,10 @@ type AuthResponse = components["schemas"]["AuthResponse"];
  */
 export function useAuthSuccess() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const setChallenge = useIntermediateStore((state) => state.setChallenge);
 
-  return (data: AuthResponse, remember: boolean) => {
+  return async (data: AuthResponse, remember: boolean) => {
     if (data.twoFactorEnabled) {
       const types = data.twoFactorAvailableTypes ?? [];
       setChallenge(data.item.accessToken, types);
@@ -33,6 +36,12 @@ export function useAuthSuccess() {
     const back = consumePostLoginReturn();
     if (back) {
       window.location.assign(back);
+      return;
+    }
+    // Resume the last account the user worked in, else open their first one.
+    const accountId = await resolveLoginAccount(queryClient);
+    if (accountId) {
+      navigate({ to: "/accounts/$accountId", params: { accountId } });
       return;
     }
     navigate({ to: "/" });

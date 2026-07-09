@@ -4,7 +4,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { Modal } from "antd";
 import { z } from "zod";
 import { $api } from "@/api/$api";
-import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -17,7 +16,6 @@ export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const setActiveId = useActiveAccountStore((state) => state.setAccountId);
 
   const createMutation = $api.useMutation("post", "/v1/accounts", {
     meta: { successMessage: t`Compte créé`, noErrorToast: true },
@@ -38,7 +36,6 @@ export function CreateAccountModal({ open, onClose }: CreateAccountModalProps) {
         queryClient.invalidateQueries({ queryKey: ["get", "/v1/accounts"] });
         formApi.reset();
         onClose();
-        setActiveId(created.item.id);
         navigate({
           to: "/accounts/$accountId",
           params: { accountId: created.item.id },

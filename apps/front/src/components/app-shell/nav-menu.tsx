@@ -4,7 +4,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Tooltip } from "antd";
 import type { ReactNode } from "react";
 import { $api } from "@/api/$api";
-import { useActiveAccountStore } from "@/features/accounts/active-account-store";
+import { useCurrentAccountId } from "@/features/accounts/use-current-account-id";
 
 interface NavItem {
   to: string;
@@ -71,26 +71,27 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const activeId = useActiveAccountStore((state) => state.accountId);
+  const accountId = useCurrentAccountId();
 
   const accountQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}",
-    { params: { path: { account_id: activeId ?? "" } } },
-    { enabled: !!activeId }
+    { params: { path: { account_id: accountId ?? "" } } },
+    { enabled: !!accountId }
   );
   const role = accountQuery.data?.item.membership?.role;
   const isAdmin = role === "owner" || role === "administrator";
 
-  // No account selected → empty nav (only the bottom user section shows).
-  if (!activeId) {
+  // Outside an account (e.g. `/`, `/me/*`) → empty nav; the switcher and the
+  // bottom user section are the only things the shell offers.
+  if (!accountId) {
     return <nav style={{ height: "100%" }} />;
   }
 
   const topItems: NavItem[] = [
     {
       to: "/accounts/$accountId/applications",
-      params: { accountId: activeId },
+      params: { accountId },
       label: t`Applications`,
       icon: <AppstoreOutlined />,
     },
@@ -100,7 +101,7 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
     ? [
         {
           to: "/accounts/$accountId/administration",
-          params: { accountId: activeId },
+          params: { accountId },
           label: t`Administration`,
           icon: <ControlOutlined />,
         },

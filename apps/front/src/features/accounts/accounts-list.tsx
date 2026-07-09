@@ -10,7 +10,6 @@ import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { AccountAvatar } from "@/features/accounts/account-avatar";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
-import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 import { CreateAccountModal } from "@/features/accounts/create-account-modal";
 import { ACCOUNT_STATUS_LABELS, ROLE_LABELS } from "@/features/accounts/labels";
 import { AccountStatusTag } from "@/features/accounts/status-tags";
@@ -32,7 +31,6 @@ const SORT_FIELD: Record<string, SortField> = {
 export function AccountsList() {
   const { t } = useLingui();
   const navigate = useNavigate();
-  const setActiveId = useActiveAccountStore((state) => state.setAccountId);
   const [createOpen, setCreateOpen] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -59,8 +57,8 @@ export function AccountsList() {
   const total = accountsQuery.data?.count ?? 0;
   const hasFilters = statuses.length > 0 || roles.length > 0;
 
+  // The `$accountId` layout records the visit — no need to set it here.
   function openAccount(accountId: string) {
-    setActiveId(accountId);
     navigate({ to: "/accounts/$accountId", params: { accountId } });
   }
 
