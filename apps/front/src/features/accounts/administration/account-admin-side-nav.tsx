@@ -1,6 +1,7 @@
 import {
   InfoCircleOutlined,
   MailOutlined,
+  TagsOutlined,
   TeamOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -67,6 +68,11 @@ export function AccountAdminSideNav({ accountId }: { accountId: string }) {
       to: "/accounts/$accountId/administration/invitations",
       label: t`Invitations`,
       icon: <MailOutlined />,
+    },
+    {
+      to: "/accounts/$accountId/administration/tags",
+      label: t`Tags`,
+      icon: <TagsOutlined />,
     },
   ];
   const footerItems: NavItem[] = [

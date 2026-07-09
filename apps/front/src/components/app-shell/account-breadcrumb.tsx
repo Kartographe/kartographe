@@ -24,6 +24,10 @@ const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
   services: msg`Services`,
   actions: msg`Actions`,
   databases: msg`Bases de données`,
+  features: msg`Fonctionnalités`,
+  journeys: msg`Parcours utilisateurs`,
+  personas: msg`Personas`,
+  tags: msg`Tags`,
 };
 
 interface Crumb {

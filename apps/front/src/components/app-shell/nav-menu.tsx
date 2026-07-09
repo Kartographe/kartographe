@@ -1,12 +1,16 @@
 import {
   AppstoreOutlined,
+  BulbOutlined,
   CloudServerOutlined,
   ControlOutlined,
   DatabaseOutlined,
+  HomeOutlined,
+  NodeIndexOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Tooltip } from "antd";
+import { Divider, Tooltip, Typography } from "antd";
 import type { ReactNode } from "react";
 import { $api } from "@/api/$api";
 import { useCurrentAccountId } from "@/features/accounts/use-current-account-id";
@@ -17,6 +21,13 @@ interface NavItem {
   label: string;
   icon: ReactNode;
   exact?: boolean;
+}
+
+/** A group of links under a heading. A section without a title stands alone. */
+interface NavSection {
+  key: string;
+  title?: string;
+  items: NavItem[];
 }
 
 function isActive(item: NavItem, resolved: string, pathname: string): boolean {
@@ -93,24 +104,67 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
     return <nav style={{ height: "100%" }} />;
   }
 
-  const topItems: NavItem[] = [
+  const params = { accountId };
+  const sections: NavSection[] = [
     {
-      to: "/accounts/$accountId/applications",
-      params: { accountId },
-      label: t`Applications`,
-      icon: <AppstoreOutlined />,
+      key: "dashboard",
+      items: [
+        {
+          to: "/accounts/$accountId",
+          params,
+          label: t`Tableau de bord`,
+          icon: <HomeOutlined />,
+          exact: true,
+        },
+      ],
     },
     {
-      to: "/accounts/$accountId/services",
-      params: { accountId },
-      label: t`Services`,
-      icon: <CloudServerOutlined />,
+      key: "product",
+      title: t`Produit`,
+      items: [
+        {
+          to: "/accounts/$accountId/features",
+          params,
+          label: t`Fonctionnalités`,
+          icon: <BulbOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/journeys",
+          params,
+          label: t`Parcours utilisateurs`,
+          icon: <NodeIndexOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/personas",
+          params,
+          label: t`Personas`,
+          icon: <TeamOutlined />,
+        },
+      ],
     },
     {
-      to: "/accounts/$accountId/databases",
-      params: { accountId },
-      label: t`Bases de données`,
-      icon: <DatabaseOutlined />,
+      key: "infrastructure",
+      title: t`Infrastructure`,
+      items: [
+        {
+          to: "/accounts/$accountId/databases",
+          params,
+          label: t`Bases de données`,
+          icon: <DatabaseOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/applications",
+          params,
+          label: t`Applications`,
+          icon: <AppstoreOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/services",
+          params,
+          label: t`Services`,
+          icon: <CloudServerOutlined />,
+        },
+      ],
     },
   ];
 
@@ -135,13 +189,38 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
         padding: 8,
       }}
     >
-      {topItems.map((item) => (
-        <NavLink
-          collapsed={collapsed}
-          item={item}
-          key={item.to}
-          pathname={pathname}
-        />
+      {sections.map((section) => (
+        <div
+          key={section.key}
+          style={{ display: "flex", flexDirection: "column", gap: 4 }}
+        >
+          {/* Collapsed, a heading has no room — a rule keeps the grouping. */}
+          {section.title && collapsed ? (
+            <Divider style={{ margin: "4px 0" }} />
+          ) : null}
+          {section.title && !collapsed ? (
+            <Typography.Text
+              style={{
+                fontSize: 11,
+                letterSpacing: 0.4,
+                marginTop: 8,
+                padding: "0 12px",
+                textTransform: "uppercase",
+              }}
+              type="secondary"
+            >
+              {section.title}
+            </Typography.Text>
+          ) : null}
+          {section.items.map((item) => (
+            <NavLink
+              collapsed={collapsed}
+              item={item}
+              key={item.to}
+              pathname={pathname}
+            />
+          ))}
+        </div>
       ))}
 
       {bottomItems.length > 0 ? (

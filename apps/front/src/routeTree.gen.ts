@@ -34,11 +34,15 @@ import { Route as AppMeInvitationsRouteImport } from './routes/_app/me/invitatio
 import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/accounts/$accountId/route'
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
 import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
+import { Route as AppAccountsAccountIdPersonasRouteImport } from './routes/_app/accounts/$accountId/personas'
+import { Route as AppAccountsAccountIdJourneysRouteImport } from './routes/_app/accounts/$accountId/journeys'
+import { Route as AppAccountsAccountIdFeaturesRouteImport } from './routes/_app/accounts/$accountId/features'
 import { Route as AppAccountsAccountIdAdministrationRouteRouteImport } from './routes/_app/accounts/$accountId/administration/route'
 import { Route as AppAccountsAccountIdServicesIndexRouteImport } from './routes/_app/accounts/$accountId/services/index'
 import { Route as AppAccountsAccountIdDatabasesIndexRouteImport } from './routes/_app/accounts/$accountId/databases/index'
 import { Route as AppAccountsAccountIdApplicationsIndexRouteImport } from './routes/_app/accounts/$accountId/applications/index'
 import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
+import { Route as AppAccountsAccountIdAdministrationTagsRouteImport } from './routes/_app/accounts/$accountId/administration/tags'
 import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
 import { Route as AppAccountsAccountIdAdministrationInvitationsRouteImport } from './routes/_app/accounts/$accountId/administration/invitations'
 import { Route as AppAccountsAccountIdAdministrationInformationRouteImport } from './routes/_app/accounts/$accountId/administration/information'
@@ -188,6 +192,24 @@ const AppAccountsAccountIdIndexRoute =
     path: '/',
     getParentRoute: () => AppAccountsAccountIdRouteRoute,
   } as any)
+const AppAccountsAccountIdPersonasRoute =
+  AppAccountsAccountIdPersonasRouteImport.update({
+    id: '/personas',
+    path: '/personas',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdJourneysRoute =
+  AppAccountsAccountIdJourneysRouteImport.update({
+    id: '/journeys',
+    path: '/journeys',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdFeaturesRoute =
+  AppAccountsAccountIdFeaturesRouteImport.update({
+    id: '/features',
+    path: '/features',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdAdministrationRouteRoute =
   AppAccountsAccountIdAdministrationRouteRouteImport.update({
     id: '/administration',
@@ -216,6 +238,12 @@ const AppAccountsAccountIdAdministrationIndexRoute =
   AppAccountsAccountIdAdministrationIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationTagsRoute =
+  AppAccountsAccountIdAdministrationTagsRouteImport.update({
+    id: '/tags',
+    path: '/tags',
     getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
   } as any)
 const AppAccountsAccountIdAdministrationMembersRoute =
@@ -383,6 +411,9 @@ export interface FileRoutesByFullPath {
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me/': typeof AppMeIndexRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  '/accounts/$accountId/features': typeof AppAccountsAccountIdFeaturesRoute
+  '/accounts/$accountId/journeys': typeof AppAccountsAccountIdJourneysRoute
+  '/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
   '/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts/': typeof AppMeAccountsIndexRoute
   '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
@@ -392,6 +423,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -433,12 +465,16 @@ export interface FileRoutesByTo {
   '/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me': typeof AppMeIndexRoute
+  '/accounts/$accountId/features': typeof AppAccountsAccountIdFeaturesRoute
+  '/accounts/$accountId/journeys': typeof AppAccountsAccountIdJourneysRoute
+  '/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
   '/accounts/$accountId': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts': typeof AppMeAccountsIndexRoute
   '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
   '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -485,6 +521,9 @@ export interface FileRoutesById {
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/_app/me/': typeof AppMeIndexRoute
   '/_app/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  '/_app/accounts/$accountId/features': typeof AppAccountsAccountIdFeaturesRoute
+  '/_app/accounts/$accountId/journeys': typeof AppAccountsAccountIdJourneysRoute
+  '/_app/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
   '/_app/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/_app/me/accounts/': typeof AppMeAccountsIndexRoute
   '/_app/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
@@ -494,6 +533,7 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/_app/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
+  '/_app/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/_app/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/_app/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -540,6 +580,9 @@ export interface FileRouteTypes {
     | '/oauth/consent/$requestId'
     | '/me/'
     | '/accounts/$accountId/administration'
+    | '/accounts/$accountId/features'
+    | '/accounts/$accountId/journeys'
+    | '/accounts/$accountId/personas'
     | '/accounts/$accountId/'
     | '/me/accounts/'
     | '/accounts/$accountId/applications/$applicationId'
@@ -549,6 +592,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/information'
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
+    | '/accounts/$accountId/administration/tags'
     | '/accounts/$accountId/administration/'
     | '/accounts/$accountId/applications/'
     | '/accounts/$accountId/databases/'
@@ -590,12 +634,16 @@ export interface FileRouteTypes {
     | '/me/settings'
     | '/oauth/consent/$requestId'
     | '/me'
+    | '/accounts/$accountId/features'
+    | '/accounts/$accountId/journeys'
+    | '/accounts/$accountId/personas'
     | '/accounts/$accountId'
     | '/me/accounts'
     | '/accounts/$accountId/administration/advanced'
     | '/accounts/$accountId/administration/information'
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
+    | '/accounts/$accountId/administration/tags'
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/applications'
     | '/accounts/$accountId/databases'
@@ -641,6 +689,9 @@ export interface FileRouteTypes {
     | '/oauth/consent/$requestId'
     | '/_app/me/'
     | '/_app/accounts/$accountId/administration'
+    | '/_app/accounts/$accountId/features'
+    | '/_app/accounts/$accountId/journeys'
+    | '/_app/accounts/$accountId/personas'
     | '/_app/accounts/$accountId/'
     | '/_app/me/accounts/'
     | '/_app/accounts/$accountId/applications/$applicationId'
@@ -650,6 +701,7 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/administration/information'
     | '/_app/accounts/$accountId/administration/invitations'
     | '/_app/accounts/$accountId/administration/members'
+    | '/_app/accounts/$accountId/administration/tags'
     | '/_app/accounts/$accountId/administration/'
     | '/_app/accounts/$accountId/applications/'
     | '/_app/accounts/$accountId/databases/'
@@ -856,6 +908,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdIndexRouteImport
       parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
+    '/_app/accounts/$accountId/personas': {
+      id: '/_app/accounts/$accountId/personas'
+      path: '/personas'
+      fullPath: '/accounts/$accountId/personas'
+      preLoaderRoute: typeof AppAccountsAccountIdPersonasRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/journeys': {
+      id: '/_app/accounts/$accountId/journeys'
+      path: '/journeys'
+      fullPath: '/accounts/$accountId/journeys'
+      preLoaderRoute: typeof AppAccountsAccountIdJourneysRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/features': {
+      id: '/_app/accounts/$accountId/features'
+      path: '/features'
+      fullPath: '/accounts/$accountId/features'
+      preLoaderRoute: typeof AppAccountsAccountIdFeaturesRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
     '/_app/accounts/$accountId/administration': {
       id: '/_app/accounts/$accountId/administration'
       path: '/administration'
@@ -889,6 +962,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/accounts/$accountId/administration/'
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/tags': {
+      id: '/_app/accounts/$accountId/administration/tags'
+      path: '/tags'
+      fullPath: '/accounts/$accountId/administration/tags'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationTagsRouteImport
       parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
     }
     '/_app/accounts/$accountId/administration/members': {
@@ -1105,6 +1185,7 @@ interface AppAccountsAccountIdAdministrationRouteRouteChildren {
   AppAccountsAccountIdAdministrationInformationRoute: typeof AppAccountsAccountIdAdministrationInformationRoute
   AppAccountsAccountIdAdministrationInvitationsRoute: typeof AppAccountsAccountIdAdministrationInvitationsRoute
   AppAccountsAccountIdAdministrationMembersRoute: typeof AppAccountsAccountIdAdministrationMembersRoute
+  AppAccountsAccountIdAdministrationTagsRoute: typeof AppAccountsAccountIdAdministrationTagsRoute
   AppAccountsAccountIdAdministrationIndexRoute: typeof AppAccountsAccountIdAdministrationIndexRoute
 }
 
@@ -1118,6 +1199,8 @@ const AppAccountsAccountIdAdministrationRouteRouteChildren: AppAccountsAccountId
       AppAccountsAccountIdAdministrationInvitationsRoute,
     AppAccountsAccountIdAdministrationMembersRoute:
       AppAccountsAccountIdAdministrationMembersRoute,
+    AppAccountsAccountIdAdministrationTagsRoute:
+      AppAccountsAccountIdAdministrationTagsRoute,
     AppAccountsAccountIdAdministrationIndexRoute:
       AppAccountsAccountIdAdministrationIndexRoute,
   }
@@ -1210,6 +1293,9 @@ const AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren =
 
 interface AppAccountsAccountIdRouteRouteChildren {
   AppAccountsAccountIdAdministrationRouteRoute: typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
+  AppAccountsAccountIdFeaturesRoute: typeof AppAccountsAccountIdFeaturesRoute
+  AppAccountsAccountIdJourneysRoute: typeof AppAccountsAccountIdJourneysRoute
+  AppAccountsAccountIdPersonasRoute: typeof AppAccountsAccountIdPersonasRoute
   AppAccountsAccountIdIndexRoute: typeof AppAccountsAccountIdIndexRoute
   AppAccountsAccountIdApplicationsApplicationIdRouteRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
   AppAccountsAccountIdDatabasesDatabaseIdRouteRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren
@@ -1223,6 +1309,9 @@ const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChil
   {
     AppAccountsAccountIdAdministrationRouteRoute:
       AppAccountsAccountIdAdministrationRouteRouteWithChildren,
+    AppAccountsAccountIdFeaturesRoute: AppAccountsAccountIdFeaturesRoute,
+    AppAccountsAccountIdJourneysRoute: AppAccountsAccountIdJourneysRoute,
+    AppAccountsAccountIdPersonasRoute: AppAccountsAccountIdPersonasRoute,
     AppAccountsAccountIdIndexRoute: AppAccountsAccountIdIndexRoute,
     AppAccountsAccountIdApplicationsApplicationIdRouteRoute:
       AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren,
