@@ -1,8 +1,9 @@
 """Input schemas for databases, versions, tables, columns and migrations."""
 
 import uuid
+from typing import Annotated
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from src.forms._base import CamelBase
 from src.models.enum import (
@@ -69,6 +70,28 @@ class DatabaseTableColumnCreateForm(CamelBase):
     description: dict | None = Field(default=None)
     color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     tag_ids: list[uuid.UUID] = Field(default_factory=list)
+
+
+class DatabaseTableColumnReorderForm(CamelBase):
+    """Reorder the columns of a table. Send exactly one of the two shapes.
+
+    `columnIds` is the table's columns in their new order, and must list every
+    column of the table exactly once. `ranks` maps a column to its new position
+    and may cover only the columns that move.
+    """
+
+    column_ids: list[uuid.UUID] | None = Field(
+        default=None, description="Every column of the table, in their new order."
+    )
+    ranks: dict[uuid.UUID, Annotated[int, Field(ge=0)]] | None = Field(
+        default=None, description="New position of each column, keyed by column id."
+    )
+
+    @model_validator(mode="after")
+    def _exactly_one_shape(self) -> "DatabaseTableColumnReorderForm":
+        if (self.column_ids is None) == (self.ranks is None):
+            raise ValueError("Send either columnIds or ranks, not both.")
+        return self
 
 
 class DatabaseTableColumnPatchForm(CamelBase):

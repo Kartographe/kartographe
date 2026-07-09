@@ -9,7 +9,11 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from src.forms.databases import DatabaseTableColumnCreateForm, DatabaseTableColumnPatchForm
+from src.forms.databases import (
+    DatabaseTableColumnCreateForm,
+    DatabaseTableColumnPatchForm,
+    DatabaseTableColumnReorderForm,
+)
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
@@ -36,6 +40,14 @@ _DATA = require_role(
     AccountUserRole.OWNER,
     AccountUserRole.ADMINISTRATOR,
     AccountUserRole.LEAD_DEVELOPER,
+    AccountUserRole.DATA_ANALYST,
+)
+
+_DATA_DEV = require_role(
+    AccountUserRole.OWNER,
+    AccountUserRole.ADMINISTRATOR,
+    AccountUserRole.LEAD_DEVELOPER,
+    AccountUserRole.DEVELOPER,
     AccountUserRole.DATA_ANALYST,
 )
 
@@ -93,6 +105,30 @@ def create_column(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=DatabaseTableColumnItem.model_validate(column))
+
+
+@router.post(
+    "/reorder",
+    operation_id="api.databases.versions.tables.columns.reorder",
+    summary="Reorder columns",
+    description=(
+        "Reorder the columns of a table. Send `columnIds` — every column of the table in its new "
+        "order — or `ranks`, mapping a column id to its new position, which may cover only the "
+        "columns that move. Returns the table's columns in their new order. Data roles and "
+        "developers only."
+    ),
+    response_model=ListingResponse[DatabaseTableColumnItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def reorder_columns(
+    form: DatabaseTableColumnReorderForm,
+    table: CurrentDatabaseTableDep,
+    manager: DatabaseTableColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA_DEV)],
+) -> ListingResponse[DatabaseTableColumnItem]:
+    rows = manager.reorder(table, column_ids=form.column_ids, ranks=form.ranks)
+    items = [DatabaseTableColumnItem.model_validate(row) for row in rows]
+    return ListingResponse.single_page(items)
 
 
 @router.get(

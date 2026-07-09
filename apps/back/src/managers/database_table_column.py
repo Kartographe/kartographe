@@ -168,6 +168,52 @@ class DatabaseTableColumnManager(BaseEntityManager):
             )
         return self.apply_update(column, fields)
 
+    def reorder(
+        self,
+        table: DatabaseTable,
+        *,
+        column_ids: list[uuid.UUID] | None,
+        ranks: dict[uuid.UUID, int] | None,
+    ) -> list[DatabaseTableColumn]:
+        """Re-rank the table's columns, from an ordered list or a rank mapping.
+
+        An ordered list must cover the table exactly — a partial list would leave
+        the ranks of the omitted columns ambiguous. A mapping may be partial, so
+        a caller can move one column without resending the whole table.
+        """
+        columns = self.list_for_table(table)
+        by_id = {column.id: column for column in columns}
+
+        if column_ids is not None:
+            if len(set(column_ids)) != len(column_ids):
+                raise HTTPException(
+                    status.HTTP_422_UNPROCESSABLE_CONTENT, "A column is listed more than once."
+                )
+            if set(column_ids) != set(by_id):
+                raise HTTPException(
+                    status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    "The order must list every column of the table exactly once.",
+                )
+            target = {column_id: rank for rank, column_id in enumerate(column_ids)}
+        else:
+            target = ranks or {}
+            if not target:
+                raise HTTPException(
+                    status.HTTP_422_UNPROCESSABLE_CONTENT, "No column to reorder."
+                )
+            if set(target) - set(by_id):
+                raise HTTPException(status.HTTP_404_NOT_FOUND, "Column not found in this table.")
+
+        now = utc_now()
+        for column_id, rank in target.items():
+            column = by_id[column_id]
+            if column.rank != rank:
+                column.rank = rank
+                column.updated_at = now
+                self.session.add(column)
+        self.session.commit()
+        return self.list_for_table(table)
+
     def soft_delete(self, column: DatabaseTableColumn) -> None:
         now = utc_now()
         self._disable(column, now)
