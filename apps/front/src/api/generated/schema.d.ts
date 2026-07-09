@@ -285,7 +285,7 @@ export interface paths {
         };
         /**
          * List applications
-         * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.applications.list"];
         put?: never;
@@ -725,7 +725,7 @@ export interface paths {
         };
         /**
          * List guards
-         * @description List the authentication guards of an application, most recent first. Any member may read.
+         * @description List the authentication guards of an application, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.applications.guards.list"];
         put?: never;
@@ -909,7 +909,7 @@ export interface paths {
         };
         /**
          * List routes
-         * @description List the routes of an application, most recent first. Any member may read.
+         * @description List the routes of an application, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.applications.routes.list"];
         put?: never;
@@ -1205,7 +1205,7 @@ export interface paths {
         };
         /**
          * List features
-         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.features.list"];
         put?: never;
@@ -1461,7 +1461,7 @@ export interface paths {
         };
         /**
          * List personas
-         * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.personas.list"];
         put?: never;
@@ -1577,7 +1577,7 @@ export interface paths {
         };
         /**
          * List journeys
-         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.journeys.list"];
         put?: never;
@@ -1669,7 +1669,7 @@ export interface paths {
         };
         /**
          * List scenarios
-         * @description List the scenarios of a journey, most recent first. Any member may read.
+         * @description List the scenarios of a journey, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.journeys.scenarios.list"];
         put?: never;
@@ -1761,7 +1761,7 @@ export interface paths {
         };
         /**
          * List steps
-         * @description List the steps of a scenario, in insertion order. Any member may read.
+         * @description List the steps of a scenario, in insertion order. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.journeys.scenarios.steps.list"];
         put?: never;
@@ -2069,7 +2069,7 @@ export interface paths {
         };
         /**
          * List databases
-         * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.databases.list"];
         put?: never;
@@ -2253,7 +2253,7 @@ export interface paths {
         };
         /**
          * List tables
-         * @description List the tables of a database version, most recent first, each with its columns. Any member may read.
+         * @description List the tables of a database version, most recent first, each with its columns. Filter with `tagIds` (repeat the query param) to keep only the tables carrying at least one of those tags. Any member may read.
          */
         get: operations["api.databases.versions.tables.list"];
         put?: never;
@@ -2345,7 +2345,7 @@ export interface paths {
         };
         /**
          * List columns
-         * @description List the columns of a table, in insertion order. Any member may read.
+         * @description List the columns of a table, in insertion order. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api.databases.versions.tables.columns.list"];
         put?: never;
@@ -4655,6 +4655,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationGuardType"];
@@ -4714,6 +4719,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationType"];
@@ -5001,6 +5011,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title?: string | null;
         };
@@ -5549,6 +5564,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["DatabaseType"];
@@ -5891,6 +5911,11 @@ export interface components {
             systemField: boolean;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Unique */
             unique: boolean;
         };
@@ -6012,6 +6037,11 @@ export interface components {
             schema: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             type: components["schemas"]["DatabaseTableType"];
         };
         /**
@@ -6226,6 +6256,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["FeatureType"];
@@ -6614,6 +6649,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["JourneyType"];
@@ -6693,6 +6733,11 @@ export interface components {
             statusDate: string;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["JourneyScenarioType"];
@@ -6909,6 +6954,11 @@ export interface components {
             parentJourneyScenarioStepId?: string | null;
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
         };
@@ -7802,6 +7852,11 @@ export interface components {
             status: components["schemas"]["PersonaStatus"];
             /** Tagids */
             tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
             type: components["schemas"]["PersonaType"];
@@ -9565,6 +9620,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["ApplicationStatus"][] | null;
                 type?: components["schemas"]["ApplicationType"][] | null;
+                tagIds?: string[] | null;
                 sortBy?: components["schemas"]["ApplicationSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -11328,7 +11384,9 @@ export interface operations {
     };
     "api.applications.guards.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -12050,7 +12108,9 @@ export interface operations {
     };
     "api.applications.routes.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -13380,6 +13440,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["FeatureStatus"][] | null;
                 type?: components["schemas"]["FeatureType"][] | null;
+                tagIds?: string[] | null;
                 sortBy?: components["schemas"]["FeatureSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -14410,6 +14471,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["PersonaStatus"][] | null;
                 type?: components["schemas"]["PersonaType"][] | null;
+                tagIds?: string[] | null;
                 sortBy?: components["schemas"]["PersonaSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -14857,6 +14919,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["JourneyStatus"][] | null;
                 type?: components["schemas"]["JourneyType"][] | null;
+                tagIds?: string[] | null;
                 sortBy?: components["schemas"]["JourneySortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -15215,7 +15278,9 @@ export interface operations {
     };
     "api.journeys.scenarios.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -15576,7 +15641,9 @@ export interface operations {
     };
     "api.journeys.scenarios.steps.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -16909,6 +16976,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["DatabaseStatus"][] | null;
                 type?: components["schemas"]["DatabaseType"][] | null;
+                tagIds?: string[] | null;
                 sortBy?: components["schemas"]["DatabaseSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -17628,7 +17696,9 @@ export interface operations {
     };
     "api.databases.versions.tables.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -17996,7 +18066,9 @@ export interface operations {
     };
     "api.databases.versions.tables.columns.list": {
         parameters: {
-            query?: never;
+            query?: {
+                tagIds?: string[] | null;
+            };
             header?: never;
             path: {
                 account_id: string;
