@@ -3065,7 +3065,7 @@ export interface paths {
         };
         /**
          * List comments
-         * @description List the comments of the account, most recent first. Filter by entity type, entity id, owner and/or status (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and sort by date/status/statusDate. Any member may read.
+         * @description List the comments of the account, most recent first. Filter by entity type, entity id, owner and/or status (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and sort by date/status/statusDate. Each comment carries its resolved `entity` — the commented entity's type, id and label, with its containing entities in `parent` (null when the entity has since been deleted). Any member may read.
          */
         get: operations["api.comments.list"];
         put?: never;
@@ -5315,6 +5315,47 @@ export interface components {
             };
         };
         /**
+         * CommentEntityNode
+         * @description One entity in a comment's breadcrumb: what it is, and how to name it.
+         */
+        CommentEntityNode: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            type: components["schemas"]["CommentEntityType"];
+            /** Label */
+            label: string;
+        };
+        /**
+         * CommentEntityRef
+         * @description A display-ready pointer to the entity a comment is attached to.
+         *
+         *     `label` is derived per type (a title, a name, or `METHOD /path`). `parents`
+         *     lists the containing entities, outermost first, so a column named `email`
+         *     can be told apart from another one: `[database, table]` for the column.
+         *
+         *     Deliberately flat rather than a self-referencing `parent`: `fastapi-mcp`
+         *     inlines every `$ref` when it converts the OpenAPI spec into MCP tools, so a
+         *     recursive schema blows the stack at app boot.
+         */
+        CommentEntityRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            type: components["schemas"]["CommentEntityType"];
+            /** Label */
+            label: string;
+            /**
+             * Parents
+             * @default []
+             */
+            parents: components["schemas"]["CommentEntityNode"][];
+        };
+        /**
          * CommentEntityType
          * @description The kind of entity a comment can be attached to.
          * @enum {string}
@@ -5358,6 +5399,49 @@ export interface components {
             value?: {
                 [key: string]: unknown;
             } | null;
+        };
+        /**
+         * CommentListItem
+         * @description A comment enriched with its resolved entity.
+         *
+         *     `entity` is null when the target has been soft-deleted — the comment still
+         *     exists, its entity no longer does.
+         */
+        CommentListItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["CommentEntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Parentcommentid */
+            parentCommentId?: string | null;
+            status: components["schemas"]["CommentStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Value */
+            value?: {
+                [key: string]: unknown;
+            } | null;
+            entity?: components["schemas"]["CommentEntityRef"] | null;
         };
         /**
          * CommentPatchForm
@@ -7095,6 +7179,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["CommentItem"][];
+        };
+        /** ListingResponse[CommentListItem] */
+        ListingResponse_CommentListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["CommentListItem"][];
         };
         /** ListingResponse[DatabaseColumnTypeItem] */
         ListingResponse_DatabaseColumnTypeItem_: {
@@ -20732,7 +20826,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                    "application/json": components["schemas"]["ListingResponse_CommentListItem_"];
                 };
             };
             /** @description Account or comment not found */
