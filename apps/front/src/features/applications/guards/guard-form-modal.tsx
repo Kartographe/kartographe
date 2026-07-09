@@ -10,6 +10,7 @@ import {
   GUARD_FIELD_TYPE_LABELS,
   GUARD_TYPE_LABELS,
 } from "@/features/applications/labels";
+import { TagsField } from "@/features/tags/tags-field";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -55,6 +56,7 @@ export function GuardFormModal({
       fieldType: (guard?.fieldType ?? "header") as FieldType,
       fieldKey: guard?.fieldKey ?? "",
       fieldFormat: (guard?.fieldFormat ?? "") as FieldFormat | "",
+      tagIds: guard?.tagIds ?? [],
     },
     validators: {
       onSubmit: z.object({
@@ -66,6 +68,7 @@ export function GuardFormModal({
           z.literal(""),
           z.enum(dtoEnums.ApplicationGuardFieldFormat),
         ]),
+        tagIds: z.array(z.string()),
       }),
     },
     onSubmit: async ({ value, formApi }) => {
@@ -75,6 +78,7 @@ export function GuardFormModal({
         fieldType: value.fieldType,
         fieldKey: value.fieldKey,
         fieldFormat: value.fieldFormat || null,
+        tagIds: value.tagIds,
       };
       try {
         if (guard) {
@@ -167,6 +171,16 @@ export function GuardFormModal({
               <field.SelectField
                 label={t`Format`}
                 options={fieldFormatOptions}
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="application_guard"
+                onChange={field.handleChange}
+                value={field.state.value}
               />
             )}
           </form.AppField>

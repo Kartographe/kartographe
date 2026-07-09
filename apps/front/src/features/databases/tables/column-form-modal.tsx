@@ -10,6 +10,7 @@ import {
   IDENTIFIER_PATTERN,
 } from "@/features/databases/identifier";
 import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
+import { TagsField } from "@/features/tags/tags-field";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
@@ -81,6 +82,7 @@ export function ColumnFormModal({
       foreignKeyDatabaseTableColumnId:
         column?.foreignKeyDatabaseTableColumnId ?? NO_FK,
       color: column?.color ?? "",
+      tagIds: column?.tagIds ?? [],
       description: asRichText(column?.description),
     },
     validators: {
@@ -101,6 +103,7 @@ export function ColumnFormModal({
         foreignKeyDatabaseTableId: z.string(),
         foreignKeyDatabaseTableColumnId: z.string(),
         color: z.string(),
+        tagIds: z.array(z.string()),
         description: z.record(z.string(), z.unknown()),
       }),
     },
@@ -120,6 +123,7 @@ export function ColumnFormModal({
           : null,
         rank: column?.rank ?? nextRank,
         color: value.color || null,
+        tagIds: value.tagIds,
         description: isRichTextEmpty(value.description)
           ? null
           : (value.description as RichTextDocument),
@@ -230,6 +234,16 @@ export function ColumnFormModal({
           </form.AppField>
           <form.AppField name="color">
             {(field) => <field.ColorField label={t`Couleur`} />}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="database_table_column"
+                onChange={field.handleChange}
+                value={field.state.value}
+              />
+            )}
           </form.AppField>
           <form.AppField name="description">
             {(field) => (

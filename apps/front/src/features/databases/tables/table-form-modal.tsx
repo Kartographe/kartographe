@@ -10,6 +10,7 @@ import {
   IDENTIFIER_PATTERN,
 } from "@/features/databases/identifier";
 import { TABLE_TYPE_LABELS } from "@/features/databases/labels";
+import { TagsField } from "@/features/tags/tags-field";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
@@ -61,6 +62,7 @@ export function TableFormModal({
       name: table?.name ?? "",
       type: (table?.type ?? "physical") as TableType,
       color: table?.color ?? "",
+      tagIds: table?.tagIds ?? [],
       description: asRichText(table?.description),
     },
     validators: {
@@ -84,6 +86,7 @@ export function TableFormModal({
           ),
         type: z.enum(dtoEnums.DatabaseTableType),
         color: z.string(),
+        tagIds: z.array(z.string()),
         description: z.record(z.string(), z.unknown()),
       }),
     },
@@ -95,6 +98,7 @@ export function TableFormModal({
         name: value.name,
         type: value.type,
         color: value.color || null,
+        tagIds: value.tagIds,
         description: isRichTextEmpty(value.description)
           ? null
           : (value.description as RichTextDocument),
@@ -152,6 +156,16 @@ export function TableFormModal({
           </form.AppField>
           <form.AppField name="color">
             {(field) => <field.ColorField label={t`Couleur`} />}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="database_table"
+                onChange={field.handleChange}
+                value={field.state.value}
+              />
+            )}
           </form.AppField>
           <form.AppField name="description">
             {(field) => (

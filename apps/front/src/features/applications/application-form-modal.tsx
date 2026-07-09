@@ -6,6 +6,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { APPLICATION_TYPE_LABELS } from "@/features/applications/labels";
+import { TagsField } from "@/features/tags/tags-field";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -45,12 +46,14 @@ export function ApplicationFormModal({
       title: application?.title ?? "",
       description: application?.description ?? "",
       type: (application?.type ?? "customer") as ApplicationType,
+      tagIds: application?.tagIds ?? [],
     },
     validators: {
       onSubmit: z.object({
         title: z.string().min(1, t`Le titre est requis`),
         description: z.string(),
         type: z.enum(dtoEnums.ApplicationType),
+        tagIds: z.array(z.string()),
       }),
     },
     onSubmit: async ({ value, formApi }) => {
@@ -58,6 +61,7 @@ export function ApplicationFormModal({
         title: value.title,
         description: value.description || null,
         type: value.type,
+        tagIds: value.tagIds,
       };
       try {
         if (application) {
@@ -116,6 +120,16 @@ export function ApplicationFormModal({
           <form.AppField name="type">
             {(field) => (
               <field.SelectField label={t`Type`} options={typeOptions} />
+            )}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="application"
+                onChange={field.handleChange}
+                value={field.state.value}
+              />
             )}
           </form.AppField>
           <form.AppField name="description">

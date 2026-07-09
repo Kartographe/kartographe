@@ -5,6 +5,7 @@ import { z } from "zod";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { TagsField } from "@/features/tags/tags-field";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
@@ -63,6 +64,7 @@ export function RouteFormModal({
       description: asRichText(route?.description),
       applicationGuardIds: route?.applicationGuardIds ?? [],
       applicationRoleIds: route?.applicationRoleIds ?? [],
+      tagIds: route?.tagIds ?? [],
     },
     validators: {
       onSubmit: z.object({
@@ -72,6 +74,7 @@ export function RouteFormModal({
         description: z.record(z.string(), z.unknown()),
         applicationGuardIds: z.array(z.string()),
         applicationRoleIds: z.array(z.string()),
+        tagIds: z.array(z.string()),
       }),
     },
     onSubmit: async ({ value, formApi }) => {
@@ -84,6 +87,7 @@ export function RouteFormModal({
           : (value.description as RichTextDocument),
         applicationGuardIds: value.applicationGuardIds,
         applicationRoleIds: value.applicationRoleIds,
+        tagIds: value.tagIds,
       };
       try {
         if (route) {
@@ -169,6 +173,16 @@ export function RouteFormModal({
                 loading={rolesQuery.isLoading}
                 options={roleOptions}
                 placeholder={t`Aucun rôle`}
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="application_route"
+                onChange={field.handleChange}
+                value={field.state.value}
               />
             )}
           </form.AppField>

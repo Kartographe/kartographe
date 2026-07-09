@@ -6,6 +6,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { DATABASE_TYPE_LABELS } from "@/features/databases/labels";
+import { TagsField } from "@/features/tags/tags-field";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
@@ -51,12 +52,14 @@ export function DatabaseFormModal({
     defaultValues: {
       title: database?.title ?? "",
       type: (database?.type ?? "postgresql") as DatabaseType,
+      tagIds: database?.tagIds ?? [],
       description: asRichText(database?.description),
     },
     validators: {
       onSubmit: z.object({
         title: z.string().min(1, t`Le titre est requis`),
         type: z.enum(dtoEnums.DatabaseType),
+        tagIds: z.array(z.string()),
         description: z.record(z.string(), z.unknown()),
       }),
     },
@@ -64,6 +67,7 @@ export function DatabaseFormModal({
       const body = {
         title: value.title,
         type: value.type,
+        tagIds: value.tagIds,
         description: isRichTextEmpty(value.description)
           ? null
           : (value.description as RichTextDocument),
@@ -127,6 +131,16 @@ export function DatabaseFormModal({
           <form.AppField name="type">
             {(field) => (
               <field.SelectField label={t`Moteur`} options={typeOptions} />
+            )}
+          </form.AppField>
+          <form.AppField name="tagIds">
+            {(field) => (
+              <TagsField
+                accountId={accountId}
+                entityType="database"
+                onChange={field.handleChange}
+                value={field.state.value}
+              />
             )}
           </form.AppField>
           <form.AppField name="description">
