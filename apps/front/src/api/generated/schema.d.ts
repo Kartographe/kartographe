@@ -3067,7 +3067,7 @@ export interface paths {
         put?: never;
         /**
          * Create a tag
-         * @description Create a tag for a given entity type. Owners and administrators only.
+         * @description Create a tag for a given entity type. Any member may create.
          */
         post: operations["api.tags.create"];
         delete?: never;
