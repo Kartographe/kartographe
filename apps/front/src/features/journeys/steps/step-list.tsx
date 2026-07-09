@@ -1,6 +1,5 @@
-import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
-import { Button, Flex, Steps, Tag, Typography } from "antd";
+import { Flex, Steps, Tag, Typography } from "antd";
 import type { components } from "@/api/generated/schema";
 import { useActionTypes } from "@/features/journeys/steps/use-action-types";
 import { isRichTextEmpty } from "@/lib/rich-text/rich-text";
@@ -48,20 +47,19 @@ function orderSteps(steps: Step[]): Step[] {
 }
 
 /**
- * The scenario as a vertical timeline: one step per row, each followed by the
- * button that adds the step after it — the parent arrives pre-filled, so the
- * scenario is written where it is read.
+ * The scenario as a vertical timeline: one step per row.
+ *
+ * Adding is driven from the header, where the form asks for the preceding step
+ * — the API then inserts the new one right after it, rather than appending.
  */
 export function StepList({
   steps,
   selectedId,
   onSelect,
-  onAddChild,
 }: {
   steps: Step[];
   selectedId: string | undefined;
   onSelect: (step: Step) => void;
-  onAddChild: (step: Step) => void;
 }) {
   const { t } = useLingui();
   const actionTypes = useActionTypes();
@@ -95,26 +93,9 @@ export function StepList({
               ) : null}
             </Flex>
           ),
-          description: (
-            <Flex gap={8} vertical>
-              {/* Each `RichTextView` mounts an editor — skip the empty ones. */}
-              {isRichTextEmpty(step.description) ? null : (
-                <RichTextView value={step.description} />
-              )}
-              <Button
-                icon={<PlusOutlined />}
-                onClick={(event) => {
-                  // The row itself selects the step; the button must not.
-                  event.stopPropagation();
-                  onAddChild(step);
-                }}
-                size="small"
-                style={{ alignSelf: "flex-start" }}
-                type="dashed"
-              >
-                {t`Ajouter une étape`}
-              </Button>
-            </Flex>
+          // Each `RichTextView` mounts an editor — skip the empty ones.
+          description: isRichTextEmpty(step.description) ? null : (
+            <RichTextView value={step.description} />
           ),
         };
       })}

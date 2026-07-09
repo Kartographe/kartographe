@@ -137,6 +137,63 @@ export const SCENARIO_CRITICITY_COLORS: Record<
   critical: "red",
 };
 
+export const STEP_FILE_TYPE_LABELS: Record<
+  S["JourneyScenarioStepFileType"],
+  MessageDescriptor
+> = {
+  screenshot: msg`Capture d'écran`,
+  video: msg`Vidéo`,
+  document: msg`Document`,
+  input: msg`Jeu de données`,
+  other: msg`Autre`,
+};
+
+export const STEP_FILE_TYPE_DESCRIPTIONS: Record<
+  S["JourneyScenarioStepFileType"],
+  MessageDescriptor
+> = {
+  screenshot: msg`Image de l'écran tel qu'il doit apparaître à cette étape.`,
+  video: msg`Enregistrement de l'étape en train d'être jouée.`,
+  document: msg`Spécification, maquette ou tout autre document de référence.`,
+  input: msg`Données à saisir ou à injecter pour jouer l'étape.`,
+  other: msg`Pièce jointe qui n'entre dans aucune des autres catégories.`,
+};
+
+export const STEP_FILE_TYPE_COLORS: Record<
+  S["JourneyScenarioStepFileType"],
+  string
+> = {
+  screenshot: "blue",
+  video: "purple",
+  document: "geekblue",
+  input: "cyan",
+  other: "default",
+};
+
+export const STEP_FILE_STATUS_LABELS: Record<
+  S["JourneyScenarioStepFileStatus"],
+  MessageDescriptor
+> = {
+  uploaded: msg`Déposé`,
+  archived: msg`Archivé`,
+};
+
+export const STEP_FILE_STATUS_DESCRIPTIONS: Record<
+  S["JourneyScenarioStepFileStatus"],
+  MessageDescriptor
+> = {
+  uploaded: msg`Pièce jointe courante de l'étape.`,
+  archived: msg`Conservée pour l'historique, plus mise en avant.`,
+};
+
+export const STEP_FILE_STATUS_COLORS: Record<
+  S["JourneyScenarioStepFileStatus"],
+  string
+> = {
+  uploaded: "success",
+  archived: "warning",
+};
+
 export const ASSERTION_STATUS_LABELS: Record<
   S["JourneyScenarioStepAssertionStatus"],
   MessageDescriptor

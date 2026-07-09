@@ -6,16 +6,22 @@ import {
   Divider,
   Drawer,
   Flex,
+  Segmented,
   Space,
   Tag,
   Typography,
 } from "antd";
+import { useState } from "react";
 import type { components } from "@/api/generated/schema";
 import { StepAssertions } from "@/features/journeys/steps/step-assertions";
+import { StepFiles } from "@/features/journeys/steps/step-files";
+import { StepRoutes } from "@/features/journeys/steps/step-routes";
 import { useActionTypes } from "@/features/journeys/steps/use-action-types";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Step = components["schemas"]["JourneyScenarioStepItem"];
+
+type Panel = "files" | "assertions" | "routes";
 
 export function StepDrawer({
   accountId,
@@ -41,6 +47,7 @@ export function StepDrawer({
 }) {
   const { t } = useLingui();
   const actionTypes = useActionTypes();
+  const [panel, setPanel] = useState<Panel>("files");
 
   const actionLabel = actionTypes.label(step?.actionTypeId);
   const parameters = step?.parameters ?? {};
@@ -125,12 +132,46 @@ export function StepDrawer({
 
           <Divider style={{ margin: 0 }} />
 
-          <StepAssertions
-            accountId={accountId}
-            journeyId={journeyId}
-            scenarioId={scenarioId}
-            stepId={step.id}
+          <Segmented
+            block
+            onChange={(value) => setPanel(value as Panel)}
+            options={[
+              { label: t`Fichiers`, value: "files" },
+              { label: t`Assertions`, value: "assertions" },
+              { label: t`Routes`, value: "routes" },
+            ]}
+            value={panel}
           />
+
+          {/* Keyed on the step: switching steps must not carry a panel's state
+              (an open modal, a pending upload) onto the next one. */}
+          {panel === "files" ? (
+            <StepFiles
+              accountId={accountId}
+              journeyId={journeyId}
+              key={`files-${step.id}`}
+              scenarioId={scenarioId}
+              stepId={step.id}
+            />
+          ) : null}
+          {panel === "assertions" ? (
+            <StepAssertions
+              accountId={accountId}
+              journeyId={journeyId}
+              key={`assertions-${step.id}`}
+              scenarioId={scenarioId}
+              stepId={step.id}
+            />
+          ) : null}
+          {panel === "routes" ? (
+            <StepRoutes
+              accountId={accountId}
+              journeyId={journeyId}
+              key={`routes-${step.id}`}
+              scenarioId={scenarioId}
+              stepId={step.id}
+            />
+          ) : null}
         </Flex>
       ) : null}
     </Drawer>

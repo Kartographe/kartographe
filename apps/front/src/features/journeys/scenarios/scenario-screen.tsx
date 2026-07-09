@@ -156,7 +156,6 @@ export function ScenarioScreen({
         </Empty>
       ) : (
         <StepList
-          onAddChild={(step) => setStepForm({ parentId: step.id })}
           onSelect={(step) => setSelectedId(step.id)}
           selectedId={selectedId}
           steps={steps}

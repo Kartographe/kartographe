@@ -19,6 +19,12 @@ import {
   SCENARIO_TYPE_COLORS,
   SCENARIO_TYPE_DESCRIPTIONS,
   SCENARIO_TYPE_LABELS,
+  STEP_FILE_STATUS_COLORS,
+  STEP_FILE_STATUS_DESCRIPTIONS,
+  STEP_FILE_STATUS_LABELS,
+  STEP_FILE_TYPE_COLORS,
+  STEP_FILE_TYPE_DESCRIPTIONS,
+  STEP_FILE_TYPE_LABELS,
 } from "@/features/journeys/labels";
 
 type S = components["schemas"];
@@ -82,6 +88,36 @@ export function ScenarioCriticityTag({
       descriptions={SCENARIO_CRITICITY_DESCRIPTIONS}
       labels={SCENARIO_CRITICITY_LABELS}
       value={criticity}
+    />
+  );
+}
+
+export function StepFileTypeTag({
+  type,
+}: {
+  type: S["JourneyScenarioStepFileType"];
+}) {
+  return (
+    <EnumTag
+      colors={STEP_FILE_TYPE_COLORS}
+      descriptions={STEP_FILE_TYPE_DESCRIPTIONS}
+      labels={STEP_FILE_TYPE_LABELS}
+      value={type}
+    />
+  );
+}
+
+export function StepFileStatusTag({
+  status,
+}: {
+  status: S["JourneyScenarioStepFileStatus"];
+}) {
+  return (
+    <EnumTag
+      colors={STEP_FILE_STATUS_COLORS}
+      descriptions={STEP_FILE_STATUS_DESCRIPTIONS}
+      labels={STEP_FILE_STATUS_LABELS}
+      value={status}
     />
   );
 }
