@@ -1,6 +1,7 @@
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "@/api/generated/schema";
 import { emitSessionExpired } from "@/lib/auth/auth-events";
+import { emitForbidden } from "@/lib/auth/forbidden-events";
 import { requestTokenRefresh } from "@/lib/auth/refresh";
 import {
   clearSession,
@@ -69,9 +70,18 @@ const authMiddleware: Middleware = {
   },
   onResponse({ request, response }) {
     const { pathname } = new URL(request.url);
-    if (response.status === 401 && !isPublic(pathname)) {
+    if (isPublic(pathname)) {
+      return response;
+    }
+    if (response.status === 401) {
       clearSession();
       emitSessionExpired("expired");
+    }
+    // A forbidden *read* means the page itself is out of reach — bounce home.
+    // Writes are left alone: a denied action should surface as an error on the
+    // screen the user is on, not yank them away from it.
+    if (response.status === 403 && request.method === "GET") {
+      emitForbidden();
     }
     return response;
   },
