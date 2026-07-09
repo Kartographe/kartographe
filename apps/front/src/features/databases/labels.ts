@@ -129,6 +129,22 @@ export function formatVersion(version: number[]): string {
 }
 
 /**
+ * Newest first, comparing segment by segment — so `v1.10.0` sorts above
+ * `v1.9.0`, which a lexicographic sort on the formatted string would not.
+ * A missing segment counts as `0`: `v2` and `v2.0.0` are the same version.
+ */
+export function compareVersionsDesc(a: number[], b: number[]): number {
+  const length = Math.max(a.length, b.length);
+  for (let index = 0; index < length; index++) {
+    const diff = (b[index] ?? 0) - (a[index] ?? 0);
+    if (diff !== 0) {
+      return diff;
+    }
+  }
+  return 0;
+}
+
+/**
  * `"1.2.0"` → `[1, 2, 0]`, or `null` when the input is not a dotted list of
  * non-negative integers. A leading `v` is tolerated, since that is how the
  * version is rendered everywhere else.

@@ -5,13 +5,37 @@ import {
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { Flex, Tag, Typography } from "antd";
 import type { ReactNode } from "react";
+import { $api } from "@/api/$api";
+import type { components } from "@/api/generated/schema";
+import {
+  compareVersionsDesc,
+  formatVersion,
+  VERSION_STATUS_COLORS,
+  VERSION_STATUS_LABELS,
+} from "@/features/databases/labels";
+
+type DatabaseVersion = components["schemas"]["DatabaseVersionItem"];
 
 interface NavItem {
   to: string;
   label: string;
   icon: ReactNode;
   exact?: boolean;
+}
+
+function linkStyle(active: boolean) {
+  return {
+    alignItems: "center",
+    background: active ? "var(--ant-color-primary-bg)" : "transparent",
+    borderRadius: 8,
+    color: active ? "var(--ant-color-primary)" : "var(--ant-color-text)",
+    display: "flex",
+    fontWeight: active ? 600 : 400,
+    gap: 10,
+    padding: "8px 12px",
+  } as const;
 }
 
 function NavLink({
@@ -34,20 +58,59 @@ function NavLink({
   return (
     <Link
       params={{ accountId, databaseId }}
-      style={{
-        alignItems: "center",
-        background: active ? "var(--ant-color-primary-bg)" : "transparent",
-        borderRadius: 8,
-        color: active ? "var(--ant-color-primary)" : "var(--ant-color-text)",
-        display: "flex",
-        fontWeight: active ? 600 : 400,
-        gap: 10,
-        padding: "8px 12px",
-      }}
+      style={linkStyle(active)}
       to={item.to}
     >
       {item.icon}
       {item.label}
+    </Link>
+  );
+}
+
+/**
+ * A version, reachable in one click from the nav. The status is a plain `Tag`
+ * rather than the usual `EnumTag`: its description popover is a button, and a
+ * button nested inside a link is not something to hand a keyboard user.
+ */
+function VersionLink({
+  version,
+  accountId,
+  databaseId,
+  pathname,
+}: {
+  version: DatabaseVersion;
+  accountId: string;
+  databaseId: string;
+  pathname: string;
+}) {
+  const { t } = useLingui();
+  const resolved = `/accounts/${accountId}/databases/${databaseId}/versions/${version.id}`;
+  const active = pathname === resolved || pathname.startsWith(`${resolved}/`);
+
+  return (
+    <Link
+      params={{ accountId, databaseId, versionId: version.id }}
+      style={{
+        ...linkStyle(active),
+        fontSize: 12,
+        justifyContent: "space-between",
+        paddingBlock: 6,
+        paddingInlineStart: 32,
+      }}
+      to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
+    >
+      <Typography.Text
+        ellipsis
+        style={{ color: "inherit", fontSize: 12, fontWeight: "inherit" }}
+      >
+        {formatVersion(version.version)}
+      </Typography.Text>
+      <Tag
+        color={VERSION_STATUS_COLORS[version.status]}
+        style={{ fontSize: 10, lineHeight: "16px", marginInlineEnd: 0 }}
+      >
+        {t(VERSION_STATUS_LABELS[version.status])}
+      </Tag>
     </Link>
   );
 }
@@ -66,21 +129,34 @@ export function DatabaseSideNav({
     select: (state) => state.location.pathname,
   });
 
-  const items: NavItem[] = [
-    {
-      to: BASE,
-      label: t`Informations`,
-      icon: <InfoCircleOutlined />,
-      exact: true,
-    },
-    // Not `exact`: stays lit while browsing a version's tables underneath.
-    { to: `${BASE}/versions`, label: t`Versions`, icon: <BranchesOutlined /> },
-    {
-      to: `${BASE}/comments`,
-      label: t`Commentaires`,
-      icon: <CommentOutlined />,
-    },
-  ];
+  const versionsQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions",
+    { params: { path: { account_id: accountId, database_id: databaseId } } }
+  );
+  const versions = [...(versionsQuery.data?.items ?? [])].sort((a, b) =>
+    compareVersionsDesc(a.version, b.version)
+  );
+
+  const overview: NavItem = {
+    to: BASE,
+    label: t`Informations`,
+    icon: <InfoCircleOutlined />,
+    exact: true,
+  };
+  // `exact`: the section itself, not the versions listed under it — each of
+  // those lights up on its own.
+  const versionsItem: NavItem = {
+    to: `${BASE}/versions`,
+    label: t`Versions`,
+    icon: <BranchesOutlined />,
+    exact: true,
+  };
+  const comments: NavItem = {
+    to: `${BASE}/comments`,
+    label: t`Commentaires`,
+    icon: <CommentOutlined />,
+  };
 
   return (
     <nav
@@ -92,7 +168,7 @@ export function DatabaseSideNav({
         padding: 8,
       }}
     >
-      {items.map((item) => (
+      {[overview, versionsItem].map((item) => (
         <NavLink
           accountId={accountId}
           databaseId={databaseId}
@@ -101,6 +177,27 @@ export function DatabaseSideNav({
           pathname={pathname}
         />
       ))}
+
+      {versions.length > 0 ? (
+        <Flex gap={2} vertical>
+          {versions.map((version) => (
+            <VersionLink
+              accountId={accountId}
+              databaseId={databaseId}
+              key={version.id}
+              pathname={pathname}
+              version={version}
+            />
+          ))}
+        </Flex>
+      ) : null}
+
+      <NavLink
+        accountId={accountId}
+        databaseId={databaseId}
+        item={comments}
+        pathname={pathname}
+      />
     </nav>
   );
 }
