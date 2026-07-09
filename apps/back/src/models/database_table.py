@@ -4,8 +4,8 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ARRAY, JSON, Uuid
-from sqlmodel import Field, Relationship
+from sqlalchemy import ARRAY, JSON, Column, Uuid
+from sqlmodel import AutoString, Field, Relationship
 
 from src.models._base import BaseModel
 from src.models.enum import DatabaseTableStatus, DatabaseTableType
@@ -26,7 +26,9 @@ class DatabaseTable(BaseModel, table=True):
     date: datetime
     status: DatabaseTableStatus = Field(index=True)
     status_date: datetime
-    schema: str
+    # Python attribute renamed off `schema` (which shadows a Pydantic method);
+    # the DB column and the API field stay `schema`.
+    table_schema: str = Field(sa_column=Column("schema", AutoString(), nullable=False))
     name: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)

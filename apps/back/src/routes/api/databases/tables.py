@@ -81,7 +81,7 @@ def create_table(
         version,
         user,
         type=form.type,
-        schema=form.schema,
+        schema=form.table_schema,
         name=form.name,
         description=form.description,
         column_forms=form.columns,

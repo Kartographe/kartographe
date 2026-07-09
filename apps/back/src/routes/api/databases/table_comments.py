@@ -20,7 +20,7 @@ from src.utils.dependencies import (
 
 router = APIRouter(
     prefix="/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments",
-    tags=["api.comments"],
+    tags=["api.databases.versions.tables.comments"],
 )
 
 _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Table not found"}}
@@ -28,7 +28,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Table not found"}}
 
 @router.get(
     "",
-    operation_id="api.comments.databaseTable.list",
+    operation_id="api.databases.versions.tables.comments.list",
     summary="List table comments",
     description="List the root comments on a database table, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -46,7 +46,7 @@ def list_table_comments(
 
 @router.post(
     "",
-    operation_id="api.comments.databaseTable.create",
+    operation_id="api.databases.versions.tables.comments.create",
     summary="Comment on a table",
     description="Post a comment on a database table. Any member may post.",
     response_model=ItemResponse[CommentItem],

@@ -19,7 +19,7 @@ from src.utils.dependencies import (
 )
 
 router = APIRouter(
-    prefix="/accounts/{account_id}/journeys/{journey_id}/comments", tags=["api.comments"]
+    prefix="/accounts/{account_id}/journeys/{journey_id}/comments", tags=["api.journeys.comments"]
 )
 
 _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Journey not found"}}
@@ -27,7 +27,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Journey not found"}}
 
 @router.get(
     "",
-    operation_id="api.comments.journey.list",
+    operation_id="api.journeys.comments.list",
     summary="List journey comments",
     description="List the root comments on a journey, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -45,7 +45,7 @@ def list_journey_comments(
 
 @router.post(
     "",
-    operation_id="api.comments.journey.create",
+    operation_id="api.journeys.comments.create",
     summary="Comment on a journey",
     description="Post a comment on a journey. Any member may post.",
     response_model=ItemResponse[CommentItem],

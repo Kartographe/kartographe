@@ -3,6 +3,8 @@
 import uuid
 from datetime import datetime
 
+from pydantic import Field
+
 from src.models.enum import DatabaseStatus, DatabaseTableStatus, DatabaseTableType, DatabaseType, DatabaseVersionStatus
 from src.serializes._base import CamelBase
 
@@ -63,8 +65,8 @@ class DatabaseTableItem(CamelBase):
     id: uuid.UUID
     name: str
     owner_id: uuid.UUID
-    schema: str
     status: DatabaseTableStatus
     status_date: datetime
+    table_schema: str = Field(serialization_alias="schema")
     tag_ids: list[uuid.UUID]
     type: DatabaseTableType

@@ -20,7 +20,7 @@ from src.utils.dependencies import (
 
 router = APIRouter(
     prefix="/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/comments",
-    tags=["api.comments"],
+    tags=["api.databases.versions.tables.columns.comments"],
 )
 
 _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Column not found"}}
@@ -28,7 +28,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Column not found"}}
 
 @router.get(
     "",
-    operation_id="api.comments.databaseTableColumn.list",
+    operation_id="api.databases.versions.tables.columns.comments.list",
     summary="List column comments",
     description="List the root comments on a database column, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -46,7 +46,7 @@ def list_column_comments(
 
 @router.post(
     "",
-    operation_id="api.comments.databaseTableColumn.create",
+    operation_id="api.databases.versions.tables.columns.comments.create",
     summary="Comment on a column",
     description="Post a comment on a database column. Any member may post.",
     response_model=ItemResponse[CommentItem],

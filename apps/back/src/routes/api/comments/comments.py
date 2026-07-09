@@ -68,7 +68,7 @@ def update_comment(
 
 
 @router.post(
-    "/{comment_id}/removed",
+    "/{comment_id}/remove",
     operation_id="api.comments.remove",
     summary="Remove a comment",
     description=(

@@ -83,7 +83,7 @@ class DatabaseTableCreateForm(CamelBase):
     """Create a table, optionally with its columns in one call."""
 
     type: DatabaseTableType
-    schema: str = Field(min_length=1, max_length=255)
+    table_schema: str = Field(alias="schema", min_length=1, max_length=255)
     name: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     columns: list[DatabaseTableColumnCreateForm] = Field(default_factory=list)
@@ -95,7 +95,7 @@ class DatabaseTablePatchForm(CamelBase):
     table's current columns."""
 
     type: DatabaseTableType | None = Field(default=None)
-    schema: str | None = Field(default=None, min_length=1, max_length=255)
+    table_schema: str | None = Field(default=None, alias="schema", min_length=1, max_length=255)
     name: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     columns: list[DatabaseTableColumnCreateForm] | None = Field(default=None)

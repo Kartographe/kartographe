@@ -169,7 +169,42 @@ API_TAGS: list[dict[str, str]] = [
     {
         "name": "api.comments",
         "x-displayName": "Comments",
-        "description": "Threaded comments on account entities (per-entity and account-wide).",
+        "description": "Account-wide comment management: read, edit, remove, delete and reply.",
+    },
+    {
+        "name": "api.applications.comments",
+        "x-displayName": "Applications › Comments",
+        "description": "Comments posted on an application.",
+    },
+    {
+        "name": "api.features.comments",
+        "x-displayName": "Features › Comments",
+        "description": "Comments posted on a feature.",
+    },
+    {
+        "name": "api.journeys.comments",
+        "x-displayName": "Journeys › Comments",
+        "description": "Comments posted on a journey.",
+    },
+    {
+        "name": "api.personas.comments",
+        "x-displayName": "Personas › Comments",
+        "description": "Comments posted on a persona.",
+    },
+    {
+        "name": "api.databases.comments",
+        "x-displayName": "Databases › Comments",
+        "description": "Comments posted on a database.",
+    },
+    {
+        "name": "api.databases.versions.tables.comments",
+        "x-displayName": "Databases › Table comments",
+        "description": "Comments posted on a database table.",
+    },
+    {
+        "name": "api.databases.versions.tables.columns.comments",
+        "x-displayName": "Databases › Column comments",
+        "description": "Comments posted on a database column.",
     },
     {
         "name": "api.core.actionTypes",

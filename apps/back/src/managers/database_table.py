@@ -88,7 +88,7 @@ class DatabaseTableManager(BaseEntityManager):
             date=now,
             status=DatabaseTableStatus.DRAFT,
             status_date=now,
-            schema=schema,
+            table_schema=schema,
             name=name,
             description=description,
             tag_ids=tag_ids,
