@@ -45,7 +45,10 @@ _DATA = require_role(
     "",
     operation_id="api.databases.versions.tables.list",
     summary="List tables",
-    description="List the tables of a database version, most recent first. Any member may read.",
+    description=(
+        "List the tables of a database version, most recent first, each with its columns. "
+        "Any member may read."
+    ),
     response_model=ListingResponse[DatabaseTableItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -54,7 +57,7 @@ def list_tables(
     version: CurrentDatabaseVersionDep,
     manager: DatabaseTableManagerDep,
 ) -> ListingResponse[DatabaseTableItem]:
-    items = [manager.to_item(row) for row in manager.list_for_version(version)]
+    items = manager.to_items(manager.list_for_version(version))
     return ListingResponse.single_page(items)
 
 

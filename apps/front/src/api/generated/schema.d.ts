@@ -2253,7 +2253,7 @@ export interface paths {
         };
         /**
          * List tables
-         * @description List the tables of a database version, most recent first. Any member may read.
+         * @description List the tables of a database version, most recent first, each with its columns. Any member may read.
          */
         get: operations["api.databases.versions.tables.list"];
         put?: never;
@@ -5320,8 +5320,8 @@ export interface components {
          * DatabaseTableItem
          * @description A table within a database version.
          *
-         *     `columns` is resolved by the manager on the single-table read and on
-         *     create; the listing omits it.
+         *     `columns` is resolved by the manager on every table read (listing included)
+         *     and on create/update.
          */
         DatabaseTableItem: {
             /** Columns */

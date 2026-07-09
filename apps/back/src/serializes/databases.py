@@ -55,8 +55,8 @@ class DatabaseTableColumnItem(CamelBase):
 class DatabaseTableItem(CamelBase):
     """A table within a database version.
 
-    `columns` is resolved by the manager on the single-table read and on
-    create; the listing omits it.
+    `columns` is resolved by the manager on every table read (listing included)
+    and on create/update.
     """
 
     columns: list[DatabaseTableColumnItem] | None = None

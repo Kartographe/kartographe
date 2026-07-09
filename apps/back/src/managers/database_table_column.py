@@ -6,9 +6,10 @@ specific column of that table.
 """
 
 import uuid
+from collections import defaultdict
 
 from fastapi import HTTPException, status
-from sqlmodel import select
+from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
 from src.models.database_column_type import DatabaseColumnType
@@ -31,6 +32,28 @@ class DatabaseTableColumnManager(BaseEntityManager):
                 .order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
             ).all()
         )
+
+    def group_by_table(
+        self, table_ids: list[uuid.UUID]
+    ) -> dict[uuid.UUID, list[DatabaseTableColumn]]:
+        """Enabled columns of several tables at once, keyed by table id.
+
+        Same ordering as `list_for_table`; one query instead of one per table.
+        """
+        grouped: dict[uuid.UUID, list[DatabaseTableColumn]] = defaultdict(list)
+        if not table_ids:
+            return grouped
+        rows = self.session.exec(
+            select(DatabaseTableColumn)
+            .where(
+                col(DatabaseTableColumn.database_table_id).in_(table_ids),
+                DatabaseTableColumn.enabled.is_(True),
+            )
+            .order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
+        ).all()
+        for column in rows:
+            grouped[column.database_table_id].append(column)
+        return grouped
 
     def _validate_refs(
         self,

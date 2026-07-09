@@ -34,6 +34,18 @@ class DatabaseTableManager(BaseEntityManager):
             ]
         return item
 
+    def to_items(self, tables: list[DatabaseTable]) -> list[DatabaseTableItem]:
+        """Serialize a listing with each table's columns, in a single column query."""
+        grouped = self._columns.group_by_table([table.id for table in tables])
+        items = []
+        for table in tables:
+            item = DatabaseTableItem.model_validate(table)
+            item.columns = [
+                DatabaseTableColumnItem.model_validate(column) for column in grouped[table.id]
+            ]
+            items.append(item)
+        return items
+
     def list_for_version(self, version: DatabaseVersion) -> list[DatabaseTable]:
         """Every enabled table of the version, most recent first."""
         return list(
