@@ -344,6 +344,34 @@ class DatabaseVersionStatus(str, Enum):
     ARCHIVED = "archived"
 
 
+class DatabaseMigrationType(str, Enum):
+    """Scale of a migration between two database versions."""
+
+    MINOR = "minor"
+    MAJOR = "major"
+
+
+class DatabaseMigrationStatus(str, Enum):
+    DRAFT = "draft"
+    VALIDATED = "validated"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+
+
+class DatabaseMigrationColumnType(str, Enum):
+    """What happens to the column across the migration."""
+
+    MIGRATION = "migration"
+    DELETION = "deletion"
+    CREATION = "creation"
+
+
+class DatabaseMigrationColumnStatus(str, Enum):
+    DRAFT = "draft"
+    TO_BE_CONFIRMED = "to_be_confirmed"
+    CONFIRMED = "confirmed"
+
+
 class DatabaseTableType(str, Enum):
     PHYSICAL = "physical"
     LOGICAL = "logical"
@@ -433,6 +461,8 @@ class CommentEntityType(str, Enum):
     DATABASE = "database"
     DATABASE_TABLE = "database_table"
     DATABASE_TABLE_COLUMN = "database_table_column"
+    DATABASE_MIGRATION = "database_migration"
+    DATABASE_MIGRATION_COLUMN = "database_migration_column"
     SERVICE = "service"
     SERVICE_ACTION = "service_action"
 

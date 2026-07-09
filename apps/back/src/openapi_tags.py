@@ -232,6 +232,16 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Comments posted on a database column.",
     },
     {
+        "name": "api.databases.migrations.comments",
+        "x-displayName": "Databases › Migration comments",
+        "description": "Comments posted on a database migration.",
+    },
+    {
+        "name": "api.databases.migrations.columns.comments",
+        "x-displayName": "Databases › Migration column comments",
+        "description": "Comments posted on a migration column step.",
+    },
+    {
         "name": "api.core.actionTypes",
         "x-displayName": "Core › Action types",
         "description": "Global catalogue of the actions a scenario step can perform.",
@@ -265,6 +275,16 @@ API_TAGS: list[dict[str, str]] = [
         "name": "api.databases.versions.tables.columns",
         "x-displayName": "Databases › Columns",
         "description": "Columns of a database table.",
+    },
+    {
+        "name": "api.databases.migrations",
+        "x-displayName": "Databases › Migrations",
+        "description": "Planned moves from a version of a database to a version of another.",
+    },
+    {
+        "name": "api.databases.migrations.columns",
+        "x-displayName": "Databases › Migration columns",
+        "description": "Column-level steps of a database migration.",
     },
     {
         "name": "api.mcp.metadata",

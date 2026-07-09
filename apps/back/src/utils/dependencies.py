@@ -33,6 +33,8 @@ from src.managers.auth import AuthManager
 from src.managers.comment import CommentManager
 from src.managers.core import CoreManager
 from src.managers.database import DatabaseManager
+from src.managers.database_migration import DatabaseMigrationManager
+from src.managers.database_migration_column import DatabaseMigrationColumnManager
 from src.managers.database_table import DatabaseTableManager
 from src.managers.database_table_column import DatabaseTableColumnManager
 from src.managers.database_version import DatabaseVersionManager
@@ -74,6 +76,8 @@ from src.models.assertion_type import AssertionType
 from src.models.comment import Comment
 from src.models.database import Database
 from src.models.database_column_type import DatabaseColumnType
+from src.models.database_migration import DatabaseMigration
+from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_version import DatabaseVersion
@@ -764,6 +768,53 @@ def get_current_database_table_column(
 
 CurrentDatabaseTableColumnDep = Annotated[
     DatabaseTableColumn, Depends(get_current_database_table_column)
+]
+
+
+def get_database_migration_manager(session: SessionDep) -> DatabaseMigrationManager:
+    return DatabaseMigrationManager(session)
+
+
+DatabaseMigrationManagerDep = Annotated[
+    DatabaseMigrationManager, Depends(get_database_migration_manager)
+]
+
+
+def get_database_migration_column_manager(session: SessionDep) -> DatabaseMigrationColumnManager:
+    return DatabaseMigrationColumnManager(session)
+
+
+DatabaseMigrationColumnManagerDep = Annotated[
+    DatabaseMigrationColumnManager, Depends(get_database_migration_column_manager)
+]
+
+
+def get_current_database_migration(
+    database_migration_id: uuid.UUID, database: CurrentDatabaseDep, session: SessionDep
+) -> DatabaseMigration:
+    """A migration is reachable through the database it leaves from."""
+    migration = session.get(DatabaseMigration, database_migration_id)
+    if migration is None or not migration.enabled or migration.source_database_id != database.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Migration not found.")
+    return migration
+
+
+CurrentDatabaseMigrationDep = Annotated[DatabaseMigration, Depends(get_current_database_migration)]
+
+
+def get_current_database_migration_column(
+    database_migration_column_id: uuid.UUID,
+    migration: CurrentDatabaseMigrationDep,
+    session: SessionDep,
+) -> DatabaseMigrationColumn:
+    column = session.get(DatabaseMigrationColumn, database_migration_column_id)
+    if column is None or not column.enabled or column.database_migration_id != migration.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Migration column not found.")
+    return column
+
+
+CurrentDatabaseMigrationColumnDep = Annotated[
+    DatabaseMigrationColumn, Depends(get_current_database_migration_column)
 ]
 
 

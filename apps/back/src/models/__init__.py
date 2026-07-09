@@ -25,6 +25,8 @@ from src.models.assertion_type import AssertionType
 from src.models.comment import Comment
 from src.models.database import Database
 from src.models.database_column_type import DatabaseColumnType
+from src.models.database_migration import DatabaseMigration
+from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_version import DatabaseVersion
@@ -70,6 +72,8 @@ __all__ = [
     "Comment",
     "Database",
     "DatabaseColumnType",
+    "DatabaseMigration",
+    "DatabaseMigrationColumn",
     "DatabaseTable",
     "DatabaseTableColumn",
     "DatabaseVersion",

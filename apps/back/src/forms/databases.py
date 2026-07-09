@@ -1,11 +1,16 @@
-"""Input schemas for databases, versions, tables and columns."""
+"""Input schemas for databases, versions, tables, columns and migrations."""
 
 import uuid
 
 from pydantic import Field
 
 from src.forms._base import CamelBase
-from src.models.enum import DatabaseTableType, DatabaseType
+from src.models.enum import (
+    DatabaseMigrationColumnType,
+    DatabaseMigrationType,
+    DatabaseTableType,
+    DatabaseType,
+)
 
 # A `#rgb` or `#rrggbb` color. `None` clears the color; the field is optional.
 HEX_COLOR_PATTERN = r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
@@ -109,3 +114,70 @@ class DatabaseTablePatchForm(CamelBase):
     color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     columns: list[DatabaseTableColumnCreateForm] | None = Field(default=None)
     tag_ids: list[uuid.UUID] | None = Field(default=None)
+
+
+# --- DatabaseMigration ---------------------------------------------------
+
+
+class DatabaseMigrationCreateForm(CamelBase):
+    """Create a migration leaving the database in the path. It starts as a draft."""
+
+    type: DatabaseMigrationType
+    title: str = Field(min_length=1, max_length=255)
+    description: dict | None = Field(default=None)
+    source_database_version_id: uuid.UUID = Field(
+        description="Version of the database in the path the migration leaves from."
+    )
+    destination_database_id: uuid.UUID = Field(
+        description="Database the migration lands on. May be the database in the path."
+    )
+    destination_database_version_id: uuid.UUID = Field(
+        description="Version of the destination database the migration lands on."
+    )
+
+
+class DatabaseMigrationPatchForm(CamelBase):
+    """Partial update of a migration — only the keys sent are applied."""
+
+    type: DatabaseMigrationType | None = Field(default=None)
+    title: str | None = Field(default=None, min_length=1, max_length=255)
+    description: dict | None = Field(default=None)
+    source_database_version_id: uuid.UUID | None = Field(default=None)
+    destination_database_id: uuid.UUID | None = Field(default=None)
+    destination_database_version_id: uuid.UUID | None = Field(default=None)
+
+
+# --- DatabaseMigrationColumn ---------------------------------------------
+
+
+class DatabaseMigrationColumnCreateForm(CamelBase):
+    """Create a column step on a migration. It starts as a draft.
+
+    A creation step only needs its destination endpoints, a deletion step only
+    its source ones, and a migration step both. A column endpoint always requires
+    the table endpoint on the same side.
+    """
+
+    type: DatabaseMigrationColumnType
+    source_database_table_id: uuid.UUID | None = Field(default=None)
+    source_database_table_column_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_column_id: uuid.UUID | None = Field(default=None)
+    transformation_method: str | None = Field(
+        default=None,
+        max_length=1024,
+        description="How the value is reshaped on its way across.",
+    )
+    description: dict | None = Field(default=None)
+
+
+class DatabaseMigrationColumnPatchForm(CamelBase):
+    """Partial update of a column step — only the keys sent are applied."""
+
+    type: DatabaseMigrationColumnType | None = Field(default=None)
+    source_database_table_id: uuid.UUID | None = Field(default=None)
+    source_database_table_column_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_column_id: uuid.UUID | None = Field(default=None)
+    transformation_method: str | None = Field(default=None, max_length=1024)
+    description: dict | None = Field(default=None)

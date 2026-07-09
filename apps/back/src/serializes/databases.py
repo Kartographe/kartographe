@@ -1,11 +1,21 @@
-"""Output schemas for databases, versions, tables and columns."""
+"""Output schemas for databases, versions, tables, columns and migrations."""
 
 import uuid
 from datetime import datetime
 
 from pydantic import Field
 
-from src.models.enum import DatabaseStatus, DatabaseTableStatus, DatabaseTableType, DatabaseType, DatabaseVersionStatus
+from src.models.enum import (
+    DatabaseMigrationColumnStatus,
+    DatabaseMigrationColumnType,
+    DatabaseMigrationStatus,
+    DatabaseMigrationType,
+    DatabaseStatus,
+    DatabaseTableStatus,
+    DatabaseTableType,
+    DatabaseType,
+    DatabaseVersionStatus,
+)
 from src.serializes._base import CamelBase
 
 
@@ -73,3 +83,40 @@ class DatabaseTableItem(CamelBase):
     table_schema: str = Field(serialization_alias="schema")
     tag_ids: list[uuid.UUID]
     type: DatabaseTableType
+
+
+class DatabaseMigrationItem(CamelBase):
+    """A planned move from a version of one database to a version of another."""
+
+    date: datetime
+    description: dict | None = None
+    destination_database_id: uuid.UUID
+    destination_database_version_id: uuid.UUID
+    id: uuid.UUID
+    source_database_id: uuid.UUID
+    source_database_version_id: uuid.UUID
+    status: DatabaseMigrationStatus
+    status_date: datetime
+    title: str
+    type: DatabaseMigrationType
+
+
+class DatabaseMigrationColumnItem(CamelBase):
+    """One column-level step of a migration.
+
+    A creation only carries destination endpoints, a deletion only source ones,
+    and a migration carries both.
+    """
+
+    date: datetime
+    description: dict | None = None
+    destination_database_table_column_id: uuid.UUID | None = None
+    destination_database_table_id: uuid.UUID | None = None
+    id: uuid.UUID
+    owner_id: uuid.UUID
+    source_database_table_column_id: uuid.UUID | None = None
+    source_database_table_id: uuid.UUID | None = None
+    status: DatabaseMigrationColumnStatus
+    status_date: datetime
+    transformation_method: str | None = None
+    type: DatabaseMigrationColumnType
