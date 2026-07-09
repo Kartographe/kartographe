@@ -5,8 +5,8 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import type { AccountUserLookup } from "@/features/accounts/use-account-user-map";
-import { CommentAvatar } from "@/features/applications/comments/comment-avatar";
-import { CommentDate } from "@/features/applications/comments/comment-date";
+import { CommentAvatar } from "@/features/comments/comment-avatar";
+import { CommentDate } from "@/features/comments/comment-date";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import {
   asRichText,

@@ -23,12 +23,13 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { RoutePath } from "@/components/route-path";
 import {
-  ApplicationStatusTag,
-  RouteMethodTag,
-} from "@/features/applications/application-tags";
-import { ROUTE_METHOD_COLORS } from "@/features/applications/labels";
+  HTTP_METHOD_COLORS,
+  MethodTag,
+  tintMethod,
+} from "@/components/method-tag";
+import { RoutePath } from "@/components/route-path";
+import { ApplicationStatusTag } from "@/features/applications/application-tags";
 import { RouteCommentsDrawer } from "@/features/applications/routes/route-comments-drawer";
 import { RouteFormModal } from "@/features/applications/routes/route-form-modal";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
@@ -39,11 +40,6 @@ const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/applications/{application_id}/routes",
 ];
-
-/** Swagger tints its opblocks with the method colour at 10% opacity. */
-function tint(hex: string): string {
-  return `${hex}1a`;
-}
 
 export function RoutesScreen({
   accountId,
@@ -135,12 +131,12 @@ export function RoutesScreen({
   }
 
   const items = routes.map((route) => {
-    const color = ROUTE_METHOD_COLORS[route.method];
+    const color = HTTP_METHOD_COLORS[route.method];
     const archived = route.status === "archived";
     return {
       key: route.id,
       style: {
-        background: tint(color),
+        background: tintMethod(color),
         border: `1px solid ${color}`,
         borderRadius: 4,
         marginBottom: 8,
@@ -148,7 +144,7 @@ export function RoutesScreen({
       },
       label: (
         <Flex align="center" gap={12} style={{ minWidth: 0 }}>
-          <RouteMethodTag method={route.method} />
+          <MethodTag method={route.method} />
           <RoutePath path={route.path} />
           <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
             {route.title ?? ""}

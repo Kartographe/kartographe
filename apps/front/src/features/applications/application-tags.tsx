@@ -1,4 +1,3 @@
-import { Tag } from "antd";
 import type { components } from "@/api/generated/schema";
 import { EnumTag } from "@/components/enum-tag";
 import {
@@ -17,7 +16,6 @@ import {
   GUARD_TYPE_COLORS,
   GUARD_TYPE_DESCRIPTIONS,
   GUARD_TYPE_LABELS,
-  ROUTE_METHOD_COLORS,
   VERSION_TYPE_COLORS,
   VERSION_TYPE_DESCRIPTIONS,
   VERSION_TYPE_LABELS,
@@ -104,34 +102,5 @@ export function GuardTypeTag({ type }: { type: S["ApplicationGuardType"] }) {
       labels={GUARD_TYPE_LABELS}
       value={type}
     />
-  );
-}
-
-/**
- * Swagger-style solid method badge. The colour is applied by hand rather than
- * through `Tag`'s `color` prop: antd 6 tints the *text* with a custom colour,
- * which leaves the label unreadable on the badge.
- */
-export function RouteMethodTag({
-  method,
-}: {
-  method: S["ApplicationRouteMethod"];
-}) {
-  return (
-    <Tag
-      style={{
-        backgroundColor: ROUTE_METHOD_COLORS[method],
-        border: "none",
-        color: "#fff",
-        fontFamily: "monospace",
-        fontWeight: 700,
-        marginInlineEnd: 0,
-        minWidth: 72,
-        textAlign: "center",
-        textShadow: "0 1px 0 rgba(0, 0, 0, 0.25)",
-      }}
-    >
-      {method}
-    </Tag>
   );
 }

@@ -196,17 +196,3 @@ export const GUARD_FIELD_FORMAT_LABELS: Record<
 > = {
   JWT: msg`JWT`,
 };
-
-/**
- * Swagger UI's opblock palette — hex values are data here (they drive the
- * method badges and the operation block tints), not theme tokens.
- */
-export const ROUTE_METHOD_COLORS: Record<S["ApplicationRouteMethod"], string> =
-  {
-    GET: "#61affe",
-    POST: "#49cc90",
-    PATCH: "#50e3c2",
-    PUT: "#fca130",
-    DELETE: "#f93e3e",
-    QUERY: "#9012fe",
-  };

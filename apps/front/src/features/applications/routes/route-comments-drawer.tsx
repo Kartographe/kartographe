@@ -3,9 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Drawer, Flex } from "antd";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { MethodTag } from "@/components/method-tag";
 import { RoutePath } from "@/components/route-path";
-import { RouteMethodTag } from "@/features/applications/application-tags";
-import { CommentsFeed } from "@/features/applications/comments/comments-feed";
+import { CommentsFeed } from "@/features/comments/comments-feed";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 type ApplicationRoute = components["schemas"]["ApplicationRouteItem"];
@@ -72,7 +72,7 @@ export function RouteCommentsDrawer({
       title={
         route ? (
           <Flex align="center" gap={12} style={{ minWidth: 0 }}>
-            <RouteMethodTag method={route.method} />
+            <MethodTag method={route.method} />
             <RoutePath path={route.path} size={13} />
           </Flex>
         ) : (

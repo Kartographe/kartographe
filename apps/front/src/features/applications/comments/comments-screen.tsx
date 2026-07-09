@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Flex, Typography } from "antd";
 import { $api } from "@/api/$api";
-import { CommentsFeed } from "@/features/applications/comments/comments-feed";
+import { CommentsFeed } from "@/features/comments/comments-feed";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 const LIST_KEY = [
