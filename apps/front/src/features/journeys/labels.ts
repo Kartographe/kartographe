@@ -52,3 +52,114 @@ export const JOURNEY_TYPE_COLORS: Record<S["JourneyType"], string> = {
   internal: "purple",
   other: "default",
 };
+
+export const SCENARIO_STATUS_LABELS: Record<
+  S["JourneyScenarioStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Brouillon`,
+  active: msg`Actif`,
+  archived: msg`Archivé`,
+};
+
+export const SCENARIO_STATUS_DESCRIPTIONS: Record<
+  S["JourneyScenarioStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`En cours de rédaction, non encore joué.`,
+  active: msg`Scénario de référence, rejoué à chaque recette.`,
+  archived: msg`Conservé pour l'historique, plus rejoué.`,
+};
+
+export const SCENARIO_STATUS_COLORS: Record<
+  S["JourneyScenarioStatus"],
+  string
+> = {
+  draft: "default",
+  active: "success",
+  archived: "warning",
+};
+
+export const SCENARIO_TYPE_LABELS: Record<
+  S["JourneyScenarioType"],
+  MessageDescriptor
+> = {
+  nominal: msg`Nominal`,
+  alternative: msg`Alternatif`,
+  error: msg`Erreur`,
+  edge_case: msg`Cas limite`,
+};
+
+export const SCENARIO_TYPE_DESCRIPTIONS: Record<
+  S["JourneyScenarioType"],
+  MessageDescriptor
+> = {
+  nominal: msg`Le chemin attendu, quand tout se passe bien.`,
+  alternative: msg`Une autre façon d'arriver au même résultat.`,
+  error: msg`Ce qui doit se produire quand l'utilisateur ou le système échoue.`,
+  edge_case: msg`Un cas rare, aux bornes de ce que le produit accepte.`,
+};
+
+export const SCENARIO_TYPE_COLORS: Record<S["JourneyScenarioType"], string> = {
+  nominal: "green",
+  alternative: "blue",
+  error: "red",
+  edge_case: "purple",
+};
+
+export const SCENARIO_CRITICITY_LABELS: Record<
+  S["JourneyScenarioCriticity"],
+  MessageDescriptor
+> = {
+  low: msg`Faible`,
+  medium: msg`Moyenne`,
+  high: msg`Élevée`,
+  critical: msg`Critique`,
+};
+
+export const SCENARIO_CRITICITY_DESCRIPTIONS: Record<
+  S["JourneyScenarioCriticity"],
+  MessageDescriptor
+> = {
+  low: msg`Une régression ici gênerait peu l'utilisateur.`,
+  medium: msg`Une régression ici dégraderait l'expérience.`,
+  high: msg`Une régression ici empêcherait un usage important.`,
+  critical: msg`Une régression ici rendrait le produit inutilisable.`,
+};
+
+export const SCENARIO_CRITICITY_COLORS: Record<
+  S["JourneyScenarioCriticity"],
+  string
+> = {
+  low: "default",
+  medium: "blue",
+  high: "orange",
+  critical: "red",
+};
+
+export const ASSERTION_STATUS_LABELS: Record<
+  S["JourneyScenarioStepAssertionStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Brouillon`,
+  active: msg`Active`,
+  archived: msg`Archivée`,
+};
+
+export const ASSERTION_STATUS_DESCRIPTIONS: Record<
+  S["JourneyScenarioStepAssertionStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`En cours d'écriture, non encore vérifiée.`,
+  active: msg`Vérifiée à chaque exécution du scénario.`,
+  archived: msg`Conservée pour l'historique, plus vérifiée.`,
+};
+
+export const ASSERTION_STATUS_COLORS: Record<
+  S["JourneyScenarioStepAssertionStatus"],
+  string
+> = {
+  draft: "default",
+  active: "success",
+  archived: "warning",
+};
