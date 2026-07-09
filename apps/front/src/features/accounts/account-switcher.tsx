@@ -12,6 +12,7 @@ import { $api } from "@/api/$api";
 import { AccountAvatar } from "@/features/accounts/account-avatar";
 import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 import { CreateAccountModal } from "@/features/accounts/create-account-modal";
+import { ROLE_LABELS } from "@/features/accounts/labels";
 import { SearchModal } from "@/features/accounts/search-modal";
 
 export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
@@ -53,14 +54,30 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
     ...(accounts.length > 0
       ? accounts.map((account) => ({
           key: account.id,
-          icon: (
-            <AccountAvatar
-              name={account.name}
-              pictureProfile={account.pictureProfile}
-              size={20}
-            />
+          label: (
+            <Flex align="center" gap={12} style={{ minWidth: 0 }}>
+              <AccountAvatar
+                name={account.name}
+                pictureProfile={account.pictureProfile}
+                size={24}
+              />
+              <Flex style={{ minWidth: 0 }} vertical>
+                <Typography.Text ellipsis style={{ lineHeight: 1.3 }}>
+                  {account.name}
+                </Typography.Text>
+                {account.membership ? (
+                  <Typography.Text
+                    ellipsis
+                    style={{ fontSize: 11, lineHeight: 1.3 }}
+                    type="secondary"
+                  >
+                    {t(ROLE_LABELS[account.membership.role])}
+                  </Typography.Text>
+                ) : null}
+              </Flex>
+            </Flex>
           ),
-          label: account.name,
+          style: { height: "auto", paddingBlock: 6 },
           onClick: () => openAccount(account.id),
         }))
       : [{ key: "empty", disabled: true, label: t`Aucun compte` }]),
@@ -86,17 +103,28 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
     );
   } else {
     trigger = (
-      <Flex align="center" gap={8} style={{ minWidth: 0, width: "100%" }}>
+      <Flex align="center" gap={10} style={{ minWidth: 0, width: "100%" }}>
         {active ? (
           <AccountAvatar
             name={active.name}
             pictureProfile={active.pictureProfile}
-            size={22}
+            size={24}
           />
         ) : null}
-        <Typography.Text ellipsis style={{ flex: 1, textAlign: "left" }}>
-          {active?.name ?? t`Sélectionner un compte`}
-        </Typography.Text>
+        <Flex style={{ flex: 1, minWidth: 0, textAlign: "left" }} vertical>
+          <Typography.Text ellipsis style={{ lineHeight: 1.3 }}>
+            {active?.name ?? t`Sélectionner un compte`}
+          </Typography.Text>
+          {active?.membership ? (
+            <Typography.Text
+              ellipsis
+              style={{ fontSize: 11, lineHeight: 1.3 }}
+              type="secondary"
+            >
+              {t(ROLE_LABELS[active.membership.role])}
+            </Typography.Text>
+          ) : null}
+        </Flex>
         <CaretDownOutlined style={{ fontSize: 10 }} />
       </Flex>
     );
@@ -108,7 +136,7 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
         <Button
           block
           style={{
-            height: 40,
+            height: collapsed ? 40 : 48,
             justifyContent: collapsed ? "center" : "space-between",
             paddingInline: collapsed ? 0 : 8,
           }}

@@ -134,7 +134,7 @@ export function AccountsList() {
             sorter: true,
             sortOrder: antdOrder("name"),
             render: (name: string, account) => (
-              <Flex align="center" gap={8}>
+              <Flex align="center" gap={12}>
                 <AccountAvatar
                   name={name}
                   pictureProfile={account.pictureProfile}
