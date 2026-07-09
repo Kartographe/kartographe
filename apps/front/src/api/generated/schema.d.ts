@@ -1148,6 +1148,30 @@ export interface paths {
         patch: operations["api.applications.routes.tables.update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List application comments
+         * @description List the root comments on an application, oldest first. Any member may read.
+         */
+        get: operations["api.comments.application.list"];
+        put?: never;
+        /**
+         * Comment on an application
+         * @description Post a comment on an application. Any member may post.
+         */
+        post: operations["api.comments.application.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -1380,6 +1404,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature comments
+         * @description List the root comments on a feature, oldest first. Any member may read.
+         */
+        get: operations["api.comments.feature.list"];
+        put?: never;
+        /**
+         * Comment on a feature
+         * @description Post a comment on a feature. Any member may post.
+         */
+        post: operations["api.comments.feature.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/personas": {
         parameters: {
             query?: never;
@@ -1466,6 +1514,30 @@ export interface paths {
          * @description Set the persona status to archived. Editing roles only.
          */
         post: operations["api.personas.archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List persona comments
+         * @description List the root comments on a persona, oldest first. Any member may read.
+         */
+        get: operations["api.comments.persona.list"];
+        put?: never;
+        /**
+         * Comment on a persona
+         * @description Post a comment on a persona. Any member may post.
+         */
+        post: operations["api.comments.persona.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1940,6 +2012,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journey comments
+         * @description List the root comments on a journey, oldest first. Any member may read.
+         */
+        get: operations["api.comments.journey.list"];
+        put?: never;
+        /**
+         * Comment on a journey
+         * @description Post a comment on a journey. Any member may post.
+         */
+        post: operations["api.comments.journey.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases": {
         parameters: {
             query?: never;
@@ -2266,6 +2362,222 @@ export interface paths {
          * @description Partially update a column (type, foreign key, nullable, unique, default, name, description). Data roles only.
          */
         patch: operations["api.databases.versions.tables.columns.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database comments
+         * @description List the root comments on a database, oldest first. Any member may read.
+         */
+        get: operations["api.comments.database.list"];
+        put?: never;
+        /**
+         * Comment on a database
+         * @description Post a comment on a database. Any member may post.
+         */
+        post: operations["api.comments.database.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List table comments
+         * @description List the root comments on a database table, oldest first. Any member may read.
+         */
+        get: operations["api.comments.databaseTable.list"];
+        put?: never;
+        /**
+         * Comment on a table
+         * @description Post a comment on a database table. Any member may post.
+         */
+        post: operations["api.comments.databaseTable.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List column comments
+         * @description List the root comments on a database column, oldest first. Any member may read.
+         */
+        get: operations["api.comments.databaseTableColumn.list"];
+        put?: never;
+        /**
+         * Comment on a column
+         * @description Post a comment on a database column. Any member may post.
+         */
+        post: operations["api.comments.databaseTableColumn.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List tags
+         * @description List the tags of the account, optionally filtered by entity type. Any member may read.
+         */
+        get: operations["api.tags.list"];
+        put?: never;
+        /**
+         * Create a tag
+         * @description Create a tag for a given entity type. Owners and administrators only.
+         */
+        post: operations["api.tags.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/tags/{tag_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a tag
+         * @description Return a single tag of the account. Any member may read.
+         */
+        get: operations["api.tags.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a tag
+         * @description Soft-delete a tag and detach it from every entity that carried it. Owners and administrators only.
+         */
+        delete: operations["api.tags.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a tag
+         * @description Partially update a tag (label, colors). Owners and administrators only.
+         */
+        patch: operations["api.tags.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List comments
+         * @description List every comment of the account, most recent first. Any member may read.
+         */
+        get: operations["api.comments.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/comments/{comment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a comment
+         * @description Return a single comment of the account. Any member may read.
+         */
+        get: operations["api.comments.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a comment
+         * @description Soft-delete a comment and its direct replies. The author or an owner/administrator only.
+         */
+        delete: operations["api.comments.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Edit a comment
+         * @description Edit a comment's content. The author or an owner/administrator only.
+         */
+        patch: operations["api.comments.update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/comments/{comment_id}/removed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove a comment
+         * @description Mark a comment as removed and drop its content, keeping the thread. The author or an owner/administrator only.
+         */
+        post: operations["api.comments.remove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/comments/{comment_id}/replies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List replies
+         * @description List the direct replies to a comment, oldest first. Any member may read.
+         */
+        get: operations["api.comments.replies.list"];
+        put?: never;
+        /**
+         * Reply to a comment
+         * @description Post a reply to a comment. Any member may reply.
+         */
+        post: operations["api.comments.replies.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/core/actionTypes": {
@@ -3506,6 +3818,8 @@ export interface components {
             /** Description */
             description?: string | null;
             type: components["schemas"]["ApplicationType"];
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * ApplicationEnvironmentCreateForm
@@ -3728,6 +4042,8 @@ export interface components {
             /** Fieldkey */
             fieldKey: string;
             fieldFormat?: components["schemas"]["ApplicationGuardFieldFormat"] | null;
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * ApplicationGuardFieldFormat
@@ -3769,6 +4085,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationGuardType"];
@@ -3785,6 +4103,8 @@ export interface components {
             /** Fieldkey */
             fieldKey?: string | null;
             fieldFormat?: components["schemas"]["ApplicationGuardFieldFormat"] | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * ApplicationGuardStatus
@@ -3824,6 +4144,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationType"];
@@ -3838,6 +4160,8 @@ export interface components {
             /** Description */
             description?: string | null;
             type?: components["schemas"]["ApplicationType"] | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * ApplicationRoleCreateForm
@@ -3946,6 +4270,8 @@ export interface components {
             rawSchema?: {
                 [key: string]: unknown;
             };
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * ApplicationRouteExampleCreateForm
@@ -4105,6 +4431,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title?: string | null;
         };
@@ -4157,6 +4485,8 @@ export interface components {
             rawSchema?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * ApplicationRouteResponseCreateForm
@@ -4404,6 +4734,82 @@ export interface components {
             twoFactorEnabled: boolean;
         };
         /**
+         * CommentCreateForm
+         * @description Post a comment (or a reply). `value` is rich-text content.
+         */
+        CommentCreateForm: {
+            /**
+             * Value
+             * @description Rich-text content as a document object.
+             */
+            value: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * CommentEntityType
+         * @description The kind of entity a comment can be attached to.
+         * @enum {string}
+         */
+        CommentEntityType: "feature" | "application" | "journey" | "persona" | "database" | "database_table" | "database_table_column";
+        /**
+         * CommentItem
+         * @description A threaded comment on an account entity.
+         */
+        CommentItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["CommentEntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Parentcommentid */
+            parentCommentId?: string | null;
+            status: components["schemas"]["CommentStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Value */
+            value?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * CommentPatchForm
+         * @description Edit a comment's content.
+         */
+        CommentPatchForm: {
+            /**
+             * Value
+             * @description Rich-text content as a document object.
+             */
+            value: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * CommentStatus
+         * @enum {string}
+         */
+        CommentStatus: "published" | "removed";
+        /**
          * CreateAccountInvitationsForm
          * @description Invite one or more emails to the account with a single role.
          *
@@ -4450,6 +4856,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * DatabaseItem
@@ -4481,6 +4889,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["DatabaseType"];
@@ -4497,6 +4907,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * DatabaseSortField
@@ -4645,6 +5057,8 @@ export interface components {
             } | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnCreateForm"][];
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * DatabaseTableItem
@@ -4685,6 +5099,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             type: components["schemas"]["DatabaseTableType"];
         };
         /**
@@ -4704,6 +5120,8 @@ export interface components {
             } | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnCreateForm"][] | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * DatabaseTableStatus
@@ -4788,6 +5206,8 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             type: components["schemas"]["FeatureType"];
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * FeatureFileItem
@@ -4891,6 +5311,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["FeatureType"];
@@ -4945,6 +5367,8 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             type?: components["schemas"]["FeatureType"] | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * FeatureSortField
@@ -5098,6 +5522,10 @@ export interface components {
         ItemResponse_AssertionTypeItem_: {
             item: components["schemas"]["AssertionTypeItem"];
         };
+        /** ItemResponse[CommentItem] */
+        ItemResponse_CommentItem_: {
+            item: components["schemas"]["CommentItem"];
+        };
         /** ItemResponse[DatabaseColumnTypeItem] */
         ItemResponse_DatabaseColumnTypeItem_: {
             item: components["schemas"]["DatabaseColumnTypeItem"];
@@ -5190,6 +5618,10 @@ export interface components {
         ItemResponse_SecurityOverviewItem_: {
             item: components["schemas"]["SecurityOverviewItem"];
         };
+        /** ItemResponse[TagItem] */
+        ItemResponse_TagItem_: {
+            item: components["schemas"]["TagItem"];
+        };
         /** ItemResponse[TokenItem] */
         ItemResponse_TokenItem_: {
             item: components["schemas"]["TokenItem"];
@@ -5216,6 +5648,8 @@ export interface components {
             } | null;
             /** Personasids */
             personasIds?: string[];
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * JourneyItem
@@ -5249,6 +5683,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["JourneyType"];
@@ -5267,6 +5703,8 @@ export interface components {
             } | null;
             /** Personasids */
             personasIds?: string[] | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * JourneyScenarioCreateForm
@@ -5283,6 +5721,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * JourneyScenarioCriticity
@@ -5322,6 +5762,8 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["JourneyScenarioType"];
@@ -5341,6 +5783,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * JourneyScenarioStatus
@@ -5439,6 +5883,8 @@ export interface components {
             parameters?: {
                 [key: string]: unknown;
             };
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * JourneyScenarioStepFileItem
@@ -5532,6 +5978,8 @@ export interface components {
             };
             /** Parentjourneyscenariostepid */
             parentJourneyScenarioStepId?: string | null;
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
         };
@@ -5556,6 +6004,8 @@ export interface components {
             parameters?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * JourneyScenarioStepRouteCreateForm
@@ -5791,6 +6241,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["AssertionTypeItem"][];
         };
+        /** ListingResponse[CommentItem] */
+        ListingResponse_CommentItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["CommentItem"][];
+        };
         /** ListingResponse[DatabaseColumnTypeItem] */
         ListingResponse_DatabaseColumnTypeItem_: {
             /** Count */
@@ -5990,6 +6450,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["SecurityLogItem"][];
+        };
+        /** ListingResponse[TagItem] */
+        ListingResponse_TagItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["TagItem"][];
         };
         /**
          * LoginForm
@@ -6328,6 +6798,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[];
         };
         /**
          * PersonaItem
@@ -6349,6 +6821,8 @@ export interface components {
              */
             id: string;
             status: components["schemas"]["PersonaStatus"];
+            /** Tagids */
+            tagIds: string[];
             /** Title */
             title: string;
             type: components["schemas"]["PersonaType"];
@@ -6365,6 +6839,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
         };
         /**
          * PersonaSortField
@@ -6551,6 +7027,55 @@ export interface components {
              * @default ok
              */
             status: string;
+        };
+        /**
+         * TagCreateForm
+         * @description Create a tag for a given entity type.
+         */
+        TagCreateForm: {
+            entityType: components["schemas"]["TagEntityType"];
+            /** Label */
+            label: string;
+            /** Backgroundcolor */
+            backgroundColor: string;
+            /** Textcolor */
+            textColor: string;
+        };
+        /**
+         * TagEntityType
+         * @description The kind of entity a tag can be attached to.
+         * @enum {string}
+         */
+        TagEntityType: "application" | "application_route" | "application_guard" | "feature" | "journey" | "journey_scenario" | "journey_scenario_step" | "persona" | "database" | "database_table";
+        /**
+         * TagItem
+         * @description A colored label attachable to an account's entities.
+         */
+        TagItem: {
+            /** Backgroundcolor */
+            backgroundColor: string;
+            entityType: components["schemas"]["TagEntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Textcolor */
+            textColor: string;
+        };
+        /**
+         * TagPatchForm
+         * @description Partial update of a tag — its label and colors (not its entity type).
+         */
+        TagPatchForm: {
+            /** Label */
+            label?: string | null;
+            /** Backgroundcolor */
+            backgroundColor?: string | null;
+            /** Textcolor */
+            textColor?: string | null;
         };
         /**
          * TokenItem
@@ -11516,6 +12041,92 @@ export interface operations {
             };
         };
     };
+    "api.comments.application.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.application.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.features.list": {
         parameters: {
             query?: {
@@ -12460,6 +13071,92 @@ export interface operations {
             };
         };
     };
+    "api.comments.feature.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.feature.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.personas.list": {
         parameters: {
             query?: {
@@ -12802,6 +13499,92 @@ export interface operations {
                 };
             };
             /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.persona.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.persona.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Persona not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -14787,6 +15570,92 @@ export interface operations {
             };
         };
     };
+    "api.comments.journey.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.journey.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "api.databases.list": {
         parameters: {
             query?: {
@@ -16127,6 +16996,849 @@ export interface operations {
                 };
             };
             /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.database.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.database.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.databaseTable.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.databaseTable.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.databaseTableColumn.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.databaseTableColumn.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.tags.list": {
+        parameters: {
+            query?: {
+                type?: components["schemas"]["TagEntityType"] | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_TagItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.tags.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TagCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TagItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.tags.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                tag_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TagItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.tags.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tag_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.tags.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tag_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TagPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_TagItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                comment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                comment_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this comment */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                comment_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this comment */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                comment_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this comment */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.replies.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                comment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.comments.replies.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                comment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Account or comment not found */
             404: {
                 headers: {
                     [name: string]: unknown;
