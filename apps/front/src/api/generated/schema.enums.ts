@@ -32,7 +32,7 @@ export const dtoEnums = {
   ApplicationType: ["backoffice", "customer", "public", "mixed", "other"] as const satisfies readonly S["ApplicationType"][],
   ApplicationVersionType: ["alpha", "beta", "stable", "dev"] as const satisfies readonly S["ApplicationVersionType"][],
   AssertionTypeCategory: ["browser", "database"] as const satisfies readonly S["AssertionTypeCategory"][],
-  CommentEntityType: ["feature", "application", "journey", "persona", "database", "database_table", "database_table_column"] as const satisfies readonly S["CommentEntityType"][],
+  CommentEntityType: ["feature", "application", "application_route", "journey", "persona", "database", "database_table", "database_table_column"] as const satisfies readonly S["CommentEntityType"][],
   CommentStatus: ["published", "removed"] as const satisfies readonly S["CommentStatus"][],
   DatabaseSortField: ["date", "title", "status", "type"] as const satisfies readonly S["DatabaseSortField"][],
   DatabaseStatus: ["draft", "active", "archived"] as const satisfies readonly S["DatabaseStatus"][],

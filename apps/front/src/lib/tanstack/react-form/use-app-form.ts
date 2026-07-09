@@ -4,6 +4,7 @@ import { MultiSelectField } from "@/lib/tanstack/react-form/fields/multi-select-
 import { OtpField } from "@/lib/tanstack/react-form/fields/otp-field";
 import { PasswordField } from "@/lib/tanstack/react-form/fields/password-field";
 import { RichTextField } from "@/lib/tanstack/react-form/fields/rich-text-field";
+import { RoutePathField } from "@/lib/tanstack/react-form/fields/route-path-field";
 import { SelectField } from "@/lib/tanstack/react-form/fields/select-field";
 import { TextField } from "@/lib/tanstack/react-form/fields/text-field";
 import { TextAreaField } from "@/lib/tanstack/react-form/fields/textarea-field";
@@ -26,6 +27,7 @@ export const { useAppForm, withForm } = createFormHook({
     TextField,
     TextAreaField,
     RichTextField,
+    RoutePathField,
     PasswordField,
     OtpField,
     SelectField,

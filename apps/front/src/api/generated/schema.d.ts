@@ -1172,6 +1172,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route comments
+         * @description List the root comments on an application route, oldest first. Any member may read.
+         */
+        get: operations["api.applications.routes.comments.list"];
+        put?: never;
+        /**
+         * Comment on a route
+         * @description Post a comment on an application route. Any member may post.
+         */
+        post: operations["api.applications.routes.comments.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -4751,7 +4775,7 @@ export interface components {
          * @description The kind of entity a comment can be attached to.
          * @enum {string}
          */
-        CommentEntityType: "feature" | "application" | "journey" | "persona" | "database" | "database_table" | "database_table_column";
+        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column";
         /**
          * CommentItem
          * @description A threaded comment on an account entity.
@@ -12108,6 +12132,94 @@ export interface operations {
                 };
             };
             /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.comments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.applications.routes.comments.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or route not found */
             404: {
                 headers: {
                     [name: string]: unknown;

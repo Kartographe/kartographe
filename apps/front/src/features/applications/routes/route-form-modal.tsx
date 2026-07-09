@@ -138,7 +138,10 @@ export function RouteFormModal({
           </form.AppField>
           <form.AppField name="path">
             {(field) => (
-              <field.TextField label={t`Chemin`} placeholder="/v1/users/{id}" />
+              <field.RoutePathField
+                label={t`Chemin`}
+                placeholder="/v1/users/{id}"
+              />
             )}
           </form.AppField>
           <form.AppField name="title">

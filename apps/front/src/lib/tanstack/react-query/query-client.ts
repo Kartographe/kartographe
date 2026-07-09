@@ -29,7 +29,9 @@ export function createQueryClient(): QueryClient {
         if (meta?.noErrorToast) {
           return;
         }
-        getMessageApi().error(meta?.errorMessage ?? extractApiErrorDetail(error));
+        getMessageApi().error(
+          meta?.errorMessage ?? extractApiErrorDetail(error)
+        );
       },
     }),
   });

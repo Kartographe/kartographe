@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { RoutePath } from "@/components/route-path";
 import {
   ApplicationStatusTag,
   RouteMethodTag,
@@ -143,12 +144,7 @@ export function RoutesScreen({
       label: (
         <Flex align="center" gap={12} style={{ minWidth: 0 }}>
           <RouteMethodTag method={route.method} />
-          <Typography.Text
-            strong
-            style={{ fontFamily: "monospace", fontSize: 14 }}
-          >
-            {route.path}
-          </Typography.Text>
+          <RoutePath path={route.path} />
           <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
             {route.title ?? ""}
           </Typography.Text>
