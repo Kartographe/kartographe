@@ -5,6 +5,10 @@ import { Modal } from "antd";
 import { z } from "zod";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import {
+  IDENTIFIER_MAX_LENGTH,
+  IDENTIFIER_PATTERN,
+} from "@/features/databases/identifier";
 import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
@@ -81,7 +85,14 @@ export function ColumnFormModal({
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(1, t`Le nom est requis`),
+        name: z
+          .string()
+          .min(1, t`Le nom est requis`)
+          .max(IDENTIFIER_MAX_LENGTH, t`Le nom est trop long`)
+          .regex(
+            IDENTIFIER_PATTERN,
+            t`Lettres, chiffres et tirets bas uniquement, ne commençant pas par un chiffre`
+          ),
         databaseColumnTypeId: z.string().min(1, t`Le type est requis`),
         defaultValue: z.string(),
         nullable: z.boolean(),

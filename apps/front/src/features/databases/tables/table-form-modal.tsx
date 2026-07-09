@@ -5,6 +5,10 @@ import { z } from "zod";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import {
+  IDENTIFIER_MAX_LENGTH,
+  IDENTIFIER_PATTERN,
+} from "@/features/databases/identifier";
 import { TABLE_TYPE_LABELS } from "@/features/databases/labels";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
@@ -61,8 +65,23 @@ export function TableFormModal({
     },
     validators: {
       onSubmit: z.object({
-        schema: z.string().min(1, t`Le schéma est requis`),
-        name: z.string().min(1, t`Le nom est requis`),
+        // A schema is an unquoted identifier too, not free text.
+        schema: z
+          .string()
+          .min(1, t`Le schéma est requis`)
+          .max(IDENTIFIER_MAX_LENGTH, t`Le schéma est trop long`)
+          .regex(
+            IDENTIFIER_PATTERN,
+            t`Lettres, chiffres et tirets bas uniquement, ne commençant pas par un chiffre`
+          ),
+        name: z
+          .string()
+          .min(1, t`Le nom est requis`)
+          .max(IDENTIFIER_MAX_LENGTH, t`Le nom est trop long`)
+          .regex(
+            IDENTIFIER_PATTERN,
+            t`Lettres, chiffres et tirets bas uniquement, ne commençant pas par un chiffre`
+          ),
         type: z.enum(dtoEnums.DatabaseTableType),
         color: z.string(),
         description: z.record(z.string(), z.unknown()),
