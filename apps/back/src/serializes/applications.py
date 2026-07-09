@@ -23,6 +23,7 @@ class ApplicationItem(CamelBase):
     owner_id: uuid.UUID
     status: ApplicationStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: ApplicationType
 

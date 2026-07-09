@@ -86,6 +86,7 @@ def create_step(
         action_type_id=form.action_type_id,
         optional=form.optional,
         parameters=form.parameters,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=JourneyScenarioStepItem.model_validate(step))
 

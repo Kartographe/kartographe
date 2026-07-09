@@ -67,6 +67,7 @@ class JourneyScenarioStepManager(BaseEntityManager):
         action_type_id: uuid.UUID | None,
         optional: bool,
         parameters: dict,
+        tag_ids: list[uuid.UUID],
     ) -> JourneyScenarioStep:
         """Create a step, validating its parent, action type and parameters."""
         if parent_journey_scenario_step_id is not None:
@@ -82,6 +83,7 @@ class JourneyScenarioStepManager(BaseEntityManager):
             description=description,
             optional=optional,
             parameters=parameters,
+            tag_ids=tag_ids,
         )
         return self._persist(step)
 

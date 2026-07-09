@@ -44,6 +44,7 @@ class JourneyScenarioManager(BaseEntityManager):
         title: str,
         criticity: JourneyScenarioCriticity,
         description: dict | None,
+        tag_ids: list[uuid.UUID],
     ) -> JourneyScenario:
         """Create a draft scenario owned by `user` after checking the personas."""
         assert_personas_in_account(self.session, account, personas_ids)
@@ -60,6 +61,7 @@ class JourneyScenarioManager(BaseEntityManager):
             title=title,
             criticity=criticity,
             description=description,
+            tag_ids=tag_ids,
         )
         return self._persist(scenario)
 

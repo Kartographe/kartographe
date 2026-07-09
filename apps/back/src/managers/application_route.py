@@ -101,6 +101,7 @@ class ApplicationRouteManager(BaseEntityManager):
         header_schema: dict,
         body_schema: dict,
         raw_schema: dict,
+        tag_ids: list[uuid.UUID],
     ) -> ApplicationRoute:
         """Create a draft route owned by `user`, validating its references."""
         self._validate(
@@ -135,6 +136,7 @@ class ApplicationRouteManager(BaseEntityManager):
             header_schema=header_schema,
             body_schema=body_schema,
             raw_schema=raw_schema,
+            tag_ids=tag_ids,
         )
         return self._persist(route)
 

@@ -16,6 +16,7 @@ class FeatureItem(CamelBase):
     owner_id: uuid.UUID
     status: FeatureStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: FeatureType
 

@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON
+from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -27,5 +27,6 @@ class Feature(BaseModel, table=True):
     type: FeatureType = Field(index=True)
     status: FeatureStatus = Field(index=True)
     status_date: datetime
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     owner: "User" = Relationship()

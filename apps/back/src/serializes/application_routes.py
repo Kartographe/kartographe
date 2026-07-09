@@ -30,6 +30,7 @@ class ApplicationGuardItem(CamelBase):
     owner_id: uuid.UUID
     status: ApplicationGuardStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: ApplicationGuardType
 
@@ -68,6 +69,7 @@ class ApplicationRouteItem(CamelBase):
     start_date: datetime | None = None
     status: ApplicationRouteStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str | None = None
 
 

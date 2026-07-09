@@ -28,6 +28,7 @@ class ApplicationGuardCreateForm(CamelBase):
     field_type: ApplicationGuardFieldType
     field_key: str = Field(min_length=1, max_length=255)
     field_format: ApplicationGuardFieldFormat | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class ApplicationGuardPatchForm(CamelBase):
@@ -38,6 +39,7 @@ class ApplicationGuardPatchForm(CamelBase):
     field_type: ApplicationGuardFieldType | None = Field(default=None)
     field_key: str | None = Field(default=None, min_length=1, max_length=255)
     field_format: ApplicationGuardFieldFormat | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- ApplicationRole -----------------------------------------------------
@@ -79,6 +81,7 @@ class ApplicationRouteCreateForm(CamelBase):
     header_schema: dict = Field(default_factory=dict)
     body_schema: dict = Field(default_factory=dict)
     raw_schema: dict = Field(default_factory=dict)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class ApplicationRoutePatchForm(CamelBase):
@@ -99,6 +102,7 @@ class ApplicationRoutePatchForm(CamelBase):
     header_schema: dict | None = Field(default=None)
     body_schema: dict | None = Field(default=None)
     raw_schema: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- ApplicationRouteResponse --------------------------------------------

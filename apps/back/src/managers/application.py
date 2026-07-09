@@ -1,5 +1,7 @@
 """Application lifecycle: listing, creation, status flips and cascading delete."""
 
+import uuid
+
 from sqlmodel import func, select
 
 from src.filters._base import SortOrder
@@ -53,7 +55,14 @@ class ApplicationManager(BaseEntityManager):
         return list(rows), total
 
     def create(
-        self, account: Account, user: User, *, title: str, description: str | None, type: ApplicationType
+        self,
+        account: Account,
+        user: User,
+        *,
+        title: str,
+        description: str | None,
+        type: ApplicationType,
+        tag_ids: list[uuid.UUID],
     ) -> Application:
         """Create a draft application owned by `user`."""
         now = utc_now()
@@ -66,6 +75,7 @@ class ApplicationManager(BaseEntityManager):
             type=type,
             status=ApplicationStatus.DRAFT,
             status_date=now,
+            tag_ids=tag_ids,
         )
         return self._persist(application)
 

@@ -94,7 +94,9 @@ def create_database(
     manager: DatabaseManagerDep,
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> ItemResponse[DatabaseItem]:
-    database = manager.create(account, user, type=form.type, title=form.title, description=form.description)
+    database = manager.create(
+        account, user, type=form.type, title=form.title, description=form.description, tag_ids=form.tag_ids
+    )
     return ItemResponse(item=DatabaseItem.model_validate(database))
 
 

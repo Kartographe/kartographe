@@ -90,7 +90,9 @@ def create_persona(
     manager: PersonaManagerDep,
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> ItemResponse[PersonaItem]:
-    persona = manager.create(account, type=form.type, title=form.title, description=form.description)
+    persona = manager.create(
+        account, type=form.type, title=form.title, description=form.description, tag_ids=form.tag_ids
+    )
     return ItemResponse(item=PersonaItem.model_validate(persona))
 
 

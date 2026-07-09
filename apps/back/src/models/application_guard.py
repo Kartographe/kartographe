@@ -8,6 +8,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from sqlalchemy import ARRAY, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -37,5 +38,6 @@ class ApplicationGuard(BaseModel, table=True):
     field_type: ApplicationGuardFieldType = Field(index=True)
     field_key: str
     field_format: ApplicationGuardFieldFormat | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     owner: "User" = Relationship()

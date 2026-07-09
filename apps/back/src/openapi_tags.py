@@ -162,6 +162,16 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Application routes exercised by a scenario step.",
     },
     {
+        "name": "api.tags",
+        "x-displayName": "Tags",
+        "description": "Colored labels attachable to an account's entities.",
+    },
+    {
+        "name": "api.comments",
+        "x-displayName": "Comments",
+        "description": "Threaded comments on account entities (per-entity and account-wide).",
+    },
+    {
         "name": "api.core.actionTypes",
         "x-displayName": "Core › Action types",
         "description": "Global catalogue of the actions a scenario step can perform.",

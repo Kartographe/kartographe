@@ -22,6 +22,7 @@ class JourneyCreateForm(CamelBase):
     title: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     personas_ids: list[uuid.UUID] = Field(default_factory=list)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class JourneyPatchForm(CamelBase):
@@ -31,6 +32,7 @@ class JourneyPatchForm(CamelBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     personas_ids: list[uuid.UUID] | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- JourneyScenario -----------------------------------------------------
@@ -44,6 +46,7 @@ class JourneyScenarioCreateForm(CamelBase):
     title: str = Field(min_length=1, max_length=255)
     criticity: JourneyScenarioCriticity
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class JourneyScenarioPatchForm(CamelBase):
@@ -54,6 +57,7 @@ class JourneyScenarioPatchForm(CamelBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     criticity: JourneyScenarioCriticity | None = Field(default=None)
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- JourneyScenarioStep -------------------------------------------------
@@ -68,6 +72,7 @@ class JourneyScenarioStepCreateForm(CamelBase):
     action_type_id: uuid.UUID | None = Field(default=None)
     optional: bool = Field(default=False)
     parameters: dict = Field(default_factory=dict)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class JourneyScenarioStepPatchForm(CamelBase):
@@ -79,6 +84,7 @@ class JourneyScenarioStepPatchForm(CamelBase):
     action_type_id: uuid.UUID | None = Field(default=None)
     optional: bool | None = Field(default=None)
     parameters: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- JourneyScenarioStepFile ---------------------------------------------

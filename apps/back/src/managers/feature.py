@@ -1,5 +1,7 @@
 """Feature lifecycle: listing, creation, status flips and cascading delete."""
 
+import uuid
+
 from sqlmodel import func, select
 
 from src.filters._base import SortOrder
@@ -51,7 +53,14 @@ class FeatureManager(BaseEntityManager):
         return list(rows), total
 
     def create(
-        self, account: Account, user: User, *, title: str, description: dict | None, type: FeatureType
+        self,
+        account: Account,
+        user: User,
+        *,
+        title: str,
+        description: dict | None,
+        type: FeatureType,
+        tag_ids: list[uuid.UUID],
     ) -> Feature:
         """Create a draft feature owned by `user`."""
         now = utc_now()
@@ -64,6 +73,7 @@ class FeatureManager(BaseEntityManager):
             type=type,
             status=FeatureStatus.DRAFT,
             status_date=now,
+            tag_ids=tag_ids,
         )
         return self._persist(feature)
 

@@ -8,7 +8,7 @@ Steps form a tree via the optional self-referential
 import uuid
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON
+from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -36,5 +36,6 @@ class JourneyScenarioStep(BaseModel, table=True):
     optional: bool = Field(default=False)
     # Values for the action, shaped by `action_type.parameter_schema`.
     parameters: dict = Field(default_factory=dict, sa_type=JSON)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     action_type: "ActionType" = Relationship()

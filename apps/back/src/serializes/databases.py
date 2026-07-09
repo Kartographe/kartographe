@@ -16,6 +16,7 @@ class DatabaseItem(CamelBase):
     owner_id: uuid.UUID
     status: DatabaseStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: DatabaseType
 
@@ -65,4 +66,5 @@ class DatabaseTableItem(CamelBase):
     schema: str
     status: DatabaseTableStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     type: DatabaseTableType

@@ -5,6 +5,8 @@ Columns can be managed inline (created with the table, fully replaced on a table
 update that sends `columns`) or individually via the columns routes.
 """
 
+import uuid
+
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
@@ -73,6 +75,7 @@ class DatabaseTableManager(BaseEntityManager):
         name: str,
         description: dict | None,
         column_forms,
+        tag_ids: list[uuid.UUID],
     ) -> DatabaseTable:
         """Create a draft table and its columns in one transaction."""
         now = utc_now()
@@ -88,6 +91,7 @@ class DatabaseTableManager(BaseEntityManager):
             schema=schema,
             name=name,
             description=description,
+            tag_ids=tag_ids,
         )
         self.session.add(table)
         self.session.flush()  # assign table.id before columns reference it

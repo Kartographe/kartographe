@@ -16,6 +16,7 @@ class DatabaseCreateForm(CamelBase):
     type: DatabaseType
     title: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class DatabasePatchForm(CamelBase):
@@ -24,6 +25,7 @@ class DatabasePatchForm(CamelBase):
     type: DatabaseType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- DatabaseVersion -----------------------------------------------------
@@ -85,6 +87,7 @@ class DatabaseTableCreateForm(CamelBase):
     name: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     columns: list[DatabaseTableColumnCreateForm] = Field(default_factory=list)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class DatabaseTablePatchForm(CamelBase):
@@ -96,3 +99,4 @@ class DatabaseTablePatchForm(CamelBase):
     name: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     columns: list[DatabaseTableColumnCreateForm] | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)

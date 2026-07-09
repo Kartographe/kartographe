@@ -10,6 +10,7 @@ role-gated (`require_role`), and every object is re-checked against the account
 from fastapi import APIRouter
 
 from src.routes.api.applications.applications import router as applications_router
+from src.routes.api.applications.comments import router as comments_router
 from src.routes.api.applications.environment_versions import router as environment_versions_router
 from src.routes.api.applications.environments import router as environments_router
 from src.routes.api.applications.features import router as features_router
@@ -33,3 +34,4 @@ router.include_router(routes_router)
 router.include_router(route_responses_router)
 router.include_router(route_examples_router)
 router.include_router(route_tables_router)
+router.include_router(comments_router)

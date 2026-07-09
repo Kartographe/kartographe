@@ -81,6 +81,7 @@ def create_guard(
         field_type=form.field_type,
         field_key=form.field_key,
         field_format=form.field_format,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=ApplicationGuardItem.model_validate(guard))
 

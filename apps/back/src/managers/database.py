@@ -1,5 +1,7 @@
 """Database lifecycle: listing, creation, status flips and cascading delete."""
 
+import uuid
+
 from sqlmodel import func, select
 
 from src.filters._base import SortOrder
@@ -52,7 +54,14 @@ class DatabaseManager(BaseEntityManager):
         return list(rows), total
 
     def create(
-        self, account: Account, user: User, *, type: DatabaseType, title: str, description: dict | None
+        self,
+        account: Account,
+        user: User,
+        *,
+        type: DatabaseType,
+        title: str,
+        description: dict | None,
+        tag_ids: list[uuid.UUID],
     ) -> Database:
         """Create a draft database owned by `user`."""
         now = utc_now()
@@ -65,6 +74,7 @@ class DatabaseManager(BaseEntityManager):
             status_date=now,
             title=title,
             description=description,
+            tag_ids=tag_ids,
         )
         return self._persist(database)
 

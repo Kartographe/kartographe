@@ -22,6 +22,7 @@ from src.models.application_route_response import ApplicationRouteResponse
 from src.models.application_route_table import ApplicationRouteTable
 from src.models.application_version import ApplicationVersion
 from src.models.assertion_type import AssertionType
+from src.models.comment import Comment
 from src.models.database import Database
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
@@ -37,6 +38,7 @@ from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssert
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.persona import Persona
+from src.models.tag import Tag
 from src.models.user import User
 from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
@@ -63,6 +65,7 @@ __all__ = [
     "ApplicationVersion",
     "AssertionType",
     "BaseModel",
+    "Comment",
     "Database",
     "DatabaseColumnType",
     "DatabaseTable",
@@ -78,6 +81,7 @@ __all__ = [
     "JourneyScenarioStepFile",
     "JourneyScenarioStepRoute",
     "Persona",
+    "Tag",
     "User",
     "UserAuthentication",
     "UserAuthenticationLog",

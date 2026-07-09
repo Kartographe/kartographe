@@ -98,7 +98,7 @@ def create_feature(
     _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
 ) -> ItemResponse[FeatureItem]:
     feature = manager.create(
-        account, user, title=form.title, description=form.description, type=form.type
+        account, user, title=form.title, description=form.description, type=form.type, tag_ids=form.tag_ids
     )
     return ItemResponse(item=FeatureItem.model_validate(feature))
 

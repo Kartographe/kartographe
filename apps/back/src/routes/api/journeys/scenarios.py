@@ -90,6 +90,7 @@ def create_scenario(
         title=form.title,
         criticity=form.criticity,
         description=form.description,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=JourneyScenarioItem.model_validate(scenario))
 

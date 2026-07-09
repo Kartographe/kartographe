@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON
+from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -30,5 +30,6 @@ class DatabaseTable(BaseModel, table=True):
     name: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     owner: "User" = Relationship()

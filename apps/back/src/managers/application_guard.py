@@ -4,6 +4,8 @@ Deleting a guard also removes its id from every route's `application_guard_ids`
 array so no route keeps a dangling reference.
 """
 
+import uuid
+
 from sqlalchemy import func, update
 from sqlmodel import select
 
@@ -40,6 +42,7 @@ class ApplicationGuardManager(BaseEntityManager):
         field_type: ApplicationGuardFieldType,
         field_key: str,
         field_format: ApplicationGuardFieldFormat | None,
+        tag_ids: list[uuid.UUID],
     ) -> ApplicationGuard:
         """Create a draft guard owned by `user`."""
         now = utc_now()
@@ -55,6 +58,7 @@ class ApplicationGuardManager(BaseEntityManager):
             field_type=field_type,
             field_key=field_key,
             field_format=field_format,
+            tag_ids=tag_ids,
         )
         return self._persist(guard)
 

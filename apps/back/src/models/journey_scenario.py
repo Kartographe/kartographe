@@ -33,5 +33,6 @@ class JourneyScenario(BaseModel, table=True):
     criticity: JourneyScenarioCriticity = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     owner: "User" = Relationship()

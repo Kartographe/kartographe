@@ -85,6 +85,7 @@ def create_table(
         name=form.name,
         description=form.description,
         column_forms=form.columns,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=manager.to_item(table, with_columns=True))
 

@@ -67,6 +67,7 @@ class JourneyManager(BaseEntityManager):
         title: str,
         description: dict | None,
         personas_ids: list[uuid.UUID],
+        tag_ids: list[uuid.UUID],
     ) -> Journey:
         """Create a draft journey owned by `user` after checking the personas."""
         assert_personas_in_account(self.session, account, personas_ids)
@@ -81,6 +82,7 @@ class JourneyManager(BaseEntityManager):
             status_date=now,
             title=title,
             description=description,
+            tag_ids=tag_ids,
         )
         return self._persist(journey)
 

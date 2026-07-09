@@ -73,7 +73,13 @@ class PersonaManager(BaseEntityManager):
         return list(rows), total
 
     def create(
-        self, account: Account, *, type: PersonaType, title: str, description: dict | None
+        self,
+        account: Account,
+        *,
+        type: PersonaType,
+        title: str,
+        description: dict | None,
+        tag_ids: list[uuid.UUID],
     ) -> Persona:
         """Create a draft persona."""
         persona = Persona(
@@ -83,6 +89,7 @@ class PersonaManager(BaseEntityManager):
             date=utc_now(),
             title=title,
             description=description,
+            tag_ids=tag_ids,
         )
         return self._persist(persona)
 

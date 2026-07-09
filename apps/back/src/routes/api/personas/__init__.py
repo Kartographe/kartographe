@@ -6,7 +6,9 @@ MCP tool. Reads require account membership; writes are role-gated.
 
 from fastapi import APIRouter
 
+from src.routes.api.personas.comments import router as comments_router
 from src.routes.api.personas.personas import router as personas_router
 
 router = APIRouter()
 router.include_router(personas_router)
+router.include_router(comments_router)

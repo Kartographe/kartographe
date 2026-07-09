@@ -22,6 +22,7 @@ class ApplicationCreateForm(CamelBase):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=5000)
     type: ApplicationType
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class ApplicationPatchForm(CamelBase):
@@ -30,6 +31,7 @@ class ApplicationPatchForm(CamelBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=5000)
     type: ApplicationType | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)
 
 
 # --- ApplicationEnvironment ----------------------------------------------

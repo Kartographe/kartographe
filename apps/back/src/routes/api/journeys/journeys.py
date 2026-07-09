@@ -104,6 +104,7 @@ def create_journey(
         title=form.title,
         description=form.description,
         personas_ids=form.personas_ids,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=JourneyItem.model_validate(journey))
 

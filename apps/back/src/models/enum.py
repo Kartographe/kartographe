@@ -420,3 +420,35 @@ class ApplicationRouteTableAction(str, Enum):
     CREATE = "create"
     UPDATE = "update"
     DELETE = "delete"
+
+
+class CommentEntityType(str, Enum):
+    """The kind of entity a comment can be attached to."""
+
+    FEATURE = "feature"
+    APPLICATION = "application"
+    JOURNEY = "journey"
+    PERSONA = "persona"
+    DATABASE = "database"
+    DATABASE_TABLE = "database_table"
+    DATABASE_TABLE_COLUMN = "database_table_column"
+
+
+class CommentStatus(str, Enum):
+    PUBLISHED = "published"
+    REMOVED = "removed"
+
+
+class TagEntityType(str, Enum):
+    """The kind of entity a tag can be attached to."""
+
+    APPLICATION = "application"
+    APPLICATION_ROUTE = "application_route"
+    APPLICATION_GUARD = "application_guard"
+    FEATURE = "feature"
+    JOURNEY = "journey"
+    JOURNEY_SCENARIO = "journey_scenario"
+    JOURNEY_SCENARIO_STEP = "journey_scenario_step"
+    PERSONA = "persona"
+    DATABASE = "database"
+    DATABASE_TABLE = "database_table"

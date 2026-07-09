@@ -95,6 +95,7 @@ def create_route(
         header_schema=form.header_schema,
         body_schema=form.body_schema,
         raw_schema=form.raw_schema,
+        tag_ids=form.tag_ids,
     )
     return ItemResponse(item=ApplicationRouteItem.model_validate(route))
 

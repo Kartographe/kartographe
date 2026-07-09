@@ -1,5 +1,7 @@
 """Input schemas for personas."""
 
+import uuid
+
 from pydantic import Field
 
 from src.forms._base import CamelBase
@@ -12,6 +14,7 @@ class PersonaCreateForm(CamelBase):
     type: PersonaType
     title: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
 class PersonaPatchForm(CamelBase):
@@ -20,3 +23,4 @@ class PersonaPatchForm(CamelBase):
     type: PersonaType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
+    tag_ids: list[uuid.UUID] | None = Field(default=None)

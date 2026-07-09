@@ -30,6 +30,7 @@ from src.managers.application_route_response import ApplicationRouteResponseMana
 from src.managers.application_route_table import ApplicationRouteTableManager
 from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
+from src.managers.comment import CommentManager
 from src.managers.core import CoreManager
 from src.managers.database import DatabaseManager
 from src.managers.database_table import DatabaseTableManager
@@ -45,6 +46,7 @@ from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAsse
 from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
 from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteManager
 from src.managers.persona import PersonaManager
+from src.managers.tag import TagManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
 from src.managers.me_invitations import MeInvitationsManager
@@ -67,12 +69,13 @@ from src.models.application_route_table import ApplicationRouteTable
 from src.models.application_version import ApplicationVersion
 from src.models.action_type import ActionType
 from src.models.assertion_type import AssertionType
+from src.models.comment import Comment
 from src.models.database import Database
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_version import DatabaseVersion
-from src.models.enum import UserStatus
+from src.models.enum import AccountUserRole, UserStatus
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
 from src.models.feature_journey import FeatureJourney
@@ -83,6 +86,7 @@ from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssert
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.persona import Persona
+from src.models.tag import Tag
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
 from src.models.user_mcp_grant import UserMcpGrant
@@ -938,3 +942,60 @@ def get_current_journey_scenario_step_route(
 CurrentJourneyScenarioStepRouteDep = Annotated[
     JourneyScenarioStepRoute, Depends(get_current_journey_scenario_step_route)
 ]
+
+
+# --- Tags ---------------------------------------------------------------
+
+def get_tag_manager(session: SessionDep) -> TagManager:
+    return TagManager(session)
+
+
+TagManagerDep = Annotated[TagManager, Depends(get_tag_manager)]
+
+
+def get_current_tag(tag_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep) -> Tag:
+    tag = session.get(Tag, tag_id)
+    if tag is None or not tag.enabled or tag.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Tag not found.")
+    return tag
+
+
+CurrentTagDep = Annotated[Tag, Depends(get_current_tag)]
+
+
+# --- Comments -----------------------------------------------------------
+
+def get_comment_manager(session: SessionDep) -> CommentManager:
+    return CommentManager(session)
+
+
+CommentManagerDep = Annotated[CommentManager, Depends(get_comment_manager)]
+
+# Roles that may moderate any comment (beyond its own author).
+_COMMENT_MODERATOR_ROLES = frozenset({AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR})
+
+
+def get_current_comment(
+    comment_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Comment:
+    comment = session.get(Comment, comment_id)
+    if comment is None or not comment.enabled or comment.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Comment not found.")
+    return comment
+
+
+CurrentCommentDep = Annotated[Comment, Depends(get_current_comment)]
+
+
+def get_modifiable_comment(
+    comment: CurrentCommentDep, user: CurrentUserDep, membership: CurrentAccountUserDep
+) -> Comment:
+    """Allow the comment's author, or an owner/administrator, to modify it."""
+    if comment.owner_id != user.id and membership.role not in _COMMENT_MODERATOR_ROLES:
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN, "You can only modify your own comments."
+        )
+    return comment
+
+
+ModifiableCommentDep = Annotated[Comment, Depends(get_modifiable_comment)]

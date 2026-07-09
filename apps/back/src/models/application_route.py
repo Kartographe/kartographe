@@ -35,6 +35,7 @@ class ApplicationRoute(BaseModel, table=True):
     # Guards/roles protecting the route — validated against the application.
     application_guard_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
     application_role_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
+    tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     date: datetime
     status: ApplicationRouteStatus = Field(index=True)

@@ -14,5 +14,6 @@ class PersonaItem(CamelBase):
     description: dict | None = None
     id: uuid.UUID
     status: PersonaStatus
+    tag_ids: list[uuid.UUID]
     title: str
     type: PersonaType

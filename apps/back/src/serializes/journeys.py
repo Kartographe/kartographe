@@ -26,6 +26,7 @@ class JourneyItem(CamelBase):
     personas_ids: list[uuid.UUID]
     status: JourneyStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: JourneyType
 
@@ -41,6 +42,7 @@ class JourneyScenarioItem(CamelBase):
     personas_ids: list[uuid.UUID]
     status: JourneyScenarioStatus
     status_date: datetime
+    tag_ids: list[uuid.UUID]
     title: str
     type: JourneyScenarioType
 
@@ -54,6 +56,7 @@ class JourneyScenarioStepItem(CamelBase):
     optional: bool
     parameters: dict
     parent_journey_scenario_step_id: uuid.UUID | None = None
+    tag_ids: list[uuid.UUID]
     title: str
 
 
