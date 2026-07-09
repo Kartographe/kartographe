@@ -1,4 +1,8 @@
-import { AppstoreOutlined, ControlOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  CloudServerOutlined,
+  ControlOutlined,
+} from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Tooltip } from "antd";
@@ -94,6 +98,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
       params: { accountId },
       label: t`Applications`,
       icon: <AppstoreOutlined />,
+    },
+    {
+      to: "/accounts/$accountId/services",
+      params: { accountId },
+      label: t`Services`,
+      icon: <CloudServerOutlined />,
     },
   ];
 
