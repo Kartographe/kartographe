@@ -1,5 +1,6 @@
 import { createFormHook } from "@tanstack/react-form";
 import { CheckboxField } from "@/lib/tanstack/react-form/fields/checkbox-field";
+import { ColorField } from "@/lib/tanstack/react-form/fields/color-field";
 import { MultiSelectField } from "@/lib/tanstack/react-form/fields/multi-select-field";
 import { OtpField } from "@/lib/tanstack/react-form/fields/otp-field";
 import { PasswordField } from "@/lib/tanstack/react-form/fields/password-field";
@@ -33,6 +34,7 @@ export const { useAppForm, withForm } = createFormHook({
     SelectField,
     MultiSelectField,
     CheckboxField,
+    ColorField,
   },
   formComponents: {
     FormRoot,
