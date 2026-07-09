@@ -51,7 +51,7 @@ _CONTRIBUTOR = require_role(
     description=(
         "List the features of the account. Filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
-        "Any member may read."
+        "Any member may read. "
         "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[FeatureItem],
