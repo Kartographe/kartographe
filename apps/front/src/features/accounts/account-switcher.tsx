@@ -169,6 +169,7 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
         <Button
           icon={<SearchOutlined />}
           onClick={() => setSearchOpen(true)}
+          style={{ alignSelf: "center" }}
           type="text"
         />
       ) : null}

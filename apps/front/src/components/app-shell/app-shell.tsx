@@ -48,6 +48,7 @@ function SidebarInner({
             aria-label="toggle-sidebar"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={toggle}
+            style={{ alignSelf: collapsed ? "center" : "flex-start" }}
             type="text"
           />
         ) : null}
