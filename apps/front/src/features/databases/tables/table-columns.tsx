@@ -4,8 +4,26 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
+  HolderOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -135,7 +153,10 @@ interface ColumnRowProps {
   onDelete: () => void;
 }
 
-/** An existing column, read-only. Editing goes through the modal. */
+/**
+ * An existing column, read-only, draggable by the handle on its left. Editing
+ * goes through the modal.
+ */
 function ColumnRow({
   column,
   columnTypes,
@@ -144,9 +165,39 @@ function ColumnRow({
   onDelete,
 }: ColumnRowProps) {
   const { t } = useLingui();
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: column.id });
 
   return (
-    <Flex align="center" gap={8}>
+    <Flex
+      align="center"
+      gap={8}
+      ref={setNodeRef}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        transform: CSS.Transform.toString(transform),
+        transition,
+        // Lift the row being dragged above its neighbours.
+        zIndex: isDragging ? 1 : undefined,
+      }}
+    >
+      <Tooltip title={t`Réordonner`}>
+        <HolderOutlined
+          {...attributes}
+          {...listeners}
+          style={{
+            color: "var(--ant-color-text-tertiary)",
+            cursor: "grab",
+            touchAction: "none",
+          }}
+        />
+      </Tooltip>
       <ColorSwatch color={column.color} size={10} />
       <Typography.Text code style={{ minWidth: 160 }}>
         {column.name}
@@ -206,14 +257,62 @@ export function TableColumns({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<Draft | null>(null);
+  // The order shown while the server catches up; cleared once it agrees.
+  const [pendingOrder, setPendingOrder] = useState<Column[] | null>(null);
+
+  const sensors = useSensors(
+    // A few pixels of travel before a drag starts, so the handle stays clickable.
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const createMutation = $api.useMutation(
     "post",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns",
     { meta: { successMessage: t`Colonne créée` } }
   );
+  const reorderMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/reorder",
+    { meta: { successMessage: t`Colonnes réordonnées` } }
+  );
 
-  const columns = table.columns ?? [];
+  const stored = [...(table.columns ?? [])].sort((a, b) => a.rank - b.rank);
+  const columns = pendingOrder ?? stored;
+
+  async function reorder(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
+    }
+    const from = columns.findIndex((column) => column.id === active.id);
+    const to = columns.findIndex((column) => column.id === over.id);
+    if (from === -1 || to === -1) {
+      return;
+    }
+
+    const moved = arrayMove(columns, from, to);
+    setPendingOrder(moved);
+    try {
+      await reorderMutation.mutateAsync({
+        params: {
+          path: {
+            account_id: accountId,
+            database_id: databaseId,
+            database_version_id: versionId,
+            database_table_id: table.id,
+          },
+        },
+        body: { columnIds: moved.map((column) => column.id) },
+      });
+      await queryClient.invalidateQueries({ queryKey: TABLES_KEY });
+    } finally {
+      // Either the refetch confirms the move, or it restores the old order.
+      setPendingOrder(null);
+    }
+  }
 
   async function create() {
     if (!draft) {
@@ -247,19 +346,35 @@ export function TableColumns({
         />
       ) : null}
 
-      {columns.map((column) => (
-        <ColumnRow
-          column={column}
-          columnTypes={columnTypes}
-          key={column.id}
-          onComment={() => onComment(column)}
-          onDelete={() => onDelete(column)}
-          onEdit={() => onEdit(column)}
-        />
-      ))}
+      {/* Only stored columns sort; the draft row below is not part of the set. */}
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={reorder}
+        sensors={sensors}
+      >
+        <SortableContext
+          items={columns.map((column) => column.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <Flex gap={8} vertical>
+            {columns.map((column) => (
+              <ColumnRow
+                column={column}
+                columnTypes={columnTypes}
+                key={column.id}
+                onComment={() => onComment(column)}
+                onDelete={() => onDelete(column)}
+                onEdit={() => onEdit(column)}
+              />
+            ))}
+          </Flex>
+        </SortableContext>
+      </DndContext>
 
       {draft ? (
         <Flex align="center" gap={8}>
+          {/* Aligns the draft fields under the sortable rows, past their handle. */}
+          <span style={{ width: 14 }} />
           <ColorSwatch size={10} />
           <DraftFields
             columnTypes={columnTypes}
