@@ -7,6 +7,18 @@ import {
   DATABASE_TYPE_COLORS,
   DATABASE_TYPE_DESCRIPTIONS,
   DATABASE_TYPE_LABELS,
+  MIGRATION_COLUMN_STATUS_COLORS,
+  MIGRATION_COLUMN_STATUS_DESCRIPTIONS,
+  MIGRATION_COLUMN_STATUS_LABELS,
+  MIGRATION_COLUMN_TYPE_COLORS,
+  MIGRATION_COLUMN_TYPE_DESCRIPTIONS,
+  MIGRATION_COLUMN_TYPE_LABELS,
+  MIGRATION_STATUS_COLORS,
+  MIGRATION_STATUS_DESCRIPTIONS,
+  MIGRATION_STATUS_LABELS,
+  MIGRATION_TYPE_COLORS,
+  MIGRATION_TYPE_DESCRIPTIONS,
+  MIGRATION_TYPE_LABELS,
   TABLE_STATUS_COLORS,
   TABLE_STATUS_DESCRIPTIONS,
   TABLE_STATUS_LABELS,
@@ -78,6 +90,66 @@ export function VersionStatusTag({
       colors={VERSION_STATUS_COLORS}
       descriptions={VERSION_STATUS_DESCRIPTIONS}
       labels={VERSION_STATUS_LABELS}
+      value={status}
+    />
+  );
+}
+
+export function MigrationTypeTag({
+  type,
+}: {
+  type: S["DatabaseMigrationType"];
+}) {
+  return (
+    <EnumTag
+      colors={MIGRATION_TYPE_COLORS}
+      descriptions={MIGRATION_TYPE_DESCRIPTIONS}
+      labels={MIGRATION_TYPE_LABELS}
+      value={type}
+    />
+  );
+}
+
+export function MigrationStatusTag({
+  status,
+}: {
+  status: S["DatabaseMigrationStatus"];
+}) {
+  return (
+    <EnumTag
+      colors={MIGRATION_STATUS_COLORS}
+      descriptions={MIGRATION_STATUS_DESCRIPTIONS}
+      labels={MIGRATION_STATUS_LABELS}
+      value={status}
+    />
+  );
+}
+
+export function MigrationColumnTypeTag({
+  type,
+}: {
+  type: S["DatabaseMigrationColumnType"];
+}) {
+  return (
+    <EnumTag
+      colors={MIGRATION_COLUMN_TYPE_COLORS}
+      descriptions={MIGRATION_COLUMN_TYPE_DESCRIPTIONS}
+      labels={MIGRATION_COLUMN_TYPE_LABELS}
+      value={type}
+    />
+  );
+}
+
+export function MigrationColumnStatusTag({
+  status,
+}: {
+  status: S["DatabaseMigrationColumnStatus"];
+}) {
+  return (
+    <EnumTag
+      colors={MIGRATION_COLUMN_STATUS_COLORS}
+      descriptions={MIGRATION_COLUMN_STATUS_DESCRIPTIONS}
+      labels={MIGRATION_COLUMN_STATUS_LABELS}
       value={status}
     />
   );

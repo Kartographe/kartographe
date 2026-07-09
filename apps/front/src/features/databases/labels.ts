@@ -119,6 +119,112 @@ export const VERSION_STATUS_COLORS: Record<S["DatabaseVersionStatus"], string> =
     archived: "warning",
   };
 
+export const MIGRATION_TYPE_LABELS: Record<
+  S["DatabaseMigrationType"],
+  MessageDescriptor
+> = {
+  minor: msg`Mineure`,
+  major: msg`Majeure`,
+};
+
+export const MIGRATION_TYPE_DESCRIPTIONS: Record<
+  S["DatabaseMigrationType"],
+  MessageDescriptor
+> = {
+  minor: msg`Changement rétrocompatible : les consommateurs existants continuent de fonctionner.`,
+  major: msg`Changement de rupture : les consommateurs doivent être adaptés.`,
+};
+
+export const MIGRATION_TYPE_COLORS: Record<S["DatabaseMigrationType"], string> =
+  {
+    minor: "blue",
+    major: "volcano",
+  };
+
+export const MIGRATION_STATUS_LABELS: Record<
+  S["DatabaseMigrationStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Brouillon`,
+  validated: msg`Validée`,
+  completed: msg`Terminée`,
+  cancelled: msg`Annulée`,
+};
+
+export const MIGRATION_STATUS_DESCRIPTIONS: Record<
+  S["DatabaseMigrationStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Plan en cours d'écriture, non encore approuvé.`,
+  validated: msg`Plan approuvé, prêt à être exécuté.`,
+  completed: msg`Migration exécutée jusqu'au bout.`,
+  cancelled: msg`Migration abandonnée, conservée pour l'historique.`,
+};
+
+export const MIGRATION_STATUS_COLORS: Record<
+  S["DatabaseMigrationStatus"],
+  string
+> = {
+  draft: "default",
+  validated: "processing",
+  completed: "success",
+  cancelled: "error",
+};
+
+export const MIGRATION_COLUMN_TYPE_LABELS: Record<
+  S["DatabaseMigrationColumnType"],
+  MessageDescriptor
+> = {
+  migration: msg`Migration`,
+  deletion: msg`Suppression`,
+  creation: msg`Création`,
+};
+
+export const MIGRATION_COLUMN_TYPE_DESCRIPTIONS: Record<
+  S["DatabaseMigrationColumnType"],
+  MessageDescriptor
+> = {
+  migration: msg`La donnée est reprise de la colonne source vers la colonne de destination.`,
+  deletion: msg`La colonne source disparaît et n'est reprise nulle part.`,
+  creation: msg`La colonne de destination est nouvelle, sans source à reprendre.`,
+};
+
+export const MIGRATION_COLUMN_TYPE_COLORS: Record<
+  S["DatabaseMigrationColumnType"],
+  string
+> = {
+  migration: "geekblue",
+  deletion: "red",
+  creation: "green",
+};
+
+export const MIGRATION_COLUMN_STATUS_LABELS: Record<
+  S["DatabaseMigrationColumnStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Brouillon`,
+  to_be_confirmed: msg`À confirmer`,
+  confirmed: msg`Confirmée`,
+};
+
+export const MIGRATION_COLUMN_STATUS_DESCRIPTIONS: Record<
+  S["DatabaseMigrationColumnStatus"],
+  MessageDescriptor
+> = {
+  draft: msg`Étape en cours d'écriture.`,
+  to_be_confirmed: msg`Étape soumise à relecture, en attente de confirmation.`,
+  confirmed: msg`Étape relue et confirmée, prête à être exécutée.`,
+};
+
+export const MIGRATION_COLUMN_STATUS_COLORS: Record<
+  S["DatabaseMigrationColumnStatus"],
+  string
+> = {
+  draft: "default",
+  to_be_confirmed: "warning",
+  confirmed: "success",
+};
+
 /** A dotted list of non-negative integers: `1`, `1.2`, `1.2.0`. */
 const VERSION_PATTERN = /^\d+(\.\d+)*$/;
 const LEADING_V = /^v/i;

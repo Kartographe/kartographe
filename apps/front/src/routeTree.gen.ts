@@ -64,7 +64,9 @@ import { Route as AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
 import { Route as AppAccountsAccountIdApplicationsApplicationIdDeploymentsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/deployments'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdCommentsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/comments'
 import { Route as AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/versions/index'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/migrations/index'
 import { Route as AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/versions/$versionId'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -380,12 +382,26 @@ const AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute =
     path: '/versions/',
     getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
   } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRouteImport.update({
+    id: '/migrations/',
+    path: '/migrations/',
+    getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute =
   AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRouteImport.update({
     id: '/versions/$versionId',
     path: '/versions/$versionId',
     getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
   } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRouteImport.update(
+    {
+      id: '/migrations/$migrationId',
+      path: '/migrations/$migrationId',
+      getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -441,7 +457,9 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
   '/accounts/$accountId/databases/$databaseId/': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
   '/accounts/$accountId/services/$serviceId/': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
+  '/accounts/$accountId/databases/$databaseId/migrations/$migrationId': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute
   '/accounts/$accountId/databases/$databaseId/versions/$versionId': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute
+  '/accounts/$accountId/databases/$databaseId/migrations/': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute
   '/accounts/$accountId/databases/$databaseId/versions/': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -492,7 +510,9 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
   '/accounts/$accountId/databases/$databaseId': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
   '/accounts/$accountId/services/$serviceId': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
+  '/accounts/$accountId/databases/$databaseId/migrations/$migrationId': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute
   '/accounts/$accountId/databases/$databaseId/versions/$versionId': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute
+  '/accounts/$accountId/databases/$databaseId/migrations': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute
   '/accounts/$accountId/databases/$databaseId/versions': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute
 }
 export interface FileRoutesById {
@@ -551,7 +571,9 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
   '/_app/accounts/$accountId/databases/$databaseId/': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
   '/_app/accounts/$accountId/services/$serviceId/': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
+  '/_app/accounts/$accountId/databases/$databaseId/migrations/$migrationId': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute
   '/_app/accounts/$accountId/databases/$databaseId/versions/$versionId': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute
+  '/_app/accounts/$accountId/databases/$databaseId/migrations/': typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute
   '/_app/accounts/$accountId/databases/$databaseId/versions/': typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute
 }
 export interface FileRouteTypes {
@@ -610,7 +632,9 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/applications/$applicationId/'
     | '/accounts/$accountId/databases/$databaseId/'
     | '/accounts/$accountId/services/$serviceId/'
+    | '/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
     | '/accounts/$accountId/databases/$databaseId/versions/$versionId'
+    | '/accounts/$accountId/databases/$databaseId/migrations/'
     | '/accounts/$accountId/databases/$databaseId/versions/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -661,7 +685,9 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/applications/$applicationId'
     | '/accounts/$accountId/databases/$databaseId'
     | '/accounts/$accountId/services/$serviceId'
+    | '/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
     | '/accounts/$accountId/databases/$databaseId/versions/$versionId'
+    | '/accounts/$accountId/databases/$databaseId/migrations'
     | '/accounts/$accountId/databases/$databaseId/versions'
   id:
     | '__root__'
@@ -719,7 +745,9 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/applications/$applicationId/'
     | '/_app/accounts/$accountId/databases/$databaseId/'
     | '/_app/accounts/$accountId/services/$serviceId/'
+    | '/_app/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
     | '/_app/accounts/$accountId/databases/$databaseId/versions/$versionId'
+    | '/_app/accounts/$accountId/databases/$databaseId/migrations/'
     | '/_app/accounts/$accountId/databases/$databaseId/versions/'
   fileRoutesById: FileRoutesById
 }
@@ -1118,11 +1146,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRouteImport
       parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
     }
+    '/_app/accounts/$accountId/databases/$databaseId/migrations/': {
+      id: '/_app/accounts/$accountId/databases/$databaseId/migrations/'
+      path: '/migrations'
+      fullPath: '/accounts/$accountId/databases/$databaseId/migrations/'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
+    }
     '/_app/accounts/$accountId/databases/$databaseId/versions/$versionId': {
       id: '/_app/accounts/$accountId/databases/$databaseId/versions/$versionId'
       path: '/versions/$versionId'
       fullPath: '/accounts/$accountId/databases/$databaseId/versions/$versionId'
       preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRouteImport
+      parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/$databaseId/migrations/$migrationId': {
+      id: '/_app/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
+      path: '/migrations/$migrationId'
+      fullPath: '/accounts/$accountId/databases/$databaseId/migrations/$migrationId'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRouteImport
       parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
     }
   }
@@ -1249,7 +1291,9 @@ const AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren =
 interface AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren {
   AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute
   AppAccountsAccountIdDatabasesDatabaseIdIndexRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
+  AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute
   AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute
+  AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute
   AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute
 }
 
@@ -1259,8 +1303,12 @@ const AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren: AppAccountsAcco
       AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute,
     AppAccountsAccountIdDatabasesDatabaseIdIndexRoute:
       AppAccountsAccountIdDatabasesDatabaseIdIndexRoute,
+    AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdMigrationsMigrationIdRoute,
     AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute:
       AppAccountsAccountIdDatabasesDatabaseIdVersionsVersionIdRoute,
+    AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdMigrationsIndexRoute,
     AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute:
       AppAccountsAccountIdDatabasesDatabaseIdVersionsIndexRoute,
   }

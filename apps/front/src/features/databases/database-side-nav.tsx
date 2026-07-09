@@ -2,6 +2,7 @@ import {
   BranchesOutlined,
   CommentOutlined,
   InfoCircleOutlined,
+  SwapOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -12,11 +13,15 @@ import type { components } from "@/api/generated/schema";
 import {
   compareVersionsDesc,
   formatVersion,
+  MIGRATION_STATUS_COLORS,
+  MIGRATION_STATUS_LABELS,
   VERSION_STATUS_COLORS,
   VERSION_STATUS_LABELS,
 } from "@/features/databases/labels";
+import { useVersionLookup } from "@/features/databases/migrations/use-version-lookup";
 
 type DatabaseVersion = components["schemas"]["DatabaseVersionItem"];
+type DatabaseMigration = components["schemas"]["DatabaseMigrationItem"];
 
 interface NavItem {
   to: string;
@@ -115,6 +120,67 @@ function VersionLink({
   );
 }
 
+/**
+ * A migration, read as the `v1.0.0 → v2.0.0` it plans. Same reason as
+ * `VersionLink` for the plain `Tag`: no button inside a link.
+ */
+function MigrationLink({
+  migration,
+  accountId,
+  databaseId,
+  pathname,
+  versions,
+}: {
+  migration: DatabaseMigration;
+  accountId: string;
+  databaseId: string;
+  pathname: string;
+  versions: ReturnType<typeof useVersionLookup>;
+}) {
+  const { t } = useLingui();
+  const resolved = `/accounts/${accountId}/databases/${databaseId}/migrations/${migration.id}`;
+  const active = pathname === resolved || pathname.startsWith(`${resolved}/`);
+
+  const from =
+    versions.format(
+      migration.sourceDatabaseId,
+      migration.sourceDatabaseVersionId
+    ) ?? "…";
+  const to =
+    versions.format(
+      migration.destinationDatabaseId,
+      migration.destinationDatabaseVersionId
+    ) ?? "…";
+
+  return (
+    <Link
+      params={{ accountId, databaseId, migrationId: migration.id }}
+      style={{
+        ...linkStyle(active),
+        fontSize: 12,
+        justifyContent: "space-between",
+        paddingBlock: 6,
+        paddingInlineStart: 32,
+      }}
+      title={migration.title}
+      to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
+    >
+      <Typography.Text
+        ellipsis
+        style={{ color: "inherit", fontSize: 12, fontWeight: "inherit" }}
+      >
+        {`${from} → ${to}`}
+      </Typography.Text>
+      <Tag
+        color={MIGRATION_STATUS_COLORS[migration.status]}
+        style={{ fontSize: 10, lineHeight: "16px", marginInlineEnd: 0 }}
+      >
+        {t(MIGRATION_STATUS_LABELS[migration.status])}
+      </Tag>
+    </Link>
+  );
+}
+
 const BASE = "/accounts/$accountId/databases/$databaseId";
 
 export function DatabaseSideNav({
@@ -138,6 +204,21 @@ export function DatabaseSideNav({
     compareVersionsDesc(a.version, b.version)
   );
 
+  const migrationsQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations",
+    { params: { path: { account_id: accountId, database_id: databaseId } } }
+  );
+  // Already most recent first, straight from the API.
+  const migrations = migrationsQuery.data?.items ?? [];
+  const migrationVersions = useVersionLookup(accountId, [
+    databaseId,
+    ...migrations.flatMap((migration) => [
+      migration.sourceDatabaseId,
+      migration.destinationDatabaseId,
+    ]),
+  ]);
+
   const overview: NavItem = {
     to: BASE,
     label: t`Informations`,
@@ -150,6 +231,13 @@ export function DatabaseSideNav({
     to: `${BASE}/versions`,
     label: t`Versions`,
     icon: <BranchesOutlined />,
+    exact: true,
+  };
+  // `exact`: same as the versions section — each migration lights up on its own.
+  const migrationsItem: NavItem = {
+    to: `${BASE}/migrations`,
+    label: t`Migrations`,
+    icon: <SwapOutlined />,
     exact: true,
   };
   const comments: NavItem = {
@@ -187,6 +275,28 @@ export function DatabaseSideNav({
               key={version.id}
               pathname={pathname}
               version={version}
+            />
+          ))}
+        </Flex>
+      ) : null}
+
+      <NavLink
+        accountId={accountId}
+        databaseId={databaseId}
+        item={migrationsItem}
+        pathname={pathname}
+      />
+
+      {migrations.length > 0 ? (
+        <Flex gap={2} vertical>
+          {migrations.map((migration) => (
+            <MigrationLink
+              accountId={accountId}
+              databaseId={databaseId}
+              key={migration.id}
+              migration={migration}
+              pathname={pathname}
+              versions={migrationVersions}
             />
           ))}
         </Flex>

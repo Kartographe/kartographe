@@ -14,6 +14,11 @@ interface SelectFieldProps {
   disabled?: boolean;
   /** For options fetched asynchronously. */
   loading?: boolean;
+  /**
+   * Fired after the field took the new value. For the one thing the field
+   * cannot do itself: clearing another field whose options depend on this one.
+   */
+  onChange?: (value: string) => void;
 }
 
 export function SelectField({
@@ -22,6 +27,7 @@ export function SelectField({
   options,
   disabled,
   loading,
+  onChange,
 }: SelectFieldProps) {
   const field = useFieldContext<string>();
   const error = firstFieldError(field.state.meta.errors);
@@ -39,7 +45,10 @@ export function SelectField({
         id={field.name}
         loading={loading}
         onBlur={field.handleBlur}
-        onChange={(value) => field.handleChange(value)}
+        onChange={(value) => {
+          field.handleChange(value);
+          onChange?.(value);
+        }}
         options={options}
         placeholder={placeholder}
         value={field.state.value || undefined}
