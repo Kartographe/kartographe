@@ -82,12 +82,12 @@ export function StepList({
             step.id === selectedId ? ("process" as const) : ("wait" as const),
           title: (
             <Flex align="center" gap={8} wrap>
-              <Typography.Text strong>{step.title}</Typography.Text>
               {actionLabel ? (
                 <Tag color="blue" style={{ marginInlineEnd: 0 }}>
                   {actionLabel}
                 </Tag>
               ) : null}
+              <Typography.Text strong>{step.title}</Typography.Text>
               {step.optional ? (
                 <Tag style={{ marginInlineEnd: 0 }}>{t`Optionnelle`}</Tag>
               ) : null}
