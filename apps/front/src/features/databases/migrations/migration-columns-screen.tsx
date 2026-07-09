@@ -1,4 +1,5 @@
 import {
+  CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
@@ -30,7 +31,9 @@ import {
   MIGRATION_COLUMN_STATUS_LABELS,
   MIGRATION_STATUS_LABELS,
 } from "@/features/databases/labels";
+import { MigrationColumnCommentsDrawer } from "@/features/databases/migrations/migration-column-comments-drawer";
 import { MigrationColumnFormModal } from "@/features/databases/migrations/migration-column-form-modal";
+import { MigrationCommentsDrawer } from "@/features/databases/migrations/migration-comments-drawer";
 import { MigrationEndpoints } from "@/features/databases/migrations/migration-endpoints";
 import { useVersionLookup } from "@/features/databases/migrations/use-version-lookup";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
@@ -114,6 +117,10 @@ export function MigrationColumnsScreen({
   const queryClient = useQueryClient();
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<MigrationColumn | undefined | null>(null);
+  const [migrationCommentsOpen, setMigrationCommentsOpen] = useState(false);
+  const [commentedColumn, setCommentedColumn] = useState<
+    MigrationColumn | undefined
+  >(undefined);
 
   const path = {
     account_id: accountId,
@@ -222,6 +229,27 @@ export function MigrationColumnsScreen({
     migration.destinationDatabaseId,
   ]);
 
+  /** The step, read as its endpoints — only the sides its type carries. */
+  function stepLabel(column: MigrationColumn): string {
+    const source = endpointLabel(
+      sourceTables,
+      column.sourceDatabaseTableId,
+      column.sourceDatabaseTableColumnId
+    );
+    const destination = endpointLabel(
+      destinationTables,
+      column.destinationDatabaseTableId,
+      column.destinationDatabaseTableColumnId
+    );
+    if (column.type === "deletion") {
+      return source;
+    }
+    if (column.type === "creation") {
+      return destination;
+    }
+    return `${source} → ${destination}`;
+  }
+
   async function setMigrationStatus(status: MigrationStatus) {
     await migrationStatusMutations[status].mutateAsync({ params: { path } });
     queryClient.invalidateQueries({ queryKey: MIGRATIONS_KEY });
@@ -285,6 +313,12 @@ export function MigrationColumnsScreen({
           {migration.title}
         </Typography.Title>
         <Space>
+          <Tooltip title={t`Commentaires`}>
+            <Button
+              icon={<CommentOutlined />}
+              onClick={() => setMigrationCommentsOpen(true)}
+            />
+          </Tooltip>
           <Dropdown
             menu={{
               items: MIGRATION_STATUSES.map((status) => ({
@@ -386,6 +420,13 @@ export function MigrationColumnsScreen({
               align: "right",
               render: (_, column) => (
                 <Space>
+                  <Tooltip title={t`Commentaires`}>
+                    <Button
+                      icon={<CommentOutlined />}
+                      onClick={() => setCommentedColumn(column)}
+                      size="small"
+                    />
+                  </Tooltip>
                   <Dropdown
                     menu={{
                       items: COLUMN_STATUSES.map((status) => ({
@@ -426,6 +467,20 @@ export function MigrationColumnsScreen({
       )}
 
       {formModal}
+      <MigrationCommentsDrawer
+        accountId={accountId}
+        databaseId={databaseId}
+        migration={migrationCommentsOpen ? migration : undefined}
+        onClose={() => setMigrationCommentsOpen(false)}
+      />
+      <MigrationColumnCommentsDrawer
+        accountId={accountId}
+        column={commentedColumn}
+        databaseId={databaseId}
+        label={commentedColumn ? stepLabel(commentedColumn) : ""}
+        migrationId={migration.id}
+        onClose={() => setCommentedColumn(undefined)}
+      />
     </Flex>
   );
 }
