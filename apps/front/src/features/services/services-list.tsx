@@ -1,4 +1,5 @@
 import {
+  ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
   InboxOutlined,
@@ -211,12 +212,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
             sortOrder: antdOrder("title"),
             render: (title: string, service) => (
               <Flex vertical>
-                <Link
-                  params={{ accountId, serviceId: service.id }}
-                  to="/accounts/$accountId/services/$serviceId"
-                >
-                  <Typography.Text strong>{title}</Typography.Text>
-                </Link>
+                <Typography.Text>{title}</Typography.Text>
                 {service.url ? (
                   <Typography.Text
                     ellipsis
@@ -270,6 +266,18 @@ export function ServicesList({ accountId }: { accountId: string }) {
             align: "right",
             render: (_, service) => (
               <Space>
+                <Link
+                  params={{ accountId, serviceId: service.id }}
+                  to="/accounts/$accountId/services/$serviceId"
+                >
+                  <Button
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
+                    size="small"
+                  >
+                    {t`Accéder`}
+                  </Button>
+                </Link>
                 <Tooltip title={t`Modifier`}>
                   <Button
                     icon={<EditOutlined />}

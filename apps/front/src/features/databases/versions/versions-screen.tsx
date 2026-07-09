@@ -1,4 +1,5 @@
 import {
+  ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
   InboxOutlined,
@@ -156,14 +157,9 @@ export function VersionsScreen({
             title: t`Version`,
             key: "version",
             render: (_, version) => (
-              <Link
-                params={{ accountId, databaseId, versionId: version.id }}
-                to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
-              >
-                <Typography.Text strong>
-                  {formatVersion(version.version)}
-                </Typography.Text>
-              </Link>
+              <Typography.Text>
+                {formatVersion(version.version)}
+              </Typography.Text>
             ),
           },
           {
@@ -201,6 +197,18 @@ export function VersionsScreen({
             align: "right",
             render: (_, version) => (
               <Space>
+                <Link
+                  params={{ accountId, databaseId, versionId: version.id }}
+                  to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
+                >
+                  <Button
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
+                    size="small"
+                  >
+                    {t`Accéder`}
+                  </Button>
+                </Link>
                 <Tooltip title={t`Modifier`}>
                   <Button
                     icon={<EditOutlined />}

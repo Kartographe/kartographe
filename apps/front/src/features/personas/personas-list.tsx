@@ -223,9 +223,6 @@ export function PersonasList({ accountId }: { accountId: string }) {
             dataIndex: "title",
             sorter: true,
             sortOrder: antdOrder("title"),
-            render: (title: string) => (
-              <Typography.Text strong>{title}</Typography.Text>
-            ),
           },
           {
             title: t`Type`,

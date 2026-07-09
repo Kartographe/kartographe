@@ -1,4 +1,9 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -137,12 +142,7 @@ export function MigrationsScreen({
             title: t`Titre`,
             key: "title",
             render: (_, migration) => (
-              <Link
-                params={{ accountId, databaseId, migrationId: migration.id }}
-                to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
-              >
-                <Typography.Text strong>{migration.title}</Typography.Text>
-              </Link>
+              <Typography.Text>{migration.title}</Typography.Text>
             ),
           },
           {
@@ -186,6 +186,18 @@ export function MigrationsScreen({
             align: "right",
             render: (_, migration) => (
               <Space>
+                <Link
+                  params={{ accountId, databaseId, migrationId: migration.id }}
+                  to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
+                >
+                  <Button
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
+                    size="small"
+                  >
+                    {t`Accéder`}
+                  </Button>
+                </Link>
                 <Tooltip title={t`Modifier`}>
                   <Button
                     icon={<EditOutlined />}

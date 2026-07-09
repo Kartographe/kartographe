@@ -1,6 +1,6 @@
 import { ArrowRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import type { TableProps } from "antd";
 import { Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
@@ -137,12 +137,7 @@ export function AccountsList() {
                   name={name}
                   pictureProfile={account.pictureProfile}
                 />
-                <Link
-                  params={{ accountId: account.id }}
-                  to="/accounts/$accountId"
-                >
-                  <Typography.Text strong>{name}</Typography.Text>
-                </Link>
+                <Typography.Text>{name}</Typography.Text>
               </Flex>
             ),
           },

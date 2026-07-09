@@ -1,4 +1,5 @@
 import {
+  ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
   InboxOutlined,
@@ -159,12 +160,7 @@ export function ScenariosScreen({
             title: t`Titre`,
             key: "title",
             render: (_, scenario) => (
-              <Link
-                params={{ accountId, journeyId, scenarioId: scenario.id }}
-                to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
-              >
-                <Typography.Text strong>{scenario.title}</Typography.Text>
-              </Link>
+              <Typography.Text>{scenario.title}</Typography.Text>
             ),
           },
           {
@@ -204,6 +200,18 @@ export function ScenariosScreen({
             align: "right",
             render: (_, scenario) => (
               <Space>
+                <Link
+                  params={{ accountId, journeyId, scenarioId: scenario.id }}
+                  to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
+                >
+                  <Button
+                    icon={<ArrowRightOutlined />}
+                    iconPosition="end"
+                    size="small"
+                  >
+                    {t`Accéder`}
+                  </Button>
+                </Link>
                 <Tooltip title={t`Modifier`}>
                   <Button
                     icon={<EditOutlined />}
