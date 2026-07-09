@@ -12,6 +12,8 @@ interface SelectFieldProps {
   placeholder?: string;
   options: SelectOption[];
   disabled?: boolean;
+  /** For options fetched asynchronously. */
+  loading?: boolean;
 }
 
 export function SelectField({
@@ -19,6 +21,7 @@ export function SelectField({
   placeholder,
   options,
   disabled,
+  loading,
 }: SelectFieldProps) {
   const field = useFieldContext<string>();
   const error = firstFieldError(field.state.meta.errors);
@@ -34,6 +37,7 @@ export function SelectField({
       <Select
         disabled={disabled}
         id={field.name}
+        loading={loading}
         onBlur={field.handleBlur}
         onChange={(value) => field.handleChange(value)}
         options={options}
