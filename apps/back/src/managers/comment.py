@@ -14,10 +14,12 @@ from sqlmodel import select
 from src.filters._base import SortOrder
 from src.filters.comments import CommentSortField
 from src.managers._base import BaseEntityManager
+from src.managers.comment_entity import resolve_entity_refs
 from src.models.account import Account
 from src.models.comment import Comment
 from src.models.enum import CommentEntityType, CommentStatus
 from src.models.user import User
+from src.serializes.comments import CommentEntityRef
 from src.utils.datetime import to_naive_utc, utc_now
 
 _SORT_COLUMNS = {
@@ -82,6 +84,12 @@ class CommentManager(BaseEntityManager):
                 .order_by(Comment.date.asc())
             ).all()
         )
+
+    def resolve_entities(
+        self, account: Account, comments: list[Comment]
+    ) -> dict[tuple[CommentEntityType, uuid.UUID], CommentEntityRef]:
+        """Display-ready refs for the entities the comments point at, keyed by target."""
+        return resolve_entity_refs(self.session, account.id, comments)
 
     def list_replies(self, comment: Comment) -> list[Comment]:
         """Direct replies to a comment, oldest first."""

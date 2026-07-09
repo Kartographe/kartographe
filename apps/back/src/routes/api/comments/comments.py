@@ -15,7 +15,7 @@ from src.filters.comments import CommentSortField
 from src.forms.comments import CommentCreateForm, CommentPatchForm
 from src.models.enum import CommentEntityType, CommentStatus
 from src.serializes._base import ItemResponse, ListingResponse
-from src.serializes.comments import CommentItem
+from src.serializes.comments import CommentItem, CommentListItem
 from src.serializes.errors import ErrorResponse
 from src.utils.dependencies import (
     CommentManagerDep,
@@ -40,9 +40,11 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account or comment n
         "List the comments of the account, most recent first. Filter by entity type, entity id, "
         "owner and/or status (repeat the query param for multiple values), restrict to a date "
         "range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and "
-        "sort by date/status/statusDate. Any member may read."
+        "sort by date/status/statusDate. Each comment carries its resolved `entity` — the "
+        "commented entity's type, id and label, with its containing entities in `parent` "
+        "(null when the entity has since been deleted). Any member may read."
     ),
-    response_model=ListingResponse[CommentItem],
+    response_model=ListingResponse[CommentListItem],
     responses={**_NOT_FOUND},
 )
 def list_comments(
@@ -57,7 +59,7 @@ def list_comments(
     ubound: Annotated[datetime | None, Query()] = None,
     sort_by: Annotated[CommentSortField, Query(alias="sortBy")] = CommentSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
-) -> ListingResponse[CommentItem]:
+) -> ListingResponse[CommentListItem]:
     rows = manager.list_for_account(
         account,
         entity_types=entity_type,
@@ -69,7 +71,13 @@ def list_comments(
         sort_by=sort_by,
         sort_order=sort_order,
     )
-    items = [CommentItem.model_validate(row) for row in rows]
+    entities = manager.resolve_entities(account, rows)
+    items = [
+        CommentListItem.model_validate(row).model_copy(
+            update={"entity": entities.get((row.entity_type, row.entity_id))}
+        )
+        for row in rows
+    ]
     return ListingResponse.single_page(items)
 
 
