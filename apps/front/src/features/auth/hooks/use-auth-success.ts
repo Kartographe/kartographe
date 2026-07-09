@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import type { components } from "@/api/generated/schema";
-import { resolveLoginAccount } from "@/features/accounts/resolve-login-account";
+import { resolveDefaultAccount } from "@/features/accounts/resolve-default-account";
 import { useIntermediateStore } from "@/features/auth/stores/intermediate-store";
 import { consumePostLoginReturn } from "@/lib/auth/post-login-return";
 import { saveSession } from "@/lib/auth/token-storage";
@@ -39,7 +39,7 @@ export function useAuthSuccess() {
       return;
     }
     // Resume the last account the user worked in, else open their first one.
-    const accountId = await resolveLoginAccount(queryClient);
+    const accountId = await resolveDefaultAccount(queryClient);
     if (accountId) {
       navigate({ to: "/accounts/$accountId", params: { accountId } });
       return;

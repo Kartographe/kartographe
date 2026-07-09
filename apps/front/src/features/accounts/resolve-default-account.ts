@@ -8,16 +8,17 @@ import { useActiveAccountStore } from "@/features/accounts/active-account-store"
 const ACCOUNTS_LIMIT = 100;
 
 /**
- * Decides where a freshly signed-in user lands, and reconciles the remembered
- * account with what they can actually access.
+ * Decides which account `/` opens, and reconciles the remembered account with
+ * what the user can actually access.
  *
  * The remembered id survives sign-out, so it may belong to a previous user on
  * this browser or to an account since deleted. Resolving it against the real
  * list is what stops a stale id from leaking into the next session.
  *
- * Returns the account to open, or `null` to land on the dashboard.
+ * Returns the account to open, or `null` when the user has none — the only case
+ * where `/` renders instead of redirecting.
  */
-export async function resolveLoginAccount(
+export async function resolveDefaultAccount(
   queryClient: QueryClient
 ): Promise<string | null> {
   let accounts: { id: string }[];
@@ -29,7 +30,7 @@ export async function resolveLoginAccount(
     );
     accounts = data.items ?? [];
   } catch {
-    // Can't tell stale from unreachable — keep the memory, land on `/`.
+    // Can't tell stale from unreachable — keep the memory, stay on `/`.
     return null;
   }
 
