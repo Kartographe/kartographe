@@ -16,7 +16,6 @@ import {
   Flex,
   Segmented,
   Spin,
-  Tag,
   Tooltip,
   Typography,
 } from "antd";
@@ -33,6 +32,7 @@ import { ColorSwatch } from "@/features/databases/tables/color-swatch";
 import { ColumnCommentsDrawer } from "@/features/databases/tables/column-comments-drawer";
 import { ColumnFormModal } from "@/features/databases/tables/column-form-modal";
 import { SchemaGraph } from "@/features/databases/tables/schema-graph";
+import { TableColumns } from "@/features/databases/tables/table-columns";
 import { TableCommentsDrawer } from "@/features/databases/tables/table-comments-drawer";
 import { TableFormModal } from "@/features/databases/tables/table-form-modal";
 import { useColumnTypes } from "@/features/databases/use-column-types";
@@ -246,60 +246,16 @@ export function TablesScreen({
       >
         <RichTextView value={table.description} />
 
-        <Flex align="center" justify="space-between">
-          <Typography.Text strong>{t`Colonnes`}</Typography.Text>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={() => setColumnForm({ table })}
-            size="small"
-          >
-            {t`Ajouter une colonne`}
-          </Button>
-        </Flex>
-
-        {(table.columns ?? []).length === 0 ? (
-          <Empty description={t`Aucune colonne`} />
-        ) : null}
-
-        {(table.columns ?? []).map((column) => (
-          <Flex align="center" gap={8} key={column.id}>
-            <ColorSwatch color={column.color} size={10} />
-            <Typography.Text code style={{ minWidth: 160 }}>
-              {column.name}
-            </Typography.Text>
-            <Typography.Text style={{ flex: 1 }} type="secondary">
-              {columnTypes.label(column.databaseColumnTypeId)}
-            </Typography.Text>
-            {column.foreignKeyDatabaseTableId ? (
-              <Tag color="blue">FK</Tag>
-            ) : null}
-            {column.unique ? <Tag color="gold">{t`Unique`}</Tag> : null}
-            {column.nullable ? <Tag>{t`Nullable`}</Tag> : null}
-            {column.systemField ? <Tag>{t`Système`}</Tag> : null}
-            <Tooltip title={t`Commentaires`}>
-              <Button
-                icon={<CommentOutlined />}
-                onClick={() => setCommentedColumn({ table, column })}
-                size="small"
-              />
-            </Tooltip>
-            <Tooltip title={t`Modifier`}>
-              <Button
-                icon={<EditOutlined />}
-                onClick={() => setColumnForm({ table, column })}
-                size="small"
-              />
-            </Tooltip>
-            <Tooltip title={t`Supprimer`}>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => confirmDeleteColumn(table, column)}
-                size="small"
-              />
-            </Tooltip>
-          </Flex>
-        ))}
+        <TableColumns
+          accountId={accountId}
+          columnTypes={columnTypes}
+          databaseId={database.id}
+          onComment={(column) => setCommentedColumn({ table, column })}
+          onDelete={(column) => confirmDeleteColumn(table, column)}
+          onEdit={(column) => setColumnForm({ table, column })}
+          table={table}
+          versionId={selectedId}
+        />
       </Flex>
     ),
   }));
