@@ -1159,13 +1159,13 @@ export interface paths {
          * List application comments
          * @description List the root comments on an application, oldest first. Any member may read.
          */
-        get: operations["api.comments.application.list"];
+        get: operations["api.applications.comments.list"];
         put?: never;
         /**
          * Comment on an application
          * @description Post a comment on an application. Any member may post.
          */
-        post: operations["api.comments.application.create"];
+        post: operations["api.applications.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1415,13 +1415,13 @@ export interface paths {
          * List feature comments
          * @description List the root comments on a feature, oldest first. Any member may read.
          */
-        get: operations["api.comments.feature.list"];
+        get: operations["api.features.comments.list"];
         put?: never;
         /**
          * Comment on a feature
          * @description Post a comment on a feature. Any member may post.
          */
-        post: operations["api.comments.feature.create"];
+        post: operations["api.features.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1531,13 +1531,13 @@ export interface paths {
          * List persona comments
          * @description List the root comments on a persona, oldest first. Any member may read.
          */
-        get: operations["api.comments.persona.list"];
+        get: operations["api.personas.comments.list"];
         put?: never;
         /**
          * Comment on a persona
          * @description Post a comment on a persona. Any member may post.
          */
-        post: operations["api.comments.persona.create"];
+        post: operations["api.personas.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2023,13 +2023,13 @@ export interface paths {
          * List journey comments
          * @description List the root comments on a journey, oldest first. Any member may read.
          */
-        get: operations["api.comments.journey.list"];
+        get: operations["api.journeys.comments.list"];
         put?: never;
         /**
          * Comment on a journey
          * @description Post a comment on a journey. Any member may post.
          */
-        post: operations["api.comments.journey.create"];
+        post: operations["api.journeys.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2375,13 +2375,13 @@ export interface paths {
          * List database comments
          * @description List the root comments on a database, oldest first. Any member may read.
          */
-        get: operations["api.comments.database.list"];
+        get: operations["api.databases.comments.list"];
         put?: never;
         /**
          * Comment on a database
          * @description Post a comment on a database. Any member may post.
          */
-        post: operations["api.comments.database.create"];
+        post: operations["api.databases.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2399,13 +2399,13 @@ export interface paths {
          * List table comments
          * @description List the root comments on a database table, oldest first. Any member may read.
          */
-        get: operations["api.comments.databaseTable.list"];
+        get: operations["api.databases.versions.tables.comments.list"];
         put?: never;
         /**
          * Comment on a table
          * @description Post a comment on a database table. Any member may post.
          */
-        post: operations["api.comments.databaseTable.create"];
+        post: operations["api.databases.versions.tables.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2423,13 +2423,13 @@ export interface paths {
          * List column comments
          * @description List the root comments on a database column, oldest first. Any member may read.
          */
-        get: operations["api.comments.databaseTableColumn.list"];
+        get: operations["api.databases.versions.tables.columns.comments.list"];
         put?: never;
         /**
          * Comment on a column
          * @description Post a comment on a database column. Any member may post.
          */
-        post: operations["api.comments.databaseTableColumn.create"];
+        post: operations["api.databases.versions.tables.columns.comments.create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2536,7 +2536,7 @@ export interface paths {
         patch: operations["api.comments.update"];
         trace?: never;
     };
-    "/v1/accounts/{account_id}/comments/{comment_id}/removed": {
+    "/v1/accounts/{account_id}/comments/{comment_id}/remove": {
         parameters: {
             query?: never;
             header?: never;
@@ -5091,14 +5091,14 @@ export interface components {
              * Format: uuid
              */
             ownerId: string;
-            /** Schema */
-            schema: string;
             status: components["schemas"]["DatabaseTableStatus"];
             /**
              * Statusdate
              * Format: date-time
              */
             statusDate: string;
+            /** Schema */
+            schema: string;
             /** Tagids */
             tagIds: string[];
             type: components["schemas"]["DatabaseTableType"];
@@ -12041,7 +12041,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.application.list": {
+    "api.applications.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -12082,7 +12082,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.application.create": {
+    "api.applications.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -13071,7 +13071,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.feature.list": {
+    "api.features.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -13112,7 +13112,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.feature.create": {
+    "api.features.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -13518,7 +13518,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.persona.list": {
+    "api.personas.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -13559,7 +13559,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.persona.create": {
+    "api.personas.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -15570,7 +15570,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.journey.list": {
+    "api.journeys.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -15611,7 +15611,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.journey.create": {
+    "api.journeys.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -17015,7 +17015,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.database.list": {
+    "api.databases.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -17056,7 +17056,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.database.create": {
+    "api.databases.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -17101,7 +17101,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.databaseTable.list": {
+    "api.databases.versions.tables.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -17144,7 +17144,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.databaseTable.create": {
+    "api.databases.versions.tables.comments.create": {
         parameters: {
             query?: never;
             header?: never;
@@ -17191,7 +17191,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.databaseTableColumn.list": {
+    "api.databases.versions.tables.columns.comments.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -17235,7 +17235,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.databaseTableColumn.create": {
+    "api.databases.versions.tables.columns.comments.create": {
         parameters: {
             query?: never;
             header?: never;
