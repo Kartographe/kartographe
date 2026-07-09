@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
+from src.logging_config import configure_logging
 from src.managers.mcp_oauth import MCPOAuthError
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
@@ -18,11 +19,13 @@ from src.utils.validation_errors import validation_error_handler
 def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     """Build the Kartographe FastAPI app.
 
+    - Applies the per-typology log levels (`LOG_LEVEL`, `LOG_LEVEL_*`).
     - Disables Swagger/Redoc; serves Scalar at `/docs` (gated by `DOCS_ENABLED`).
     - Mounts the `fastapi-mcp` server when `mount_mcp=True` so every `/v1/*`
       route becomes an MCP tool reachable through the `/mcp` transport.
     """
     settings = get_settings()
+    configure_logging(settings)
     info = openapi_info()
 
     # Captured by the lifespan closure below; filled in when `mount_mcp=True`.

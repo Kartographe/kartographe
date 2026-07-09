@@ -1,7 +1,9 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+LOG_LEVELS = frozenset({"NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"})
 
 
 class Settings(BaseSettings):
@@ -11,6 +13,40 @@ class Settings(BaseSettings):
     app_env: str = Field(default="local")
     app_debug: bool = Field(default=False)
     app_version: str = Field(default="0.1.0")
+
+    # Logging. `LOG_LEVEL` is the baseline; each `LOG_LEVEL_<TYPOLOGY>` narrows
+    # or widens one family of loggers (see `src/logging_config.py` for the
+    # typology → logger-name mapping). Leave one empty to inherit `LOG_LEVEL`.
+    # SQL is pinned to WARNING by default: `sqlalchemy.engine` at INFO echoes
+    # every statement, which drowns the rest of the output.
+    log_level: str = Field(default="INFO")
+    log_level_app: str | None = Field(default=None)
+    log_level_sql: str | None = Field(default="WARNING")
+    log_level_server: str | None = Field(default=None)
+    log_level_access: str | None = Field(default=None)
+    log_level_mcp: str | None = Field(default=None)
+
+    @field_validator(
+        "log_level",
+        "log_level_app",
+        "log_level_sql",
+        "log_level_server",
+        "log_level_access",
+        "log_level_mcp",
+    )
+    @classmethod
+    def _validate_log_level(cls, value: str | None, info: ValidationInfo) -> str | None:
+        if not value or not value.strip():
+            # An empty typology means "inherit"; an empty baseline means "default".
+            return None if info.field_name != "log_level" else "INFO"
+        level = value.strip().upper()
+        if level not in LOG_LEVELS:
+            raise ValueError(f"invalid log level {value!r} — expected one of {sorted(LOG_LEVELS)}")
+        return level
+
+    def resolved_log_level(self, typology: str) -> str:
+        """Level configured for `typology`, falling back to the baseline `LOG_LEVEL`."""
+        return getattr(self, f"log_level_{typology}", None) or self.log_level
 
     # Public base URL of the API itself — surfaced in the OpenAPI `servers`
     # block so Scalar's "Try it" points at the right host.
