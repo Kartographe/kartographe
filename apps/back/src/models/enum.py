@@ -433,6 +433,50 @@ class CommentEntityType(str, Enum):
     DATABASE = "database"
     DATABASE_TABLE = "database_table"
     DATABASE_TABLE_COLUMN = "database_table_column"
+    SERVICE = "service"
+    SERVICE_ACTION = "service_action"
+
+
+class ServiceType(str, Enum):
+    """Where the service comes from."""
+
+    INTERNAL = "internal"
+    EXTERNAL = "external"
+    THIRD_PARTY = "third_party"
+    OTHER = "other"
+
+
+class ServiceStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ServiceActionType(str, Enum):
+    """Nature of the call exposed by a service action."""
+
+    ENDPOINT = "endpoint"
+    WEBHOOK = "webhook"
+    EVENT = "event"
+    JOB = "job"
+    OTHER = "other"
+
+
+class ServiceActionStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class ServiceActionMethod(str, Enum):
+    """HTTP method of a service action (absent for non-HTTP actions)."""
+
+    POST = "POST"
+    GET = "GET"
+    PATCH = "PATCH"
+    PUT = "PUT"
+    DELETE = "DELETE"
+    QUERY = "QUERY"
 
 
 class CommentStatus(str, Enum):

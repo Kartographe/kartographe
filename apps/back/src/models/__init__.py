@@ -38,6 +38,8 @@ from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssert
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.persona import Persona
+from src.models.service import Service
+from src.models.service_action import ServiceAction
 from src.models.tag import Tag
 from src.models.user import User
 from src.models.user_authentication import UserAuthentication
@@ -81,6 +83,8 @@ __all__ = [
     "JourneyScenarioStepFile",
     "JourneyScenarioStepRoute",
     "Persona",
+    "Service",
+    "ServiceAction",
     "Tag",
     "User",
     "UserAuthentication",

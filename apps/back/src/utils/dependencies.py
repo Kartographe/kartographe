@@ -46,6 +46,8 @@ from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAsse
 from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
 from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteManager
 from src.managers.persona import PersonaManager
+from src.managers.service import ServiceManager
+from src.managers.service_action import ServiceActionManager
 from src.managers.tag import TagManager
 from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
@@ -86,6 +88,8 @@ from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssert
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.persona import Persona
+from src.models.service import Service
+from src.models.service_action import ServiceAction
 from src.models.tag import Tag
 from src.models.user import User
 from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
@@ -961,6 +965,46 @@ def get_current_tag(tag_id: uuid.UUID, account: CurrentAccountDep, session: Sess
 
 
 CurrentTagDep = Annotated[Tag, Depends(get_current_tag)]
+
+
+# --- Services -----------------------------------------------------------
+
+def get_service_manager(session: SessionDep) -> ServiceManager:
+    return ServiceManager(session)
+
+
+ServiceManagerDep = Annotated[ServiceManager, Depends(get_service_manager)]
+
+
+def get_service_action_manager(session: SessionDep) -> ServiceActionManager:
+    return ServiceActionManager(session)
+
+
+ServiceActionManagerDep = Annotated[ServiceActionManager, Depends(get_service_action_manager)]
+
+
+def get_current_service(
+    service_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep
+) -> Service:
+    service = session.get(Service, service_id)
+    if service is None or not service.enabled or service.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Service not found.")
+    return service
+
+
+CurrentServiceDep = Annotated[Service, Depends(get_current_service)]
+
+
+def get_current_service_action(
+    action_id: uuid.UUID, service: CurrentServiceDep, session: SessionDep
+) -> ServiceAction:
+    action = session.get(ServiceAction, action_id)
+    if action is None or not action.enabled or action.service_id != service.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Service action not found.")
+    return action
+
+
+CurrentServiceActionDep = Annotated[ServiceAction, Depends(get_current_service_action)]
 
 
 # --- Comments -----------------------------------------------------------

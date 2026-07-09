@@ -162,6 +162,26 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Application routes exercised by a scenario step.",
     },
     {
+        "name": "api.services",
+        "x-displayName": "Services",
+        "description": "Create and manage the services tracked inside an account.",
+    },
+    {
+        "name": "api.services.actions",
+        "x-displayName": "Services › Actions",
+        "description": "Actions exposed by a service (endpoints, webhooks, events, jobs).",
+    },
+    {
+        "name": "api.services.comments",
+        "x-displayName": "Services › Comments",
+        "description": "Comments posted on a service.",
+    },
+    {
+        "name": "api.services.actions.comments",
+        "x-displayName": "Services › Action comments",
+        "description": "Comments posted on a service action.",
+    },
+    {
         "name": "api.tags",
         "x-displayName": "Tags",
         "description": "Colored labels attachable to an account's entities.",
