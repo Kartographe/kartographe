@@ -1,12 +1,12 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { App, Button, Flex, Space, Tag, Typography } from "antd";
-import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import type { AccountUserLookup } from "@/features/accounts/use-account-user-map";
 import { CommentAvatar } from "@/features/applications/comments/comment-avatar";
+import { CommentDate } from "@/features/applications/comments/comment-date";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import {
   asRichText,
@@ -142,9 +142,7 @@ export function CommentThread({
           <Typography.Text strong>
             {users.name(comment.ownerId)}
           </Typography.Text>
-          <Typography.Text style={{ fontSize: 12 }} type="secondary">
-            {dayjs(comment.date).format("DD/MM/YYYY HH:mm")}
-          </Typography.Text>
+          <CommentDate date={comment.date} />
           {isRemoved ? <Tag>{t`Retiré`}</Tag> : null}
         </Flex>
 

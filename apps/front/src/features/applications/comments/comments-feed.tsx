@@ -29,10 +29,10 @@ interface CommentsFeedProps {
   fillHeight?: boolean;
 }
 
-/** Oldest first, so the newest comment sits just above the composer. */
-function chronological(comments: Comment[]): Comment[] {
+/** Newest first: the latest comment is the one worth landing on. */
+function newestFirst(comments: Comment[]): Comment[] {
   return [...comments].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
 
@@ -40,9 +40,10 @@ function chronological(comments: Comment[]): Comment[] {
  * Thread list + composer, shared by every entity that carries comments
  * (application, route, …). The caller wires the entity's own endpoints.
  *
- * Reads like a conversation: comments run oldest to newest, and the composer
- * closes the list rather than heading it. It stays folded behind a button until
- * the user means to write, so the editor never competes with the thread.
+ * Comments run newest first, so the latest activity is what greets the reader.
+ * The composer closes the list rather than heading it, and stays folded behind
+ * a button until the user means to write, so the editor never competes with the
+ * thread.
  */
 export function CommentsFeed({
   accountId,
@@ -86,7 +87,7 @@ export function CommentsFeed({
 
       {comments.length > 0 ? (
         <Flex gap={28} vertical>
-          {chronological(comments).map((comment) => (
+          {newestFirst(comments).map((comment) => (
             <CommentThread
               accountId={accountId}
               comment={comment}
