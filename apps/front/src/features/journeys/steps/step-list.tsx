@@ -1,6 +1,6 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
-import { Button, Card, Flex, Tag, Typography } from "antd";
+import { Button, Flex, Steps, Tag, Typography } from "antd";
 import type { components } from "@/api/generated/schema";
 import { useActionTypes } from "@/features/journeys/steps/use-action-types";
 import { isRichTextEmpty } from "@/lib/rich-text/rich-text";
@@ -8,81 +8,49 @@ import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Step = components["schemas"]["JourneyScenarioStepItem"];
 
-/** How far a child is inset from its parent, so depth reads at a glance. */
-const INDENT = 28;
+/**
+ * The steps in the order they are walked.
+ *
+ * A scenario reads as a timeline, but the model is a tree (`parentId`), so the
+ * order is a depth-first pre-order: with no branching that *is* the timeline,
+ * and a branch — should one exist — trails its parent rather than vanishing.
+ * A step whose parent is missing starts a chain of its own instead of being
+ * dropped; a cycle is broken by walking each step at most once.
+ */
+function orderSteps(steps: Step[]): Step[] {
+  const byId = new Map(steps.map((step) => [step.id, step]));
+  const children = new Map<string | null, Step[]>();
 
-function StepCard({
-  step,
-  depth,
-  isSelected,
-  actionLabel,
-  onSelect,
-  onAddChild,
-}: {
-  step: Step;
-  depth: number;
-  isSelected: boolean;
-  actionLabel: string | null;
-  onSelect: (step: Step) => void;
-  onAddChild: (step: Step) => void;
-}) {
-  const { t } = useLingui();
+  for (const step of steps) {
+    const raw = step.parentJourneyScenarioStepId;
+    const parent = raw && byId.has(raw) ? raw : null;
+    const siblings = children.get(parent) ?? [];
+    siblings.push(step);
+    children.set(parent, siblings);
+  }
 
-  return (
-    <Flex gap={8} style={{ marginInlineStart: depth * INDENT }} vertical>
-      <Card
-        hoverable
-        onClick={() => onSelect(step)}
-        size="small"
-        style={{
-          borderColor: isSelected ? "var(--ant-color-primary)" : undefined,
-          width: "100%",
-        }}
-        styles={{ body: { padding: 12 } }}
-      >
-        <Flex align="center" gap={12} justify="space-between">
-          <Flex gap={4} style={{ minWidth: 0 }} vertical>
-            <Typography.Text ellipsis strong>
-              {step.title}
-            </Typography.Text>
-            {/* Each `RichTextView` mounts an editor — skip the empty ones. */}
-            {isRichTextEmpty(step.description) ? null : (
-              <RichTextView value={step.description} />
-            )}
-          </Flex>
-          <Flex gap={4} wrap>
-            {actionLabel ? (
-              <Tag color="blue" style={{ marginInlineEnd: 0 }}>
-                {actionLabel}
-              </Tag>
-            ) : null}
-            {step.optional ? (
-              <Tag style={{ marginInlineEnd: 0 }}>{t`Optionnelle`}</Tag>
-            ) : null}
-          </Flex>
-        </Flex>
-      </Card>
+  const ordered: Step[] = [];
+  const walked = new Set<string>();
 
-      <Button
-        icon={<PlusOutlined />}
-        onClick={() => onAddChild(step)}
-        size="small"
-        style={{ alignSelf: "flex-start", marginInlineStart: INDENT }}
-        type="dashed"
-      >
-        {t`Ajouter une étape`}
-      </Button>
-    </Flex>
-  );
+  function walk(parentId: string | null) {
+    for (const step of children.get(parentId) ?? []) {
+      if (walked.has(step.id)) {
+        continue;
+      }
+      walked.add(step.id);
+      ordered.push(step);
+      walk(step.id);
+    }
+  }
+  walk(null);
+
+  return ordered;
 }
 
 /**
- * The steps as a column of full-width cards, each inset under its parent and
- * followed by the button that adds its next step — so the scenario is written
- * where it is read, rather than through a form that asks for the parent again.
- *
- * Ordering and orphan handling mirror `layoutSteps`: a step whose parent is
- * missing is shown at the root rather than hidden.
+ * The scenario as a vertical timeline: one step per row, each followed by the
+ * button that adds the step after it — the parent arrives pre-filled, so the
+ * scenario is written where it is read.
  */
 export function StepList({
   steps,
@@ -95,45 +63,67 @@ export function StepList({
   onSelect: (step: Step) => void;
   onAddChild: (step: Step) => void;
 }) {
+  const { t } = useLingui();
   const actionTypes = useActionTypes();
-  const byId = new Map(steps.map((step) => [step.id, step]));
 
-  function childrenOf(parentId: string | null): Step[] {
-    return steps.filter((step) => {
-      const rawParent = step.parentJourneyScenarioStepId;
-      const parent = rawParent && byId.has(rawParent) ? rawParent : null;
-      return parent === parentId;
-    });
-  }
-
-  // A cycle would recurse forever; the API forbids self-parenting but not a
-  // longer loop.
-  const rendered = new Set<string>();
-
-  function renderBranch(parentId: string | null, depth: number) {
-    return childrenOf(parentId)
-      .filter((step) => !rendered.has(step.id))
-      .map((step) => {
-        rendered.add(step.id);
-        return (
-          <Flex gap={8} key={step.id} vertical>
-            <StepCard
-              actionLabel={actionTypes.label(step.actionTypeId)}
-              depth={depth}
-              isSelected={step.id === selectedId}
-              onAddChild={onAddChild}
-              onSelect={onSelect}
-              step={step}
-            />
-            {renderBranch(step.id, depth + 1)}
-          </Flex>
-        );
-      });
-  }
+  const ordered = orderSteps(steps);
 
   return (
-    <Flex gap={8} vertical>
-      {renderBranch(null, 0)}
-    </Flex>
+    <Steps
+      // `current` defaults to `0`, which would make the first step *the* current
+      // one: styled as reached, and unclickable — antd skips `onChange` when the
+      // clicked index is already `current`. No step is current here.
+      current={-1}
+      direction="vertical"
+      items={ordered.map((step) => {
+        const actionLabel = actionTypes.label(step.actionTypeId);
+        return {
+          // Per item, never through `current`: that would mark every step above
+          // the selected one as "finished", and a scenario is a plan, not a run.
+          status:
+            step.id === selectedId ? ("process" as const) : ("wait" as const),
+          title: (
+            <Flex align="center" gap={8} wrap>
+              <Typography.Text strong>{step.title}</Typography.Text>
+              {actionLabel ? (
+                <Tag color="blue" style={{ marginInlineEnd: 0 }}>
+                  {actionLabel}
+                </Tag>
+              ) : null}
+              {step.optional ? (
+                <Tag style={{ marginInlineEnd: 0 }}>{t`Optionnelle`}</Tag>
+              ) : null}
+            </Flex>
+          ),
+          description: (
+            <Flex gap={8} vertical>
+              {/* Each `RichTextView` mounts an editor — skip the empty ones. */}
+              {isRichTextEmpty(step.description) ? null : (
+                <RichTextView value={step.description} />
+              )}
+              <Button
+                icon={<PlusOutlined />}
+                onClick={(event) => {
+                  // The row itself selects the step; the button must not.
+                  event.stopPropagation();
+                  onAddChild(step);
+                }}
+                size="small"
+                style={{ alignSelf: "flex-start" }}
+                type="dashed"
+              >
+                {t`Ajouter une étape`}
+              </Button>
+            </Flex>
+          ),
+        };
+      })}
+      onChange={(index) => {
+        const step = ordered[index];
+        if (step) {
+          onSelect(step);
+        }
+      }}
+    />
   );
 }

@@ -1,16 +1,7 @@
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  App,
-  Button,
-  Empty,
-  Flex,
-  Segmented,
-  Space,
-  Tag,
-  Typography,
-} from "antd";
+import { App, Button, Empty, Flex, Space, Tag, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
@@ -21,7 +12,6 @@ import {
 } from "@/features/journeys/journey-tags";
 import { ScenarioFormModal } from "@/features/journeys/scenarios/scenario-form-modal";
 import { StepDrawer } from "@/features/journeys/steps/step-drawer";
-import { StepFlow } from "@/features/journeys/steps/step-flow";
 import { StepFormModal } from "@/features/journeys/steps/step-form-modal";
 import { StepList } from "@/features/journeys/steps/step-list";
 import { usePersonas } from "@/features/journeys/use-personas";
@@ -54,9 +44,6 @@ export function ScenarioScreen({
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
   const personas = usePersonas(accountId);
-  // The list is what the scenario is written in; the graph is there to read the
-  // branching back.
-  const [view, setView] = useState<"list" | "graph">("list");
   const [editScenarioOpen, setEditScenarioOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const [stepForm, setStepForm] = useState<StepFormState | null>(null);
@@ -168,32 +155,12 @@ export function ScenarioScreen({
           {addButton}
         </Empty>
       ) : (
-        <Flex gap={12} vertical>
-          <Segmented
-            onChange={(value) => setView(value as "list" | "graph")}
-            options={[
-              { label: t`Liste`, value: "list" },
-              { label: t`Graphe`, value: "graph" },
-            ]}
-            style={{ alignSelf: "flex-start" }}
-            value={view}
-          />
-
-          {view === "list" ? (
-            <StepList
-              onAddChild={(step) => setStepForm({ parentId: step.id })}
-              onSelect={(step) => setSelectedId(step.id)}
-              selectedId={selectedId}
-              steps={steps}
-            />
-          ) : (
-            <StepFlow
-              onSelect={(step) => setSelectedId(step.id)}
-              selectedId={selectedId}
-              steps={steps}
-            />
-          )}
-        </Flex>
+        <StepList
+          onAddChild={(step) => setStepForm({ parentId: step.id })}
+          onSelect={(step) => setSelectedId(step.id)}
+          selectedId={selectedId}
+          steps={steps}
+        />
       )}
 
       <StepDrawer
