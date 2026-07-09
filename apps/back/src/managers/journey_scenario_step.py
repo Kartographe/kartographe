@@ -13,6 +13,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager, validate_parameters
+from src.managers.tagging import tag_overlap
 from src.models.action_type import ActionType
 from src.models.journey_scenario import JourneyScenario
 from src.models.journey_scenario_step import JourneyScenarioStep
