@@ -20,6 +20,8 @@ const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
   versions: msg`Versions`,
   routes: msg`Routes`,
   comments: msg`Commentaires`,
+  services: msg`Services`,
+  actions: msg`Actions`,
 };
 
 interface Crumb {
@@ -30,8 +32,8 @@ interface Crumb {
 
 /**
  * Breadcrumb for every `/accounts/$accountId/*` page. Static segments are
- * translated from `SEGMENT_LABELS`; the account and application ids are
- * resolved to their titles.
+ * translated from `SEGMENT_LABELS`; the account id, and the id of whichever
+ * entity is being browsed, are resolved to their titles.
  */
 export function AccountBreadcrumb({ accountId }: { accountId: string }) {
   const { t } = useLingui();
@@ -42,8 +44,11 @@ export function AccountBreadcrumb({ accountId }: { accountId: string }) {
   const segments = pathname.split("/").filter(Boolean);
   // ["accounts", accountId, ...rest]
   const rest = segments.slice(2);
+  // Only the id right after its collection is an entity; deeper ids (a route,
+  // an action) never reach the URL.
   const applicationId =
     rest[0] === "applications" && rest[1] ? rest[1] : undefined;
+  const serviceId = rest[0] === "services" && rest[1] ? rest[1] : undefined;
 
   const accountQuery = $api.useQuery("get", "/v1/accounts/{account_id}", {
     params: { path: { account_id: accountId } },
@@ -57,6 +62,14 @@ export function AccountBreadcrumb({ accountId }: { accountId: string }) {
       },
     },
     { enabled: !!applicationId }
+  );
+  const serviceQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/services/{service_id}",
+    {
+      params: { path: { account_id: accountId, service_id: serviceId ?? "" } },
+    },
+    { enabled: !!serviceId }
   );
 
   const crumbs: Crumb[] = [
@@ -74,6 +87,14 @@ export function AccountBreadcrumb({ accountId }: { accountId: string }) {
       crumbs.push({
         key: segment,
         label: applicationQuery.data?.item.title ?? t`Application`,
+        href,
+      });
+      continue;
+    }
+    if (segment === serviceId) {
+      crumbs.push({
+        key: segment,
+        label: serviceQuery.data?.item.title ?? t`Service`,
         href,
       });
       continue;
