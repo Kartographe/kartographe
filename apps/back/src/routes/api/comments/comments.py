@@ -4,9 +4,16 @@ Any member may read comments and post replies; editing, removing or deleting a
 comment is restricted to its author or an owner/administrator.
 """
 
-from fastapi import APIRouter, status
+import uuid
+from datetime import datetime
+from typing import Annotated
 
+from fastapi import APIRouter, Query, status
+
+from src.filters._base import SortOrder
+from src.filters.comments import CommentSortField
 from src.forms.comments import CommentCreateForm, CommentPatchForm
+from src.models.enum import CommentEntityType, CommentStatus
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -29,14 +36,40 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account or comment n
     "",
     operation_id="api.comments.list",
     summary="List comments",
-    description="List every comment of the account, most recent first. Any member may read.",
+    description=(
+        "List the comments of the account, most recent first. Filter by entity type, entity id, "
+        "owner and/or status (repeat the query param for multiple values), restrict to a date "
+        "range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and "
+        "sort by date/status/statusDate. Any member may read."
+    ),
     response_model=ListingResponse[CommentItem],
     responses={**_NOT_FOUND},
 )
 def list_comments(
-    account: CurrentAccountDep, _: CurrentAccountUserDep, manager: CommentManagerDep
+    account: CurrentAccountDep,
+    _: CurrentAccountUserDep,
+    manager: CommentManagerDep,
+    entity_type: Annotated[list[CommentEntityType] | None, Query(alias="entityType")] = None,
+    entity_id: Annotated[list[uuid.UUID] | None, Query(alias="entityId")] = None,
+    owner_id: Annotated[list[uuid.UUID] | None, Query(alias="ownerId")] = None,
+    comment_status: Annotated[list[CommentStatus] | None, Query(alias="status")] = None,
+    lbound: Annotated[datetime | None, Query()] = None,
+    ubound: Annotated[datetime | None, Query()] = None,
+    sort_by: Annotated[CommentSortField, Query(alias="sortBy")] = CommentSortField.DATE,
+    sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
 ) -> ListingResponse[CommentItem]:
-    items = [CommentItem.model_validate(row) for row in manager.list_for_account(account)]
+    rows = manager.list_for_account(
+        account,
+        entity_types=entity_type,
+        entity_ids=entity_id,
+        owner_ids=owner_id,
+        statuses=comment_status,
+        lbound=lbound,
+        ubound=ubound,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+    items = [CommentItem.model_validate(row) for row in rows]
     return ListingResponse.single_page(items)
 
 
