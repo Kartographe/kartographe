@@ -73,8 +73,11 @@ def list_steps(
     operation_id="api.journeys.scenarios.steps.create",
     summary="Create a step",
     description=(
-        "Create a step in the scenario. A parent step (if any) must belong to the same scenario, "
-        "and `parameters` must match the action type's schema. Editing roles only."
+        "Insert a step in the scenario. A parent step (if any) must belong to the same scenario, "
+        "and `parameters` must match the action type's schema. The step is inserted rather than "
+        "appended: whatever already hung under the same parent is re-parented onto the new step, "
+        "so it lands right after its parent (or at the head of the scenario when no parent is "
+        "given). Editing roles only."
     ),
     response_model=ItemResponse[JourneyScenarioStepItem],
     status_code=status.HTTP_201_CREATED,

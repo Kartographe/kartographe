@@ -10,6 +10,7 @@ assertions.
 import uuid
 
 from fastapi import HTTPException, status
+from sqlalchemy import update
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager, validate_parameters
@@ -73,7 +74,13 @@ class JourneyScenarioStepManager(BaseEntityManager):
         parameters: dict,
         tag_ids: list[uuid.UUID],
     ) -> JourneyScenarioStep:
-        """Create a step, validating its parent, action type and parameters."""
+        """Create a step, validating its parent, action type and parameters.
+
+        The step is **inserted**, not appended: whatever already hung under the
+        same parent is re-parented onto the new step. Picking "Étape précédente
+        = X" therefore slots the step right after X and before what used to
+        follow X; picking none slots it at the head of the scenario.
+        """
         if parent_journey_scenario_step_id is not None:
             self._assert_parent_in_scenario(scenario, parent_journey_scenario_step_id)
         validate_parameters(self._action_schema(action_type_id), parameters)
@@ -89,7 +96,39 @@ class JourneyScenarioStepManager(BaseEntityManager):
             parameters=parameters,
             tag_ids=tag_ids,
         )
-        return self._persist(step)
+        self.session.add(step)
+        self._adopt_former_children(scenario, parent_journey_scenario_step_id, step)
+        self.session.commit()
+        self.session.refresh(step)
+        return step
+
+    def _adopt_former_children(
+        self,
+        scenario: JourneyScenario,
+        parent_id: uuid.UUID | None,
+        step: JourneyScenarioStep,
+    ) -> None:
+        """Re-parent the parent's current children onto the freshly inserted `step`.
+
+        Runs in the same transaction as the insert. The new step is excluded by
+        id — the pending INSERT is autoflushed before this UPDATE, so it would
+        otherwise match its own parent filter and become its own parent.
+        """
+        parent_matches = (
+            JourneyScenarioStep.parent_journey_scenario_step_id.is_(None)
+            if parent_id is None
+            else JourneyScenarioStep.parent_journey_scenario_step_id == parent_id
+        )
+        self.session.execute(
+            update(JourneyScenarioStep)
+            .where(
+                JourneyScenarioStep.journey_scenario_id == scenario.id,
+                JourneyScenarioStep.id != step.id,
+                JourneyScenarioStep.enabled.is_(True),
+                parent_matches,
+            )
+            .values(parent_journey_scenario_step_id=step.id, updated_at=utc_now())
+        )
 
     def update(
         self, scenario: JourneyScenario, step: JourneyScenarioStep, fields: dict
