@@ -4,41 +4,65 @@ Deleting a tag also removes its id from the `tag_ids` array of the entity table
 its `entity_type` targets, so no entity keeps a dangling reference.
 """
 
+import uuid
+from typing import TypeVar
+
 from sqlalchemy import func, update
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import TAGGED_MODEL
 from src.models.account import Account
-from src.models.application import Application
-from src.models.application_guard import ApplicationGuard
-from src.models.application_route import ApplicationRoute
-from src.models.database import Database
-from src.models.database_table import DatabaseTable
 from src.models.enum import TagEntityType
-from src.models.feature import Feature
-from src.models.journey import Journey
-from src.models.journey_scenario import JourneyScenario
-from src.models.journey_scenario_step import JourneyScenarioStep
-from src.models.persona import Persona
 from src.models.tag import Tag
+from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 from src.utils.datetime import utc_now
 
-# Which entity table (and its `tag_ids` column) each tag type targets.
-_TAGGED_MODEL = {
-    TagEntityType.APPLICATION: Application,
-    TagEntityType.APPLICATION_ROUTE: ApplicationRoute,
-    TagEntityType.APPLICATION_GUARD: ApplicationGuard,
-    TagEntityType.FEATURE: Feature,
-    TagEntityType.JOURNEY: Journey,
-    TagEntityType.JOURNEY_SCENARIO: JourneyScenario,
-    TagEntityType.JOURNEY_SCENARIO_STEP: JourneyScenarioStep,
-    TagEntityType.PERSONA: Persona,
-    TagEntityType.DATABASE: Database,
-    TagEntityType.DATABASE_TABLE: DatabaseTable,
-}
+ItemT = TypeVar("ItemT", bound=CamelBase)
 
 
 class TagManager(BaseEntityManager):
+    def index_for(self, rows: list) -> dict[uuid.UUID, TagItem]:
+        """The tags carried by `rows`, keyed by id, in a single query.
+
+        Scoped to the rows' own accounts. Soft-deleted tags are skipped, so an
+        entity whose `tag_ids` still holds a stale id simply serializes with
+        fewer tags rather than failing.
+        """
+        tag_ids = {tag_id for row in rows for tag_id in (row.tag_ids or [])}
+        if not tag_ids:
+            return {}
+        found = self.session.exec(
+            select(Tag).where(
+                Tag.id.in_(tag_ids),
+                Tag.account_id.in_({row.account_id for row in rows}),
+                Tag.enabled.is_(True),
+            )
+        ).all()
+        return {tag.id: TagItem.model_validate(tag) for tag in found}
+
+    def attach(
+        self, rows: list, item_cls: type[ItemT], index: dict[uuid.UUID, TagItem] | None = None
+    ) -> list[ItemT]:
+        """Serialize `rows` with their `tags` resolved — one query for the whole page.
+
+        Pass a prebuilt `index` to share one lookup across several row kinds
+        (e.g. tables and their nested columns).
+        """
+        if index is None:
+            index = self.index_for(rows)
+        return [self.serialize(row, item_cls, index) for row in rows]
+
+    def attach_one(self, row, item_cls: type[ItemT]) -> ItemT:
+        """Serialize a single row with its `tags` resolved."""
+        return self.serialize(row, item_cls, self.index_for([row]))
+
+    @staticmethod
+    def serialize(row, item_cls: type[ItemT], index: dict[uuid.UUID, TagItem]) -> ItemT:
+        """Build one item, filling `tags` from an already-built index."""
+        tags = [index[tag_id] for tag_id in (row.tag_ids or []) if tag_id in index]
+        return item_cls.model_validate(row).model_copy(update={"tags": tags})
     def list_for_account(
         self, account: Account, *, entity_type: TagEntityType | None = None
     ) -> list[Tag]:
@@ -73,7 +97,7 @@ class TagManager(BaseEntityManager):
         """Soft-delete the tag and detach it from every entity that carried it."""
         now = utc_now()
         self._disable(tag, now)
-        model = _TAGGED_MODEL[tag.entity_type]
+        model = TAGGED_MODEL[tag.entity_type]
         self.session.execute(
             update(model)
             .where(

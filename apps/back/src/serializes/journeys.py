@@ -14,6 +14,7 @@ from src.models.enum import (
     JourneyType,
 )
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class JourneyItem(CamelBase):
@@ -27,6 +28,7 @@ class JourneyItem(CamelBase):
     status: JourneyStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: JourneyType
 
@@ -43,6 +45,7 @@ class JourneyScenarioItem(CamelBase):
     status: JourneyScenarioStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: JourneyScenarioType
 
@@ -57,6 +60,7 @@ class JourneyScenarioStepItem(CamelBase):
     parameters: dict
     parent_journey_scenario_step_id: uuid.UUID | None = None
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
 
 

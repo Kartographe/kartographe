@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.application import Application
 from src.models.application_guard import ApplicationGuard
 from src.models.application_role import ApplicationRole
@@ -22,16 +23,19 @@ from src.utils.datetime import utc_now
 
 
 class ApplicationRouteManager(BaseEntityManager):
-    def list_for_application(self, application: Application) -> list[ApplicationRoute]:
-        """Every enabled route of the application, most recent first."""
+    def list_for_application(
+        self, application: Application, *, tag_ids: list[uuid.UUID] | None = None
+    ) -> list[ApplicationRoute]:
+        """Every enabled route of the application, most recent first.
+
+        `tag_ids` keeps only the rows carrying at least one of those tags.
+        """
+        conditions = [ApplicationRoute.application_id == application.id, ApplicationRoute.enabled.is_(True)]
+        if tag_ids:
+            conditions.append(tag_overlap(ApplicationRoute, tag_ids))
         return list(
             self.session.exec(
-                select(ApplicationRoute)
-                .where(
-                    ApplicationRoute.application_id == application.id,
-                    ApplicationRoute.enabled.is_(True),
-                )
-                .order_by(ApplicationRoute.date.desc())
+                select(ApplicationRoute).where(*conditions).order_by(ApplicationRoute.date.desc())
             ).all()
         )
 

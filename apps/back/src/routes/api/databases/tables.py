@@ -6,9 +6,10 @@ call, and a table update that sends `columns` fully replaces them. Deleting a
 table cascades to its columns.
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.databases import DatabaseTableCreateForm, DatabaseTablePatchForm
 from src.models.account_user import AccountUser
@@ -47,7 +48,8 @@ _DATA = require_role(
     summary="List tables",
     description=(
         "List the tables of a database version, most recent first, each with its columns. "
-        "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the tables carrying at "
+        "least one of those tags. Any member may read."
     ),
     response_model=ListingResponse[DatabaseTableItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -56,8 +58,9 @@ def list_tables(
     _: CurrentAccountUserDep,
     version: CurrentDatabaseVersionDep,
     manager: DatabaseTableManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[DatabaseTableItem]:
-    items = manager.to_items(manager.list_for_version(version))
+    items = manager.to_items(manager.list_for_version(version, tag_ids=tag_ids))
     return ListingResponse.single_page(items)
 
 

@@ -6,6 +6,7 @@ import uuid
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.managers.persona import assert_personas_in_account
 from src.models.account import Account
 from src.models.enum import JourneyScenarioCriticity, JourneyScenarioStatus, JourneyScenarioType
@@ -20,16 +21,19 @@ from src.utils.datetime import utc_now
 
 
 class JourneyScenarioManager(BaseEntityManager):
-    def list_for_journey(self, journey: Journey) -> list[JourneyScenario]:
-        """Every enabled scenario of the journey, most recent first."""
+    def list_for_journey(
+        self, journey: Journey, *, tag_ids: list[uuid.UUID] | None = None
+    ) -> list[JourneyScenario]:
+        """Every enabled scenario of the journey, most recent first.
+
+        `tag_ids` keeps only the rows carrying at least one of those tags.
+        """
+        conditions = [JourneyScenario.journey_id == journey.id, JourneyScenario.enabled.is_(True)]
+        if tag_ids:
+            conditions.append(tag_overlap(JourneyScenario, tag_ids))
         return list(
             self.session.exec(
-                select(JourneyScenario)
-                .where(
-                    JourneyScenario.journey_id == journey.id,
-                    JourneyScenario.enabled.is_(True),
-                )
-                .order_by(JourneyScenario.date.desc())
+                select(JourneyScenario).where(*conditions).order_by(JourneyScenario.date.desc())
             ).all()
         )
 

@@ -5,6 +5,7 @@ role (everyone except commentators). Deleting a feature cascades a soft-delete
 to its attached files and its application links.
 """
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -23,6 +24,7 @@ from src.utils.dependencies import (
     CurrentFeatureDep,
     CurrentUserDep,
     FeatureManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -50,6 +52,7 @@ _CONTRIBUTOR = require_role(
         "List the features of the account. Filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[FeatureItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -58,8 +61,10 @@ def list_features(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: FeatureManagerDep,
+    tags: TagManagerDep,
     feature_status: Annotated[list[FeatureStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[FeatureType] | None, Query(alias="type")] = None,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     sort_by: Annotated[FeatureSortField, Query(alias="sortBy")] = FeatureSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -69,12 +74,13 @@ def list_features(
         account,
         statuses=feature_status,
         types=type,
+        tag_ids=tag_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = [FeatureItem.model_validate(row) for row in rows]
+    items = tags.attach(rows, FeatureItem)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -112,9 +118,9 @@ def create_feature(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_feature(
-    _: CurrentAccountUserDep, feature: CurrentFeatureDep
+    _: CurrentAccountUserDep, feature: CurrentFeatureDep, tags: TagManagerDep
 ) -> ItemResponse[FeatureItem]:
-    return ItemResponse(item=FeatureItem.model_validate(feature))
+    return ItemResponse(item=tags.attach_one(feature, FeatureItem))
 
 
 @router.patch(

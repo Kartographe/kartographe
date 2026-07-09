@@ -5,9 +5,10 @@ restricted to the data roles. A column references a catalogued column type and
 may model a foreign key to another table (and optionally one of its columns).
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.databases import (
     DatabaseTableColumnCreateForm,
@@ -25,6 +26,7 @@ from src.utils.dependencies import (
     CurrentDatabaseTableDep,
     CurrentUserDep,
     DatabaseTableColumnManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -56,7 +58,10 @@ _DATA_DEV = require_role(
     "",
     operation_id="api.databases.versions.tables.columns.list",
     summary="List columns",
-    description="List the columns of a table, in insertion order. Any member may read.",
+    description=(
+        "List the columns of a table, in insertion order. Any member may read. "
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags."
+    ),
     response_model=ListingResponse[DatabaseTableColumnItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -64,8 +69,11 @@ def list_columns(
     _: CurrentAccountUserDep,
     table: CurrentDatabaseTableDep,
     manager: DatabaseTableColumnManagerDep,
+    tags: TagManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[DatabaseTableColumnItem]:
-    items = [DatabaseTableColumnItem.model_validate(row) for row in manager.list_for_table(table)]
+    rows = manager.list_for_table(table, tag_ids=tag_ids)
+    items = tags.attach(rows, DatabaseTableColumnItem)
     return ListingResponse.single_page(items)
 
 
@@ -140,9 +148,9 @@ def reorder_columns(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_column(
-    _: CurrentAccountUserDep, column: CurrentDatabaseTableColumnDep
+    _: CurrentAccountUserDep, column: CurrentDatabaseTableColumnDep, tags: TagManagerDep
 ) -> ItemResponse[DatabaseTableColumnItem]:
-    return ItemResponse(item=DatabaseTableColumnItem.model_validate(column))
+    return ItemResponse(item=tags.attach_one(column, DatabaseTableColumnItem))
 
 
 @router.patch(

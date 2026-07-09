@@ -5,6 +5,7 @@ from datetime import datetime
 
 from src.models.enum import PersonaStatus, PersonaType
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class PersonaItem(CamelBase):
@@ -15,5 +16,6 @@ class PersonaItem(CamelBase):
     id: uuid.UUID
     status: PersonaStatus
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: PersonaType

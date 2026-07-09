@@ -6,9 +6,10 @@ the account. Deleting a scenario cascades a soft-delete to its steps, files and
 assertions.
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
@@ -23,6 +24,7 @@ from src.utils.dependencies import (
     CurrentJourneyScenarioDep,
     CurrentUserDep,
     JourneyScenarioManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -48,7 +50,10 @@ _EDITOR = require_role(
     "",
     operation_id="api.journeys.scenarios.list",
     summary="List scenarios",
-    description="List the scenarios of a journey, most recent first. Any member may read.",
+    description=(
+        "List the scenarios of a journey, most recent first. Any member may read. "
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags."
+    ),
     response_model=ListingResponse[JourneyScenarioItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -56,8 +61,11 @@ def list_scenarios(
     _: CurrentAccountUserDep,
     journey: CurrentJourneyDep,
     manager: JourneyScenarioManagerDep,
+    tags: TagManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[JourneyScenarioItem]:
-    items = [JourneyScenarioItem.model_validate(row) for row in manager.list_for_journey(journey)]
+    rows = manager.list_for_journey(journey, tag_ids=tag_ids)
+    items = tags.attach(rows, JourneyScenarioItem)
     return ListingResponse.single_page(items)
 
 
@@ -104,9 +112,9 @@ def create_scenario(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_scenario(
-    _: CurrentAccountUserDep, scenario: CurrentJourneyScenarioDep
+    _: CurrentAccountUserDep, scenario: CurrentJourneyScenarioDep, tags: TagManagerDep
 ) -> ItemResponse[JourneyScenarioItem]:
-    return ItemResponse(item=JourneyScenarioItem.model_validate(scenario))
+    return ItemResponse(item=tags.attach_one(scenario, JourneyScenarioItem))
 
 
 @router.patch(

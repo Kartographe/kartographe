@@ -6,9 +6,10 @@ validated against its action type's schema. Deleting a step soft-deletes its
 whole subtree plus attached files and assertions.
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.journeys import JourneyScenarioStepCreateForm, JourneyScenarioStepPatchForm
 from src.models.account_user import AccountUser
@@ -21,6 +22,7 @@ from src.utils.dependencies import (
     CurrentJourneyScenarioDep,
     CurrentJourneyScenarioStepDep,
     JourneyScenarioStepManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -47,7 +49,10 @@ _EDITOR = require_role(
     "",
     operation_id="api.journeys.scenarios.steps.list",
     summary="List steps",
-    description="List the steps of a scenario, in insertion order. Any member may read.",
+    description=(
+        "List the steps of a scenario, in insertion order. Any member may read. "
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags."
+    ),
     response_model=ListingResponse[JourneyScenarioStepItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -55,8 +60,11 @@ def list_steps(
     _: CurrentAccountUserDep,
     scenario: CurrentJourneyScenarioDep,
     manager: JourneyScenarioStepManagerDep,
+    tags: TagManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[JourneyScenarioStepItem]:
-    items = [JourneyScenarioStepItem.model_validate(row) for row in manager.list_for_scenario(scenario)]
+    rows = manager.list_for_scenario(scenario, tag_ids=tag_ids)
+    items = tags.attach(rows, JourneyScenarioStepItem)
     return ListingResponse.single_page(items)
 
 
@@ -100,9 +108,9 @@ def create_step(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_step(
-    _: CurrentAccountUserDep, step: CurrentJourneyScenarioStepDep
+    _: CurrentAccountUserDep, step: CurrentJourneyScenarioStepDep, tags: TagManagerDep
 ) -> ItemResponse[JourneyScenarioStepItem]:
-    return ItemResponse(item=JourneyScenarioStepItem.model_validate(step))
+    return ItemResponse(item=tags.attach_one(step, JourneyScenarioStepItem))
 
 
 @router.patch(

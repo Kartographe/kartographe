@@ -10,6 +10,7 @@ from sqlalchemy import func, update
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.application import Application
 from src.models.application_guard import ApplicationGuard
 from src.models.application_route import ApplicationRoute
@@ -19,16 +20,19 @@ from src.utils.datetime import utc_now
 
 
 class ApplicationGuardManager(BaseEntityManager):
-    def list_for_application(self, application: Application) -> list[ApplicationGuard]:
-        """Every enabled guard of the application, most recent first."""
+    def list_for_application(
+        self, application: Application, *, tag_ids: list[uuid.UUID] | None = None
+    ) -> list[ApplicationGuard]:
+        """Every enabled guard of the application, most recent first.
+
+        `tag_ids` keeps only the rows carrying at least one of those tags.
+        """
+        conditions = [ApplicationGuard.application_id == application.id, ApplicationGuard.enabled.is_(True)]
+        if tag_ids:
+            conditions.append(tag_overlap(ApplicationGuard, tag_ids))
         return list(
             self.session.exec(
-                select(ApplicationGuard)
-                .where(
-                    ApplicationGuard.application_id == application.id,
-                    ApplicationGuard.enabled.is_(True),
-                )
-                .order_by(ApplicationGuard.date.desc())
+                select(ApplicationGuard).where(*conditions).order_by(ApplicationGuard.date.desc())
             ).all()
         )
 

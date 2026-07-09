@@ -12,6 +12,7 @@ from src.models.enum import (
     ApplicationVersionType,
 )
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class ApplicationItem(CamelBase):
@@ -24,6 +25,7 @@ class ApplicationItem(CamelBase):
     status: ApplicationStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: ApplicationType
 

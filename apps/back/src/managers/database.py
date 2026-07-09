@@ -7,6 +7,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.databases import DatabaseSortField
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.database import Database
 from src.models.database_table import DatabaseTable
@@ -31,6 +32,7 @@ class DatabaseManager(BaseEntityManager):
         *,
         statuses: list[DatabaseStatus] | None = None,
         types: list[DatabaseType] | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
         sort_by: DatabaseSortField = DatabaseSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -42,6 +44,8 @@ class DatabaseManager(BaseEntityManager):
             conditions.append(Database.status.in_(statuses))
         if types:
             conditions.append(Database.type.in_(types))
+        if tag_ids:
+            conditions.append(tag_overlap(Database, tag_ids))
 
         base = select(Database).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

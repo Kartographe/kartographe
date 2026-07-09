@@ -12,6 +12,7 @@ from fastapi import HTTPException, status
 from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
@@ -20,16 +21,19 @@ from src.utils.datetime import utc_now
 
 
 class DatabaseTableColumnManager(BaseEntityManager):
-    def list_for_table(self, table: DatabaseTable) -> list[DatabaseTableColumn]:
-        """Every enabled column of the table, ordered by rank then insertion."""
+    def list_for_table(
+        self, table: DatabaseTable, *, tag_ids: list[uuid.UUID] | None = None
+    ) -> list[DatabaseTableColumn]:
+        """Every enabled column of the table, ordered by rank then insertion.
+
+        `tag_ids` keeps only the rows carrying at least one of those tags.
+        """
+        conditions = [DatabaseTableColumn.database_table_id == table.id, DatabaseTableColumn.enabled.is_(True)]
+        if tag_ids:
+            conditions.append(tag_overlap(DatabaseTableColumn, tag_ids))
         return list(
             self.session.exec(
-                select(DatabaseTableColumn)
-                .where(
-                    DatabaseTableColumn.database_table_id == table.id,
-                    DatabaseTableColumn.enabled.is_(True),
-                )
-                .order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
+                select(DatabaseTableColumn).where(*conditions).order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
             ).all()
         )
 

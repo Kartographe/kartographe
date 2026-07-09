@@ -7,6 +7,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.features import FeatureSortField
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application_feature import ApplicationFeature
 from src.models.enum import FeatureStatus, FeatureType
@@ -30,6 +31,7 @@ class FeatureManager(BaseEntityManager):
         *,
         statuses: list[FeatureStatus] | None = None,
         types: list[FeatureType] | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
         sort_by: FeatureSortField = FeatureSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -41,6 +43,8 @@ class FeatureManager(BaseEntityManager):
             conditions.append(Feature.status.in_(statuses))
         if types:
             conditions.append(Feature.type.in_(types))
+        if tag_ids:
+            conditions.append(tag_overlap(Feature, tag_ids))
 
         base = select(Feature).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

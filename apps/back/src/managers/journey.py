@@ -9,6 +9,7 @@ from src.filters._base import SortOrder
 from src.filters.journeys import JourneySortField
 from src.managers._base import BaseEntityManager
 from src.managers.persona import assert_personas_in_account
+from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.enum import JourneyStatus, JourneyType
 from src.models.feature_journey import FeatureJourney
@@ -36,6 +37,7 @@ class JourneyManager(BaseEntityManager):
         *,
         statuses: list[JourneyStatus] | None = None,
         types: list[JourneyType] | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
         sort_by: JourneySortField = JourneySortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -47,6 +49,8 @@ class JourneyManager(BaseEntityManager):
             conditions.append(Journey.status.in_(statuses))
         if types:
             conditions.append(Journey.type.in_(types))
+        if tag_ids:
+            conditions.append(tag_overlap(Journey, tag_ids))
 
         base = select(Journey).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

@@ -7,6 +7,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.applications import ApplicationSortField
 from src.managers._base import BaseEntityManager
+from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application import Application
 from src.models.application_environment import ApplicationEnvironment
@@ -32,6 +33,7 @@ class ApplicationManager(BaseEntityManager):
         *,
         statuses: list[ApplicationStatus] | None = None,
         types: list[ApplicationType] | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
         sort_by: ApplicationSortField = ApplicationSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -43,6 +45,8 @@ class ApplicationManager(BaseEntityManager):
             conditions.append(Application.status.in_(statuses))
         if types:
             conditions.append(Application.type.in_(types))
+        if tag_ids:
+            conditions.append(tag_overlap(Application, tag_ids))
 
         base = select(Application).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

@@ -4,6 +4,7 @@ Reads are open to any account member; writes are open to the editing roles
 (owner, administrator, lead developer, product owner, QA manager, developer).
 """
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -21,6 +22,7 @@ from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentPersonaDep,
     PersonaManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -47,6 +49,7 @@ _EDITOR = require_role(
         "List the personas of the account. Filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[PersonaItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -55,8 +58,10 @@ def list_personas(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: PersonaManagerDep,
+    tags: TagManagerDep,
     persona_status: Annotated[list[PersonaStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[PersonaType] | None, Query(alias="type")] = None,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     sort_by: Annotated[PersonaSortField, Query(alias="sortBy")] = PersonaSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -66,12 +71,13 @@ def list_personas(
         account,
         statuses=persona_status,
         types=type,
+        tag_ids=tag_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = [PersonaItem.model_validate(row) for row in rows]
+    items = tags.attach(rows, PersonaItem)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -104,8 +110,10 @@ def create_persona(
     response_model=ItemResponse[PersonaItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
-def get_persona(_: CurrentAccountUserDep, persona: CurrentPersonaDep) -> ItemResponse[PersonaItem]:
-    return ItemResponse(item=PersonaItem.model_validate(persona))
+def get_persona(
+    _: CurrentAccountUserDep, persona: CurrentPersonaDep, tags: TagManagerDep
+) -> ItemResponse[PersonaItem]:
+    return ItemResponse(item=tags.attach_one(persona, PersonaItem))
 
 
 @router.patch(

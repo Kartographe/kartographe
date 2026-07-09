@@ -6,6 +6,7 @@ cascades a soft-delete to its environments, versions, deployments and feature
 links.
 """
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -24,6 +25,7 @@ from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentApplicationDep,
     CurrentUserDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -43,6 +45,7 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
         "List the applications of the account. Filter by status and/or type (repeat the query "
         "param for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[ApplicationItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -51,8 +54,10 @@ def list_applications(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: ApplicationManagerDep,
+    tags: TagManagerDep,
     application_status: Annotated[list[ApplicationStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[ApplicationType] | None, Query(alias="type")] = None,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     sort_by: Annotated[ApplicationSortField, Query(alias="sortBy")] = ApplicationSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -62,12 +67,13 @@ def list_applications(
         account,
         statuses=application_status,
         types=type,
+        tag_ids=tag_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = [ApplicationItem.model_validate(row) for row in rows]
+    items = tags.attach(rows, ApplicationItem)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -102,9 +108,9 @@ def create_application(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_application(
-    _: CurrentAccountUserDep, application: CurrentApplicationDep
+    _: CurrentAccountUserDep, application: CurrentApplicationDep, tags: TagManagerDep
 ) -> ItemResponse[ApplicationItem]:
-    return ItemResponse(item=ApplicationItem.model_validate(application))
+    return ItemResponse(item=tags.attach_one(application, ApplicationItem))
 
 
 @router.patch(

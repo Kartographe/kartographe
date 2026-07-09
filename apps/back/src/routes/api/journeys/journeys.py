@@ -6,6 +6,7 @@ journey cascades a soft-delete to its scenarios, steps, files, assertions and
 feature links.
 """
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -24,6 +25,7 @@ from src.utils.dependencies import (
     CurrentJourneyDep,
     CurrentUserDep,
     JourneyManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -50,6 +52,7 @@ _EDITOR = require_role(
         "List the journeys of the account. Filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[JourneyItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -58,8 +61,10 @@ def list_journeys(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: JourneyManagerDep,
+    tags: TagManagerDep,
     journey_status: Annotated[list[JourneyStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[JourneyType] | None, Query(alias="type")] = None,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     sort_by: Annotated[JourneySortField, Query(alias="sortBy")] = JourneySortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -69,12 +74,13 @@ def list_journeys(
         account,
         statuses=journey_status,
         types=type,
+        tag_ids=tag_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = [JourneyItem.model_validate(row) for row in rows]
+    items = tags.attach(rows, JourneyItem)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -117,8 +123,10 @@ def create_journey(
     response_model=ItemResponse[JourneyItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
-def get_journey(_: CurrentAccountUserDep, journey: CurrentJourneyDep) -> ItemResponse[JourneyItem]:
-    return ItemResponse(item=JourneyItem.model_validate(journey))
+def get_journey(
+    _: CurrentAccountUserDep, journey: CurrentJourneyDep, tags: TagManagerDep
+) -> ItemResponse[JourneyItem]:
+    return ItemResponse(item=tags.attach_one(journey, JourneyItem))
 
 
 @router.patch(

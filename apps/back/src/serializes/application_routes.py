@@ -17,6 +17,7 @@ from src.models.enum import (
     ApplicationRouteTableType,
 )
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class ApplicationGuardItem(CamelBase):
@@ -31,6 +32,7 @@ class ApplicationGuardItem(CamelBase):
     status: ApplicationGuardStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: ApplicationGuardType
 
@@ -70,6 +72,7 @@ class ApplicationRouteItem(CamelBase):
     status: ApplicationRouteStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str | None = None
 
 

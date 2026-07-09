@@ -5,9 +5,10 @@ writes are restricted to owners, administrators, lead developers and developers.
 Deleting a guard detaches it from every route that referenced it.
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.application_routes import ApplicationGuardCreateForm, ApplicationGuardPatchForm
 from src.models.account_user import AccountUser
@@ -21,6 +22,7 @@ from src.utils.dependencies import (
     CurrentApplicationDep,
     CurrentApplicationGuardDep,
     CurrentUserDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -44,7 +46,10 @@ _DEV = require_role(
     "",
     operation_id="api.applications.guards.list",
     summary="List guards",
-    description="List the authentication guards of an application, most recent first. Any member may read.",
+    description=(
+        "List the authentication guards of an application, most recent first. Any member may read. "
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags."
+    ),
     response_model=ListingResponse[ApplicationGuardItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -52,8 +57,11 @@ def list_guards(
     _: CurrentAccountUserDep,
     application: CurrentApplicationDep,
     manager: ApplicationGuardManagerDep,
+    tags: TagManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[ApplicationGuardItem]:
-    items = [ApplicationGuardItem.model_validate(row) for row in manager.list_for_application(application)]
+    rows = manager.list_for_application(application, tag_ids=tag_ids)
+    items = tags.attach(rows, ApplicationGuardItem)
     return ListingResponse.single_page(items)
 
 
@@ -95,9 +103,9 @@ def create_guard(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_guard(
-    _: CurrentAccountUserDep, guard: CurrentApplicationGuardDep
+    _: CurrentAccountUserDep, guard: CurrentApplicationGuardDep, tags: TagManagerDep
 ) -> ItemResponse[ApplicationGuardItem]:
-    return ItemResponse(item=ApplicationGuardItem.model_validate(guard))
+    return ItemResponse(item=tags.attach_one(guard, ApplicationGuardItem))
 
 
 @router.patch(

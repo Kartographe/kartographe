@@ -5,6 +5,7 @@ from datetime import datetime
 
 from src.models.enum import FeatureFileStatus, FeatureFileType, FeatureStatus, FeatureType
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class FeatureItem(CamelBase):
@@ -17,6 +18,7 @@ class FeatureItem(CamelBase):
     status: FeatureStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: FeatureType
 

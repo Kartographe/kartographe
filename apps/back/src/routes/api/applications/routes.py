@@ -6,9 +6,10 @@ must belong to the application. Deleting a route cascades a soft-delete to its
 responses, examples and table links.
 """
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
@@ -22,6 +23,7 @@ from src.utils.dependencies import (
     CurrentApplicationDep,
     CurrentApplicationRouteDep,
     CurrentUserDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -45,7 +47,10 @@ _DEV = require_role(
     "",
     operation_id="api.applications.routes.list",
     summary="List routes",
-    description="List the routes of an application, most recent first. Any member may read.",
+    description=(
+        "List the routes of an application, most recent first. Any member may read. "
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags."
+    ),
     response_model=ListingResponse[ApplicationRouteItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -53,8 +58,11 @@ def list_routes(
     _: CurrentAccountUserDep,
     application: CurrentApplicationDep,
     manager: ApplicationRouteManagerDep,
+    tags: TagManagerDep,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[ApplicationRouteItem]:
-    items = [ApplicationRouteItem.model_validate(row) for row in manager.list_for_application(application)]
+    rows = manager.list_for_application(application, tag_ids=tag_ids)
+    items = tags.attach(rows, ApplicationRouteItem)
     return ListingResponse.single_page(items)
 
 
@@ -109,9 +117,9 @@ def create_route(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_route(
-    _: CurrentAccountUserDep, route: CurrentApplicationRouteDep
+    _: CurrentAccountUserDep, route: CurrentApplicationRouteDep, tags: TagManagerDep
 ) -> ItemResponse[ApplicationRouteItem]:
-    return ItemResponse(item=ApplicationRouteItem.model_validate(route))
+    return ItemResponse(item=tags.attach_one(route, ApplicationRouteItem))
 
 
 @router.patch(

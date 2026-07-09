@@ -17,6 +17,7 @@ from src.models.enum import (
     DatabaseVersionStatus,
 )
 from src.serializes._base import CamelBase
+from src.serializes.tags import TagItem
 
 
 class DatabaseItem(CamelBase):
@@ -29,6 +30,7 @@ class DatabaseItem(CamelBase):
     status: DatabaseStatus
     status_date: datetime
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     title: str
     type: DatabaseType
 
@@ -61,6 +63,7 @@ class DatabaseTableColumnItem(CamelBase):
     rank: int
     system_field: bool
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     unique: bool
 
 
@@ -82,6 +85,7 @@ class DatabaseTableItem(CamelBase):
     status_date: datetime
     table_schema: str = Field(serialization_alias="schema")
     tag_ids: list[uuid.UUID]
+    tags: list[TagItem] = []
     type: DatabaseTableType
 
 

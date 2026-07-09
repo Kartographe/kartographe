@@ -5,6 +5,7 @@ administrators, lead developers and data analysts. Deleting a database cascades
 a soft-delete to its versions, tables and columns.
 """
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
@@ -23,6 +24,7 @@ from src.utils.dependencies import (
     CurrentDatabaseDep,
     CurrentUserDep,
     DatabaseManagerDep,
+    TagManagerDep,
 )
 from src.utils.middlewares import require_role
 
@@ -47,6 +49,7 @@ _DATA = require_role(
         "List the databases of the account. Filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read."
+        "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
     ),
     response_model=ListingResponse[DatabaseItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -55,8 +58,10 @@ def list_databases(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: DatabaseManagerDep,
+    tags: TagManagerDep,
     database_status: Annotated[list[DatabaseStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[DatabaseType] | None, Query(alias="type")] = None,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     sort_by: Annotated[DatabaseSortField, Query(alias="sortBy")] = DatabaseSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -66,12 +71,13 @@ def list_databases(
         account,
         statuses=database_status,
         types=type,
+        tag_ids=tag_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = [DatabaseItem.model_validate(row) for row in rows]
+    items = tags.attach(rows, DatabaseItem)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -108,8 +114,10 @@ def create_database(
     response_model=ItemResponse[DatabaseItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
-def get_database(_: CurrentAccountUserDep, database: CurrentDatabaseDep) -> ItemResponse[DatabaseItem]:
-    return ItemResponse(item=DatabaseItem.model_validate(database))
+def get_database(
+    _: CurrentAccountUserDep, database: CurrentDatabaseDep, tags: TagManagerDep
+) -> ItemResponse[DatabaseItem]:
+    return ItemResponse(item=tags.attach_one(database, DatabaseItem))
 
 
 @router.patch(
