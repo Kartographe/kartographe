@@ -9,7 +9,7 @@ import {
   DEFAULT_TAG_BACKGROUND,
   DEFAULT_TAG_TEXT,
   TAG_ENTITY_TYPE_LABELS,
-} from "@/features/accounts/administration/tags/labels";
+} from "@/features/tags/labels";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 

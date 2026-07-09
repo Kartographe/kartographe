@@ -16,8 +16,8 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
-import { TAG_ENTITY_TYPE_LABELS } from "@/features/accounts/administration/tags/labels";
-import { TagFormModal } from "@/features/accounts/administration/tags/tag-form-modal";
+import { TAG_ENTITY_TYPE_LABELS } from "@/features/tags/labels";
+import { TagFormModal } from "@/features/tags/tag-form-modal";
 
 type TagItem = components["schemas"]["TagItem"];
 type TagEntityType = components["schemas"]["TagEntityType"];
