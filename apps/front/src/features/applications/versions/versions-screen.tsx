@@ -65,10 +65,10 @@ export function VersionsScreen({
 
   async function toggleStatus(version: Version) {
     const params = { path: { ...path, version_id: version.id } };
-    if (version.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (version.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -147,7 +147,7 @@ export function VersionsScreen({
               align: "right",
               render: (_, version) => (
                 <RowActions
-                  archived={version.status === "archived"}
+                  active={version.status === "active"}
                   onDelete={() => confirmDelete(version)}
                   onEdit={() => {
                     setEditing(version);

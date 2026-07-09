@@ -127,10 +127,10 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     const params = {
       path: { account_id: accountId, application_id: application.id },
     };
-    if (application.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (application.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -309,15 +309,15 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
                 </Tooltip>
                 <Tooltip
                   title={
-                    application.status === "archived" ? t`Activer` : t`Archiver`
+                    application.status === "active" ? t`Archiver` : t`Activer`
                   }
                 >
                   <Button
                     icon={
-                      application.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      application.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(application)}

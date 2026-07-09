@@ -118,10 +118,10 @@ export function ServicesList({ accountId }: { accountId: string }) {
 
   async function toggleStatus(service: Service) {
     const params = { path: { account_id: accountId, service_id: service.id } };
-    if (service.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (service.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -286,16 +286,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
                   />
                 </Tooltip>
                 <Tooltip
-                  title={
-                    service.status === "archived" ? t`Activer` : t`Archiver`
-                  }
+                  title={service.status === "active" ? t`Archiver` : t`Activer`}
                 >
                   <Button
                     icon={
-                      service.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      service.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(service)}

@@ -128,10 +128,10 @@ export function JourneysList({ accountId }: { accountId: string }) {
 
   async function toggleStatus(journey: Journey) {
     const params = { path: { account_id: accountId, journey_id: journey.id } };
-    if (journey.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (journey.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -311,16 +311,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
                   />
                 </Tooltip>
                 <Tooltip
-                  title={
-                    journey.status === "archived" ? t`Activer` : t`Archiver`
-                  }
+                  title={journey.status === "active" ? t`Archiver` : t`Activer`}
                 >
                   <Button
                     icon={
-                      journey.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      journey.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(journey)}

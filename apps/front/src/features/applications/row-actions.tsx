@@ -8,7 +8,8 @@ import { useLingui } from "@lingui/react/macro";
 import { Button, Space, Tooltip } from "antd";
 
 interface RowActionsProps {
-  archived: boolean;
+  /** Only an *active* row can be archived; a draft or archived one is activated. */
+  active: boolean;
   onEdit: () => void;
   onToggleStatus: () => void;
   onDelete: () => void;
@@ -16,7 +17,7 @@ interface RowActionsProps {
 
 /** Edit / activate-archive / delete cluster shared by the application tables. */
 export function RowActions({
-  archived,
+  active,
   onEdit,
   onToggleStatus,
   onDelete,
@@ -27,9 +28,9 @@ export function RowActions({
       <Tooltip title={t`Modifier`}>
         <Button icon={<EditOutlined />} onClick={onEdit} size="small" />
       </Tooltip>
-      <Tooltip title={archived ? t`Activer` : t`Archiver`}>
+      <Tooltip title={active ? t`Archiver` : t`Activer`}>
         <Button
-          icon={archived ? <RocketOutlined /> : <InboxOutlined />}
+          icon={active ? <InboxOutlined /> : <RocketOutlined />}
           onClick={onToggleStatus}
           size="small"
         />

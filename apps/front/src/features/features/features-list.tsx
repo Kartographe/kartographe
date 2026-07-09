@@ -125,10 +125,10 @@ export function FeaturesList({ accountId }: { accountId: string }) {
 
   async function toggleStatus(feature: Feature) {
     const params = { path: { account_id: accountId, feature_id: feature.id } };
-    if (feature.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (feature.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -288,16 +288,14 @@ export function FeaturesList({ accountId }: { accountId: string }) {
                   />
                 </Tooltip>
                 <Tooltip
-                  title={
-                    feature.status === "archived" ? t`Activer` : t`Archiver`
-                  }
+                  title={feature.status === "active" ? t`Archiver` : t`Activer`}
                 >
                   <Button
                     icon={
-                      feature.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      feature.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(feature)}

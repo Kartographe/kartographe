@@ -39,14 +39,15 @@ export function FeatureOverview({
     { meta: { successMessage: t`Fonctionnalité archivée` } }
   );
 
-  const isArchived = feature.status === "archived";
+  // Only an active entity can be archived; a draft or archived one is activated.
+  const isActive = feature.status === "active";
 
   async function toggleStatus() {
     const params = { path: { account_id: accountId, feature_id: feature.id } };
-    if (isArchived) {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (isActive) {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
@@ -67,11 +68,11 @@ export function FeatureOverview({
             {t`Modifier`}
           </Button>
           <Button
-            icon={isArchived ? <RocketOutlined /> : <InboxOutlined />}
+            icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
             loading={activateMutation.isPending || archiveMutation.isPending}
             onClick={toggleStatus}
           >
-            {isArchived ? t`Activer` : t`Archiver`}
+            {isActive ? t`Archiver` : t`Activer`}
           </Button>
         </Space>
       </Flex>

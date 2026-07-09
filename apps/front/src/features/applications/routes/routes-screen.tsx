@@ -106,10 +106,10 @@ export function RoutesScreen({
 
   async function toggleStatus(route: ApplicationRoute) {
     const params = { path: { ...path, route_id: route.id } };
-    if (route.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (route.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -132,7 +132,10 @@ export function RoutesScreen({
 
   const items = routes.map((route) => {
     const color = HTTP_METHOD_COLORS[route.method];
+    // Dimming tracks "archived"; the button tracks "active" — a draft is neither
+    // dimmed nor archivable, it is waiting to be activated.
     const archived = route.status === "archived";
+    const isActive = route.status === "active";
     return {
       key: route.id,
       style: {
@@ -171,9 +174,9 @@ export function RoutesScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={archived ? t`Activer` : t`Archiver`}>
+          <Tooltip title={isActive ? t`Archiver` : t`Activer`}>
             <Button
-              icon={archived ? <RocketOutlined /> : <InboxOutlined />}
+              icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
               onClick={() => toggleStatus(route)}
               size="small"
             />

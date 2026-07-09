@@ -85,10 +85,10 @@ export function StepAssertions({
 
   async function toggleStatus(assertion: Assertion) {
     const params = { path: { ...path, assertion_id: assertion.id } };
-    if (assertion.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (assertion.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -158,15 +158,15 @@ export function StepAssertions({
                 <Tooltip
                   key="status"
                   title={
-                    assertion.status === "archived" ? t`Activer` : t`Archiver`
+                    assertion.status === "active" ? t`Archiver` : t`Activer`
                   }
                 >
                   <Button
                     icon={
-                      assertion.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      assertion.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(assertion)}

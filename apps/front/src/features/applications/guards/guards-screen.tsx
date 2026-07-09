@@ -73,10 +73,10 @@ export function GuardsScreen({
 
   async function toggleStatus(guard: Guard) {
     const params = { path: { ...path, guard_id: guard.id } };
-    if (guard.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (guard.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -169,7 +169,7 @@ export function GuardsScreen({
               align: "right",
               render: (_, guard) => (
                 <RowActions
-                  archived={guard.status === "archived"}
+                  active={guard.status === "active"}
                   onDelete={() => confirmDelete(guard)}
                   onEdit={() => {
                     setEditing(guard);

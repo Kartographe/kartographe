@@ -39,16 +39,17 @@ export function DatabaseOverview({
     { meta: { successMessage: t`Base de données archivée` } }
   );
 
-  const isArchived = database.status === "archived";
+  // Only an active entity can be archived; a draft or archived one is activated.
+  const isActive = database.status === "active";
 
   async function toggleStatus() {
     const params = {
       path: { account_id: accountId, database_id: database.id },
     };
-    if (isArchived) {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (isActive) {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/databases/{database_id}"],
@@ -69,11 +70,11 @@ export function DatabaseOverview({
             {t`Modifier`}
           </Button>
           <Button
-            icon={isArchived ? <RocketOutlined /> : <InboxOutlined />}
+            icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
             loading={activateMutation.isPending || archiveMutation.isPending}
             onClick={toggleStatus}
           >
-            {isArchived ? t`Activer` : t`Archiver`}
+            {isActive ? t`Archiver` : t`Activer`}
           </Button>
         </Space>
       </Flex>

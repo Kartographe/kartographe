@@ -62,10 +62,10 @@ export function RolesScreen({
 
   async function toggleStatus(role: Role) {
     const params = { path: { ...path, role_id: role.id } };
-    if (role.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (role.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -140,7 +140,7 @@ export function RolesScreen({
               align: "right",
               render: (_, role) => (
                 <RowActions
-                  archived={role.status === "archived"}
+                  active={role.status === "active"}
                   onDelete={() => confirmDelete(role)}
                   onEdit={() => {
                     setEditing(role);

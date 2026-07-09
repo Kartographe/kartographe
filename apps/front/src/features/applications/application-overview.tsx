@@ -38,16 +38,17 @@ export function ApplicationOverview({
     { meta: { successMessage: t`Application archivée` } }
   );
 
-  const isArchived = application.status === "archived";
+  // Only an active entity can be archived; a draft or archived one is activated.
+  const isActive = application.status === "active";
 
   async function toggleStatus() {
     const params = {
       path: { account_id: accountId, application_id: application.id },
     };
-    if (isArchived) {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (isActive) {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     queryClient.invalidateQueries({
       queryKey: [
@@ -71,11 +72,11 @@ export function ApplicationOverview({
             {t`Modifier`}
           </Button>
           <Button
-            icon={isArchived ? <RocketOutlined /> : <InboxOutlined />}
+            icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
             loading={activateMutation.isPending || archiveMutation.isPending}
             onClick={toggleStatus}
           >
-            {isArchived ? t`Activer` : t`Archiver`}
+            {isActive ? t`Archiver` : t`Activer`}
           </Button>
         </Space>
       </Flex>

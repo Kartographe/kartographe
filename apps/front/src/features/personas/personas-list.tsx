@@ -128,10 +128,10 @@ export function PersonasList({ accountId }: { accountId: string }) {
 
   async function toggleStatus(persona: Persona) {
     const params = { path: { account_id: accountId, persona_id: persona.id } };
-    if (persona.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (persona.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -288,16 +288,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
                   />
                 </Tooltip>
                 <Tooltip
-                  title={
-                    persona.status === "archived" ? t`Activer` : t`Archiver`
-                  }
+                  title={persona.status === "active" ? t`Archiver` : t`Activer`}
                 >
                   <Button
                     icon={
-                      persona.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      persona.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(persona)}

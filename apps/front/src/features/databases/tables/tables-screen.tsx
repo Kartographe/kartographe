@@ -127,10 +127,10 @@ export function TablesScreen({
 
   async function toggleStatus(table: DatabaseTable) {
     const params = { path: { ...path, database_table_id: table.id } };
-    if (table.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (table.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -211,14 +211,10 @@ export function TablesScreen({
             size="small"
           />
         </Tooltip>
-        <Tooltip title={table.status === "archived" ? t`Activer` : t`Archiver`}>
+        <Tooltip title={table.status === "active" ? t`Archiver` : t`Activer`}>
           <Button
             icon={
-              table.status === "archived" ? (
-                <RocketOutlined />
-              ) : (
-                <InboxOutlined />
-              )
+              table.status === "active" ? <InboxOutlined /> : <RocketOutlined />
             }
             onClick={() => toggleStatus(table)}
             size="small"

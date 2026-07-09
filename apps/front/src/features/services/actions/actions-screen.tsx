@@ -105,10 +105,10 @@ export function ActionsScreen({
 
   async function toggleStatus(action: ServiceAction) {
     const params = { path: { ...path, action_id: action.id } };
-    if (action.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (action.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -130,7 +130,8 @@ export function ActionsScreen({
   }
 
   const items = actions.map((action) => {
-    const archived = action.status === "archived";
+    // The button tracks "active": a draft is not archivable, it is activated.
+    const isActive = action.status === "active";
     return {
       key: action.id,
       style: panelStyle(action),
@@ -164,9 +165,9 @@ export function ActionsScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={archived ? t`Activer` : t`Archiver`}>
+          <Tooltip title={isActive ? t`Archiver` : t`Activer`}>
             <Button
-              icon={archived ? <RocketOutlined /> : <InboxOutlined />}
+              icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
               onClick={() => toggleStatus(action)}
               size="small"
             />

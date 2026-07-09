@@ -94,6 +94,7 @@ export function FeatureFilesScreen({
 
   async function toggleStatus(file: FeatureFile) {
     const params = { path: { ...path, feature_file_id: file.id } };
+    // A file is only ever `uploaded` or `archived` — no draft to activate from.
     if (file.status === "archived") {
       await activateMutation.mutateAsync({ params });
     } else {

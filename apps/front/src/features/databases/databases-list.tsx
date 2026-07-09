@@ -127,10 +127,10 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     const params = {
       path: { account_id: accountId, database_id: database.id },
     };
-    if (database.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (database.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -291,15 +291,15 @@ export function DatabasesList({ accountId }: { accountId: string }) {
                 </Tooltip>
                 <Tooltip
                   title={
-                    database.status === "archived" ? t`Activer` : t`Archiver`
+                    database.status === "active" ? t`Archiver` : t`Activer`
                   }
                 >
                   <Button
                     icon={
-                      database.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      database.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(database)}

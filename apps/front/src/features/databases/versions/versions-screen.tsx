@@ -78,10 +78,10 @@ export function VersionsScreen({
 
   async function toggleStatus(version: DatabaseVersion) {
     const params = { path: { ...path, database_version_id: version.id } };
-    if (version.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (version.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -217,16 +217,14 @@ export function VersionsScreen({
                   />
                 </Tooltip>
                 <Tooltip
-                  title={
-                    version.status === "archived" ? t`Activer` : t`Archiver`
-                  }
+                  title={version.status === "active" ? t`Archiver` : t`Activer`}
                 >
                   <Button
                     icon={
-                      version.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      version.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(version)}

@@ -81,10 +81,10 @@ export function ScenariosScreen({
 
   async function toggleStatus(scenario: JourneyScenario) {
     const params = { path: { ...path, scenario_id: scenario.id } };
-    if (scenario.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
+    if (scenario.status === "active") {
       await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
     }
     invalidate();
   }
@@ -221,15 +221,15 @@ export function ScenariosScreen({
                 </Tooltip>
                 <Tooltip
                   title={
-                    scenario.status === "archived" ? t`Activer` : t`Archiver`
+                    scenario.status === "active" ? t`Archiver` : t`Activer`
                   }
                 >
                   <Button
                     icon={
-                      scenario.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
+                      scenario.status === "active" ? (
                         <InboxOutlined />
+                      ) : (
+                        <RocketOutlined />
                       )
                     }
                     onClick={() => toggleStatus(scenario)}
