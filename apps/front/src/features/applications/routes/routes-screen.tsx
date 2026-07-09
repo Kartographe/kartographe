@@ -1,4 +1,5 @@
 import {
+  CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   InboxOutlined,
@@ -28,6 +29,7 @@ import {
   RouteMethodTag,
 } from "@/features/applications/application-tags";
 import { ROUTE_METHOD_COLORS } from "@/features/applications/labels";
+import { RouteCommentsDrawer } from "@/features/applications/routes/route-comments-drawer";
 import { RouteFormModal } from "@/features/applications/routes/route-form-modal";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -55,6 +57,9 @@ export function RoutesScreen({
   const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ApplicationRoute | undefined>(
+    undefined
+  );
+  const [commented, setCommented] = useState<ApplicationRoute | undefined>(
     undefined
   );
 
@@ -153,6 +158,13 @@ export function RoutesScreen({
       ),
       extra: (
         <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+          <Tooltip title={t`Commentaires`}>
+            <Button
+              icon={<CommentOutlined />}
+              onClick={() => setCommented(route)}
+              size="small"
+            />
+          </Tooltip>
           <Tooltip title={t`Modifier`}>
             <Button
               icon={<EditOutlined />}
@@ -270,6 +282,13 @@ export function RoutesScreen({
         onClose={() => setFormOpen(false)}
         open={formOpen}
         route={editing}
+      />
+
+      <RouteCommentsDrawer
+        accountId={accountId}
+        applicationId={applicationId}
+        onClose={() => setCommented(undefined)}
+        route={commented}
       />
     </Flex>
   );
