@@ -1,4 +1,4 @@
-import { ControlOutlined, DashboardOutlined } from "@ant-design/icons";
+import { ControlOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Tooltip } from "antd";
@@ -87,15 +87,6 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
     return <nav style={{ height: "100%" }} />;
   }
 
-  const topItems: NavItem[] = [
-    {
-      to: "/accounts/$accountId",
-      params: { accountId: activeId },
-      label: t`Tableau de bord`,
-      icon: <DashboardOutlined />,
-      exact: true,
-    },
-  ];
   const bottomItems: NavItem[] = isAdmin
     ? [
         {
@@ -117,14 +108,6 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
         padding: 8,
       }}
     >
-      {topItems.map((item) => (
-        <NavLink
-          collapsed={collapsed}
-          item={item}
-          key={item.to}
-          pathname={pathname}
-        />
-      ))}
       {bottomItems.length > 0 ? (
         <div
           style={{
