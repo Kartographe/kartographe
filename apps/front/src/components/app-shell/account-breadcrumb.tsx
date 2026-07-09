@@ -22,6 +22,8 @@ const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
   comments: msg`Commentaires`,
   services: msg`Services`,
   actions: msg`Actions`,
+  databases: msg`Bases de données`,
+  tables: msg`Tables`,
 };
 
 interface Crumb {
@@ -31,28 +33,25 @@ interface Crumb {
 }
 
 /**
- * Breadcrumb for every `/accounts/$accountId/*` page. Static segments are
- * translated from `SEGMENT_LABELS`; the account id, and the id of whichever
- * entity is being browsed, are resolved to their titles.
+ * Resolves the id sitting right after its collection — `.../applications/{id}`,
+ * `.../services/{id}`, `.../databases/{id}` — to that entity's title. Deeper ids
+ * (a route, an action, a table) never reach the URL, so one lookup per
+ * collection is enough.
+ *
+ * Returns a map from the id found in the path to its label; empty when the path
+ * points at no entity.
  */
-export function AccountBreadcrumb({ accountId }: { accountId: string }) {
+function useEntityLabels(
+  accountId: string,
+  rest: string[]
+): Map<string, string> {
   const { t } = useLingui();
-  const pathname = useRouterState({
-    select: (state) => state.location.pathname,
-  });
 
-  const segments = pathname.split("/").filter(Boolean);
-  // ["accounts", accountId, ...rest]
-  const rest = segments.slice(2);
-  // Only the id right after its collection is an entity; deeper ids (a route,
-  // an action) never reach the URL.
   const applicationId =
     rest[0] === "applications" && rest[1] ? rest[1] : undefined;
   const serviceId = rest[0] === "services" && rest[1] ? rest[1] : undefined;
+  const databaseId = rest[0] === "databases" && rest[1] ? rest[1] : undefined;
 
-  const accountQuery = $api.useQuery("get", "/v1/accounts/{account_id}", {
-    params: { path: { account_id: accountId } },
-  });
   const applicationQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/applications/{application_id}",
@@ -71,6 +70,55 @@ export function AccountBreadcrumb({ accountId }: { accountId: string }) {
     },
     { enabled: !!serviceId }
   );
+  const databaseQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/databases/{database_id}",
+    {
+      params: {
+        path: { account_id: accountId, database_id: databaseId ?? "" },
+      },
+    },
+    { enabled: !!databaseId }
+  );
+
+  const labels = new Map<string, string>();
+  if (applicationId) {
+    labels.set(
+      applicationId,
+      applicationQuery.data?.item.title ?? t`Application`
+    );
+  }
+  if (serviceId) {
+    labels.set(serviceId, serviceQuery.data?.item.title ?? t`Service`);
+  }
+  if (databaseId) {
+    labels.set(
+      databaseId,
+      databaseQuery.data?.item.title ?? t`Base de données`
+    );
+  }
+  return labels;
+}
+
+/**
+ * Breadcrumb for every `/accounts/$accountId/*` page. Static segments are
+ * translated from `SEGMENT_LABELS`; the account id, and the id of whichever
+ * entity is being browsed, are resolved to their titles.
+ */
+export function AccountBreadcrumb({ accountId }: { accountId: string }) {
+  const { t } = useLingui();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+
+  const segments = pathname.split("/").filter(Boolean);
+  // ["accounts", accountId, ...rest]
+  const rest = segments.slice(2);
+
+  const accountQuery = $api.useQuery("get", "/v1/accounts/{account_id}", {
+    params: { path: { account_id: accountId } },
+  });
+  const entityLabels = useEntityLabels(accountId, rest);
 
   const crumbs: Crumb[] = [
     {
@@ -83,20 +131,9 @@ export function AccountBreadcrumb({ accountId }: { accountId: string }) {
   let href = `/accounts/${accountId}`;
   for (const segment of rest) {
     href = `${href}/${segment}`;
-    if (segment === applicationId) {
-      crumbs.push({
-        key: segment,
-        label: applicationQuery.data?.item.title ?? t`Application`,
-        href,
-      });
-      continue;
-    }
-    if (segment === serviceId) {
-      crumbs.push({
-        key: segment,
-        label: serviceQuery.data?.item.title ?? t`Service`,
-        href,
-      });
+    const entityLabel = entityLabels.get(segment);
+    if (entityLabel) {
+      crumbs.push({ key: segment, label: entityLabel, href });
       continue;
     }
     const label = SEGMENT_LABELS[segment];

@@ -2,6 +2,7 @@ import {
   AppstoreOutlined,
   CloudServerOutlined,
   ControlOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -104,6 +105,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
       params: { accountId },
       label: t`Services`,
       icon: <CloudServerOutlined />,
+    },
+    {
+      to: "/accounts/$accountId/databases",
+      params: { accountId },
+      label: t`Bases de données`,
+      icon: <DatabaseOutlined />,
     },
   ];
 

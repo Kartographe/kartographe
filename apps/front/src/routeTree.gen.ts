@@ -35,14 +35,24 @@ import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/acc
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
 import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
 import { Route as AppAccountsAccountIdAdministrationRouteRouteImport } from './routes/_app/accounts/$accountId/administration/route'
+import { Route as AppAccountsAccountIdServicesIndexRouteImport } from './routes/_app/accounts/$accountId/services/index'
+import { Route as AppAccountsAccountIdDatabasesIndexRouteImport } from './routes/_app/accounts/$accountId/databases/index'
 import { Route as AppAccountsAccountIdApplicationsIndexRouteImport } from './routes/_app/accounts/$accountId/applications/index'
 import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
 import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
 import { Route as AppAccountsAccountIdAdministrationInvitationsRouteImport } from './routes/_app/accounts/$accountId/administration/invitations'
 import { Route as AppAccountsAccountIdAdministrationInformationRouteImport } from './routes/_app/accounts/$accountId/administration/information'
 import { Route as AppAccountsAccountIdAdministrationAdvancedRouteImport } from './routes/_app/accounts/$accountId/administration/advanced'
+import { Route as AppAccountsAccountIdServicesServiceIdRouteRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/route'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdRouteRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/route'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/route'
+import { Route as AppAccountsAccountIdServicesServiceIdIndexRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/index'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdIndexRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/index'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/index'
+import { Route as AppAccountsAccountIdServicesServiceIdCommentsRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/comments'
+import { Route as AppAccountsAccountIdServicesServiceIdActionsRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/actions'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdTablesRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/tables'
+import { Route as AppAccountsAccountIdDatabasesDatabaseIdCommentsRouteImport } from './routes/_app/accounts/$accountId/databases/$databaseId/comments'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdVersionsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/versions'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdRoutesRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/routes'
 import { Route as AppAccountsAccountIdApplicationsApplicationIdRolesRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/roles'
@@ -183,6 +193,18 @@ const AppAccountsAccountIdAdministrationRouteRoute =
     path: '/administration',
     getParentRoute: () => AppAccountsAccountIdRouteRoute,
   } as any)
+const AppAccountsAccountIdServicesIndexRoute =
+  AppAccountsAccountIdServicesIndexRouteImport.update({
+    id: '/services/',
+    path: '/services/',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdDatabasesIndexRoute =
+  AppAccountsAccountIdDatabasesIndexRouteImport.update({
+    id: '/databases/',
+    path: '/databases/',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdApplicationsIndexRoute =
   AppAccountsAccountIdApplicationsIndexRouteImport.update({
     id: '/applications/',
@@ -219,11 +241,35 @@ const AppAccountsAccountIdAdministrationAdvancedRoute =
     path: '/advanced',
     getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
   } as any)
+const AppAccountsAccountIdServicesServiceIdRouteRoute =
+  AppAccountsAccountIdServicesServiceIdRouteRouteImport.update({
+    id: '/services/$serviceId',
+    path: '/services/$serviceId',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdRouteRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdRouteRouteImport.update({
+    id: '/databases/$databaseId',
+    path: '/databases/$databaseId',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdApplicationsApplicationIdRouteRoute =
   AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport.update({
     id: '/applications/$applicationId',
     path: '/applications/$applicationId',
     getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdServicesServiceIdIndexRoute =
+  AppAccountsAccountIdServicesServiceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppAccountsAccountIdServicesServiceIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdIndexRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
   } as any)
 const AppAccountsAccountIdApplicationsApplicationIdIndexRoute =
   AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport.update({
@@ -231,6 +277,30 @@ const AppAccountsAccountIdApplicationsApplicationIdIndexRoute =
     path: '/',
     getParentRoute: () =>
       AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdServicesServiceIdCommentsRoute =
+  AppAccountsAccountIdServicesServiceIdCommentsRouteImport.update({
+    id: '/comments',
+    path: '/comments',
+    getParentRoute: () => AppAccountsAccountIdServicesServiceIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdServicesServiceIdActionsRoute =
+  AppAccountsAccountIdServicesServiceIdActionsRouteImport.update({
+    id: '/actions',
+    path: '/actions',
+    getParentRoute: () => AppAccountsAccountIdServicesServiceIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdTablesRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdTablesRouteImport.update({
+    id: '/tables',
+    path: '/tables',
+    getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute =
+  AppAccountsAccountIdDatabasesDatabaseIdCommentsRouteImport.update({
+    id: '/comments',
+    path: '/comments',
+    getParentRoute: () => AppAccountsAccountIdDatabasesDatabaseIdRouteRoute,
   } as any)
 const AppAccountsAccountIdApplicationsApplicationIdVersionsRoute =
   AppAccountsAccountIdApplicationsApplicationIdVersionsRouteImport.update({
@@ -309,12 +379,16 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts/': typeof AppMeAccountsIndexRoute
   '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
+  '/accounts/$accountId/databases/$databaseId': typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren
+  '/accounts/$accountId/services/$serviceId': typeof AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren
   '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
   '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
+  '/accounts/$accountId/services/': typeof AppAccountsAccountIdServicesIndexRoute
   '/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
   '/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
   '/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
@@ -322,7 +396,13 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
   '/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
   '/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/accounts/$accountId/databases/$databaseId/comments': typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute
+  '/accounts/$accountId/databases/$databaseId/tables': typeof AppAccountsAccountIdDatabasesDatabaseIdTablesRoute
+  '/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
+  '/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
   '/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
+  '/accounts/$accountId/databases/$databaseId/': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
+  '/accounts/$accountId/services/$serviceId/': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -353,6 +433,8 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/accounts/$accountId/databases': typeof AppAccountsAccountIdDatabasesIndexRoute
+  '/accounts/$accountId/services': typeof AppAccountsAccountIdServicesIndexRoute
   '/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
   '/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
   '/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
@@ -360,7 +442,13 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
   '/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
   '/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/accounts/$accountId/databases/$databaseId/comments': typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute
+  '/accounts/$accountId/databases/$databaseId/tables': typeof AppAccountsAccountIdDatabasesDatabaseIdTablesRoute
+  '/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
+  '/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
   '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
+  '/accounts/$accountId/databases/$databaseId': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
+  '/accounts/$accountId/services/$serviceId': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -391,12 +479,16 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/_app/me/accounts/': typeof AppMeAccountsIndexRoute
   '/_app/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
+  '/_app/accounts/$accountId/databases/$databaseId': typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren
+  '/_app/accounts/$accountId/services/$serviceId': typeof AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren
   '/_app/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
   '/_app/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/_app/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/_app/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/_app/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
+  '/_app/accounts/$accountId/services/': typeof AppAccountsAccountIdServicesIndexRoute
   '/_app/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
   '/_app/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
   '/_app/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
@@ -404,7 +496,13 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
   '/_app/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
   '/_app/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/_app/accounts/$accountId/databases/$databaseId/comments': typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute
+  '/_app/accounts/$accountId/databases/$databaseId/tables': typeof AppAccountsAccountIdDatabasesDatabaseIdTablesRoute
+  '/_app/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
+  '/_app/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
   '/_app/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
+  '/_app/accounts/$accountId/databases/$databaseId/': typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
+  '/_app/accounts/$accountId/services/$serviceId/': typeof AppAccountsAccountIdServicesServiceIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -435,12 +533,16 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/'
     | '/me/accounts/'
     | '/accounts/$accountId/applications/$applicationId'
+    | '/accounts/$accountId/databases/$databaseId'
+    | '/accounts/$accountId/services/$serviceId'
     | '/accounts/$accountId/administration/advanced'
     | '/accounts/$accountId/administration/information'
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/'
     | '/accounts/$accountId/applications/'
+    | '/accounts/$accountId/databases/'
+    | '/accounts/$accountId/services/'
     | '/accounts/$accountId/applications/$applicationId/comments'
     | '/accounts/$accountId/applications/$applicationId/deployments'
     | '/accounts/$accountId/applications/$applicationId/environments'
@@ -448,7 +550,13 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/applications/$applicationId/roles'
     | '/accounts/$accountId/applications/$applicationId/routes'
     | '/accounts/$accountId/applications/$applicationId/versions'
+    | '/accounts/$accountId/databases/$databaseId/comments'
+    | '/accounts/$accountId/databases/$databaseId/tables'
+    | '/accounts/$accountId/services/$serviceId/actions'
+    | '/accounts/$accountId/services/$serviceId/comments'
     | '/accounts/$accountId/applications/$applicationId/'
+    | '/accounts/$accountId/databases/$databaseId/'
+    | '/accounts/$accountId/services/$serviceId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -479,6 +587,8 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/applications'
+    | '/accounts/$accountId/databases'
+    | '/accounts/$accountId/services'
     | '/accounts/$accountId/applications/$applicationId/comments'
     | '/accounts/$accountId/applications/$applicationId/deployments'
     | '/accounts/$accountId/applications/$applicationId/environments'
@@ -486,7 +596,13 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/applications/$applicationId/roles'
     | '/accounts/$accountId/applications/$applicationId/routes'
     | '/accounts/$accountId/applications/$applicationId/versions'
+    | '/accounts/$accountId/databases/$databaseId/comments'
+    | '/accounts/$accountId/databases/$databaseId/tables'
+    | '/accounts/$accountId/services/$serviceId/actions'
+    | '/accounts/$accountId/services/$serviceId/comments'
     | '/accounts/$accountId/applications/$applicationId'
+    | '/accounts/$accountId/databases/$databaseId'
+    | '/accounts/$accountId/services/$serviceId'
   id:
     | '__root__'
     | '/auth'
@@ -516,12 +632,16 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/'
     | '/_app/me/accounts/'
     | '/_app/accounts/$accountId/applications/$applicationId'
+    | '/_app/accounts/$accountId/databases/$databaseId'
+    | '/_app/accounts/$accountId/services/$serviceId'
     | '/_app/accounts/$accountId/administration/advanced'
     | '/_app/accounts/$accountId/administration/information'
     | '/_app/accounts/$accountId/administration/invitations'
     | '/_app/accounts/$accountId/administration/members'
     | '/_app/accounts/$accountId/administration/'
     | '/_app/accounts/$accountId/applications/'
+    | '/_app/accounts/$accountId/databases/'
+    | '/_app/accounts/$accountId/services/'
     | '/_app/accounts/$accountId/applications/$applicationId/comments'
     | '/_app/accounts/$accountId/applications/$applicationId/deployments'
     | '/_app/accounts/$accountId/applications/$applicationId/environments'
@@ -529,7 +649,13 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/applications/$applicationId/roles'
     | '/_app/accounts/$accountId/applications/$applicationId/routes'
     | '/_app/accounts/$accountId/applications/$applicationId/versions'
+    | '/_app/accounts/$accountId/databases/$databaseId/comments'
+    | '/_app/accounts/$accountId/databases/$databaseId/tables'
+    | '/_app/accounts/$accountId/services/$serviceId/actions'
+    | '/_app/accounts/$accountId/services/$serviceId/comments'
     | '/_app/accounts/$accountId/applications/$applicationId/'
+    | '/_app/accounts/$accountId/databases/$databaseId/'
+    | '/_app/accounts/$accountId/services/$serviceId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -724,6 +850,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationRouteRouteImport
       parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
+    '/_app/accounts/$accountId/services/': {
+      id: '/_app/accounts/$accountId/services/'
+      path: '/services'
+      fullPath: '/accounts/$accountId/services/'
+      preLoaderRoute: typeof AppAccountsAccountIdServicesIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/': {
+      id: '/_app/accounts/$accountId/databases/'
+      path: '/databases'
+      fullPath: '/accounts/$accountId/databases/'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
     '/_app/accounts/$accountId/applications/': {
       id: '/_app/accounts/$accountId/applications/'
       path: '/applications'
@@ -766,6 +906,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationAdvancedRouteImport
       parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
     }
+    '/_app/accounts/$accountId/services/$serviceId': {
+      id: '/_app/accounts/$accountId/services/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/accounts/$accountId/services/$serviceId'
+      preLoaderRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/$databaseId': {
+      id: '/_app/accounts/$accountId/databases/$databaseId'
+      path: '/databases/$databaseId'
+      fullPath: '/accounts/$accountId/databases/$databaseId'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
     '/_app/accounts/$accountId/applications/$applicationId': {
       id: '/_app/accounts/$accountId/applications/$applicationId'
       path: '/applications/$applicationId'
@@ -773,12 +927,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport
       parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
+    '/_app/accounts/$accountId/services/$serviceId/': {
+      id: '/_app/accounts/$accountId/services/$serviceId/'
+      path: '/'
+      fullPath: '/accounts/$accountId/services/$serviceId/'
+      preLoaderRoute: typeof AppAccountsAccountIdServicesServiceIdIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/$databaseId/': {
+      id: '/_app/accounts/$accountId/databases/$databaseId/'
+      path: '/'
+      fullPath: '/accounts/$accountId/databases/$databaseId/'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
+    }
     '/_app/accounts/$accountId/applications/$applicationId/': {
       id: '/_app/accounts/$accountId/applications/$applicationId/'
       path: '/'
       fullPath: '/accounts/$accountId/applications/$applicationId/'
       preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport
       parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/services/$serviceId/comments': {
+      id: '/_app/accounts/$accountId/services/$serviceId/comments'
+      path: '/comments'
+      fullPath: '/accounts/$accountId/services/$serviceId/comments'
+      preLoaderRoute: typeof AppAccountsAccountIdServicesServiceIdCommentsRouteImport
+      parentRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRoute
+    }
+    '/_app/accounts/$accountId/services/$serviceId/actions': {
+      id: '/_app/accounts/$accountId/services/$serviceId/actions'
+      path: '/actions'
+      fullPath: '/accounts/$accountId/services/$serviceId/actions'
+      preLoaderRoute: typeof AppAccountsAccountIdServicesServiceIdActionsRouteImport
+      parentRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/$databaseId/tables': {
+      id: '/_app/accounts/$accountId/databases/$databaseId/tables'
+      path: '/tables'
+      fullPath: '/accounts/$accountId/databases/$databaseId/tables'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdTablesRouteImport
+      parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
+    }
+    '/_app/accounts/$accountId/databases/$databaseId/comments': {
+      id: '/_app/accounts/$accountId/databases/$databaseId/comments'
+      path: '/comments'
+      fullPath: '/accounts/$accountId/databases/$databaseId/comments'
+      preLoaderRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRouteImport
+      parentRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRoute
     }
     '/_app/accounts/$accountId/applications/$applicationId/versions': {
       id: '/_app/accounts/$accountId/applications/$applicationId/versions'
@@ -947,11 +1143,57 @@ const AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren =
     AppAccountsAccountIdApplicationsApplicationIdRouteRouteChildren,
   )
 
+interface AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren {
+  AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute
+  AppAccountsAccountIdDatabasesDatabaseIdTablesRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdTablesRoute
+  AppAccountsAccountIdDatabasesDatabaseIdIndexRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdIndexRoute
+}
+
+const AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren: AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren =
+  {
+    AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdCommentsRoute,
+    AppAccountsAccountIdDatabasesDatabaseIdTablesRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdTablesRoute,
+    AppAccountsAccountIdDatabasesDatabaseIdIndexRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdIndexRoute,
+  }
+
+const AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren =
+  AppAccountsAccountIdDatabasesDatabaseIdRouteRoute._addFileChildren(
+    AppAccountsAccountIdDatabasesDatabaseIdRouteRouteChildren,
+  )
+
+interface AppAccountsAccountIdServicesServiceIdRouteRouteChildren {
+  AppAccountsAccountIdServicesServiceIdActionsRoute: typeof AppAccountsAccountIdServicesServiceIdActionsRoute
+  AppAccountsAccountIdServicesServiceIdCommentsRoute: typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
+  AppAccountsAccountIdServicesServiceIdIndexRoute: typeof AppAccountsAccountIdServicesServiceIdIndexRoute
+}
+
+const AppAccountsAccountIdServicesServiceIdRouteRouteChildren: AppAccountsAccountIdServicesServiceIdRouteRouteChildren =
+  {
+    AppAccountsAccountIdServicesServiceIdActionsRoute:
+      AppAccountsAccountIdServicesServiceIdActionsRoute,
+    AppAccountsAccountIdServicesServiceIdCommentsRoute:
+      AppAccountsAccountIdServicesServiceIdCommentsRoute,
+    AppAccountsAccountIdServicesServiceIdIndexRoute:
+      AppAccountsAccountIdServicesServiceIdIndexRoute,
+  }
+
+const AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren =
+  AppAccountsAccountIdServicesServiceIdRouteRoute._addFileChildren(
+    AppAccountsAccountIdServicesServiceIdRouteRouteChildren,
+  )
+
 interface AppAccountsAccountIdRouteRouteChildren {
   AppAccountsAccountIdAdministrationRouteRoute: typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   AppAccountsAccountIdIndexRoute: typeof AppAccountsAccountIdIndexRoute
   AppAccountsAccountIdApplicationsApplicationIdRouteRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
+  AppAccountsAccountIdDatabasesDatabaseIdRouteRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren
+  AppAccountsAccountIdServicesServiceIdRouteRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren
   AppAccountsAccountIdApplicationsIndexRoute: typeof AppAccountsAccountIdApplicationsIndexRoute
+  AppAccountsAccountIdDatabasesIndexRoute: typeof AppAccountsAccountIdDatabasesIndexRoute
+  AppAccountsAccountIdServicesIndexRoute: typeof AppAccountsAccountIdServicesIndexRoute
 }
 
 const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChildren =
@@ -961,8 +1203,16 @@ const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChil
     AppAccountsAccountIdIndexRoute: AppAccountsAccountIdIndexRoute,
     AppAccountsAccountIdApplicationsApplicationIdRouteRoute:
       AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren,
+    AppAccountsAccountIdDatabasesDatabaseIdRouteRoute:
+      AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren,
+    AppAccountsAccountIdServicesServiceIdRouteRoute:
+      AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren,
     AppAccountsAccountIdApplicationsIndexRoute:
       AppAccountsAccountIdApplicationsIndexRoute,
+    AppAccountsAccountIdDatabasesIndexRoute:
+      AppAccountsAccountIdDatabasesIndexRoute,
+    AppAccountsAccountIdServicesIndexRoute:
+      AppAccountsAccountIdServicesIndexRoute,
   }
 
 const AppAccountsAccountIdRouteRouteWithChildren =
