@@ -212,6 +212,16 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Comments posted on a journey.",
     },
     {
+        "name": "api.journeys.scenarios.comments",
+        "x-displayName": "Journeys › Scenario comments",
+        "description": "Comments posted on a journey scenario.",
+    },
+    {
+        "name": "api.journeys.scenarios.steps.comments",
+        "x-displayName": "Journeys › Step comments",
+        "description": "Comments posted on a journey scenario step.",
+    },
+    {
         "name": "api.personas.comments",
         "x-displayName": "Personas › Comments",
         "description": "Comments posted on a persona.",

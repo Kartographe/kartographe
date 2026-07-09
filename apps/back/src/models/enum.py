@@ -465,6 +465,8 @@ class CommentEntityType(str, Enum):
     DATABASE_MIGRATION_COLUMN = "database_migration_column"
     SERVICE = "service"
     SERVICE_ACTION = "service_action"
+    JOURNEY_SCENARIO = "journey_scenario"
+    JOURNEY_SCENARIO_STEP = "journey_scenario_step"
 
 
 class ServiceType(str, Enum):

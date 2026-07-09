@@ -11,8 +11,10 @@ from fastapi import APIRouter
 
 from src.routes.api.journeys.comments import router as comments_router
 from src.routes.api.journeys.journeys import router as journeys_router
+from src.routes.api.journeys.scenario_comments import router as scenario_comments_router
 from src.routes.api.journeys.scenarios import router as scenarios_router
 from src.routes.api.journeys.step_assertions import router as step_assertions_router
+from src.routes.api.journeys.step_comments import router as step_comments_router
 from src.routes.api.journeys.step_files import router as step_files_router
 from src.routes.api.journeys.step_routes import router as step_routes_router
 from src.routes.api.journeys.steps import router as steps_router
@@ -25,3 +27,5 @@ router.include_router(step_files_router)
 router.include_router(step_assertions_router)
 router.include_router(step_routes_router)
 router.include_router(comments_router)
+router.include_router(scenario_comments_router)
+router.include_router(step_comments_router)

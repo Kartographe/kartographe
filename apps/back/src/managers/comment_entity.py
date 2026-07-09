@@ -26,6 +26,8 @@ from src.models.database_table_column import DatabaseTableColumn
 from src.models.enum import CommentEntityType, DatabaseMigrationColumnType
 from src.models.feature import Feature
 from src.models.journey import Journey
+from src.models.journey_scenario import JourneyScenario
+from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.persona import Persona
 from src.models.service import Service
 from src.models.service_action import ServiceAction
@@ -80,6 +82,12 @@ _SPECS: dict[CommentEntityType, _EntitySpec] = {
         ApplicationRoute, _route_label, CommentEntityType.APPLICATION, "application_id"
     ),
     CommentEntityType.JOURNEY: _EntitySpec(Journey, _title),
+    CommentEntityType.JOURNEY_SCENARIO: _EntitySpec(
+        JourneyScenario, _title, CommentEntityType.JOURNEY, "journey_id"
+    ),
+    CommentEntityType.JOURNEY_SCENARIO_STEP: _EntitySpec(
+        JourneyScenarioStep, _title, CommentEntityType.JOURNEY_SCENARIO, "journey_scenario_id"
+    ),
     CommentEntityType.PERSONA: _EntitySpec(Persona, _title),
     CommentEntityType.DATABASE: _EntitySpec(Database, _title),
     CommentEntityType.DATABASE_TABLE: _EntitySpec(
@@ -102,6 +110,10 @@ _SPECS: dict[CommentEntityType, _EntitySpec] = {
         ServiceAction, _title, CommentEntityType.SERVICE, "service_id"
     ),
 }
+
+# A missing spec would only surface as a KeyError once someone comments on that
+# kind of entity — fail at import instead.
+assert set(_SPECS) == set(CommentEntityType), "every CommentEntityType needs an entity spec"
 
 
 def _load_column_names(
