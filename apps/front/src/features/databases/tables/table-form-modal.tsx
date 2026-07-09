@@ -56,6 +56,7 @@ export function TableFormModal({
       schema: table?.schema ?? "public",
       name: table?.name ?? "",
       type: (table?.type ?? "physical") as TableType,
+      color: table?.color ?? "",
       description: asRichText(table?.description),
     },
     validators: {
@@ -63,6 +64,7 @@ export function TableFormModal({
         schema: z.string().min(1, t`Le schéma est requis`),
         name: z.string().min(1, t`Le nom est requis`),
         type: z.enum(dtoEnums.DatabaseTableType),
+        color: z.string(),
         description: z.record(z.string(), z.unknown()),
       }),
     },
@@ -73,6 +75,7 @@ export function TableFormModal({
         schema: value.schema,
         name: value.name,
         type: value.type,
+        color: value.color || null,
         description: isRichTextEmpty(value.description)
           ? null
           : (value.description as RichTextDocument),
@@ -127,6 +130,9 @@ export function TableFormModal({
             {(field) => (
               <field.SelectField label={t`Type`} options={typeOptions} />
             )}
+          </form.AppField>
+          <form.AppField name="color">
+            {(field) => <field.ColorField label={t`Couleur`} />}
           </form.AppField>
           <form.AppField name="description">
             {(field) => (

@@ -29,6 +29,7 @@ import {
   VersionStatusTag,
 } from "@/features/databases/database-tags";
 import { formatVersion } from "@/features/databases/labels";
+import { ColorSwatch } from "@/features/databases/tables/color-swatch";
 import { ColumnCommentsDrawer } from "@/features/databases/tables/column-comments-drawer";
 import { ColumnFormModal } from "@/features/databases/tables/column-form-modal";
 import { SchemaGraph } from "@/features/databases/tables/schema-graph";
@@ -183,6 +184,7 @@ export function TablesScreen({
     },
     label: (
       <Flex align="center" gap={12} style={{ minWidth: 0 }}>
+        <ColorSwatch color={table.color} />
         <Typography.Text
           code
         >{`${table.schema}.${table.name}`}</Typography.Text>
@@ -261,6 +263,7 @@ export function TablesScreen({
 
         {(table.columns ?? []).map((column) => (
           <Flex align="center" gap={8} key={column.id}>
+            <ColorSwatch color={column.color} size={10} />
             <Typography.Text code style={{ minWidth: 160 }}>
               {column.name}
             </Typography.Text>

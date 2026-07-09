@@ -76,6 +76,7 @@ export function ColumnFormModal({
       foreignKeyDatabaseTableId: column?.foreignKeyDatabaseTableId ?? NO_FK,
       foreignKeyDatabaseTableColumnId:
         column?.foreignKeyDatabaseTableColumnId ?? NO_FK,
+      color: column?.color ?? "",
       description: asRichText(column?.description),
     },
     validators: {
@@ -88,6 +89,7 @@ export function ColumnFormModal({
         systemField: z.boolean(),
         foreignKeyDatabaseTableId: z.string(),
         foreignKeyDatabaseTableColumnId: z.string(),
+        color: z.string(),
         description: z.record(z.string(), z.unknown()),
       }),
     },
@@ -106,6 +108,7 @@ export function ColumnFormModal({
           ? value.foreignKeyDatabaseTableColumnId || null
           : null,
         rank: column?.rank ?? nextRank,
+        color: value.color || null,
         description: isRichTextEmpty(value.description)
           ? null
           : (value.description as RichTextDocument),
@@ -213,6 +216,9 @@ export function ColumnFormModal({
                 options={fkColumnOptions}
               />
             )}
+          </form.AppField>
+          <form.AppField name="color">
+            {(field) => <field.ColorField label={t`Couleur`} />}
           </form.AppField>
           <form.AppField name="description">
             {(field) => (

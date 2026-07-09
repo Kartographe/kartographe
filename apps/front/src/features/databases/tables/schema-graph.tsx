@@ -12,6 +12,7 @@ import "@xyflow/react/dist/style.css";
 import { Checkbox, Empty, Flex, Tag, Typography } from "antd";
 import { useState } from "react";
 import type { components } from "@/api/generated/schema";
+import { ColorSwatch } from "@/features/databases/tables/color-swatch";
 import {
   type ColumnFilter,
   layoutSchema,
@@ -46,17 +47,20 @@ function TableNode({ data }: NodeProps) {
       <Handle position={Position.Left} type="target" />
       <Handle position={Position.Right} type="source" />
 
-      <div
+      <Flex
+        align="center"
+        gap={8}
         style={{
           background: "var(--ant-color-fill-quaternary)",
           borderBottom: "1px solid var(--ant-color-border-secondary)",
           padding: "10px 12px",
         }}
       >
+        <ColorSwatch color={table.color} />
         <Typography.Text ellipsis strong style={{ fontSize: 13 }}>
           {`${table.schema}.${table.name}`}
         </Typography.Text>
-      </div>
+      </Flex>
 
       {columns.map((column) => (
         <Flex
@@ -65,6 +69,7 @@ function TableNode({ data }: NodeProps) {
           key={column.id}
           style={{ fontSize: 11, height: 26, padding: "0 12px" }}
         >
+          <ColorSwatch color={column.color} size={8} />
           <Typography.Text ellipsis style={{ flex: 1, fontSize: 11 }}>
             {column.name}
           </Typography.Text>
