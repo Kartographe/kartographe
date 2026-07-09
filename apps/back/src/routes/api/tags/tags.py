@@ -1,8 +1,9 @@
 """`/v1/accounts/{account_id}/tags` — colored labels for account entities.
 
-Reads are open to any account member; writes (create, edit, delete) are
-restricted to owners and administrators. Deleting a tag detaches it from every
-entity that carried it.
+Reads and tag creation are open to any account member — tagging is part of
+filling in an entity, and the entity forms create the missing tag on the spot.
+Editing and deleting stay restricted to owners and administrators, since both
+reach across every entity that carries the tag.
 """
 
 from typing import Annotated
@@ -53,7 +54,7 @@ def list_tags(
     "",
     operation_id="api.tags.create",
     summary="Create a tag",
-    description="Create a tag for a given entity type. Owners and administrators only.",
+    description="Create a tag for a given entity type. Any member may create.",
     response_model=ItemResponse[TagItem],
     status_code=status.HTTP_201_CREATED,
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -61,8 +62,8 @@ def list_tags(
 def create_tag(
     form: TagCreateForm,
     account: CurrentAccountDep,
+    _: CurrentAccountUserDep,
     manager: TagManagerDep,
-    _: Annotated[AccountUser, Depends(_ADMIN)],
 ) -> ItemResponse[TagItem]:
     tag = manager.create(
         account,
