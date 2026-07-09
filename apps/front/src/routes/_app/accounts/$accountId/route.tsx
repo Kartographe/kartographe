@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { AccountBreadcrumb } from "@/components/app-shell/account-breadcrumb";
 import { useActiveAccountStore } from "@/features/accounts/active-account-store";
 
 export const Route = createFileRoute("/_app/accounts/$accountId")({
@@ -15,5 +16,10 @@ function AccountWorkspaceLayout() {
     setActiveId(accountId);
   }, [accountId, setActiveId]);
 
-  return <Outlet />;
+  return (
+    <>
+      <AccountBreadcrumb accountId={accountId} />
+      <Outlet />
+    </>
+  );
 }

@@ -1,0 +1,184 @@
+import { PlusOutlined } from "@ant-design/icons";
+import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
+import { App, Button, Empty, Flex, Table, Tag, Typography } from "antd";
+import { useState } from "react";
+import { $api } from "@/api/$api";
+import type { components } from "@/api/generated/schema";
+import {
+  ApplicationStatusTag,
+  GuardTypeTag,
+} from "@/features/applications/application-tags";
+import { GuardFormModal } from "@/features/applications/guards/guard-form-modal";
+import { GUARD_FIELD_TYPE_LABELS } from "@/features/applications/labels";
+import { RowActions } from "@/features/applications/row-actions";
+
+type Guard = components["schemas"]["ApplicationGuardItem"];
+
+const LIST_KEY = [
+  "get",
+  "/v1/accounts/{account_id}/applications/{application_id}/guards",
+];
+
+export function GuardsScreen({
+  accountId,
+  applicationId,
+}: {
+  accountId: string;
+  applicationId: string;
+}) {
+  const { t } = useLingui();
+  const { modal } = App.useApp();
+  const queryClient = useQueryClient();
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<Guard | undefined>(undefined);
+
+  const path = { account_id: accountId, application_id: applicationId };
+
+  const guardsQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards",
+    { params: { path } }
+  );
+  const activateMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/activate",
+    { meta: { successMessage: t`Guard activé` } }
+  );
+  const archiveMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/archive",
+    { meta: { successMessage: t`Guard archivé` } }
+  );
+  const deleteMutation = $api.useMutation(
+    "delete",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
+    { meta: { successMessage: t`Guard supprimé` } }
+  );
+
+  const guards = guardsQuery.data?.items ?? [];
+
+  function invalidate() {
+    queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  async function toggleStatus(guard: Guard) {
+    const params = { path: { ...path, guard_id: guard.id } };
+    if (guard.status === "archived") {
+      await activateMutation.mutateAsync({ params });
+    } else {
+      await archiveMutation.mutateAsync({ params });
+    }
+    invalidate();
+  }
+
+  function confirmDelete(guard: Guard) {
+    modal.confirm({
+      title: t`Supprimer ${guard.title} ?`,
+      content: t`Les routes protégées par ce guard ne le référenceront plus.`,
+      okText: t`Supprimer`,
+      okButtonProps: { danger: true },
+      cancelText: t`Annuler`,
+      onOk: async () => {
+        await deleteMutation.mutateAsync({
+          params: { path: { ...path, guard_id: guard.id } },
+        });
+        invalidate();
+      },
+    });
+  }
+
+  return (
+    <Flex gap={16} vertical>
+      <Flex align="center" justify="space-between">
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t`Guards`}
+        </Typography.Title>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => {
+            setEditing(undefined);
+            setFormOpen(true);
+          }}
+          type="primary"
+        >
+          {t`Créer un guard`}
+        </Button>
+      </Flex>
+
+      {guards.length === 0 && !guardsQuery.isLoading ? (
+        <Empty description={t`Aucun guard`} />
+      ) : (
+        <Table<Guard>
+          columns={[
+            {
+              title: t`Titre`,
+              dataIndex: "title",
+              render: (title: string) => (
+                <Typography.Text strong>{title}</Typography.Text>
+              ),
+            },
+            {
+              title: t`Type`,
+              dataIndex: "type",
+              render: (type: Guard["type"]) => <GuardTypeTag type={type} />,
+            },
+            {
+              title: t`Emplacement`,
+              dataIndex: "fieldType",
+              render: (fieldType: Guard["fieldType"]) =>
+                t(GUARD_FIELD_TYPE_LABELS[fieldType]),
+            },
+            {
+              title: t`Clé`,
+              dataIndex: "fieldKey",
+              render: (fieldKey: string) => <Tag>{fieldKey}</Tag>,
+            },
+            {
+              title: t`Format`,
+              dataIndex: "fieldFormat",
+              render: (fieldFormat: string | null) => fieldFormat ?? "—",
+            },
+            {
+              title: t`Statut`,
+              dataIndex: "status",
+              render: (status: Guard["status"]) => (
+                <ApplicationStatusTag status={status} />
+              ),
+            },
+            {
+              title: "",
+              key: "actions",
+              align: "right",
+              render: (_, guard) => (
+                <RowActions
+                  archived={guard.status === "archived"}
+                  onDelete={() => confirmDelete(guard)}
+                  onEdit={() => {
+                    setEditing(guard);
+                    setFormOpen(true);
+                  }}
+                  onToggleStatus={() => toggleStatus(guard)}
+                />
+              ),
+            },
+          ]}
+          dataSource={guards}
+          loading={guardsQuery.isLoading}
+          pagination={{ hideOnSinglePage: true, pageSize: 25 }}
+          rowKey="id"
+          size="small"
+        />
+      )}
+
+      <GuardFormModal
+        accountId={accountId}
+        applicationId={applicationId}
+        guard={editing}
+        key={editing?.id ?? "create"}
+        onClose={() => setFormOpen(false)}
+        open={formOpen}
+      />
+    </Flex>
+  );
+}

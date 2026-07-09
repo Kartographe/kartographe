@@ -35,11 +35,21 @@ import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/acc
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
 import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
 import { Route as AppAccountsAccountIdAdministrationRouteRouteImport } from './routes/_app/accounts/$accountId/administration/route'
+import { Route as AppAccountsAccountIdApplicationsIndexRouteImport } from './routes/_app/accounts/$accountId/applications/index'
 import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
 import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
 import { Route as AppAccountsAccountIdAdministrationInvitationsRouteImport } from './routes/_app/accounts/$accountId/administration/invitations'
 import { Route as AppAccountsAccountIdAdministrationInformationRouteImport } from './routes/_app/accounts/$accountId/administration/information'
 import { Route as AppAccountsAccountIdAdministrationAdvancedRouteImport } from './routes/_app/accounts/$accountId/administration/advanced'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/route'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/index'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdVersionsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/versions'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdRoutesRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/routes'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdRolesRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/roles'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdGuardsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/guards'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/environments'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdDeploymentsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/deployments'
+import { Route as AppAccountsAccountIdApplicationsApplicationIdCommentsRouteImport } from './routes/_app/accounts/$accountId/applications/$applicationId/comments'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -173,6 +183,12 @@ const AppAccountsAccountIdAdministrationRouteRoute =
     path: '/administration',
     getParentRoute: () => AppAccountsAccountIdRouteRoute,
   } as any)
+const AppAccountsAccountIdApplicationsIndexRoute =
+  AppAccountsAccountIdApplicationsIndexRouteImport.update({
+    id: '/applications/',
+    path: '/applications/',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdAdministrationIndexRoute =
   AppAccountsAccountIdAdministrationIndexRouteImport.update({
     id: '/',
@@ -203,6 +219,68 @@ const AppAccountsAccountIdAdministrationAdvancedRoute =
     path: '/advanced',
     getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
   } as any)
+const AppAccountsAccountIdApplicationsApplicationIdRouteRoute =
+  AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport.update({
+    id: '/applications/$applicationId',
+    path: '/applications/$applicationId',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdIndexRoute =
+  AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdVersionsRoute =
+  AppAccountsAccountIdApplicationsApplicationIdVersionsRouteImport.update({
+    id: '/versions',
+    path: '/versions',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdRoutesRoute =
+  AppAccountsAccountIdApplicationsApplicationIdRoutesRouteImport.update({
+    id: '/routes',
+    path: '/routes',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdRolesRoute =
+  AppAccountsAccountIdApplicationsApplicationIdRolesRouteImport.update({
+    id: '/roles',
+    path: '/roles',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdGuardsRoute =
+  AppAccountsAccountIdApplicationsApplicationIdGuardsRouteImport.update({
+    id: '/guards',
+    path: '/guards',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute =
+  AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRouteImport.update({
+    id: '/environments',
+    path: '/environments',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute =
+  AppAccountsAccountIdApplicationsApplicationIdDeploymentsRouteImport.update({
+    id: '/deployments',
+    path: '/deployments',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdApplicationsApplicationIdCommentsRoute =
+  AppAccountsAccountIdApplicationsApplicationIdCommentsRouteImport.update({
+    id: '/comments',
+    path: '/comments',
+    getParentRoute: () =>
+      AppAccountsAccountIdApplicationsApplicationIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -230,11 +308,21 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   '/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts/': typeof AppMeAccountsIndexRoute
+  '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
   '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
   '/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
+  '/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
+  '/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
+  '/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
+  '/accounts/$accountId/applications/$applicationId/guards': typeof AppAccountsAccountIdApplicationsApplicationIdGuardsRoute
+  '/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
+  '/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
+  '/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -264,6 +352,15 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
+  '/accounts/$accountId/applications': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
+  '/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
+  '/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
+  '/accounts/$accountId/applications/$applicationId/guards': typeof AppAccountsAccountIdApplicationsApplicationIdGuardsRoute
+  '/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
+  '/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
+  '/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -293,11 +390,21 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   '/_app/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/_app/me/accounts/': typeof AppMeAccountsIndexRoute
+  '/_app/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
   '/_app/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
   '/_app/accounts/$accountId/administration/information': typeof AppAccountsAccountIdAdministrationInformationRoute
   '/_app/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
+  '/_app/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
+  '/_app/accounts/$accountId/applications/$applicationId/comments': typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
+  '/_app/accounts/$accountId/applications/$applicationId/deployments': typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
+  '/_app/accounts/$accountId/applications/$applicationId/environments': typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
+  '/_app/accounts/$accountId/applications/$applicationId/guards': typeof AppAccountsAccountIdApplicationsApplicationIdGuardsRoute
+  '/_app/accounts/$accountId/applications/$applicationId/roles': typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
+  '/_app/accounts/$accountId/applications/$applicationId/routes': typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
+  '/_app/accounts/$accountId/applications/$applicationId/versions': typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  '/_app/accounts/$accountId/applications/$applicationId/': typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -327,11 +434,21 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/'
     | '/me/accounts/'
+    | '/accounts/$accountId/applications/$applicationId'
     | '/accounts/$accountId/administration/advanced'
     | '/accounts/$accountId/administration/information'
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/'
+    | '/accounts/$accountId/applications/'
+    | '/accounts/$accountId/applications/$applicationId/comments'
+    | '/accounts/$accountId/applications/$applicationId/deployments'
+    | '/accounts/$accountId/applications/$applicationId/environments'
+    | '/accounts/$accountId/applications/$applicationId/guards'
+    | '/accounts/$accountId/applications/$applicationId/roles'
+    | '/accounts/$accountId/applications/$applicationId/routes'
+    | '/accounts/$accountId/applications/$applicationId/versions'
+    | '/accounts/$accountId/applications/$applicationId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -361,6 +478,15 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration'
+    | '/accounts/$accountId/applications'
+    | '/accounts/$accountId/applications/$applicationId/comments'
+    | '/accounts/$accountId/applications/$applicationId/deployments'
+    | '/accounts/$accountId/applications/$applicationId/environments'
+    | '/accounts/$accountId/applications/$applicationId/guards'
+    | '/accounts/$accountId/applications/$applicationId/roles'
+    | '/accounts/$accountId/applications/$applicationId/routes'
+    | '/accounts/$accountId/applications/$applicationId/versions'
+    | '/accounts/$accountId/applications/$applicationId'
   id:
     | '__root__'
     | '/auth'
@@ -389,11 +515,21 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/administration'
     | '/_app/accounts/$accountId/'
     | '/_app/me/accounts/'
+    | '/_app/accounts/$accountId/applications/$applicationId'
     | '/_app/accounts/$accountId/administration/advanced'
     | '/_app/accounts/$accountId/administration/information'
     | '/_app/accounts/$accountId/administration/invitations'
     | '/_app/accounts/$accountId/administration/members'
     | '/_app/accounts/$accountId/administration/'
+    | '/_app/accounts/$accountId/applications/'
+    | '/_app/accounts/$accountId/applications/$applicationId/comments'
+    | '/_app/accounts/$accountId/applications/$applicationId/deployments'
+    | '/_app/accounts/$accountId/applications/$applicationId/environments'
+    | '/_app/accounts/$accountId/applications/$applicationId/guards'
+    | '/_app/accounts/$accountId/applications/$applicationId/roles'
+    | '/_app/accounts/$accountId/applications/$applicationId/routes'
+    | '/_app/accounts/$accountId/applications/$applicationId/versions'
+    | '/_app/accounts/$accountId/applications/$applicationId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -588,6 +724,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationRouteRouteImport
       parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
+    '/_app/accounts/$accountId/applications/': {
+      id: '/_app/accounts/$accountId/applications/'
+      path: '/applications'
+      fullPath: '/accounts/$accountId/applications/'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
     '/_app/accounts/$accountId/administration/': {
       id: '/_app/accounts/$accountId/administration/'
       path: '/'
@@ -622,6 +765,69 @@ declare module '@tanstack/react-router' {
       fullPath: '/accounts/$accountId/administration/advanced'
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationAdvancedRouteImport
       parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId': {
+      id: '/_app/accounts/$accountId/applications/$applicationId'
+      path: '/applications/$applicationId'
+      fullPath: '/accounts/$accountId/applications/$applicationId'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/'
+      path: '/'
+      fullPath: '/accounts/$accountId/applications/$applicationId/'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/versions': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/versions'
+      path: '/versions'
+      fullPath: '/accounts/$accountId/applications/$applicationId/versions'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/routes': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/routes'
+      path: '/routes'
+      fullPath: '/accounts/$accountId/applications/$applicationId/routes'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/roles': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/roles'
+      path: '/roles'
+      fullPath: '/accounts/$accountId/applications/$applicationId/roles'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRolesRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/guards': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/guards'
+      path: '/guards'
+      fullPath: '/accounts/$accountId/applications/$applicationId/guards'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdGuardsRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/environments': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/environments'
+      path: '/environments'
+      fullPath: '/accounts/$accountId/applications/$applicationId/environments'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/deployments': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/deployments'
+      path: '/deployments'
+      fullPath: '/accounts/$accountId/applications/$applicationId/deployments'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
+    }
+    '/_app/accounts/$accountId/applications/$applicationId/comments': {
+      id: '/_app/accounts/$accountId/applications/$applicationId/comments'
+      path: '/comments'
+      fullPath: '/accounts/$accountId/applications/$applicationId/comments'
+      preLoaderRoute: typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRouteImport
+      parentRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRoute
     }
   }
 }
@@ -705,9 +911,47 @@ const AppAccountsAccountIdAdministrationRouteRouteWithChildren =
     AppAccountsAccountIdAdministrationRouteRouteChildren,
   )
 
+interface AppAccountsAccountIdApplicationsApplicationIdRouteRouteChildren {
+  AppAccountsAccountIdApplicationsApplicationIdCommentsRoute: typeof AppAccountsAccountIdApplicationsApplicationIdCommentsRoute
+  AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute: typeof AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute
+  AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute: typeof AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute
+  AppAccountsAccountIdApplicationsApplicationIdGuardsRoute: typeof AppAccountsAccountIdApplicationsApplicationIdGuardsRoute
+  AppAccountsAccountIdApplicationsApplicationIdRolesRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRolesRoute
+  AppAccountsAccountIdApplicationsApplicationIdRoutesRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRoutesRoute
+  AppAccountsAccountIdApplicationsApplicationIdVersionsRoute: typeof AppAccountsAccountIdApplicationsApplicationIdVersionsRoute
+  AppAccountsAccountIdApplicationsApplicationIdIndexRoute: typeof AppAccountsAccountIdApplicationsApplicationIdIndexRoute
+}
+
+const AppAccountsAccountIdApplicationsApplicationIdRouteRouteChildren: AppAccountsAccountIdApplicationsApplicationIdRouteRouteChildren =
+  {
+    AppAccountsAccountIdApplicationsApplicationIdCommentsRoute:
+      AppAccountsAccountIdApplicationsApplicationIdCommentsRoute,
+    AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute:
+      AppAccountsAccountIdApplicationsApplicationIdDeploymentsRoute,
+    AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute:
+      AppAccountsAccountIdApplicationsApplicationIdEnvironmentsRoute,
+    AppAccountsAccountIdApplicationsApplicationIdGuardsRoute:
+      AppAccountsAccountIdApplicationsApplicationIdGuardsRoute,
+    AppAccountsAccountIdApplicationsApplicationIdRolesRoute:
+      AppAccountsAccountIdApplicationsApplicationIdRolesRoute,
+    AppAccountsAccountIdApplicationsApplicationIdRoutesRoute:
+      AppAccountsAccountIdApplicationsApplicationIdRoutesRoute,
+    AppAccountsAccountIdApplicationsApplicationIdVersionsRoute:
+      AppAccountsAccountIdApplicationsApplicationIdVersionsRoute,
+    AppAccountsAccountIdApplicationsApplicationIdIndexRoute:
+      AppAccountsAccountIdApplicationsApplicationIdIndexRoute,
+  }
+
+const AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren =
+  AppAccountsAccountIdApplicationsApplicationIdRouteRoute._addFileChildren(
+    AppAccountsAccountIdApplicationsApplicationIdRouteRouteChildren,
+  )
+
 interface AppAccountsAccountIdRouteRouteChildren {
   AppAccountsAccountIdAdministrationRouteRoute: typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   AppAccountsAccountIdIndexRoute: typeof AppAccountsAccountIdIndexRoute
+  AppAccountsAccountIdApplicationsApplicationIdRouteRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
+  AppAccountsAccountIdApplicationsIndexRoute: typeof AppAccountsAccountIdApplicationsIndexRoute
 }
 
 const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChildren =
@@ -715,6 +959,10 @@ const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChil
     AppAccountsAccountIdAdministrationRouteRoute:
       AppAccountsAccountIdAdministrationRouteRouteWithChildren,
     AppAccountsAccountIdIndexRoute: AppAccountsAccountIdIndexRoute,
+    AppAccountsAccountIdApplicationsApplicationIdRouteRoute:
+      AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren,
+    AppAccountsAccountIdApplicationsIndexRoute:
+      AppAccountsAccountIdApplicationsIndexRoute,
   }
 
 const AppAccountsAccountIdRouteRouteWithChildren =
