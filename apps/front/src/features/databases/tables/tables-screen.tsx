@@ -6,7 +6,7 @@ import {
   PlusOutlined,
   RocketOutlined,
 } from "@ant-design/icons";
-import { useLingui } from "@lingui/react/macro";
+import { Plural, useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   App,
@@ -119,7 +119,10 @@ export function TablesScreen({
     { meta: { successMessage: t`Colonne supprimée` } }
   );
 
-  const tables = tablesQuery.data?.items ?? [];
+  const tables = [...(tablesQuery.data?.items ?? [])].sort(
+    (a, b) =>
+      a.schema.localeCompare(b.schema) || a.name.localeCompare(b.name)
+  );
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: TABLES_KEY });
@@ -272,6 +275,11 @@ export function TablesScreen({
           <Typography.Text code>
             {formatVersion(version.version)}
           </Typography.Text>
+          {tablesQuery.isLoading ? null : (
+            <Typography.Text type="secondary">
+              <Plural one="# table" other="# tables" value={tables.length} />
+            </Typography.Text>
+          )}
           <VersionStatusTag status={version.status} />
         </Flex>
         <Flex align="center" gap={12}>
