@@ -11,6 +11,8 @@ from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 
+import boto3
+
 from src.settings import get_settings
 
 
@@ -71,8 +73,6 @@ class S3FileStorage(FileStorageInternalService):
         endpoint_url: str | None,
         public_url_base: str | None,
     ):
-        import boto3  # noqa: PLC0415 — lazy so local dev never needs boto3
-
         self._bucket = bucket
         self._region = region
         self._endpoint_url = endpoint_url

@@ -13,7 +13,16 @@ from src.managers.oauth import OauthError
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
 from src.settings import get_settings
+from src.utils.oauth_auth import OauthBearerMiddleware
 from src.utils.validation_errors import validation_error_handler
+
+# `fastapi-mcp` is a declared dependency but the MCP mount is optional: a
+# stripped-down self-hosted build may omit it. Guard the import at module level
+# (exception to the "imports at the top" rule) so the app still boots without it.
+try:
+    from fastapi_mcp import FastApiMCP
+except ImportError:  # pragma: no cover
+    FastApiMCP = None
 
 
 def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
@@ -115,39 +124,32 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
                 hide_models=True,
             )
 
-    if mount_mcp:
-        try:
-            from fastapi_mcp import FastApiMCP
+    if mount_mcp and FastApiMCP is not None:
+        mcp = FastApiMCP(
+            app,
+            name=f"{settings.app_name} MCP",
+            description="MCP server exposing the Kartographe platform as tools for AI agents.",
+            # Keep the ops probe, the unversioned auth/me surfaces and the
+            # OAuth/discovery endpoints out of the agent-callable tool set.
+            exclude_tags=[
+                "api.health",
+                "api.auth",
+                "api.me",
+                "api.me.security",
+                "api.me.integrations",
+                "api.oauth",
+                "api.oauth.metadata",
+            ],
+        )
+        mcp.mount_http(mount_path=settings.mcp_mount_path)
+        # Expose to the lifespan closure so the StreamableHTTP session
+        # manager is started during FastAPI startup rather than racing the
+        # first MCP request.
+        fastapi_mcp_instance = mcp
 
-            mcp = FastApiMCP(
-                app,
-                name=f"{settings.app_name} MCP",
-                description="MCP server exposing the Kartographe platform as tools for AI agents.",
-                # Keep the ops probe, the unversioned auth/me surfaces and the
-                # OAuth/discovery endpoints out of the agent-callable tool set.
-                exclude_tags=[
-                    "api.health",
-                    "api.auth",
-                    "api.me",
-                    "api.me.security",
-                    "api.me.integrations",
-                    "api.oauth",
-                    "api.oauth.metadata",
-                ],
-            )
-            mcp.mount_http(mount_path=settings.mcp_mount_path)
-            # Expose to the lifespan closure so the StreamableHTTP session
-            # manager is started during FastAPI startup rather than racing the
-            # first MCP request.
-            fastapi_mcp_instance = mcp
-
-            # Gate the transport: require a valid OAuth access token tied to an
-            # active grant. The OAuth flow itself lives at the root `/oauth/*`,
-            # outside this mount, so it stays reachable without a token.
-            from src.utils.oauth_auth import OauthBearerMiddleware
-
-            app.add_middleware(OauthBearerMiddleware, mount_path=settings.mcp_mount_path)
-        except ImportError:
-            pass
+        # Gate the transport: require a valid OAuth access token tied to an
+        # active grant. The OAuth flow itself lives at the root `/oauth/*`,
+        # outside this mount, so it stays reachable without a token.
+        app.add_middleware(OauthBearerMiddleware, mount_path=settings.mcp_mount_path)
 
     return app
