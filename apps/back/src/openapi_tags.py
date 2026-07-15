@@ -57,6 +57,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Invite members to an account and manage pending invitations.",
     },
     {
+        "name": "api.accounts.usage",
+        "x-displayName": "Accounts › Usage",
+        "description": "Live-record counts per tracked entity against the account's quotas.",
+    },
+    {
         "name": "api.applications",
         "x-displayName": "Applications",
         "description": "Create and manage the applications tracked inside an account.",

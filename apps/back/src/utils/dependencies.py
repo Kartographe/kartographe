@@ -51,6 +51,7 @@ from src.managers.persona import PersonaManager
 from src.managers.service import ServiceManager
 from src.managers.service_action import ServiceActionManager
 from src.managers.tag import TagManager
+from src.managers.usage import UsageManager
 from src.managers.me import MeManager
 from src.managers.me_integrations import MeIntegrationsManager
 from src.managers.me_invitations import MeInvitationsManager
@@ -997,6 +998,15 @@ def get_current_journey_scenario_step_route(
 CurrentJourneyScenarioStepRouteDep = Annotated[
     JourneyScenarioStepRoute, Depends(get_current_journey_scenario_step_route)
 ]
+
+
+# --- Usage --------------------------------------------------------------
+
+def get_usage_manager(session: SessionDep) -> UsageManager:
+    return UsageManager(session)
+
+
+UsageManagerDep = Annotated[UsageManager, Depends(get_usage_manager)]
 
 
 # --- Tags ---------------------------------------------------------------
