@@ -276,6 +276,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get account usage
+         * @description Return the account's usage: for every tracked entity type, the number of live records against its quota, grouped by typology (members, applications, databases, features, journeys, personas, services, content). File entities also report their cumulative storage against a storage quota. Owners and administrators only.
+         */
+        get: operations["api.accounts.usage.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications": {
         parameters: {
             query?: never;
@@ -6646,6 +6666,10 @@ export interface components {
         ItemResponse_U2FRegistrationOptionsItem_: {
             item: components["schemas"]["U2FRegistrationOptionsItem"];
         };
+        /** ItemResponse[UsageReport] */
+        ItemResponse_UsageReport_: {
+            item: components["schemas"]["UsageReport"];
+        };
         /**
          * JourneyCreateForm
          * @description Create a journey. It starts as a draft owned by the caller.
@@ -8493,6 +8517,43 @@ export interface components {
             newPassword: string;
         };
         /**
+         * UsageEntry
+         * @description One tracked entity type: live-record count against its quota.
+         *
+         *     `total_size` / `storage_limit` are only set for file entities (cumulative
+         *     bytes stored and the storage cap); they stay `None` for every other entity.
+         */
+        UsageEntry: {
+            /** Count */
+            count: number;
+            /** Key */
+            key: string;
+            /** Limit */
+            limit: number;
+            /** Storagelimit */
+            storageLimit?: number | null;
+            /** Totalsize */
+            totalSize?: number | null;
+        };
+        /**
+         * UsageGroup
+         * @description A typology bucket grouping related entity counters (e.g. `applications`).
+         */
+        UsageGroup: {
+            /** Entries */
+            entries: components["schemas"]["UsageEntry"][];
+            /** Key */
+            key: string;
+        };
+        /**
+         * UsageReport
+         * @description The account's full usage breakdown, grouped by typology.
+         */
+        UsageReport: {
+            /** Groups */
+            groups: components["schemas"]["UsageGroup"][];
+        };
+        /**
          * UserAuthenticationLogStatus
          * @enum {string}
          */
@@ -9645,6 +9706,55 @@ export interface operations {
             };
             /** @description Invitation is not in a state allowing this action */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.usage.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_UsageReport_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
