@@ -3,6 +3,17 @@
   "extends": ["ultracite/biome/core", "ultracite/biome/react"],
   "overrides": [
     {
+      // `public/` holds static assets (favicon, logos) — not source to lint.
+      "includes": ["public/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          }
+        }
+      }
+    },
+    {
       // TanStack Router param files use camelCase ($id)
       "includes": ["src/routes/**/$*"],
       "linter": {

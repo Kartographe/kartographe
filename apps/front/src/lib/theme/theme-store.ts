@@ -3,10 +3,10 @@ import { persist } from "zustand/middleware";
 
 export type ThemeMode = "light" | "dark" | "auto";
 
-type ThemeStore = {
+interface ThemeStore {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
-};
+}
 
 export const useThemeStore = create<ThemeStore>()(
   persist(

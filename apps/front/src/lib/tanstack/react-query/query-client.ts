@@ -2,11 +2,11 @@ import { MutationCache, QueryClient } from "@tanstack/react-query";
 import { extractApiErrorDetail } from "@/api/error-messages";
 import { getMessageApi } from "@/lib/antd/message-bridge";
 
-type MutationMeta = {
+interface MutationMeta {
   successMessage?: string;
   errorMessage?: string;
   noErrorToast?: boolean;
-};
+}
 
 export function createQueryClient(): QueryClient {
   return new QueryClient({

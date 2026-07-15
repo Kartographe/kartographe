@@ -120,8 +120,7 @@ export function TablesScreen({
   );
 
   const tables = [...(tablesQuery.data?.items ?? [])].sort(
-    (a, b) =>
-      a.schema.localeCompare(b.schema) || a.name.localeCompare(b.name)
+    (a, b) => a.schema.localeCompare(b.schema) || a.name.localeCompare(b.name)
   );
 
   function invalidate() {
