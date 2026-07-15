@@ -10,7 +10,7 @@ import {
  * Route guard for `beforeLoad` on authenticated routes. Synchronous: it only
  * checks that a usable token exists locally (the shell fetches `/me` and the API
  * middleware handles a stale token / 401 funnel). Redirects to login otherwise,
- * remembering the target so login can send the user back (e.g. MCP consent).
+ * remembering the target so login can send the user back (e.g. OAuth consent).
  */
 export function requireSession({
   location,

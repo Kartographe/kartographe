@@ -25,10 +25,10 @@ export function UserCodeForm() {
     <Flex gap={16} vertical>
       <div>
         <Typography.Title level={4} style={{ marginBottom: 4 }}>
-          {t`Connecter une application`}
+          {t`Connecter une intégration`}
         </Typography.Title>
         <Typography.Text type="secondary">
-          {t`Saisissez le code affiché par l'application.`}
+          {t`Saisissez le code affiché par l'intégration.`}
         </Typography.Text>
       </div>
       <Input

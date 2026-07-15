@@ -1,36 +1,36 @@
-"""Output schemas for the SPA-facing MCP consent / grants endpoints (camelCase)."""
+"""Output schemas for the SPA-facing OAuth consent / grants endpoints (camelCase)."""
 
 import uuid
 from datetime import datetime
 
-from src.models.enum import McpAuthorizationFlowType, McpGrantScope
+from src.models.enum import OauthAuthorizationFlowType, OauthGrantScope
 from src.serializes._base import CamelBase
 
 
-class MeMCPAuthorizationRequestItem(CamelBase):
+class MeIntegrationAuthorizationRequestItem(CamelBase):
     """A pending authorization shown on the consent screen."""
 
     client_name: str
     expires_at: datetime
-    flow_type: McpAuthorizationFlowType
+    flow_type: OauthAuthorizationFlowType
     id: uuid.UUID
     redirect_uri: str | None = None
-    requested_scope: McpGrantScope
+    requested_scope: OauthGrantScope
     state: str | None = None
 
 
-class MeMCPGrantItem(CamelBase):
-    """An active grant shown in the account's connected-applications list."""
+class MeIntegrationGrantItem(CamelBase):
+    """An active grant shown in the account's connected-integrations list."""
 
     client_id: uuid.UUID
     client_name: str
     connected_at: datetime | None = None
     id: uuid.UUID
     last_used_at: datetime | None = None
-    scope: McpGrantScope
+    scope: OauthGrantScope
 
 
-class MeMCPAuthorizeResponse(CamelBase):
+class MeIntegrationAuthorizeResponse(CamelBase):
     """Result of approving/denying a request: a redirect URL for the auth-code
     flow, or null for the device flow (which shows in-page success)."""
 

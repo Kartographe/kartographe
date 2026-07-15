@@ -1,4 +1,4 @@
-"""The `user_mcp_authorization_request` table — a pending MCP authorization.
+"""The `oauth_authorization_request` table — a pending OAuth authorization.
 
 One row covers both the device flow and the authorization-code (PKCE) flow via
 `flow_type`; the fields not used by the active flow stay NULL. `user_id` is
@@ -14,27 +14,27 @@ from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models.enum import (
-    McpAuthorizationFlowType,
-    McpAuthorizationRequestStatus,
-    McpGrantScope,
+    OauthAuthorizationFlowType,
+    OauthAuthorizationRequestStatus,
+    OauthGrantScope,
 )
 
 if TYPE_CHECKING:
+    from src.models.oauth_client import OauthClient
     from src.models.user import User
-    from src.models.user_mcp_client import UserMcpClient
 
 
-class UserMcpAuthorizationRequest(BaseModel, table=True):
-    __tablename__ = "user_mcp_authorization_request"
+class OauthAuthorizationRequest(BaseModel, table=True):
+    __tablename__ = "oauth_authorization_request"
 
-    flow_type: McpAuthorizationFlowType = Field(index=True)
-    status: McpAuthorizationRequestStatus = Field(index=True)
+    flow_type: OauthAuthorizationFlowType = Field(index=True)
+    status: OauthAuthorizationRequestStatus = Field(index=True)
 
-    client_id: uuid.UUID = Field(foreign_key="user_mcp_client.id", index=True)
-    client: "UserMcpClient" = Relationship()
+    client_id: uuid.UUID = Field(foreign_key="oauth_client.id", index=True)
+    client: "OauthClient" = Relationship()
 
-    requested_scope: McpGrantScope = Field(index=True)
-    approved_scope: McpGrantScope | None = Field(default=None)
+    requested_scope: OauthGrantScope = Field(index=True)
+    approved_scope: OauthGrantScope | None = Field(default=None)
 
     user_id: uuid.UUID | None = Field(default=None, foreign_key="user.id", index=True)
     user: Optional["User"] = Relationship()

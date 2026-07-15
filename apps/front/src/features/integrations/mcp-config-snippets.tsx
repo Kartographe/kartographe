@@ -45,7 +45,7 @@ export function MCPConfigSnippets() {
   return (
     <Card
       title={
-        <Typography.Text strong>{t`Connecter une application`}</Typography.Text>
+        <Typography.Text strong>{t`Connecter un client MCP`}</Typography.Text>
       }
     >
       <Flex gap={12} vertical>

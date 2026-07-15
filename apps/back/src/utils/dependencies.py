@@ -51,11 +51,11 @@ from src.managers.persona import PersonaManager
 from src.managers.service import ServiceManager
 from src.managers.service_action import ServiceActionManager
 from src.managers.tag import TagManager
-from src.managers.mcp_oauth import MCPOAuthManager
 from src.managers.me import MeManager
+from src.managers.me_integrations import MeIntegrationsManager
 from src.managers.me_invitations import MeInvitationsManager
-from src.managers.me_mcp import MeMCPManager
 from src.managers.me_security import MeSecurityManager
+from src.managers.oauth import OauthManager
 from src.managers.token import UserTokenManager
 from src.models.account import Account
 from src.models.account_user import AccountUser
@@ -95,10 +95,10 @@ from src.models.persona import Persona
 from src.models.service import Service
 from src.models.service_action import ServiceAction
 from src.models.tag import Tag
+from src.models.oauth_authorization_request import OauthAuthorizationRequest
+from src.models.oauth_grant import OauthGrant
 from src.models.user import User
-from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
-from src.models.user_mcp_grant import UserMcpGrant
-from src.utils.mcp_auth import MCPBearerError, load_mcp_grant_from_token
+from src.utils.oauth_auth import OauthBearerError, load_grant_from_token
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
@@ -132,13 +132,13 @@ def _active_user_or_401(session: Session, user_id: uuid.UUID) -> User:
     return user
 
 
-def _load_user_from_mcp_token(request: Request, session: Session, token: str) -> User:
-    # MCP access tokens are only accepted on the versioned tool surface.
+def _load_user_from_oauth_token(request: Request, session: Session, token: str) -> User:
+    # OAuth grant access tokens are only accepted on the versioned tool surface.
     if not request.url.path.startswith("/v1"):
         raise HTTPException(status.HTTP_403_FORBIDDEN, "This token cannot be used here.")
     try:
-        grant = load_mcp_grant_from_token(session, token, http_method=request.method)
-    except MCPBearerError as error:
+        grant = load_grant_from_token(session, token, http_method=request.method)
+    except OauthBearerError as error:
         raise HTTPException(
             error.status_code,
             error.error_description,
@@ -161,8 +161,8 @@ def get_current_user(
     token = credentials.credentials
     payload, _ = UserTokenManager.decode_access(token)
     if payload is None:
-        # Not a user token — try an MCP grant token.
-        return _load_user_from_mcp_token(request, session, token)
+        # Not a user token — try an OAuth grant token.
+        return _load_user_from_oauth_token(request, session, token)
 
     raw_id = payload.get("user", {}).get("id")
     if not raw_id:
@@ -199,47 +199,47 @@ def get_me_security_manager(session: SessionDep) -> MeSecurityManager:
 MeSecurityManagerDep = Annotated[MeSecurityManager, Depends(get_me_security_manager)]
 
 
-# --- MCP ----------------------------------------------------------------
+# --- OAuth / integrations -----------------------------------------------
 
-def get_mcp_oauth_manager(session: SessionDep) -> MCPOAuthManager:
-    return MCPOAuthManager(session)
-
-
-MCPOAuthManagerDep = Annotated[MCPOAuthManager, Depends(get_mcp_oauth_manager)]
+def get_oauth_manager(session: SessionDep) -> OauthManager:
+    return OauthManager(session)
 
 
-def get_me_mcp_manager(session: SessionDep) -> MeMCPManager:
-    return MeMCPManager(session)
+OauthManagerDep = Annotated[OauthManager, Depends(get_oauth_manager)]
 
 
-MeMCPManagerDep = Annotated[MeMCPManager, Depends(get_me_mcp_manager)]
+def get_me_integrations_manager(session: SessionDep) -> MeIntegrationsManager:
+    return MeIntegrationsManager(session)
+
+
+MeIntegrationsManagerDep = Annotated[MeIntegrationsManager, Depends(get_me_integrations_manager)]
 
 
 # Dedicated scheme so the MCP tool routes advertise their own Bearer in Scalar.
-_mcp_bearer = HTTPBearer(
-    scheme_name="MCPBearer",
+_oauth_bearer = HTTPBearer(
+    scheme_name="OAuthBearer",
     bearerFormat="JWT",
-    description="MCP access token obtained through the OAuth flow.",
+    description="OAuth access token obtained through the OAuth flow.",
     auto_error=False,
 )
 
 
-def get_current_mcp_grant(
+def get_current_oauth_grant(
     request: Request,
     session: SessionDep,
-    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_mcp_bearer)],
-) -> UserMcpGrant:
-    """Resolve the MCP grant behind the request (used by MCP tool routes, which
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_oauth_bearer)],
+) -> OauthGrant:
+    """Resolve the OAuth grant behind the request (used by MCP tool routes, which
     fastapi-mcp dispatches internally so the transport middleware doesn't see)."""
     if credentials is None or not credentials.credentials:
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
             "A bearer token is required.",
-            headers={"WWW-Authenticate": 'Bearer realm="mcp"'},
+            headers={"WWW-Authenticate": 'Bearer realm="oauth"'},
         )
     try:
-        return load_mcp_grant_from_token(session, credentials.credentials, http_method=request.method)
-    except MCPBearerError as error:
+        return load_grant_from_token(session, credentials.credentials, http_method=request.method)
+    except OauthBearerError as error:
         raise HTTPException(
             error.status_code,
             error.error_description,
@@ -247,27 +247,27 @@ def get_current_mcp_grant(
         ) from error
 
 
-CurrentMCPGrantDep = Annotated[UserMcpGrant, Depends(get_current_mcp_grant)]
+CurrentOauthGrantDep = Annotated[OauthGrant, Depends(get_current_oauth_grant)]
 
 
-def get_current_mcp_user(session: SessionDep, grant: CurrentMCPGrantDep) -> User:
+def get_current_oauth_user(session: SessionDep, grant: CurrentOauthGrantDep) -> User:
     return _active_user_or_401(session, grant.user_id)
 
 
-CurrentMCPUserDep = Annotated[User, Depends(get_current_mcp_user)]
+CurrentOauthUserDep = Annotated[User, Depends(get_current_oauth_user)]
 
 
-def get_current_me_mcp_authorization_request(
+def get_current_me_integration_authorization_request(
     request_id: uuid.UUID, session: SessionDep
-) -> UserMcpAuthorizationRequest:
-    authorization_request = session.get(UserMcpAuthorizationRequest, request_id)
+) -> OauthAuthorizationRequest:
+    authorization_request = session.get(OauthAuthorizationRequest, request_id)
     if authorization_request is None or not authorization_request.enabled:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Authorization request not found.")
     return authorization_request
 
 
-CurrentMeMCPAuthorizationRequestDep = Annotated[
-    UserMcpAuthorizationRequest, Depends(get_current_me_mcp_authorization_request)
+CurrentMeIntegrationAuthorizationRequestDep = Annotated[
+    OauthAuthorizationRequest, Depends(get_current_me_integration_authorization_request)
 ]
 
 

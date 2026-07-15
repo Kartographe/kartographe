@@ -1,4 +1,4 @@
-"""The `user_mcp_client` table — a dynamically registered MCP OAuth client.
+"""The `oauth_client` table — a dynamically registered OAuth client (integration).
 
 The row's UUID primary key **is** the OAuth `client_id`. `client_secret_hash`
 is the argon2 hash of the secret (NULL for public / PKCE-only clients). Redirect
@@ -13,8 +13,8 @@ from sqlmodel import Field
 from src.models._base import BaseModel
 
 
-class UserMcpClient(BaseModel, table=True):
-    __tablename__ = "user_mcp_client"
+class OauthClient(BaseModel, table=True):
+    __tablename__ = "oauth_client"
 
     name: str = Field(description="Human-readable client name shown on the consent screen.")
 

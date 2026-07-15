@@ -1,7 +1,7 @@
 const KEY = "kartographe-post-login-return";
 
 /**
- * Remember where to send the user back after login (e.g. an MCP consent page
+ * Remember where to send the user back after login (e.g. an OAuth consent page
  * they hit while logged out). Only same-origin relative paths are stored, to
  * avoid open-redirects.
  */

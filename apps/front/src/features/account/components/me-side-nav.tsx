@@ -15,7 +15,7 @@ type MeRoute =
   | "/me"
   | "/me/settings"
   | "/me/security"
-  | "/me/mcp"
+  | "/me/integrations"
   | "/me/accounts"
   | "/me/invitations"
   | "/me/logs";
@@ -68,7 +68,7 @@ export function MeSideNav() {
     { to: "/me/security", label: t`Sécurité`, icon: <SafetyOutlined /> },
     { to: "/me/accounts", label: t`Comptes`, icon: <TeamOutlined /> },
     { to: "/me/invitations", label: t`Invitations`, icon: <MailOutlined /> },
-    { to: "/me/mcp", label: t`Applications`, icon: <ApiOutlined /> },
+    { to: "/me/integrations", label: t`Intégrations`, icon: <ApiOutlined /> },
   ];
   const footerItems: NavItem[] = [
     { to: "/me/logs", label: t`Activité`, icon: <HistoryOutlined /> },

@@ -5,30 +5,30 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 
 type AuthorizationRequest =
-  components["schemas"]["MeMCPAuthorizationRequestItem"];
-type Scope = components["schemas"]["McpGrantScope"];
+  components["schemas"]["MeIntegrationAuthorizationRequestItem"];
+type Scope = components["schemas"]["OauthGrantScope"];
 
-interface MCPConsentScreenProps {
+interface IntegrationConsentScreenProps {
   request: AuthorizationRequest;
   onSettled?: () => void;
 }
 
-export function MCPConsentScreen({
+export function IntegrationConsentScreen({
   request,
   onSettled,
-}: MCPConsentScreenProps) {
+}: IntegrationConsentScreenProps) {
   const { t } = useLingui();
   const [scope, setScope] = useState<Scope>(request.requestedScope);
   const [outcome, setOutcome] = useState<"approved" | "denied" | null>(null);
 
   const approveMutation = $api.useMutation(
     "post",
-    "/me/mcp/authorize/{request_id}/approve",
+    "/me/integrations/authorize/{request_id}/approve",
     { meta: { noErrorToast: true } }
   );
   const denyMutation = $api.useMutation(
     "post",
-    "/me/mcp/authorize/{request_id}/deny",
+    "/me/integrations/authorize/{request_id}/deny",
     { meta: { noErrorToast: true } }
   );
 
@@ -61,7 +61,7 @@ export function MCPConsentScreen({
     return (
       <Result
         status="success"
-        subTitle={t`Vous pouvez revenir à l'application.`}
+        subTitle={t`Vous pouvez revenir à l'intégration.`}
         title={t`Accès autorisé`}
       />
     );
@@ -83,7 +83,7 @@ export function MCPConsentScreen({
           {t`Autoriser ${request.clientName}`}
         </Typography.Title>
         <Typography.Text type="secondary">
-          {t`Cette application demande l'accès à votre compte Kartographe.`}
+          {t`Cette intégration demande l'accès à votre compte Kartographe.`}
         </Typography.Text>
       </div>
 
@@ -110,7 +110,7 @@ export function MCPConsentScreen({
       </Radio.Group>
 
       <Alert
-        message={t`N'autorisez que les applications de confiance. Vous pourrez révoquer l'accès à tout moment depuis votre compte.`}
+        message={t`N'autorisez que les intégrations de confiance. Vous pourrez révoquer l'accès à tout moment depuis votre compte.`}
         showIcon
         type="info"
       />

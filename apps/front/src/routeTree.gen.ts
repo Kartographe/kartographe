@@ -28,9 +28,9 @@ import { Route as AppMeIndexRouteImport } from './routes/_app/me/index'
 import { Route as OauthConsentRequestIdRouteImport } from './routes/oauth/consent/$requestId'
 import { Route as AppMeSettingsRouteImport } from './routes/_app/me/settings'
 import { Route as AppMeSecurityRouteImport } from './routes/_app/me/security'
-import { Route as AppMeMcpRouteImport } from './routes/_app/me/mcp'
 import { Route as AppMeLogsRouteImport } from './routes/_app/me/logs'
 import { Route as AppMeInvitationsRouteImport } from './routes/_app/me/invitations'
+import { Route as AppMeIntegrationsRouteImport } from './routes/_app/me/integrations'
 import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/accounts/$accountId/route'
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
 import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
@@ -172,11 +172,6 @@ const AppMeSecurityRoute = AppMeSecurityRouteImport.update({
   path: '/security',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
-const AppMeMcpRoute = AppMeMcpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => AppMeRouteRoute,
-} as any)
 const AppMeLogsRoute = AppMeLogsRouteImport.update({
   id: '/logs',
   path: '/logs',
@@ -185,6 +180,11 @@ const AppMeLogsRoute = AppMeLogsRouteImport.update({
 const AppMeInvitationsRoute = AppMeInvitationsRouteImport.update({
   id: '/invitations',
   path: '/invitations',
+  getParentRoute: () => AppMeRouteRoute,
+} as any)
+const AppMeIntegrationsRoute = AppMeIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
   getParentRoute: () => AppMeRouteRoute,
 } as any)
 const AppAccountsAccountIdRouteRoute =
@@ -489,9 +489,9 @@ export interface FileRoutesByFullPath {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/accounts/$accountId': typeof AppAccountsAccountIdRouteRouteWithChildren
+  '/me/integrations': typeof AppMeIntegrationsRoute
   '/me/invitations': typeof AppMeInvitationsRoute
   '/me/logs': typeof AppMeLogsRoute
-  '/me/mcp': typeof AppMeMcpRoute
   '/me/security': typeof AppMeSecurityRoute
   '/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
@@ -556,9 +556,9 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/auth/u2f': typeof AuthU2fRoute
   '/': typeof AppIndexRoute
+  '/me/integrations': typeof AppMeIntegrationsRoute
   '/me/invitations': typeof AppMeInvitationsRoute
   '/me/logs': typeof AppMeLogsRoute
-  '/me/mcp': typeof AppMeMcpRoute
   '/me/security': typeof AppMeSecurityRoute
   '/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
@@ -621,9 +621,9 @@ export interface FileRoutesById {
   '/auth/u2f': typeof AuthU2fRoute
   '/_app/': typeof AppIndexRoute
   '/_app/accounts/$accountId': typeof AppAccountsAccountIdRouteRouteWithChildren
+  '/_app/me/integrations': typeof AppMeIntegrationsRoute
   '/_app/me/invitations': typeof AppMeInvitationsRoute
   '/_app/me/logs': typeof AppMeLogsRoute
-  '/_app/me/mcp': typeof AppMeMcpRoute
   '/_app/me/security': typeof AppMeSecurityRoute
   '/_app/me/settings': typeof AppMeSettingsRoute
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
@@ -692,9 +692,9 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/accounts/$accountId'
+    | '/me/integrations'
     | '/me/invitations'
     | '/me/logs'
-    | '/me/mcp'
     | '/me/security'
     | '/me/settings'
     | '/oauth/consent/$requestId'
@@ -759,9 +759,9 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/auth/u2f'
     | '/'
+    | '/me/integrations'
     | '/me/invitations'
     | '/me/logs'
-    | '/me/mcp'
     | '/me/security'
     | '/me/settings'
     | '/oauth/consent/$requestId'
@@ -823,9 +823,9 @@ export interface FileRouteTypes {
     | '/auth/u2f'
     | '/_app/'
     | '/_app/accounts/$accountId'
+    | '/_app/me/integrations'
     | '/_app/me/invitations'
     | '/_app/me/logs'
-    | '/_app/me/mcp'
     | '/_app/me/security'
     | '/_app/me/settings'
     | '/oauth/consent/$requestId'
@@ -1020,13 +1020,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMeSecurityRouteImport
       parentRoute: typeof AppMeRouteRoute
     }
-    '/_app/me/mcp': {
-      id: '/_app/me/mcp'
-      path: '/mcp'
-      fullPath: '/me/mcp'
-      preLoaderRoute: typeof AppMeMcpRouteImport
-      parentRoute: typeof AppMeRouteRoute
-    }
     '/_app/me/logs': {
       id: '/_app/me/logs'
       path: '/logs'
@@ -1039,6 +1032,13 @@ declare module '@tanstack/react-router' {
       path: '/invitations'
       fullPath: '/me/invitations'
       preLoaderRoute: typeof AppMeInvitationsRouteImport
+      parentRoute: typeof AppMeRouteRoute
+    }
+    '/_app/me/integrations': {
+      id: '/_app/me/integrations'
+      path: '/integrations'
+      fullPath: '/me/integrations'
+      preLoaderRoute: typeof AppMeIntegrationsRouteImport
       parentRoute: typeof AppMeRouteRoute
     }
     '/_app/accounts/$accountId': {
@@ -1395,9 +1395,9 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 interface AppMeRouteRouteChildren {
+  AppMeIntegrationsRoute: typeof AppMeIntegrationsRoute
   AppMeInvitationsRoute: typeof AppMeInvitationsRoute
   AppMeLogsRoute: typeof AppMeLogsRoute
-  AppMeMcpRoute: typeof AppMeMcpRoute
   AppMeSecurityRoute: typeof AppMeSecurityRoute
   AppMeSettingsRoute: typeof AppMeSettingsRoute
   AppMeIndexRoute: typeof AppMeIndexRoute
@@ -1405,9 +1405,9 @@ interface AppMeRouteRouteChildren {
 }
 
 const AppMeRouteRouteChildren: AppMeRouteRouteChildren = {
+  AppMeIntegrationsRoute: AppMeIntegrationsRoute,
   AppMeInvitationsRoute: AppMeInvitationsRoute,
   AppMeLogsRoute: AppMeLogsRoute,
-  AppMeMcpRoute: AppMeMcpRoute,
   AppMeSecurityRoute: AppMeSecurityRoute,
   AppMeSettingsRoute: AppMeSettingsRoute,
   AppMeIndexRoute: AppMeIndexRoute,

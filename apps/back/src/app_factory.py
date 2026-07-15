@@ -9,7 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
 from src.logging_config import configure_logging
-from src.managers.mcp_oauth import MCPOAuthError
+from src.managers.oauth import OauthError
 from src.openapi_info import openapi_info
 from src.openapi_tags import tags_for_api
 from src.settings import get_settings
@@ -72,14 +72,14 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     # submitted values such as plaintext passwords).
     app.add_exception_handler(RequestValidationError, validation_error_handler)
 
-    # MCP OAuth errors render the standard `{ error, error_description }` shape.
-    async def _mcp_oauth_error_handler(_: Request, exc: MCPOAuthError) -> JSONResponse:
+    # OAuth errors render the standard `{ error, error_description }` shape.
+    async def _oauth_error_handler(_: Request, exc: OauthError) -> JSONResponse:
         return JSONResponse(
             {"error": exc.error, "error_description": exc.error_description},
             status_code=exc.status_code,
         )
 
-    app.add_exception_handler(MCPOAuthError, _mcp_oauth_error_handler)
+    app.add_exception_handler(OauthError, _oauth_error_handler)
 
     app.include_router(router)
 
@@ -130,9 +130,9 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
                     "api.auth",
                     "api.me",
                     "api.me.security",
-                    "api.me.mcp",
-                    "api.mcp.oauth",
-                    "api.mcp.metadata",
+                    "api.me.integrations",
+                    "api.oauth",
+                    "api.oauth.metadata",
                 ],
             )
             mcp.mount_http(mount_path=settings.mcp_mount_path)
@@ -141,11 +141,12 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
             # first MCP request.
             fastapi_mcp_instance = mcp
 
-            # Gate the transport: require a valid MCP access token tied to an
-            # active grant (but leave `/mcp/oauth/*` public for the flow itself).
-            from src.utils.mcp_auth import MCPBearerMiddleware
+            # Gate the transport: require a valid OAuth access token tied to an
+            # active grant. The OAuth flow itself lives at the root `/oauth/*`,
+            # outside this mount, so it stays reachable without a token.
+            from src.utils.oauth_auth import OauthBearerMiddleware
 
-            app.add_middleware(MCPBearerMiddleware, mount_path=settings.mcp_mount_path)
+            app.add_middleware(OauthBearerMiddleware, mount_path=settings.mcp_mount_path)
         except ImportError:
             pass
 

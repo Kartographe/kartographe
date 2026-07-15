@@ -1,4 +1,4 @@
-"""Input schema for MCP dynamic client registration (RFC 7591).
+"""Input schema for OAuth dynamic client registration (RFC 7591).
 
 OAuth uses a snake_case wire shape, so these are plain Pydantic models (no
 camelCase alias generator).
@@ -7,7 +7,7 @@ camelCase alias generator).
 from pydantic import BaseModel, Field
 
 
-class MCPDynamicClientRegistrationForm(BaseModel):
+class OauthClientRegistrationForm(BaseModel):
     client_name: str = Field(examples=["Claude"])
     redirect_uris: list[str] = Field(default_factory=list)
     grant_types: list[str] | None = None

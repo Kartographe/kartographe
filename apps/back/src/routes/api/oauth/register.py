@@ -2,25 +2,25 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, status
 
-from src.forms.mcp_oauth import MCPDynamicClientRegistrationForm
-from src.serializes.mcp_oauth import MCPDynamicClientRegistrationResponse
-from src.utils.dependencies import MCPOAuthManagerDep
+from src.forms.oauth import OauthClientRegistrationForm
+from src.serializes.oauth import OauthClientRegistrationResponse
+from src.utils.dependencies import OauthManagerDep
 
 router = APIRouter()
 
 
 @router.post(
     "/register",
-    operation_id="api.mcp.oauth.register",
-    summary="Register an MCP OAuth client",
+    operation_id="api.oauth.register",
+    summary="Register an OAuth client",
     description="Dynamic client registration (RFC 7591). Returns the client id (and secret for confidential clients).",
-    response_model=MCPDynamicClientRegistrationResponse,
+    response_model=OauthClientRegistrationResponse,
     response_model_exclude_none=True,
     status_code=status.HTTP_201_CREATED,
 )
 def register(
-    form: MCPDynamicClientRegistrationForm, manager: MCPOAuthManagerDep
-) -> MCPDynamicClientRegistrationResponse:
+    form: OauthClientRegistrationForm, manager: OauthManagerDep
+) -> OauthClientRegistrationResponse:
     client, secret = manager.register_client(
         client_name=form.client_name,
         redirect_uris=form.redirect_uris,
@@ -31,7 +31,7 @@ def register(
         software_version=form.software_version,
     )
     issued_at = int((client.created_at or datetime.now(tz=UTC)).timestamp())
-    return MCPDynamicClientRegistrationResponse(
+    return OauthClientRegistrationResponse(
         client_id=str(client.id),
         client_secret=secret,
         client_id_issued_at=issued_at,

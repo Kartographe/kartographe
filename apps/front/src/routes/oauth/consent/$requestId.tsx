@@ -2,8 +2,8 @@ import { useLingui } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { Result, Skeleton } from "antd";
 import { $api } from "@/api/$api";
-import { MCPConsentScreen } from "@/features/mcp/mcp-consent-screen";
-import { OAuthPageShell } from "@/features/mcp/oauth-page-shell";
+import { IntegrationConsentScreen } from "@/features/integrations/integration-consent-screen";
+import { OAuthPageShell } from "@/features/integrations/oauth-page-shell";
 import { requireSession } from "@/lib/auth/require-session";
 
 export const Route = createFileRoute("/oauth/consent/$requestId")({
@@ -16,7 +16,7 @@ function ConsentPage() {
   const { requestId } = Route.useParams();
   const { data, isLoading, isError } = $api.useQuery(
     "get",
-    "/me/mcp/authorize/{request_id}",
+    "/me/integrations/authorize/{request_id}",
     { params: { path: { request_id: requestId } } }
   );
 
@@ -30,7 +30,7 @@ function ConsentPage() {
           title={t`Demande invalide`}
         />
       ) : null}
-      {data ? <MCPConsentScreen request={data.item} /> : null}
+      {data ? <IntegrationConsentScreen request={data.item} /> : null}
     </OAuthPageShell>
   );
 }

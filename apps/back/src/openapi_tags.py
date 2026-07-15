@@ -32,9 +32,9 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Password, authenticator, recovery codes, security keys and activity log.",
     },
     {
-        "name": "api.me.mcp",
-        "x-displayName": "Current user › MCP",
-        "description": "Consent to MCP authorization requests and manage connected applications.",
+        "name": "api.me.integrations",
+        "x-displayName": "Current user › Integrations",
+        "description": "Consent to authorization requests and manage connected integrations.",
     },
     {
         "name": "api.me.invitations",
@@ -297,14 +297,14 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Column-level steps of a database migration.",
     },
     {
-        "name": "api.mcp.metadata",
-        "x-displayName": "MCP › Discovery",
-        "description": "OAuth authorization-server and protected-resource metadata for MCP clients.",
+        "name": "api.oauth.metadata",
+        "x-displayName": "OAuth › Discovery",
+        "description": "OAuth authorization-server and protected-resource metadata for clients.",
     },
     {
-        "name": "api.mcp.oauth",
-        "x-displayName": "MCP › OAuth",
-        "description": "OAuth 2.1 flow for MCP clients: registration, authorize, token, device, revoke.",
+        "name": "api.oauth",
+        "x-displayName": "OAuth",
+        "description": "OAuth 2.1 flow for connected integrations: registration, authorize, token, device, revoke.",
     },
 ]
 

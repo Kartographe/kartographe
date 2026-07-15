@@ -4,21 +4,21 @@ import { App, Button, Empty, Flex, Table, Tag, Typography } from "antd";
 import dayjs from "dayjs";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { MCP_SCOPE_COLORS } from "@/features/mcp/labels";
+import { SCOPE_COLORS } from "@/features/integrations/labels";
 
-type Grant = components["schemas"]["MeMCPGrantItem"];
+type Grant = components["schemas"]["MeIntegrationGrantItem"];
 
-export function MCPGrantsList() {
+export function IntegrationGrantsList() {
   const { t } = useLingui();
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
 
-  const grantsQuery = $api.useQuery("get", "/me/mcp/grants");
+  const grantsQuery = $api.useQuery("get", "/me/integrations/grants");
   const revokeMutation = $api.useMutation(
     "delete",
-    "/me/mcp/grants/{grant_id}",
+    "/me/integrations/grants/{grant_id}",
     {
-      meta: { successMessage: t`Application déconnectée` },
+      meta: { successMessage: t`Intégration déconnectée` },
     }
   );
 
@@ -28,7 +28,7 @@ export function MCPGrantsList() {
   function confirmRevoke(grant: Grant) {
     modal.confirm({
       title: t`Déconnecter ${grant.clientName} ?`,
-      content: t`L'application perdra immédiatement l'accès à votre compte.`,
+      content: t`L'intégration perdra immédiatement l'accès à votre compte.`,
       okText: t`Déconnecter`,
       okButtonProps: { danger: true },
       cancelText: t`Annuler`,
@@ -36,7 +36,9 @@ export function MCPGrantsList() {
         await revokeMutation.mutateAsync({
           params: { path: { grant_id: grant.id } },
         });
-        queryClient.invalidateQueries({ queryKey: ["get", "/me/mcp/grants"] });
+        queryClient.invalidateQueries({
+          queryKey: ["get", "/me/integrations/grants"],
+        });
       },
     });
   }
@@ -46,15 +48,15 @@ export function MCPGrantsList() {
   return (
     <Flex gap={16} vertical>
       <Typography.Title level={3} style={{ margin: 0 }}>
-        {t`Applications connectées`}
+        {t`Intégrations connectées`}
       </Typography.Title>
       {grants.length === 0 && !grantsQuery.isLoading ? (
-        <Empty description={t`Aucune application connectée`} />
+        <Empty description={t`Aucune intégration connectée`} />
       ) : (
         <Table<Grant>
           columns={[
             {
-              title: t`Application`,
+              title: t`Intégration`,
               dataIndex: "clientName",
               render: (name: string, grant) => (
                 <Flex vertical>
@@ -69,7 +71,7 @@ export function MCPGrantsList() {
               title: t`Accès`,
               dataIndex: "scope",
               render: (scope: string) => (
-                <Tag color={MCP_SCOPE_COLORS[scope]}>{scopeLabel(scope)}</Tag>
+                <Tag color={SCOPE_COLORS[scope]}>{scopeLabel(scope)}</Tag>
               ),
             },
             {

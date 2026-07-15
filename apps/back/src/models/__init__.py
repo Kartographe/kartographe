@@ -39,6 +39,9 @@ from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
+from src.models.oauth_authorization_request import OauthAuthorizationRequest
+from src.models.oauth_client import OauthClient
+from src.models.oauth_grant import OauthGrant
 from src.models.persona import Persona
 from src.models.service import Service
 from src.models.service_action import ServiceAction
@@ -47,9 +50,6 @@ from src.models.user import User
 from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
 from src.models.user_authentication_two_factor import UserAuthenticationTwoFactor
-from src.models.user_mcp_authorization_request import UserMcpAuthorizationRequest
-from src.models.user_mcp_client import UserMcpClient
-from src.models.user_mcp_grant import UserMcpGrant
 
 __all__ = [
     "Account",
@@ -86,6 +86,9 @@ __all__ = [
     "JourneyScenarioStepAssertion",
     "JourneyScenarioStepFile",
     "JourneyScenarioStepRoute",
+    "OauthAuthorizationRequest",
+    "OauthClient",
+    "OauthGrant",
     "Persona",
     "Service",
     "ServiceAction",
@@ -94,7 +97,4 @@ __all__ = [
     "UserAuthentication",
     "UserAuthenticationLog",
     "UserAuthenticationTwoFactor",
-    "UserMcpAuthorizationRequest",
-    "UserMcpClient",
-    "UserMcpGrant",
 ]

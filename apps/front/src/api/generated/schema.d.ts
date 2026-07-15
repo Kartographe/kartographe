@@ -3836,7 +3836,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/authorize/by-user-code/{user_code}": {
+    "/me/integrations/authorize/by-user-code/{user_code}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3847,7 +3847,7 @@ export interface paths {
          * Look up a pending device-flow request by its user code
          * @description Resolve the pending authorization behind a device-flow user code, for the consent screen.
          */
-        get: operations["api.me.mcp.authorize.byUserCode"];
+        get: operations["api.me.integrations.authorize.byUserCode"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3856,7 +3856,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/authorize/{request_id}": {
+    "/me/integrations/authorize/{request_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3867,7 +3867,7 @@ export interface paths {
          * Get a pending authorization request
          * @description Fetch the details shown on the consent screen for an authorization-code request.
          */
-        get: operations["api.me.mcp.authorize.get"];
+        get: operations["api.me.integrations.authorize.get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3876,7 +3876,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/authorize/{request_id}/approve": {
+    "/me/integrations/authorize/{request_id}/approve": {
         parameters: {
             query?: never;
             header?: never;
@@ -3889,14 +3889,14 @@ export interface paths {
          * Approve an authorization request
          * @description Grant the client the chosen scope. Returns a redirect URL for the auth-code flow, or null for device.
          */
-        post: operations["api.me.mcp.authorize.approve"];
+        post: operations["api.me.integrations.authorize.approve"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/authorize/{request_id}/deny": {
+    "/me/integrations/authorize/{request_id}/deny": {
         parameters: {
             query?: never;
             header?: never;
@@ -3909,14 +3909,14 @@ export interface paths {
          * Deny an authorization request
          * @description Refuse the client. Returns a redirect URL (with `error=access_denied`) for the auth-code flow, else null.
          */
-        post: operations["api.me.mcp.authorize.deny"];
+        post: operations["api.me.integrations.authorize.deny"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/grants": {
+    "/me/integrations/grants": {
         parameters: {
             query?: never;
             header?: never;
@@ -3924,10 +3924,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List connected MCP applications
-         * @description List the applications with an active grant on the account.
+         * List connected integrations
+         * @description List the integrations with an active grant on the account.
          */
-        get: operations["api.me.mcp.grants.list"];
+        get: operations["api.me.integrations.grants.list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3936,7 +3936,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/mcp/grants/{grant_id}": {
+    "/me/integrations/grants/{grant_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3947,10 +3947,10 @@ export interface paths {
         put?: never;
         post?: never;
         /**
-         * Revoke a connected application
-         * @description Revoke the grant, immediately invalidating the application's tokens.
+         * Revoke a connected integration
+         * @description Revoke the grant, immediately invalidating the integration's tokens.
          */
-        delete: operations["api.me.mcp.grants.revoke"];
+        delete: operations["api.me.integrations.grants.revoke"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4045,9 +4045,9 @@ export interface paths {
         };
         /**
          * OAuth authorization server metadata
-         * @description RFC 8414 discovery document describing the MCP OAuth endpoints and capabilities.
+         * @description RFC 8414 discovery document describing the OAuth endpoints and capabilities.
          */
-        get: operations["api.mcp.metadata.authorizationServer"];
+        get: operations["api.oauth.metadata.authorizationServer"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4064,7 +4064,7 @@ export interface paths {
             cookie?: never;
         };
         /** OAuth protected resource metadata */
-        get: operations["api.mcp.metadata.protectedResource"];
+        get: operations["api.oauth.metadata.protectedResource"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4073,7 +4073,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/mcp/oauth/register": {
+    "/oauth/register": {
         parameters: {
             query?: never;
             header?: never;
@@ -4083,17 +4083,17 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Register an MCP OAuth client
+         * Register an OAuth client
          * @description Dynamic client registration (RFC 7591). Returns the client id (and secret for confidential clients).
          */
-        post: operations["api.mcp.oauth.register"];
+        post: operations["api.oauth.register"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/mcp/oauth/authorize": {
+    "/oauth/authorize": {
         parameters: {
             query?: never;
             header?: never;
@@ -4104,7 +4104,7 @@ export interface paths {
          * Authorization endpoint (redirects to the consent screen)
          * @description Start the authorization-code + PKCE flow, then redirect the browser to the SPA consent page.
          */
-        get: operations["api.mcp.oauth.authorize"];
+        get: operations["api.oauth.authorize"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4113,7 +4113,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/mcp/oauth/token": {
+    "/oauth/token": {
         parameters: {
             query?: never;
             header?: never;
@@ -4126,14 +4126,14 @@ export interface paths {
          * Token endpoint
          * @description Exchange an authorization code, device code or refresh token for an access + refresh token pair.
          */
-        post: operations["api.mcp.oauth.token"];
+        post: operations["api.oauth.token"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/mcp/oauth/device/authorize": {
+    "/oauth/device/authorize": {
         parameters: {
             query?: never;
             header?: never;
@@ -4146,14 +4146,14 @@ export interface paths {
          * Device authorization endpoint
          * @description Start the device flow (RFC 8628). Returns a device code and a user code to enter at the verification URI.
          */
-        post: operations["api.mcp.oauth.device.authorize"];
+        post: operations["api.oauth.device.authorize"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/mcp/oauth/revoke": {
+    "/oauth/revoke": {
         parameters: {
             query?: never;
             header?: never;
@@ -4166,7 +4166,7 @@ export interface paths {
          * Revoke a token
          * @description Revoke an access or refresh token (RFC 7009). Always returns 200, even for unknown tokens.
          */
-        post: operations["api.mcp.oauth.revoke"];
+        post: operations["api.oauth.revoke"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6586,6 +6586,14 @@ export interface components {
         ItemResponse_JourneyScenarioStepRouteItem_: {
             item: components["schemas"]["JourneyScenarioStepRouteItem"];
         };
+        /** ItemResponse[MeIntegrationAuthorizationRequestItem] */
+        ItemResponse_MeIntegrationAuthorizationRequestItem_: {
+            item: components["schemas"]["MeIntegrationAuthorizationRequestItem"];
+        };
+        /** ItemResponse[MeIntegrationAuthorizeResponse] */
+        ItemResponse_MeIntegrationAuthorizeResponse_: {
+            item: components["schemas"]["MeIntegrationAuthorizeResponse"];
+        };
         /** ItemResponse[MeInvitationItem] */
         ItemResponse_MeInvitationItem_: {
             item: components["schemas"]["MeInvitationItem"];
@@ -6593,14 +6601,6 @@ export interface components {
         /** ItemResponse[MeItem] */
         ItemResponse_MeItem_: {
             item: components["schemas"]["MeItem"];
-        };
-        /** ItemResponse[MeMCPAuthorizationRequestItem] */
-        ItemResponse_MeMCPAuthorizationRequestItem_: {
-            item: components["schemas"]["MeMCPAuthorizationRequestItem"];
-        };
-        /** ItemResponse[MeMCPAuthorizeResponse] */
-        ItemResponse_MeMCPAuthorizeResponse_: {
-            item: components["schemas"]["MeMCPAuthorizeResponse"];
         };
         /** ItemResponse[OtpProvisioningItem] */
         ItemResponse_OtpProvisioningItem_: {
@@ -7448,6 +7448,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["JourneyScenarioStepRouteItem"][];
         };
+        /** ListingResponse[MeIntegrationGrantItem] */
+        ListingResponse_MeIntegrationGrantItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["MeIntegrationGrantItem"][];
+        };
         /** ListingResponse[MeInvitationItem] */
         ListingResponse_MeInvitationItem_: {
             /** Count */
@@ -7457,16 +7467,6 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["MeInvitationItem"][];
-        };
-        /** ListingResponse[MeMCPGrantItem] */
-        ListingResponse_MeMCPGrantItem_: {
-            /** Count */
-            count: number;
-            /** Limit */
-            limit: number;
-            page: components["schemas"]["Pagination"];
-            /** Items */
-            items: components["schemas"]["MeMCPGrantItem"][];
         };
         /** ListingResponse[OtpMethodItem] */
         ListingResponse_OtpMethodItem_: {
@@ -7562,92 +7562,66 @@ export interface components {
              */
             rememberMe: boolean;
         };
-        /** MCPDeviceAuthorizationResponse */
-        MCPDeviceAuthorizationResponse: {
-            /** Device Code */
-            device_code: string;
-            /** User Code */
-            user_code: string;
-            /** Verification Uri */
-            verification_uri: string;
-            /** Verification Uri Complete */
-            verification_uri_complete: string;
-            /** Expires In */
-            expires_in: number;
-            /** Interval */
-            interval: number;
-        };
-        /** MCPDynamicClientRegistrationForm */
-        MCPDynamicClientRegistrationForm: {
+        /**
+         * MeIntegrationAuthorizationRequestItem
+         * @description A pending authorization shown on the consent screen.
+         */
+        MeIntegrationAuthorizationRequestItem: {
+            /** Clientname */
+            clientName: string;
             /**
-             * Client Name
-             * @example Claude
+             * Expiresat
+             * Format: date-time
              */
-            client_name: string;
-            /** Redirect Uris */
-            redirect_uris?: string[];
-            /** Grant Types */
-            grant_types?: string[] | null;
-            /** Response Types */
-            response_types?: string[] | null;
+            expiresAt: string;
+            flowType: components["schemas"]["OauthAuthorizationFlowType"];
             /**
-             * Token Endpoint Auth Method
-             * @default none
+             * Id
+             * Format: uuid
              */
-            token_endpoint_auth_method: string;
-            /** Software Id */
-            software_id?: string | null;
-            /** Software Version */
-            software_version?: string | null;
+            id: string;
+            /** Redirecturi */
+            redirectUri?: string | null;
+            requestedScope: components["schemas"]["OauthGrantScope"];
+            /** State */
+            state?: string | null;
         };
-        /** MCPDynamicClientRegistrationResponse */
-        MCPDynamicClientRegistrationResponse: {
-            /** Client Id */
-            client_id: string;
-            /** Client Secret */
-            client_secret?: string | null;
-            /** Client Id Issued At */
-            client_id_issued_at: number;
-            /** Client Secret Expires At */
-            client_secret_expires_at?: number | null;
-            /** Client Name */
-            client_name: string;
-            /** Redirect Uris */
-            redirect_uris: string[];
-            /** Grant Types */
-            grant_types: string[];
-            /** Response Types */
-            response_types: string[];
-            /** Token Endpoint Auth Method */
-            token_endpoint_auth_method: string;
-        };
-        /** MCPTokenResponse */
-        MCPTokenResponse: {
-            /** Access Token */
-            access_token: string;
-            /** Refresh Token */
-            refresh_token: string;
-            /**
-             * Token Type
-             * @default Bearer
-             */
-            token_type: string;
-            /** Expires In */
-            expires_in: number;
-            /** Scope */
-            scope: string;
+        /** MeIntegrationAuthorizeApproveForm */
+        MeIntegrationAuthorizeApproveForm: {
+            scope: components["schemas"]["OauthGrantScope"];
         };
         /**
-         * McpAuthorizationFlowType
-         * @enum {string}
+         * MeIntegrationAuthorizeResponse
+         * @description Result of approving/denying a request: a redirect URL for the auth-code
+         *     flow, or null for the device flow (which shows in-page success).
          */
-        McpAuthorizationFlowType: "device" | "authorization_code";
+        MeIntegrationAuthorizeResponse: {
+            /** Redirecturl */
+            redirectUrl?: string | null;
+        };
         /**
-         * McpGrantScope
-         * @description OAuth scope requested by / granted to an MCP client.
-         * @enum {string}
+         * MeIntegrationGrantItem
+         * @description An active grant shown in the account's connected-integrations list.
          */
-        McpGrantScope: "read" | "write";
+        MeIntegrationGrantItem: {
+            /**
+             * Clientid
+             * Format: uuid
+             */
+            clientId: string;
+            /** Clientname */
+            clientName: string;
+            /** Connectedat */
+            connectedAt?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastusedat */
+            lastUsedAt?: string | null;
+            scope: components["schemas"]["OauthGrantScope"];
+        };
         /**
          * MeInvitationAccountItem
          * @description The account the invitation grants access to.
@@ -7732,66 +7706,6 @@ export interface components {
             twoFactorEnabled: boolean;
         };
         /**
-         * MeMCPAuthorizationRequestItem
-         * @description A pending authorization shown on the consent screen.
-         */
-        MeMCPAuthorizationRequestItem: {
-            /** Clientname */
-            clientName: string;
-            /**
-             * Expiresat
-             * Format: date-time
-             */
-            expiresAt: string;
-            flowType: components["schemas"]["McpAuthorizationFlowType"];
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Redirecturi */
-            redirectUri?: string | null;
-            requestedScope: components["schemas"]["McpGrantScope"];
-            /** State */
-            state?: string | null;
-        };
-        /** MeMCPAuthorizeApproveForm */
-        MeMCPAuthorizeApproveForm: {
-            scope: components["schemas"]["McpGrantScope"];
-        };
-        /**
-         * MeMCPAuthorizeResponse
-         * @description Result of approving/denying a request: a redirect URL for the auth-code
-         *     flow, or null for the device flow (which shows in-page success).
-         */
-        MeMCPAuthorizeResponse: {
-            /** Redirecturl */
-            redirectUrl?: string | null;
-        };
-        /**
-         * MeMCPGrantItem
-         * @description An active grant shown in the account's connected-applications list.
-         */
-        MeMCPGrantItem: {
-            /**
-             * Clientid
-             * Format: uuid
-             */
-            clientId: string;
-            /** Clientname */
-            clientName: string;
-            /** Connectedat */
-            connectedAt?: string | null;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /** Lastusedat */
-            lastUsedAt?: string | null;
-            scope: components["schemas"]["McpGrantScope"];
-        };
-        /**
          * MePatchForm
          * @description Partial update of the signed-in user's profile.
          *
@@ -7807,6 +7721,92 @@ export interface components {
             theme?: components["schemas"]["UserTheme"] | null;
             /** Phone */
             phone?: string | null;
+        };
+        /**
+         * OauthAuthorizationFlowType
+         * @enum {string}
+         */
+        OauthAuthorizationFlowType: "device" | "authorization_code";
+        /** OauthClientRegistrationForm */
+        OauthClientRegistrationForm: {
+            /**
+             * Client Name
+             * @example Claude
+             */
+            client_name: string;
+            /** Redirect Uris */
+            redirect_uris?: string[];
+            /** Grant Types */
+            grant_types?: string[] | null;
+            /** Response Types */
+            response_types?: string[] | null;
+            /**
+             * Token Endpoint Auth Method
+             * @default none
+             */
+            token_endpoint_auth_method: string;
+            /** Software Id */
+            software_id?: string | null;
+            /** Software Version */
+            software_version?: string | null;
+        };
+        /** OauthClientRegistrationResponse */
+        OauthClientRegistrationResponse: {
+            /** Client Id */
+            client_id: string;
+            /** Client Secret */
+            client_secret?: string | null;
+            /** Client Id Issued At */
+            client_id_issued_at: number;
+            /** Client Secret Expires At */
+            client_secret_expires_at?: number | null;
+            /** Client Name */
+            client_name: string;
+            /** Redirect Uris */
+            redirect_uris: string[];
+            /** Grant Types */
+            grant_types: string[];
+            /** Response Types */
+            response_types: string[];
+            /** Token Endpoint Auth Method */
+            token_endpoint_auth_method: string;
+        };
+        /** OauthDeviceAuthorizationResponse */
+        OauthDeviceAuthorizationResponse: {
+            /** Device Code */
+            device_code: string;
+            /** User Code */
+            user_code: string;
+            /** Verification Uri */
+            verification_uri: string;
+            /** Verification Uri Complete */
+            verification_uri_complete: string;
+            /** Expires In */
+            expires_in: number;
+            /** Interval */
+            interval: number;
+        };
+        /**
+         * OauthGrantScope
+         * @description OAuth scope requested by / granted to a connected integration.
+         * @enum {string}
+         */
+        OauthGrantScope: "read" | "write";
+        /** OauthTokenResponse */
+        OauthTokenResponse: {
+            /** Access Token */
+            access_token: string;
+            /** Refresh Token */
+            refresh_token: string;
+            /**
+             * Token Type
+             * @default Bearer
+             */
+            token_type: string;
+            /** Expires In */
+            expires_in: number;
+            /** Scope */
+            scope: string;
         };
         /**
          * OtpMethodItem
@@ -8541,7 +8541,7 @@ export interface components {
             /** Errors */
             errors: components["schemas"]["FieldError"][];
         };
-        /** Body_api.mcp.oauth.device.authorize */
+        /** Body_api.oauth.device.authorize */
         authorize: {
             /** Client Id */
             client_id: string;
@@ -8568,7 +8568,7 @@ export interface components {
             /** File */
             file: string;
         };
-        /** Body_api.mcp.oauth.revoke */
+        /** Body_api.oauth.revoke */
         revoke: {
             /** Token */
             token: string;
@@ -8579,7 +8579,7 @@ export interface components {
             /** Client Secret */
             client_secret?: string | null;
         };
-        /** Body_api.mcp.oauth.token */
+        /** Body_api.oauth.token */
         token: {
             /** Grant Type */
             grant_type: string;
@@ -22918,7 +22918,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.authorize.byUserCode": {
+    "api.me.integrations.authorize.byUserCode": {
         parameters: {
             query?: never;
             header?: never;
@@ -22935,7 +22935,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizationRequestItem_"];
+                    "application/json": components["schemas"]["ItemResponse_MeIntegrationAuthorizationRequestItem_"];
                 };
             };
             /** @description Not found */
@@ -22958,7 +22958,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.authorize.get": {
+    "api.me.integrations.authorize.get": {
         parameters: {
             query?: never;
             header?: never;
@@ -22975,7 +22975,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizationRequestItem_"];
+                    "application/json": components["schemas"]["ItemResponse_MeIntegrationAuthorizationRequestItem_"];
                 };
             };
             /** @description Not found */
@@ -22998,7 +22998,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.authorize.approve": {
+    "api.me.integrations.authorize.approve": {
         parameters: {
             query?: never;
             header?: never;
@@ -23009,7 +23009,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["MeMCPAuthorizeApproveForm"];
+                "application/json": components["schemas"]["MeIntegrationAuthorizeApproveForm"];
             };
         };
         responses: {
@@ -23019,7 +23019,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizeResponse_"];
+                    "application/json": components["schemas"]["ItemResponse_MeIntegrationAuthorizeResponse_"];
                 };
             };
             /** @description Not found */
@@ -23042,7 +23042,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.authorize.deny": {
+    "api.me.integrations.authorize.deny": {
         parameters: {
             query?: never;
             header?: never;
@@ -23059,7 +23059,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ItemResponse_MeMCPAuthorizeResponse_"];
+                    "application/json": components["schemas"]["ItemResponse_MeIntegrationAuthorizeResponse_"];
                 };
             };
             /** @description Not found */
@@ -23082,7 +23082,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.grants.list": {
+    "api.me.integrations.grants.list": {
         parameters: {
             query?: never;
             header?: never;
@@ -23097,7 +23097,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListingResponse_MeMCPGrantItem_"];
+                    "application/json": components["schemas"]["ListingResponse_MeIntegrationGrantItem_"];
                 };
             };
             /** @description Some fields contain invalid values */
@@ -23111,7 +23111,7 @@ export interface operations {
             };
         };
     };
-    "api.me.mcp.grants.revoke": {
+    "api.me.integrations.grants.revoke": {
         parameters: {
             query?: never;
             header?: never;
@@ -23318,7 +23318,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.metadata.authorizationServer": {
+    "api.oauth.metadata.authorizationServer": {
         parameters: {
             query?: never;
             header?: never;
@@ -23340,7 +23340,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.metadata.protectedResource": {
+    "api.oauth.metadata.protectedResource": {
         parameters: {
             query?: never;
             header?: never;
@@ -23362,7 +23362,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.oauth.register": {
+    "api.oauth.register": {
         parameters: {
             query?: never;
             header?: never;
@@ -23371,7 +23371,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["MCPDynamicClientRegistrationForm"];
+                "application/json": components["schemas"]["OauthClientRegistrationForm"];
             };
         };
         responses: {
@@ -23381,7 +23381,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MCPDynamicClientRegistrationResponse"];
+                    "application/json": components["schemas"]["OauthClientRegistrationResponse"];
                 };
             };
             /** @description Validation Error */
@@ -23395,7 +23395,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.oauth.authorize": {
+    "api.oauth.authorize": {
         parameters: {
             query: {
                 client_id: string;
@@ -23432,7 +23432,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.oauth.token": {
+    "api.oauth.token": {
         parameters: {
             query?: never;
             header?: never;
@@ -23451,7 +23451,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MCPTokenResponse"];
+                    "application/json": components["schemas"]["OauthTokenResponse"];
                 };
             };
             /** @description Validation Error */
@@ -23465,7 +23465,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.oauth.device.authorize": {
+    "api.oauth.device.authorize": {
         parameters: {
             query?: never;
             header?: never;
@@ -23484,7 +23484,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MCPDeviceAuthorizationResponse"];
+                    "application/json": components["schemas"]["OauthDeviceAuthorizationResponse"];
                 };
             };
             /** @description Validation Error */
@@ -23498,7 +23498,7 @@ export interface operations {
             };
         };
     };
-    "api.mcp.oauth.revoke": {
+    "api.oauth.revoke": {
         parameters: {
             query?: never;
             header?: never;

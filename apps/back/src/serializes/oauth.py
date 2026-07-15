@@ -1,11 +1,11 @@
-"""Output schemas for the MCP OAuth endpoints (snake_case wire shape)."""
+"""Output schemas for the OAuth endpoints (snake_case wire shape)."""
 
 from typing import Any
 
 from pydantic import BaseModel
 
 
-class MCPDynamicClientRegistrationResponse(BaseModel):
+class OauthClientRegistrationResponse(BaseModel):
     client_id: str
     client_secret: str | None = None
     client_id_issued_at: int
@@ -17,7 +17,7 @@ class MCPDynamicClientRegistrationResponse(BaseModel):
     token_endpoint_auth_method: str
 
 
-class MCPTokenResponse(BaseModel):
+class OauthTokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "Bearer"
@@ -25,7 +25,7 @@ class MCPTokenResponse(BaseModel):
     scope: str
 
 
-class MCPDeviceAuthorizationResponse(BaseModel):
+class OauthDeviceAuthorizationResponse(BaseModel):
     device_code: str
     user_code: str
     verification_uri: str
@@ -35,4 +35,4 @@ class MCPDeviceAuthorizationResponse(BaseModel):
 
 
 # Discovery documents are free-form OAuth metadata objects.
-MCPMetadataDocument = dict[str, Any]
+OauthMetadataDocument = dict[str, Any]

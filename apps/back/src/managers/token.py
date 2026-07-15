@@ -23,11 +23,11 @@ import jwt
 
 from src.models.user import User
 from src.models.user_authentication import UserAuthentication
-from src.models.user_mcp_grant import UserMcpGrant
+from src.models.oauth_grant import OauthGrant
 from src.settings import get_settings
 
 _SUBJECT = "user"
-_MCP_SUBJECT = "mcp-grant"
+_OAUTH_SUBJECT = "oauth-grant"
 
 
 def _now() -> int:
@@ -207,16 +207,16 @@ class ResetTokenManager(_TemporaryAuthenticationTokenManager):
     AUDIENCE = "auth-reset-password"
 
 
-class McpAccessTokenManager:
-    """Access token for an MCP grant (audience `mcp-access`).
+class OauthAccessTokenManager:
+    """Access token for an OAuth grant (audience `oauth-access`).
 
     Embeds `grant.id` + `grant_control` so the transport can reload the grant and
     reject tokens superseded by a refresh or a revocation.
     """
 
-    AUDIENCE = "mcp-access"
+    AUDIENCE = "oauth-access"
 
-    def __init__(self, grant: UserMcpGrant):
+    def __init__(self, grant: OauthGrant):
         self.grant = grant
 
     def _claims(self) -> dict:
@@ -228,20 +228,20 @@ class McpAccessTokenManager:
         }
 
     def _ttl(self) -> int:
-        return get_settings().mcp_oauth_access_token_ttl_seconds
+        return get_settings().oauth_access_token_ttl_seconds
 
     def generate(self) -> str:
-        return _encode(self.AUDIENCE, self._ttl(), self._claims(), subject=_MCP_SUBJECT)
+        return _encode(self.AUDIENCE, self._ttl(), self._claims(), subject=_OAUTH_SUBJECT)
 
     @classmethod
     def decode(cls, token: str) -> tuple[dict | None, bool]:
-        return _decode(token, cls.AUDIENCE, subject=_MCP_SUBJECT)
+        return _decode(token, cls.AUDIENCE, subject=_OAUTH_SUBJECT)
 
 
-class McpRefreshTokenManager(McpAccessTokenManager):
-    """Refresh token for an MCP grant (audience `mcp-refresh`, longer TTL)."""
+class OauthRefreshTokenManager(OauthAccessTokenManager):
+    """Refresh token for an OAuth grant (audience `oauth-refresh`, longer TTL)."""
 
-    AUDIENCE = "mcp-refresh"
+    AUDIENCE = "oauth-refresh"
 
     def _ttl(self) -> int:
-        return get_settings().mcp_oauth_refresh_token_ttl_seconds
+        return get_settings().oauth_refresh_token_ttl_seconds

@@ -3,23 +3,23 @@ from typing import Annotated
 from fastapi import APIRouter, Query
 from fastapi.responses import RedirectResponse
 
-from src.managers.mcp_oauth import MCPOAuthError, parse_oauth_scope
+from src.managers.oauth import OauthError, parse_oauth_scope
 from src.settings import get_settings
-from src.utils.dependencies import MCPOAuthManagerDep
+from src.utils.dependencies import OauthManagerDep
 
 router = APIRouter()
 
 
 @router.get(
     "/authorize",
-    operation_id="api.mcp.oauth.authorize",
+    operation_id="api.oauth.authorize",
     summary="Authorization endpoint (redirects to the consent screen)",
     description="Start the authorization-code + PKCE flow, then redirect the browser to the SPA consent page.",
     response_model=None,
     status_code=302,
 )
 def authorize(
-    manager: MCPOAuthManagerDep,
+    manager: OauthManagerDep,
     client_id: Annotated[str, Query()],
     redirect_uri: Annotated[str, Query()],
     code_challenge: Annotated[str, Query(min_length=43, max_length=128)],
@@ -29,7 +29,7 @@ def authorize(
     state: Annotated[str | None, Query()] = None,
 ) -> RedirectResponse:
     if response_type != "code":
-        raise MCPOAuthError("unsupported_response_type", "Only the `code` response type is supported.")
+        raise OauthError("unsupported_response_type", "Only the `code` response type is supported.")
     client = manager.load_client(client_id)
     authorization_request = manager.start_authorization_code(
         client,

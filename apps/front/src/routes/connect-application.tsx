@@ -3,9 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Result, Skeleton } from "antd";
 import { z } from "zod";
 import { $api } from "@/api/$api";
-import { MCPConsentScreen } from "@/features/mcp/mcp-consent-screen";
-import { OAuthPageShell } from "@/features/mcp/oauth-page-shell";
-import { UserCodeForm } from "@/features/mcp/user-code-form";
+import { IntegrationConsentScreen } from "@/features/integrations/integration-consent-screen";
+import { OAuthPageShell } from "@/features/integrations/oauth-page-shell";
+import { UserCodeForm } from "@/features/integrations/user-code-form";
 import { requireSession } from "@/lib/auth/require-session";
 
 const searchSchema = z.object({ userCode: z.string().optional() });
@@ -20,7 +20,7 @@ function ConsentByUserCode({ userCode }: { userCode: string }) {
   const { t } = useLingui();
   const { data, isLoading, isError } = $api.useQuery(
     "get",
-    "/me/mcp/authorize/by-user-code/{user_code}",
+    "/me/integrations/authorize/by-user-code/{user_code}",
     { params: { path: { user_code: userCode } } }
   );
   if (isLoading) {
@@ -35,7 +35,7 @@ function ConsentByUserCode({ userCode }: { userCode: string }) {
       />
     );
   }
-  return <MCPConsentScreen request={data.item} />;
+  return <IntegrationConsentScreen request={data.item} />;
 }
 
 function ConnectApplicationPage() {

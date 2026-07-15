@@ -18,8 +18,8 @@ from src.routes.api.databases import router as databases_router
 from src.routes.api.features import router as features_router
 from src.routes.api.health import router as health_router
 from src.routes.api.journeys import router as journeys_router
-from src.routes.api.mcp import router as mcp_router
 from src.routes.api.me import router as me_router
+from src.routes.api.oauth import router as oauth_router
 from src.routes.api.personas import router as personas_router
 from src.routes.api.services import router as services_router
 from src.routes.api.tags import router as tags_router
@@ -44,4 +44,4 @@ router.include_router(v1_router)
 router.include_router(health_router)  # ops liveness probe
 router.include_router(auth_router)  # authentication (lock-step with the API)
 router.include_router(me_router)  # current-user profile & security
-router.include_router(mcp_router)  # MCP OAuth discovery + flow (root-mounted)
+router.include_router(oauth_router)  # OAuth discovery + flow (root-mounted)
