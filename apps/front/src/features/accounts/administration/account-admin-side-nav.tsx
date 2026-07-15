@@ -1,4 +1,5 @@
 import {
+  BarChartOutlined,
   InfoCircleOutlined,
   MailOutlined,
   TagsOutlined,
@@ -73,6 +74,11 @@ export function AccountAdminSideNav({ accountId }: { accountId: string }) {
       to: "/accounts/$accountId/administration/tags",
       label: t`Tags`,
       icon: <TagsOutlined />,
+    },
+    {
+      to: "/accounts/$accountId/administration/usage",
+      label: t`Usage`,
+      icon: <BarChartOutlined />,
     },
   ];
   const footerItems: NavItem[] = [

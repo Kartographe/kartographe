@@ -42,6 +42,7 @@ import { Route as AppAccountsAccountIdFeaturesIndexRouteImport } from './routes/
 import { Route as AppAccountsAccountIdDatabasesIndexRouteImport } from './routes/_app/accounts/$accountId/databases/index'
 import { Route as AppAccountsAccountIdApplicationsIndexRouteImport } from './routes/_app/accounts/$accountId/applications/index'
 import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
+import { Route as AppAccountsAccountIdAdministrationUsageRouteImport } from './routes/_app/accounts/$accountId/administration/usage'
 import { Route as AppAccountsAccountIdAdministrationTagsRouteImport } from './routes/_app/accounts/$accountId/administration/tags'
 import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
 import { Route as AppAccountsAccountIdAdministrationInvitationsRouteImport } from './routes/_app/accounts/$accountId/administration/invitations'
@@ -250,6 +251,12 @@ const AppAccountsAccountIdAdministrationIndexRoute =
   AppAccountsAccountIdAdministrationIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdAdministrationUsageRoute =
+  AppAccountsAccountIdAdministrationUsageRouteImport.update({
+    id: '/usage',
+    path: '/usage',
     getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
   } as any)
 const AppAccountsAccountIdAdministrationTagsRoute =
@@ -510,6 +517,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
+  '/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
   '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -571,6 +579,7 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
+  '/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -642,6 +651,7 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/administration/invitations': typeof AppAccountsAccountIdAdministrationInvitationsRoute
   '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/_app/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
+  '/_app/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
   '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/_app/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/_app/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -713,6 +723,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/tags'
+    | '/accounts/$accountId/administration/usage'
     | '/accounts/$accountId/administration/'
     | '/accounts/$accountId/applications/'
     | '/accounts/$accountId/databases/'
@@ -774,6 +785,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/invitations'
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/tags'
+    | '/accounts/$accountId/administration/usage'
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/applications'
     | '/accounts/$accountId/databases'
@@ -844,6 +856,7 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/administration/invitations'
     | '/_app/accounts/$accountId/administration/members'
     | '/_app/accounts/$accountId/administration/tags'
+    | '/_app/accounts/$accountId/administration/usage'
     | '/_app/accounts/$accountId/administration/'
     | '/_app/accounts/$accountId/applications/'
     | '/_app/accounts/$accountId/databases/'
@@ -1116,6 +1129,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/accounts/$accountId/administration/'
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/administration/usage': {
+      id: '/_app/accounts/$accountId/administration/usage'
+      path: '/usage'
+      fullPath: '/accounts/$accountId/administration/usage'
+      preLoaderRoute: typeof AppAccountsAccountIdAdministrationUsageRouteImport
       parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
     }
     '/_app/accounts/$accountId/administration/tags': {
@@ -1424,6 +1444,7 @@ interface AppAccountsAccountIdAdministrationRouteRouteChildren {
   AppAccountsAccountIdAdministrationInvitationsRoute: typeof AppAccountsAccountIdAdministrationInvitationsRoute
   AppAccountsAccountIdAdministrationMembersRoute: typeof AppAccountsAccountIdAdministrationMembersRoute
   AppAccountsAccountIdAdministrationTagsRoute: typeof AppAccountsAccountIdAdministrationTagsRoute
+  AppAccountsAccountIdAdministrationUsageRoute: typeof AppAccountsAccountIdAdministrationUsageRoute
   AppAccountsAccountIdAdministrationIndexRoute: typeof AppAccountsAccountIdAdministrationIndexRoute
 }
 
@@ -1439,6 +1460,8 @@ const AppAccountsAccountIdAdministrationRouteRouteChildren: AppAccountsAccountId
       AppAccountsAccountIdAdministrationMembersRoute,
     AppAccountsAccountIdAdministrationTagsRoute:
       AppAccountsAccountIdAdministrationTagsRoute,
+    AppAccountsAccountIdAdministrationUsageRoute:
+      AppAccountsAccountIdAdministrationUsageRoute,
     AppAccountsAccountIdAdministrationIndexRoute:
       AppAccountsAccountIdAdministrationIndexRoute,
   }
