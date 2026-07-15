@@ -1,0 +1,76 @@
+name: Publish Docker images
+
+# Build the two application images and push them to the public Docker Hub
+# repositories on every git tag:
+#   - kartographe/kartographe-back   (apps/back)
+#   - kartographe/kartographe-front  (apps/front)
+#
+# Requires two repository secrets: DOCKERHUB_USERNAME and DOCKERHUB_TOKEN.
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: back
+            image: kartographe/kartographe-back
+            context: ./apps/back
+            dockerfile: ./apps/back/Dockerfile
+          - name: front
+            image: kartographe/kartographe-front
+            context: ./apps/front
+            dockerfile: ./apps/front/docker/Dockerfile
+
+    name: ${{ matrix.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Derive image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+          # Semver tags (v1.2.3) yield 1.2.3 / 1.2 / 1 and, when not a
+          # pre-release, `latest`. `type=ref,event=tag` also mirrors the raw
+          # tag name so *any* tag (even non-semver) still produces one image tag.
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=tag
+          flavor: |
+            latest=auto
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
