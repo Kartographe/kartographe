@@ -57,6 +57,7 @@ _EDITOR = require_role(
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read. "
         "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
+        "Filter with `personasIds` (repeat the query param) to keep only the journeys targeting at least one of those personas. "
     ),
     response_model=ListingResponse[JourneyItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -69,6 +70,7 @@ def list_journeys(
     journey_status: Annotated[list[JourneyStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[JourneyType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    persona_ids: Annotated[list[uuid.UUID] | None, Query(alias="personasIds")] = None,
     sort_by: Annotated[JourneySortField, Query(alias="sortBy")] = JourneySortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -79,6 +81,7 @@ def list_journeys(
         statuses=journey_status,
         types=type,
         tag_ids=tag_ids,
+        persona_ids=persona_ids,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,

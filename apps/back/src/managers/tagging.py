@@ -5,17 +5,15 @@
 """Shared tagging primitives: the entity registry and the `tag_ids` overlap filter.
 
 Tagged entities carry their tags as a `tag_ids` UUID array rather than a join
-table, so "has at least one of these tags" is the Postgres array-overlap
-operator `&&` — index-friendly and expressed in one condition.
+table, so "has at least one of these tags" is a Postgres array overlap — see
+`src/managers/_arrays.py`, which `personas_ids` filtering uses too.
 """
 
 import uuid
 
-from sqlalchemy import Uuid, cast
-from sqlalchemy.dialects.postgresql import ARRAY as PgArray
-from sqlalchemy.dialects.postgresql import array
 from sqlalchemy.sql.elements import ColumnElement
 
+from src.managers._arrays import uuid_array_overlap
 from src.models.application import Application
 from src.models.application_guard import ApplicationGuard
 from src.models.application_route import ApplicationRoute
@@ -51,4 +49,4 @@ assert set(TAGGED_MODEL) == set(TagEntityType), "every TagEntityType needs a tag
 
 def tag_overlap(model: type, tag_ids: list[uuid.UUID]) -> ColumnElement[bool]:
     """Condition matching rows carrying **at least one** of `tag_ids`."""
-    return model.tag_ids.op("&&")(cast(array(tag_ids), PgArray(Uuid)))
+    return uuid_array_overlap(model.tag_ids, tag_ids)
