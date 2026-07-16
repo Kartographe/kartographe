@@ -8,14 +8,20 @@ For every entity type the account owns, we count the live (`enabled`) rows
 scoped to the account and compare them against a quota. File entities also sum
 their `file_size` to report cumulative storage against a storage quota.
 
-The quotas below are flat placeholders — the upcoming License feature will drive
-`ENTITY_LIMIT` / `STORAGE_LIMIT` per account. Keeping them here (and per-entry on
-the serializer) means License can override them without reshaping the contract.
+Quotas come from the account's `Entitlements` — Community's flat ceilings in
+the AGPL core, the account's licence once the Enterprise Edition is installed.
+This manager never learns which: it asks for a number and reports it.
+
+`_GROUPS` is the other half of the `QuotaKey` contract: every entity counted
+here has a key there, and every key there is counted here. `test_licensing.py`
+asserts that both ways, so adding an entity without a quota key (or the
+reverse) fails the suite rather than silently escaping its ceiling.
 """
 
 from sqlalchemy import func
 from sqlmodel import Session, select
 
+from src.licensing import Entitlements, QuotaKey
 from src.models._base import BaseModel
 from src.models.account import Account
 from src.models.account_user import AccountUser
@@ -52,73 +58,69 @@ from src.models.service_action import ServiceAction
 from src.models.tag import Tag
 from src.serializes.usage import UsageEntry, UsageGroup, UsageReport
 
-# Placeholder quotas until the License feature drives them per account.
-ENTITY_LIMIT = 1000
-STORAGE_LIMIT = 1024**3  # 1 GiB per file entity.
-
-# Ordered typology → entities. Each entity: (camelCase key, model, is_file).
+# Ordered typology → entities. Each entity: (quota key, model, is_file).
 # `is_file` entities carry a `file_size` column that we sum for storage usage.
-_GROUPS: list[tuple[str, list[tuple[str, type[BaseModel], bool]]]] = [
-    ("members", [("accountUser", AccountUser, False)]),
+_GROUPS: list[tuple[str, list[tuple[QuotaKey, type[BaseModel], bool]]]] = [
+    ("members", [(QuotaKey.ACCOUNT_USER, AccountUser, False)]),
     (
         "applications",
         [
-            ("application", Application, False),
-            ("applicationVersion", ApplicationVersion, False),
-            ("applicationEnvironment", ApplicationEnvironment, False),
-            ("applicationEnvironmentVersion", ApplicationEnvironmentVersion, False),
-            ("applicationFeature", ApplicationFeature, False),
-            ("applicationGuard", ApplicationGuard, False),
-            ("applicationRole", ApplicationRole, False),
-            ("applicationRoute", ApplicationRoute, False),
-            ("applicationRouteExample", ApplicationRouteExample, False),
-            ("applicationRouteResponse", ApplicationRouteResponse, False),
-            ("applicationRouteTable", ApplicationRouteTable, False),
+            (QuotaKey.APPLICATION, Application, False),
+            (QuotaKey.APPLICATION_VERSION, ApplicationVersion, False),
+            (QuotaKey.APPLICATION_ENVIRONMENT, ApplicationEnvironment, False),
+            (QuotaKey.APPLICATION_ENVIRONMENT_VERSION, ApplicationEnvironmentVersion, False),
+            (QuotaKey.APPLICATION_FEATURE, ApplicationFeature, False),
+            (QuotaKey.APPLICATION_GUARD, ApplicationGuard, False),
+            (QuotaKey.APPLICATION_ROLE, ApplicationRole, False),
+            (QuotaKey.APPLICATION_ROUTE, ApplicationRoute, False),
+            (QuotaKey.APPLICATION_ROUTE_EXAMPLE, ApplicationRouteExample, False),
+            (QuotaKey.APPLICATION_ROUTE_RESPONSE, ApplicationRouteResponse, False),
+            (QuotaKey.APPLICATION_ROUTE_TABLE, ApplicationRouteTable, False),
         ],
     ),
     (
         "databases",
         [
-            ("database", Database, False),
-            ("databaseVersion", DatabaseVersion, False),
-            ("databaseTable", DatabaseTable, False),
-            ("databaseTableColumn", DatabaseTableColumn, False),
-            ("databaseMigration", DatabaseMigration, False),
-            ("databaseMigrationColumn", DatabaseMigrationColumn, False),
+            (QuotaKey.DATABASE, Database, False),
+            (QuotaKey.DATABASE_VERSION, DatabaseVersion, False),
+            (QuotaKey.DATABASE_TABLE, DatabaseTable, False),
+            (QuotaKey.DATABASE_TABLE_COLUMN, DatabaseTableColumn, False),
+            (QuotaKey.DATABASE_MIGRATION, DatabaseMigration, False),
+            (QuotaKey.DATABASE_MIGRATION_COLUMN, DatabaseMigrationColumn, False),
         ],
     ),
     (
         "features",
         [
-            ("feature", Feature, False),
-            ("featureFile", FeatureFile, True),
-            ("featureJourney", FeatureJourney, False),
+            (QuotaKey.FEATURE, Feature, False),
+            (QuotaKey.FEATURE_FILE, FeatureFile, True),
+            (QuotaKey.FEATURE_JOURNEY, FeatureJourney, False),
         ],
     ),
     (
         "journeys",
         [
-            ("journey", Journey, False),
-            ("journeyScenario", JourneyScenario, False),
-            ("journeyScenarioStep", JourneyScenarioStep, False),
-            ("journeyScenarioStepAssertion", JourneyScenarioStepAssertion, False),
-            ("journeyScenarioStepFile", JourneyScenarioStepFile, True),
-            ("journeyScenarioStepRoute", JourneyScenarioStepRoute, False),
+            (QuotaKey.JOURNEY, Journey, False),
+            (QuotaKey.JOURNEY_SCENARIO, JourneyScenario, False),
+            (QuotaKey.JOURNEY_SCENARIO_STEP, JourneyScenarioStep, False),
+            (QuotaKey.JOURNEY_SCENARIO_STEP_ASSERTION, JourneyScenarioStepAssertion, False),
+            (QuotaKey.JOURNEY_SCENARIO_STEP_FILE, JourneyScenarioStepFile, True),
+            (QuotaKey.JOURNEY_SCENARIO_STEP_ROUTE, JourneyScenarioStepRoute, False),
         ],
     ),
-    ("personas", [("persona", Persona, False)]),
+    ("personas", [(QuotaKey.PERSONA, Persona, False)]),
     (
         "services",
         [
-            ("service", Service, False),
-            ("serviceAction", ServiceAction, False),
+            (QuotaKey.SERVICE, Service, False),
+            (QuotaKey.SERVICE_ACTION, ServiceAction, False),
         ],
     ),
     (
         "content",
         [
-            ("tag", Tag, False),
-            ("comment", Comment, False),
+            (QuotaKey.TAG, Tag, False),
+            (QuotaKey.COMMENT, Comment, False),
         ],
     ),
 ]
@@ -128,13 +130,14 @@ class UsageManager:
     def __init__(self, session: Session):
         self.session = session
 
-    def report_for_account(self, account: Account) -> UsageReport:
-        """Count the account's live records for every tracked entity, grouped."""
+    def report_for_account(self, account: Account, entitlements: Entitlements) -> UsageReport:
+        """Count the account's live records for every tracked entity, grouped,
+        each against the ceiling `entitlements` grants it."""
         groups = [
             UsageGroup(
                 key=group_key,
                 entries=[
-                    self._entry(account, key, model, is_file)
+                    self._entry(account, key, model, is_file, entitlements)
                     for key, model, is_file in entities
                 ],
             )
@@ -143,8 +146,17 @@ class UsageManager:
         return UsageReport(groups=groups)
 
     def _entry(
-        self, account: Account, key: str, model: type[BaseModel], is_file: bool
+        self,
+        account: Account,
+        key: QuotaKey,
+        model: type[BaseModel],
+        is_file: bool,
+        entitlements: Entitlements,
     ) -> UsageEntry:
+        # `key.value`, not `key`: QuotaKey is a `(str, Enum)`, so passing the
+        # member into a `str` field leans on subclass coercion and on Enum's
+        # `__str__` never being consulted. The serializer's contract is a plain
+        # string — hand it one.
         if is_file:
             count, total_size = self.session.exec(
                 select(func.count(), func.coalesce(func.sum(model.file_size), 0))
@@ -152,15 +164,15 @@ class UsageManager:
                 .where(model.account_id == account.id, model.enabled.is_(True))
             ).one()
             return UsageEntry(
-                key=key,
+                key=key.value,
                 count=count,
-                limit=ENTITY_LIMIT,
+                limit=entitlements.entity_quota(key),
                 total_size=total_size,
-                storage_limit=STORAGE_LIMIT,
+                storage_limit=entitlements.storage_quota(key),
             )
         count = self.session.exec(
             select(func.count())
             .select_from(model)
             .where(model.account_id == account.id, model.enabled.is_(True))
         ).one()
-        return UsageEntry(key=key, count=count, limit=ENTITY_LIMIT)
+        return UsageEntry(key=key.value, count=count, limit=entitlements.entity_quota(key))

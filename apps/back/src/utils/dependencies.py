@@ -19,6 +19,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlmodel import Session, select
 
 from src.database import get_session
+from src.licensing import Entitlements, get_entitlements_provider
 from src.managers.account import AccountManager
 from src.managers.account_invitations import AccountInvitationsManager
 from src.managers.account_users import AccountUsersManager
@@ -359,6 +360,21 @@ def get_current_account_invitation(
 
 
 CurrentAccountInvitationDep = Annotated[AccountUserInvitation, Depends(get_current_account_invitation)]
+
+
+# --- Licensing -----------------------------------------------------------
+
+def get_entitlements(account: CurrentAccountDep) -> Entitlements:
+    """Resolve what `{account_id}` is entitled to — its edition, features and quotas.
+
+    Answers Community in the AGPL core; answers from the account's licence when
+    the Enterprise Edition is installed. Call sites cannot tell the difference,
+    which is the point: `src/licensing/registry.py` is the only place that knows.
+    """
+    return get_entitlements_provider().entitlements_for(account)
+
+
+EntitlementsDep = Annotated[Entitlements, Depends(get_entitlements)]
 
 
 # --- Applications & features --------------------------------------------

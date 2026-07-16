@@ -40,21 +40,27 @@ jobs:
       - uses: actions/checkout@v4
 
       # Boundary rule 1: the dependency points one way, `ee` -> `src`, never
-      # the reverse. The core reaches ee only through the entitlements provider
-      # registry, via a guarded import in app_factory.
+      # the reverse -- with exactly one exception, the guarded import in
+      # app_factory.py that lets the Enterprise Edition register its
+      # entitlements provider. That single seam is the design; a second one
+      # would mean licensing logic is spreading into the core, so this asserts
+      # there is one and only one.
       #
       # Scoped to the backend on purpose: that is where entitlements are
       # enforced. The frontend is not an enforcement surface (it only renders
       # what the API already authorises), so its ee/ boundary is a licensing
       # one -- headers -- not a build one.
-      - name: Backend core must not import ee
+      - name: Only app_factory may import ee
         run: |
-          if grep -rnE '^[[:space:]]*(from|import)[[:space:]]+ee(\.|[[:space:]]|$)' \
-               apps/back/src apps/back/server_api.py; then
-            echo "::error::apps/back/src imports from ee/. The core must not depend on the Enterprise Edition. See LICENSING.md."
+          offenders=$(grep -rlE '^[[:space:]]*(from|import)[[:space:]]+ee(\.|[[:space:]]|$)' \
+                        apps/back/src apps/back/server_api.py \
+                      | grep -v '^apps/back/src/app_factory.py$' || true)
+          if [ -n "$offenders" ]; then
+            echo "::error::These core files import ee/. Only app_factory.py may, through the guarded seam. See LICENSING.md."
+            echo "$offenders"
             exit 1
           fi
-          echo "OK: the backend core does not import ee."
+          echo "OK: app_factory is the only core file importing ee."
 
   core-without-ee:
     name: Backend core boots and tests without ee

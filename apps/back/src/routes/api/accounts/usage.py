@@ -18,7 +18,7 @@ from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.usage import UsageReport
-from src.utils.dependencies import CurrentAccountDep, UsageManagerDep
+from src.utils.dependencies import CurrentAccountDep, EntitlementsDep, UsageManagerDep
 from src.utils.middlewares import require_role
 
 router = APIRouter(prefix="/accounts/{account_id}/usage", tags=["api.accounts.usage"])
@@ -46,5 +46,6 @@ def get_usage(
     account: CurrentAccountDep,
     _: Annotated[AccountUser, Depends(_ADMIN)],
     manager: UsageManagerDep,
+    entitlements: EntitlementsDep,
 ) -> ItemResponse[UsageReport]:
-    return ItemResponse(item=manager.report_for_account(account))
+    return ItemResponse(item=manager.report_for_account(account, entitlements))

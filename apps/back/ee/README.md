@@ -46,12 +46,31 @@ journeys. Their enforcement is therefore:
 
 Do not pretend the code enforces on-premise quotas. It does not, and it cannot.
 
+## The seam
+
+The core reaches this package through exactly one entry point:
+
+```python
+# apps/back/ee/bootstrap.py
+def setup() -> None:
+    """Called once by `create_app`, before any route is wired."""
+    register_entitlements_provider(LicenseEntitlementsProvider(...))
+```
+
+`src/app_factory.py` imports it defensively (`try: from ee import bootstrap`)
+and calls `setup()` if it is there. That is the entire contract.
+
+`bootstrap.py` **does not exist yet**: there is no provider to register until
+the `.lic` format lands, so the import fails and the core answers Community.
+That is the steady state of a community build, not a gap to be filled with a
+stub.
+
 ## Boundary rules
 
 1. **The core must never import from `ee`.** The dependency points one way:
-   `ee` → `src`, never the reverse. The core reaches `ee` only through the
-   entitlements provider registry, via a guarded import in `app_factory`
-   (same pattern already used for `fastapi-mcp`).
+   `ee` → `src`, never the reverse. The single exception is the guarded import
+   in `app_factory` described above — CI asserts it is the only one, because a
+   second seam would mean licensing logic leaking into the core.
 2. **The core must build, boot and pass its tests with this directory
    deleted.** CI enforces this — see the `core-without-ee` job. If that job
    fails, the split is broken, whatever the file headers say.

@@ -6,8 +6,13 @@
 
 Each `UsageEntry` reports how many live (`enabled`) records the account holds for
 one entity type, against a quota. File entities additionally report their
-cumulative on-disk size against a storage quota. The quotas are flat placeholders
-today; the upcoming License feature will drive them per account.
+cumulative on-disk size against a storage quota. The quotas come from the
+account's entitlements — flat Community ceilings in the AGPL core, the account's
+licence once the Enterprise Edition is installed.
+
+`key` is a `QuotaKey` value (`src/licensing/quotas.py`), typed here as a plain
+string so the wire contract stays a string and the frontend keeps its own
+label mapping.
 """
 
 from src.serializes._base import CamelBase

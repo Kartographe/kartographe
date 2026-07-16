@@ -28,6 +28,20 @@ try:
 except ImportError:  # pragma: no cover
     FastApiMCP = None
 
+# The Enterprise Edition (`ee/`, Elastic-2.0) is optional and absent from any
+# AGPL-only build, so its import is guarded the same way. This is the single
+# seam between the two licences: `ee` depends on `src`, never the reverse, and
+# all it does through this seam is register an entitlements provider.
+#
+# `ee.bootstrap` does not exist yet — the Enterprise Edition has no provider to
+# register until the `.lic` format lands — so this resolves to None today and
+# the core answers Community. That is the steady state for a community build,
+# not a temporary gap. See LICENSING.md.
+try:
+    from ee import bootstrap as ee_bootstrap
+except ImportError:
+    ee_bootstrap = None
+
 
 def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     """Build the Kartographe FastAPI app.
@@ -39,6 +53,14 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
     """
     settings = get_settings()
     configure_logging(settings)
+
+    # Hand control to the Enterprise Edition, if it is installed, before any
+    # route is wired: `setup()` registers its entitlements provider, so that
+    # the first request already resolves against a licence rather than
+    # Community. A community build skips this entirely.
+    if ee_bootstrap is not None:
+        ee_bootstrap.setup()
+
     info = openapi_info()
 
     # Captured by the lifespan closure below; filled in when `mount_mcp=True`.
