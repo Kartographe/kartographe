@@ -23,9 +23,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 > reversible.
 >
 > Not reviewed by a lawyer. Before putting it into force, have counsel confirm
-> section 2 (the relicensing grant), section 9 (a commercial commitment, not a
-> legal formality — see the note there) and section 11, whose venue is left
-> blank on purpose rather than guessed.
+> section 2 (the relicensing grant) and section 9 (a commercial commitment
+> rather than a legal formality — see the note there), and check section 11
+> against the fact that a jurisdiction clause may not bind contributors who are
+> individuals rather than professionals.
 
 Thank you for your interest in Kartographe.
 
@@ -183,13 +184,24 @@ You acknowledge that We are under no obligation to use or incorporate Your
 Contribution. The decision to use or incorporate a Contribution is at our sole
 discretion.
 
-## 11. Governing law
+## 11. Governing law and jurisdiction
 
-This Agreement is governed by French law.
+This Agreement is governed by French law. Any dispute arising out of or in
+connection with it shall be submitted to the courts of Quimper, France.
 
 <!--
-  TODO (counsel): name the competent court — normally the one with jurisdiction
-  over ChallengeMyProject's registered office. Left blank rather than guessed.
+  Quimper named by David Patiashvili (ChallengeMyProject's registered office).
+  Deliberately "the courts of Quimper" rather than a single named court:
+  Quimper has both a tribunal judiciaire and a tribunal de commerce, and which
+  one is competent depends on who the contributor is — an individual or a
+  company. Naming one would be wrong half the time.
+
+  Two points still worth a lawyer's eye:
+  - Against contributors who are individuals rather than professionals, and
+    especially non-French ones, a jurisdiction clause may be unenforceable
+    regardless of what this says (mandatory consumer-protection rules).
+  - Section 2 (relicensing grant) and section 9 (the promise back) remain the
+    clauses that carry the whole arrangement.
 -->
 
 ## Signature
