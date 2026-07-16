@@ -45,6 +45,7 @@ export const dtoEnums = {
   DatabaseTableType: ["physical", "logical"] as const satisfies readonly S["DatabaseTableType"][],
   DatabaseType: ["mysql", "postgresql"] as const satisfies readonly S["DatabaseType"][],
   DatabaseVersionStatus: ["draft", "active", "archived"] as const satisfies readonly S["DatabaseVersionStatus"][],
+  Edition: ["community"] as const satisfies readonly S["Edition"][],
   FeatureFileStatus: ["uploaded", "archived"] as const satisfies readonly S["FeatureFileStatus"][],
   FeatureFileType: ["screenshot", "video", "document", "other"] as const satisfies readonly S["FeatureFileType"][],
   FeatureSortField: ["date", "title", "status", "type"] as const satisfies readonly S["FeatureSortField"][],

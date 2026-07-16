@@ -296,6 +296,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/entitlements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get account entitlements
+         * @description Return what the account is entitled to: the edition it runs under and the licensed features unlocked for it. A self-hosted install with no licence reports the `community` edition and no features. Quotas are not repeated here — the usage endpoint reports each one next to the count it caps. Any member of the account may read this.
+         */
+        get: operations["api.accounts.entitlements.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications": {
         parameters: {
             query?: never;
@@ -6198,6 +6218,30 @@ export interface components {
          */
         DatabaseVersionStatus: "draft" | "active" | "archived";
         /**
+         * Edition
+         * @description The edition an account runs under.
+         *
+         *     Only Community exists today. Paid editions land with the `.lic` format,
+         *     once there is something to sell and a licence to carry it — naming them
+         *     here first would just be a guess in the wire contract.
+         * @enum {string}
+         */
+        Edition: "community";
+        /**
+         * EntitlementsItem
+         * @description What an account is entitled to.
+         *
+         *     `features` is a list of `LicensedFeature` values, typed as plain strings
+         *     because that enum is still empty — an empty OpenAPI enum generates an
+         *     unusable `never[]` in the frontend client. It becomes a proper enum once
+         *     the first licensed feature exists.
+         */
+        EntitlementsItem: {
+            edition: components["schemas"]["Edition"];
+            /** Features */
+            features: string[];
+        };
+        /**
          * ErrorResponse
          * @description A business error: a single human-readable message.
          */
@@ -6569,6 +6613,10 @@ export interface components {
         /** ItemResponse[DatabaseVersionItem] */
         ItemResponse_DatabaseVersionItem_: {
             item: components["schemas"]["DatabaseVersionItem"];
+        };
+        /** ItemResponse[EntitlementsItem] */
+        ItemResponse_EntitlementsItem_: {
+            item: components["schemas"]["EntitlementsItem"];
         };
         /** ItemResponse[FeatureFileItem] */
         ItemResponse_FeatureFileItem_: {
@@ -9745,6 +9793,55 @@ export interface operations {
                 };
             };
             /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "api.accounts.entitlements.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_EntitlementsItem_"];
+                };
+            };
+            /** @description You are not a member of this account */
             403: {
                 headers: {
                     [name: string]: unknown;
