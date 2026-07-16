@@ -29,8 +29,10 @@ const SEGMENT_LABELS: Record<string, MessageDescriptor> = {
   actions: msg`Actions`,
   databases: msg`Bases de données`,
   features: msg`Fonctionnalités`,
+  files: msg`Fichiers`,
   journeys: msg`Parcours utilisateurs`,
   personas: msg`Personas`,
+  scenarios: msg`Scénarios`,
   tags: msg`Tags`,
 };
 
@@ -45,6 +47,8 @@ interface PathIds {
   serviceId?: string;
   databaseId?: string;
   versionId?: string;
+  featureId?: string;
+  journeyId?: string;
 }
 
 /**
@@ -58,6 +62,8 @@ function pathIds(rest: string[]): PathIds {
   return {
     applicationId: collection === "applications" ? id : undefined,
     serviceId: collection === "services" ? id : undefined,
+    featureId: collection === "features" ? id : undefined,
+    journeyId: collection === "journeys" ? id : undefined,
     databaseId,
     versionId: databaseId && sub === "versions" ? subId : undefined,
   };
@@ -74,7 +80,14 @@ function useEntityLabels(
   rest: string[]
 ): Map<string, string> {
   const { t } = useLingui();
-  const { applicationId, serviceId, databaseId, versionId } = pathIds(rest);
+  const {
+    applicationId,
+    serviceId,
+    databaseId,
+    versionId,
+    featureId,
+    journeyId,
+  } = pathIds(rest);
 
   const applicationQuery = $api.useQuery(
     "get",
@@ -104,6 +117,22 @@ function useEntityLabels(
     },
     { enabled: !!databaseId }
   );
+  const featureQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/features/{feature_id}",
+    {
+      params: { path: { account_id: accountId, feature_id: featureId ?? "" } },
+    },
+    { enabled: !!featureId }
+  );
+  const journeyQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    {
+      params: { path: { account_id: accountId, journey_id: journeyId ?? "" } },
+    },
+    { enabled: !!journeyId }
+  );
   const versionQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}",
@@ -125,6 +154,8 @@ function useEntityLabels(
   const resolved: [string | undefined, string][] = [
     [applicationId, applicationQuery.data?.item.title ?? t`Application`],
     [serviceId, serviceQuery.data?.item.title ?? t`Service`],
+    [featureId, featureQuery.data?.item.title ?? t`Fonctionnalité`],
+    [journeyId, journeyQuery.data?.item.title ?? t`Parcours utilisateur`],
     [databaseId, databaseQuery.data?.item.title ?? t`Base de données`],
     [versionId, versionItem ? formatVersion(versionItem.version) : t`Version`],
   ];
