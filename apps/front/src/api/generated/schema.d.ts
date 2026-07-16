@@ -1617,7 +1617,7 @@ export interface paths {
         };
         /**
          * List journeys
-         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. Filter with `personasIds` (repeat the query param) to keep only the journeys targeting at least one of those personas.
          */
         get: operations["api.journeys.list"];
         put?: never;
@@ -15175,6 +15175,7 @@ export interface operations {
                 status?: components["schemas"]["JourneyStatus"][] | null;
                 type?: components["schemas"]["JourneyType"][] | null;
                 tagIds?: string[] | null;
+                personasIds?: string[] | null;
                 sortBy?: components["schemas"]["JourneySortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
