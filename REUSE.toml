@@ -1,0 +1,74 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+version = 1
+SPDX-PackageName = "Kartographe"
+SPDX-PackageSupplier = "ChallengeMyProject <license@kartographe.eu>"
+SPDX-PackageDownloadLocation = "https://github.com/Kartographe/kartographe"
+
+# Files that cannot reasonably carry an SPDX header are declared here instead.
+#
+# A file belongs here only if a header would be wiped by its generator, break a
+# parser, or be pure noise (dotfiles, binary assets). Everything else carries
+# its header inline. See LICENSING.md.
+#
+# Nothing under `ee/` may ever be declared here: those directories are
+# Elastic-2.0 and every one of their files carries its own header, so that the
+# licence always travels with the file.
+
+# --- Generated: rewritten wholesale by their generator, a header would not
+# --- survive. schema.* come from `pnpm api:sync`, routeTree.gen.ts from the
+# --- TanStack Router plugin.
+[[annotations]]
+path = [
+    "apps/front/src/api/generated/schema.d.ts",
+    "apps/front/src/api/generated/schema.enums.ts",
+    "apps/front/src/routeTree.gen.ts",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ChallengeMyProject"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# --- Lockfiles: machine-managed, and a header breaks their parsers.
+[[annotations]]
+path = ["apps/back/Pipfile.lock", "apps/front/pnpm-lock.yaml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ChallengeMyProject"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# --- Brand assets. Note these are logos: the AGPL covers their use as part of
+# --- the software, it does not grant trademark rights over the Kartographe
+# --- name or logo.
+[[annotations]]
+path = "apps/front/public/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ChallengeMyProject"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# --- JSON and NOTICE have no comment syntax; dotfiles and empty placeholders
+# --- would just be noisier with a header than without.
+[[annotations]]
+path = [
+    "NOTICE",
+    "**/.gitkeep",
+    "**/.gitignore",
+    "**/.dockerignore",
+    "**/.node-version",
+    "**/*.json",
+    "**/*.jsonc",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 ChallengeMyProject"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# --- The root LICENSE is the verbatim AGPL text, kept at the root for GitHub's
+# --- licence detection (LICENSES/AGPL-3.0-only.txt is the same text in its
+# --- REUSE location). The FSF authored that text and its terms forbid altering
+# --- it, so it cannot take a Kartographe header: the copyright below is the
+# --- FSF's, on the licence text itself, and says nothing about our code.
+[[annotations]]
+path = "LICENSE"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2007 Free Software Foundation, Inc. <https://fsf.org/>"
+SPDX-License-Identifier = "AGPL-3.0-only"

@@ -1,0 +1,55 @@
+Kartographe
+Copyright (C) 2026 ChallengeMyProject
+
+Licensor
+--------
+ChallengeMyProject
+SIREN: 880 614 110
+Website: https://www.challengemyproject.bzh
+Represented by: David Patiashvili
+Licensing contact: license@kartographe.eu
+
+ChallengeMyProject is the sole copyright holder of Kartographe and is the
+"licensor" referred to in the Elastic License 2.0 covering the `ee/`
+directories.
+
+
+Licensing
+---------
+Kartographe is distributed under two licenses. Which one applies depends on
+where a file lives:
+
+  - Everything EXCEPT the `ee/` directories:
+        GNU Affero General Public License v3.0 only (AGPL-3.0-only)
+        Full text: LICENSES/AGPL-3.0-only.txt
+
+  - The `ee/` directories (`apps/back/ee`, `apps/front/src/ee`):
+        Elastic License 2.0 (Elastic-2.0)
+        Full text: LICENSES/Elastic-2.0.txt
+
+Every source file carries an SPDX header stating which of the two applies to
+it. That header is authoritative. See LICENSING.md for the rationale and the
+boundary rules, and REUSE.toml for the files that cannot carry a header.
+
+The `LICENSE` file at the repository root is the verbatim AGPL-3.0 text, kept
+unmodified. It does not, on its own, describe the scope of the split —
+LICENSING.md does.
+
+
+Source availability (AGPL-3.0 section 13)
+-----------------------------------------
+The AGPL requires that users interacting with this software over a network be
+offered its Corresponding Source. The source of this version is published at:
+
+    https://github.com/Kartographe/kartographe
+
+If you deploy a modified version, section 13 obliges you to offer *your*
+modified source to your own users. Publishing this repository's URL does not
+discharge that obligation on your behalf.
+
+
+Third-party components
+----------------------
+Kartographe depends on third-party open source components distributed under
+their own licenses. Those licenses are not superseded by this notice. See
+`apps/back/Pipfile` and `apps/front/package.json` for the dependency lists.
