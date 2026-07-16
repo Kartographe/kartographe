@@ -66,6 +66,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Live-record counts per tracked entity against the account's quotas.",
     },
     {
+        "name": "api.accounts.entitlements",
+        "x-displayName": "Accounts › Entitlements",
+        "description": "The edition an account runs under and the licensed features unlocked for it.",
+    },
+    {
         "name": "api.applications",
         "x-displayName": "Applications",
         "description": "Create and manage the applications tracked inside an account.",
