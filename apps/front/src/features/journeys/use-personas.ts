@@ -30,6 +30,17 @@ export function usePersonas(accountId: string) {
       value: persona.id,
       label: persona.title,
     })),
+    /**
+     * Antd column filters — same shape as `useTagFilters`. The values are
+     * persona ids, which map straight onto a listing's `personasIds` query
+     * param: the filtering runs server-side ("targets at least one of these"),
+     * so it stays correct across pages rather than only filtering the page in
+     * hand.
+     */
+    filters: personas.map((persona) => ({
+      text: persona.title,
+      value: persona.id,
+    })),
     /** `personaId` → its title, or `null` when it falls outside the page. */
     title: (id: string) => titles.get(id) ?? null,
   };

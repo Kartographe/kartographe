@@ -74,6 +74,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [personasIds, setPersonasIds] = useState<string[]>([]);
 
   const tagFilters = useTagFilters(accountId, "journey");
 
@@ -91,6 +92,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
+          ...(personasIds.length ? { personasIds } : {}),
         },
       },
     }
@@ -115,7 +117,10 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const journeys = journeysQuery.data?.items ?? [];
   const total = journeysQuery.data?.count ?? 0;
   const hasFilters =
-    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
+    statuses.length > 0 ||
+    types.length > 0 ||
+    tagIds.length > 0 ||
+    personasIds.length > 0;
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -174,6 +179,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
     setTagIds((filters.tags as string[] | null) ?? []);
+    setPersonasIds((filters.personasIds as string[] | null) ?? []);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -206,6 +212,8 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "personasIds",
       dataIndex: "personasIds",
       width: COL.tags,
+      filters: personas.filters,
+      filteredValue: personasIds.length ? personasIds : null,
       render: (ids: string[]) =>
         ids.length ? (
           <Flex gap={4} wrap>
