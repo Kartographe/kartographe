@@ -168,12 +168,13 @@ Section 2 is what we need from you; this is what you get back, and it is the
 part a CLA usually omits.
 
 <!--
-  TODO (David / counsel): section 9 is a COMMERCIAL commitment, not a legal
-  formality. It permanently forecloses relicensing the core away from the AGPL
-  — the move Cal.com made in April 2026, which they made without ever having a
-  CLA at all. Keep it and contributors have a reason to sign; drop it and the
-  agreement is a one-way donation to a company that could close the core
-  tomorrow. Decide deliberately; do not let this survive by inattention.
+  Section 9 is a deliberate commercial commitment, decided by David Patiashvili
+  for ChallengeMyProject, not a clause that drifted in from a template. It
+  permanently forecloses relicensing the core away from the AGPL — the move
+  Cal.com made in April 2026, having never had a CLA at all. It is the reason a
+  contributor has to sign this rather than make a one-way donation to a company
+  that could close the core tomorrow. Removing it later would be a strategic
+  reversal and should be treated as one.
 -->
 
 ## 10. No obligation
