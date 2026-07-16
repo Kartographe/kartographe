@@ -19,10 +19,23 @@ carry a header (generated code, assets, lockfiles) are declared in
 [`REUSE.toml`](./REUSE.toml). The repository follows the
 [REUSE](https://reuse.software) specification, and `reuse lint` runs in CI.
 
-The [`LICENSE`](./LICENSE) file at the root is the verbatim, unmodified AGPL-3.0
-text — the FSF asks that its text not be altered, so the scope of the split is
-described here rather than inside it. The copyright holder is identified in
-[`NOTICE`](./NOTICE).
+The [`LICENSE`](./LICENSE) file at the root opens with a short preamble stating
+that scope, then reproduces the AGPL-3.0 text unaltered — byte for byte
+identical to `LICENSES/AGPL-3.0-only.txt`, as the FSF's terms require. The
+copyright holder is identified in [`NOTICE`](./NOTICE).
+
+> **Why the repository shows no licence badge on GitHub, and please do not
+> "fix" it.** GitHub detects licences with `licensee`, which matches a
+> `LICENSE` file against known texts and gives up when it finds anything else
+> in the way. A scope preamble is exactly that. We verified the cost — and
+> verified that GitLab, PostHog and Metabase all pay it too: every one of them
+> reports `NOASSERTION`.
+>
+> It is worth paying. A reader who opens a `LICENSE` containing nothing but the
+> AGPL will reasonably conclude that all of this is AGPL, and for `ee/` that is
+> false. Being quietly misleading about licensing is a real harm; a missing
+> badge is cosmetic. Deleting the preamble restores the badge and takes the
+> warning away with it.
 
 ## What this means for you
 
