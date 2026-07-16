@@ -90,7 +90,12 @@ jobs:
         working-directory: apps/back
         # Catches an unguarded `import ee` that grep would miss (a lazy import
         # inside a function, an importlib call).
-        run: python -c "import server_api; print('OK: the app builds without ee.')"
+        #
+        # Block scalar, not an inline string: the message contains ": ", which
+        # YAML reads as a mapping inside a plain scalar and which silently
+        # broke this whole file until 2c2d9c0.
+        run: |
+          python -c "import server_api; print('OK: the app builds without ee.')"
 
       - name: Run the test suite without ee
         working-directory: apps/back
