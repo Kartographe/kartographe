@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -29,6 +30,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
 import { DeploymentStatusTag } from "@/features/applications/application-tags";
 import { formatVersion } from "@/features/applications/version";
@@ -188,6 +190,87 @@ export function DeploymentsScreen({
     });
   }
 
+  const columns: TableProps<Deployment>["columns"] = [
+    {
+      title: t`Version`,
+      dataIndex: "applicationVersionId",
+      width: COL.title,
+      render: (id: string) => <Tag>{versionLabels.get(id) ?? id}</Tag>,
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: Deployment["status"]) => (
+        <DeploymentStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Détails`,
+      dataIndex: "statusDetails",
+      width: COL.description,
+      ellipsis: true,
+      render: (details: string | null) => details || "—",
+    },
+    {
+      title: t`Déployé par`,
+      dataIndex: "ownerId",
+      width: COL.text,
+      ellipsis: true,
+      render: (ownerId: string) => users.name(ownerId),
+    },
+    {
+      title: t`Démarré le`,
+      dataIndex: "date",
+      width: COL.datetime,
+      render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 4 }),
+      render: (_, deployment) => (
+        <Space>
+          {deployment.status === "standby" ? (
+            <>
+              <Tooltip title={t`Marquer comme terminé`}>
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={() => markFinished(deployment)}
+                  size="small"
+                />
+              </Tooltip>
+              <Tooltip title={t`Marquer en erreur`}>
+                <Button
+                  icon={<WarningOutlined />}
+                  onClick={() => setErrorTarget(deployment)}
+                  size="small"
+                />
+              </Tooltip>
+              <Tooltip title={t`Annuler`}>
+                <Button
+                  icon={<CloseOutlined />}
+                  onClick={() => markCancelled(deployment)}
+                  size="small"
+                />
+              </Tooltip>
+            </>
+          ) : null}
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(deployment)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (environments.length === 0 && !environmentsQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -231,82 +314,12 @@ export function DeploymentsScreen({
         <Empty description={t`Aucun déploiement sur cet environnement`} />
       ) : (
         <Table<Deployment>
-          columns={[
-            {
-              title: t`Version`,
-              dataIndex: "applicationVersionId",
-              render: (id: string) => <Tag>{versionLabels.get(id) ?? id}</Tag>,
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              render: (status: Deployment["status"]) => (
-                <DeploymentStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Détails`,
-              dataIndex: "statusDetails",
-              render: (details: string | null) => details || "—",
-            },
-            {
-              title: t`Déployé par`,
-              dataIndex: "ownerId",
-              render: (ownerId: string) => users.name(ownerId),
-            },
-            {
-              title: t`Démarré le`,
-              dataIndex: "date",
-              render: (value: string) =>
-                dayjs(value).format("DD/MM/YYYY HH:mm"),
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, deployment) => (
-                <Space>
-                  {deployment.status === "standby" ? (
-                    <>
-                      <Tooltip title={t`Marquer comme terminé`}>
-                        <Button
-                          icon={<CheckOutlined />}
-                          onClick={() => markFinished(deployment)}
-                          size="small"
-                        />
-                      </Tooltip>
-                      <Tooltip title={t`Marquer en erreur`}>
-                        <Button
-                          icon={<WarningOutlined />}
-                          onClick={() => setErrorTarget(deployment)}
-                          size="small"
-                        />
-                      </Tooltip>
-                      <Tooltip title={t`Annuler`}>
-                        <Button
-                          icon={<CloseOutlined />}
-                          onClick={() => markCancelled(deployment)}
-                          size="small"
-                        />
-                      </Tooltip>
-                    </>
-                  ) : null}
-                  <Tooltip title={t`Supprimer`}>
-                    <Button
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => confirmDelete(deployment)}
-                      size="small"
-                    />
-                  </Tooltip>
-                </Space>
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={deployments}
           loading={deploymentsQuery.isLoading}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

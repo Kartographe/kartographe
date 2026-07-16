@@ -13,6 +13,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -27,6 +28,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   ScenarioCriticityTag,
   ScenarioStatusTag,
@@ -121,6 +123,107 @@ export function ScenariosScreen({
       />
     );
 
+  const columns: TableProps<JourneyScenario>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (_, scenario) => (
+        <Typography.Text>{scenario.title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: JourneyScenario["type"]) => (
+        <ScenarioTypeTag type={type} />
+      ),
+    },
+    {
+      title: t`Criticité`,
+      key: "criticity",
+      dataIndex: "criticity",
+      width: COL.status,
+      render: (criticity: JourneyScenario["criticity"]) => (
+        <ScenarioCriticityTag criticity={criticity} />
+      ),
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: JourneyScenario["status"]) => (
+        <ScenarioStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, scenario) => (
+        <Space>
+          <Link
+            params={{ accountId, journeyId, scenarioId: scenario.id }}
+            to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setForm(scenario)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={scenario.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                scenario.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(scenario)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(scenario)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (!scenariosQuery.isLoading && scenarios.length === 0) {
     return (
       <Flex gap={16} vertical>
@@ -159,103 +262,12 @@ export function ScenariosScreen({
       </Flex>
 
       <Table<JourneyScenario>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            render: (_, scenario) => (
-              <Typography.Text>{scenario.title}</Typography.Text>
-            ),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            render: (type: JourneyScenario["type"]) => (
-              <ScenarioTypeTag type={type} />
-            ),
-          },
-          {
-            title: t`Criticité`,
-            key: "criticity",
-            dataIndex: "criticity",
-            render: (criticity: JourneyScenario["criticity"]) => (
-              <ScenarioCriticityTag criticity={criticity} />
-            ),
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            render: (status: JourneyScenario["status"]) => (
-              <ScenarioStatusTag status={status} />
-            ),
-          },
-          {
-            title: t`Créé le`,
-            key: "date",
-            dataIndex: "date",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, scenario) => (
-              <Space>
-                <Link
-                  params={{ accountId, journeyId, scenarioId: scenario.id }}
-                  to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setForm(scenario)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={
-                    scenario.status === "active" ? t`Archiver` : t`Activer`
-                  }
-                >
-                  <Button
-                    icon={
-                      scenario.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(scenario)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(scenario)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={scenarios}
         loading={scenariosQuery.isLoading}
         pagination={false}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

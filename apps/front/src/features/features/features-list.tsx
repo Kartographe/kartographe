@@ -29,6 +29,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { FeatureFormModal } from "@/features/features/feature-form-modal";
 import {
   FeatureStatusTag,
@@ -187,6 +188,119 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     />
   );
 
+  const columns: TableProps<Feature>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      dataIndex: "title",
+      sorter: true,
+      sortOrder: antdOrder("title"),
+      width: COL.title,
+      ellipsis: true,
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      sorter: true,
+      sortOrder: antdOrder("type"),
+      width: COL.type,
+      filters: dtoEnums.FeatureType.map((value) => ({
+        text: t(FEATURE_TYPE_LABELS[value]),
+        value,
+      })),
+      filteredValue: types.length ? types : null,
+      render: (type: Type) => <FeatureTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.FeatureStatus.map((value) => ({
+        text: t(FEATURE_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <FeatureStatusTag status={status} />,
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Feature["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      sorter: true,
+      sortOrder: antdOrder("date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, feature) => (
+        <Space>
+          <Link
+            params={{ accountId, featureId: feature.id }}
+            to="/accounts/$accountId/features/$featureId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => openEdit(feature)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={feature.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                feature.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(feature)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(feature)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !featuresQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -215,109 +329,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       </Flex>
 
       <Table<Feature>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            dataIndex: "title",
-            sorter: true,
-            sortOrder: antdOrder("title"),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            sorter: true,
-            sortOrder: antdOrder("type"),
-            filters: dtoEnums.FeatureType.map((value) => ({
-              text: t(FEATURE_TYPE_LABELS[value]),
-              value,
-            })),
-            filteredValue: types.length ? types : null,
-            render: (type: Type) => <FeatureTypeTag type={type} />,
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.FeatureStatus.map((value) => ({
-              text: t(FEATURE_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => <FeatureStatusTag status={status} />,
-          },
-          {
-            title: t`Tags`,
-            key: "tags",
-            dataIndex: "tags",
-            filters: tagFilters,
-            filteredValue: tagIds.length ? tagIds : null,
-            render: (tags: Feature["tags"]) => <TagsCell tags={tags} />,
-          },
-          {
-            title: t`Créée le`,
-            key: "date",
-            dataIndex: "date",
-            sorter: true,
-            sortOrder: antdOrder("date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, feature) => (
-              <Space>
-                <Link
-                  params={{ accountId, featureId: feature.id }}
-                  to="/accounts/$accountId/features/$featureId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(feature)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={feature.status === "active" ? t`Archiver` : t`Activer`}
-                >
-                  <Button
-                    icon={
-                      feature.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(feature)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(feature)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={features}
         loading={featuresQuery.isLoading}
         onChange={onChange}
@@ -329,6 +341,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

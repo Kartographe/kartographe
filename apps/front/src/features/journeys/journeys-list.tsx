@@ -30,6 +30,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
   JourneyStatusTag,
@@ -190,6 +191,138 @@ export function JourneysList({ accountId }: { accountId: string }) {
     />
   );
 
+  const columns: TableProps<Journey>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      dataIndex: "title",
+      sorter: true,
+      sortOrder: antdOrder("title"),
+      width: COL.title,
+      ellipsis: true,
+    },
+    {
+      title: t`Personas`,
+      key: "personasIds",
+      dataIndex: "personasIds",
+      width: COL.tags,
+      render: (ids: string[]) =>
+        ids.length ? (
+          <Flex gap={4} wrap>
+            {ids.map((id) => (
+              <Tag key={id} style={{ marginInlineEnd: 0 }}>
+                {/* Beyond the personas page, the id itself says nothing. */}
+                {personas.title(id) ?? t`Persona inconnu`}
+              </Tag>
+            ))}
+          </Flex>
+        ) : (
+          "—"
+        ),
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      sorter: true,
+      sortOrder: antdOrder("type"),
+      width: COL.type,
+      filters: dtoEnums.JourneyType.map((value) => ({
+        text: t(JOURNEY_TYPE_LABELS[value]),
+        value,
+      })),
+      filteredValue: types.length ? types : null,
+      render: (type: Type) => <JourneyTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.JourneyStatus.map((value) => ({
+        text: t(JOURNEY_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <JourneyStatusTag status={status} />,
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Journey["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      sorter: true,
+      sortOrder: antdOrder("date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, journey) => (
+        <Space>
+          <Link
+            params={{ accountId, journeyId: journey.id }}
+            to="/accounts/$accountId/journeys/$journeyId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => openEdit(journey)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={journey.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                journey.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(journey)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(journey)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !journeysQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -220,127 +353,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       </Flex>
 
       <Table<Journey>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            dataIndex: "title",
-            sorter: true,
-            sortOrder: antdOrder("title"),
-          },
-          {
-            title: t`Personas`,
-            key: "personasIds",
-            dataIndex: "personasIds",
-            render: (ids: string[]) =>
-              ids.length ? (
-                <Flex gap={4} wrap>
-                  {ids.map((id) => (
-                    <Tag key={id} style={{ marginInlineEnd: 0 }}>
-                      {/* Beyond the personas page, the id itself says nothing. */}
-                      {personas.title(id) ?? t`Persona inconnu`}
-                    </Tag>
-                  ))}
-                </Flex>
-              ) : (
-                "—"
-              ),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            sorter: true,
-            sortOrder: antdOrder("type"),
-            filters: dtoEnums.JourneyType.map((value) => ({
-              text: t(JOURNEY_TYPE_LABELS[value]),
-              value,
-            })),
-            filteredValue: types.length ? types : null,
-            render: (type: Type) => <JourneyTypeTag type={type} />,
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.JourneyStatus.map((value) => ({
-              text: t(JOURNEY_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => <JourneyStatusTag status={status} />,
-          },
-          {
-            title: t`Tags`,
-            key: "tags",
-            dataIndex: "tags",
-            filters: tagFilters,
-            filteredValue: tagIds.length ? tagIds : null,
-            render: (tags: Journey["tags"]) => <TagsCell tags={tags} />,
-          },
-          {
-            title: t`Créé le`,
-            key: "date",
-            dataIndex: "date",
-            sorter: true,
-            sortOrder: antdOrder("date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, journey) => (
-              <Space>
-                <Link
-                  params={{ accountId, journeyId: journey.id }}
-                  to="/accounts/$accountId/journeys/$journeyId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(journey)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={journey.status === "active" ? t`Archiver` : t`Activer`}
-                >
-                  <Button
-                    icon={
-                      journey.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(journey)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(journey)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={journeys}
         loading={journeysQuery.isLoading}
         onChange={onChange}
@@ -352,6 +365,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

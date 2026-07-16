@@ -5,11 +5,13 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Empty, Flex, Table, Tag, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   ApplicationStatusTag,
   VersionTypeTag,
@@ -93,6 +95,63 @@ export function VersionsScreen({
     });
   }
 
+  const columns: TableProps<Version>["columns"] = [
+    {
+      title: t`Version`,
+      dataIndex: "version",
+      width: COL.text,
+      render: (value: number[]) => <Tag>{formatVersion(value)}</Tag>,
+    },
+    {
+      title: t`Titre`,
+      dataIndex: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (title: string) => (
+        <Typography.Text strong>{title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Type`,
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: Version["type"]) => <VersionTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: Version["status"]) => (
+        <ApplicationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3 }),
+      render: (_, version) => (
+        <RowActions
+          active={version.status === "active"}
+          onDelete={() => confirmDelete(version)}
+          onEdit={() => {
+            setEditing(version);
+            setFormOpen(true);
+          }}
+          onToggleStatus={() => toggleStatus(version)}
+        />
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
@@ -115,57 +174,12 @@ export function VersionsScreen({
         <Empty description={t`Aucune version`} />
       ) : (
         <Table<Version>
-          columns={[
-            {
-              title: t`Version`,
-              dataIndex: "version",
-              render: (value: number[]) => <Tag>{formatVersion(value)}</Tag>,
-            },
-            {
-              title: t`Titre`,
-              dataIndex: "title",
-              render: (title: string) => (
-                <Typography.Text strong>{title}</Typography.Text>
-              ),
-            },
-            {
-              title: t`Type`,
-              dataIndex: "type",
-              render: (type: Version["type"]) => <VersionTypeTag type={type} />,
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              render: (status: Version["status"]) => (
-                <ApplicationStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Créée le`,
-              dataIndex: "date",
-              render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, version) => (
-                <RowActions
-                  active={version.status === "active"}
-                  onDelete={() => confirmDelete(version)}
-                  onEdit={() => {
-                    setEditing(version);
-                    setFormOpen(true);
-                  }}
-                  onToggleStatus={() => toggleStatus(version)}
-                />
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={versions}
           loading={versionsQuery.isLoading}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

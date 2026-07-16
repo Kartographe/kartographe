@@ -12,6 +12,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { AccountAvatar } from "@/features/accounts/account-avatar";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
 import { CreateAccountModal } from "@/features/accounts/create-account-modal";
@@ -89,6 +90,85 @@ export function AccountsList() {
     }
   };
 
+  const columns: TableProps<Account>["columns"] = [
+    {
+      title: t`Nom`,
+      key: "name",
+      dataIndex: "name",
+      sorter: true,
+      sortOrder: antdOrder("name"),
+      width: COL.title,
+      render: (name: string, account) => (
+        <Flex align="center" gap={12}>
+          <AccountAvatar name={name} pictureProfile={account.pictureProfile} />
+          <Typography.Text ellipsis>{name}</Typography.Text>
+        </Flex>
+      ),
+    },
+    {
+      title: t`Mon rôle`,
+      key: "role",
+      dataIndex: ["membership", "role"],
+      sorter: true,
+      sortOrder: antdOrder("role"),
+      width: COL.role,
+      filters: dtoEnums.AccountUserRole.map((value) => ({
+        text: t(ROLE_LABELS[value]),
+        value,
+      })),
+      filteredValue: roles.length ? roles : null,
+      render: (_, account) =>
+        account.membership ? (
+          <AccountRoleTag role={account.membership.role} />
+        ) : (
+          "—"
+        ),
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.AccountStatus.map((value) => ({
+        text: t(ACCOUNT_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <AccountStatusTag status={status} />,
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      key: "createdDate",
+      dataIndex: "createdDate",
+      sorter: true,
+      sortOrder: antdOrder("created_date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ labelled: 1 }),
+      render: (_, account) => (
+        <Button
+          icon={<ArrowRightOutlined />}
+          iconPosition="end"
+          onClick={() => openAccount(account.id)}
+          size="small"
+          type="primary"
+        >
+          {t`Accéder`}
+        </Button>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !accountsQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -128,80 +208,7 @@ export function AccountsList() {
       </Flex>
 
       <Table<Account>
-        columns={[
-          {
-            title: t`Nom`,
-            key: "name",
-            dataIndex: "name",
-            sorter: true,
-            sortOrder: antdOrder("name"),
-            render: (name: string, account) => (
-              <Flex align="center" gap={12}>
-                <AccountAvatar
-                  name={name}
-                  pictureProfile={account.pictureProfile}
-                />
-                <Typography.Text>{name}</Typography.Text>
-              </Flex>
-            ),
-          },
-          {
-            title: t`Mon rôle`,
-            key: "role",
-            dataIndex: ["membership", "role"],
-            sorter: true,
-            sortOrder: antdOrder("role"),
-            filters: dtoEnums.AccountUserRole.map((value) => ({
-              text: t(ROLE_LABELS[value]),
-              value,
-            })),
-            filteredValue: roles.length ? roles : null,
-            render: (_, account) =>
-              account.membership ? (
-                <AccountRoleTag role={account.membership.role} />
-              ) : (
-                "—"
-              ),
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.AccountStatus.map((value) => ({
-              text: t(ACCOUNT_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => <AccountStatusTag status={status} />,
-          },
-          {
-            title: t`Créé le`,
-            key: "createdDate",
-            dataIndex: "createdDate",
-            sorter: true,
-            sortOrder: antdOrder("created_date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, account) => (
-              <Button
-                icon={<ArrowRightOutlined />}
-                iconPosition="end"
-                onClick={() => openAccount(account.id)}
-                size="small"
-                type="primary"
-              >
-                {t`Accéder`}
-              </Button>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={accounts}
         loading={accountsQuery.isLoading}
         onChange={onChange}
@@ -213,6 +220,7 @@ export function AccountsList() {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

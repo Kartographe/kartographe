@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -25,6 +26,7 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   MigrationColumnStatusTag,
   MigrationColumnTypeTag,
@@ -354,6 +356,111 @@ export function MigrationColumnsScreen({
     </Flex>
   );
 
+  const tableColumns: TableProps<MigrationColumn>["columns"] = [
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: MigrationColumn["type"]) => (
+        <MigrationColumnTypeTag type={type} />
+      ),
+    },
+    {
+      title: t`Source`,
+      key: "source",
+      width: COL.text,
+      ellipsis: true,
+      render: (_, column) => (
+        <Typography.Text code={column.sourceDatabaseTableId !== null}>
+          {endpointLabel(
+            sourceTables,
+            column.sourceDatabaseTableId,
+            column.sourceDatabaseTableColumnId
+          )}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: t`Destination`,
+      key: "destination",
+      width: COL.text,
+      ellipsis: true,
+      render: (_, column) => (
+        <Typography.Text code={column.destinationDatabaseTableId !== null}>
+          {endpointLabel(
+            destinationTables,
+            column.destinationDatabaseTableId,
+            column.destinationDatabaseTableColumnId
+          )}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: t`Transformation`,
+      key: "transformationMethod",
+      dataIndex: "transformationMethod",
+      width: COL.text,
+      ellipsis: true,
+      render: (value: string | null) =>
+        value ? <Typography.Text code>{value}</Typography.Text> : EMPTY,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: MigrationColumn["status"]) => (
+        <MigrationColumnStatusTag status={status} />
+      ),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 4 }),
+      render: (_, column) => (
+        <Space>
+          <Tooltip title={t`Commentaires`}>
+            <Button
+              icon={<CommentOutlined />}
+              onClick={() => setCommentedColumn(column)}
+              size="small"
+            />
+          </Tooltip>
+          <Dropdown
+            menu={{
+              items: COLUMN_STATUSES.map((status) => ({
+                key: status,
+                label: t(MIGRATION_COLUMN_STATUS_LABELS[status]),
+                disabled: status === column.status,
+                onClick: () => setColumnStatus(column, status),
+              })),
+            }}
+          >
+            <Button icon={<SwapOutlined />} size="small" />
+          </Dropdown>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setForm(column)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(column)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       {header}
@@ -366,106 +473,12 @@ export function MigrationColumnsScreen({
         </Empty>
       ) : (
         <Table<MigrationColumn>
-          columns={[
-            {
-              title: t`Type`,
-              key: "type",
-              dataIndex: "type",
-              render: (type: MigrationColumn["type"]) => (
-                <MigrationColumnTypeTag type={type} />
-              ),
-            },
-            {
-              title: t`Source`,
-              key: "source",
-              render: (_, column) => (
-                <Typography.Text code={column.sourceDatabaseTableId !== null}>
-                  {endpointLabel(
-                    sourceTables,
-                    column.sourceDatabaseTableId,
-                    column.sourceDatabaseTableColumnId
-                  )}
-                </Typography.Text>
-              ),
-            },
-            {
-              title: t`Destination`,
-              key: "destination",
-              render: (_, column) => (
-                <Typography.Text
-                  code={column.destinationDatabaseTableId !== null}
-                >
-                  {endpointLabel(
-                    destinationTables,
-                    column.destinationDatabaseTableId,
-                    column.destinationDatabaseTableColumnId
-                  )}
-                </Typography.Text>
-              ),
-            },
-            {
-              title: t`Transformation`,
-              key: "transformationMethod",
-              dataIndex: "transformationMethod",
-              render: (value: string | null) =>
-                value ? <Typography.Text code>{value}</Typography.Text> : EMPTY,
-            },
-            {
-              title: t`Statut`,
-              key: "status",
-              dataIndex: "status",
-              render: (status: MigrationColumn["status"]) => (
-                <MigrationColumnStatusTag status={status} />
-              ),
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, column) => (
-                <Space>
-                  <Tooltip title={t`Commentaires`}>
-                    <Button
-                      icon={<CommentOutlined />}
-                      onClick={() => setCommentedColumn(column)}
-                      size="small"
-                    />
-                  </Tooltip>
-                  <Dropdown
-                    menu={{
-                      items: COLUMN_STATUSES.map((status) => ({
-                        key: status,
-                        label: t(MIGRATION_COLUMN_STATUS_LABELS[status]),
-                        disabled: status === column.status,
-                        onClick: () => setColumnStatus(column, status),
-                      })),
-                    }}
-                  >
-                    <Button icon={<SwapOutlined />} size="small" />
-                  </Dropdown>
-                  <Tooltip title={t`Modifier`}>
-                    <Button
-                      icon={<EditOutlined />}
-                      onClick={() => setForm(column)}
-                      size="small"
-                    />
-                  </Tooltip>
-                  <Tooltip title={t`Supprimer`}>
-                    <Button
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => confirmDelete(column)}
-                      size="small"
-                    />
-                  </Tooltip>
-                </Space>
-              ),
-            },
-          ]}
+          columns={tableColumns}
           dataSource={columns}
           loading={columnsQuery.isLoading}
           pagination={false}
           rowKey="id"
+          scroll={scrollX(tableColumns)}
           size="small"
         />
       )}

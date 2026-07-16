@@ -29,6 +29,12 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import {
+  actionsWidth,
+  COL,
+  EXPAND_COLUMN_WIDTH,
+  scrollX,
+} from "@/components/table/columns";
+import {
   PERSONA_STATUS_LABELS,
   PERSONA_TYPE_LABELS,
 } from "@/features/personas/labels";
@@ -190,6 +196,114 @@ export function PersonasList({ accountId }: { accountId: string }) {
     />
   );
 
+  const columns: TableProps<Persona>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      dataIndex: "title",
+      sorter: true,
+      sortOrder: antdOrder("title"),
+      width: COL.title,
+      ellipsis: true,
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      sorter: true,
+      sortOrder: antdOrder("type"),
+      width: COL.type,
+      filters: dtoEnums.PersonaType.map((value) => ({
+        text: t(PERSONA_TYPE_LABELS[value]),
+        value,
+      })),
+      filteredValue: types.length ? types : null,
+      render: (type: Type) => <PersonaTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.PersonaStatus.map((value) => ({
+        text: t(PERSONA_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <PersonaStatusTag status={status} />,
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Persona["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      sorter: true,
+      sortOrder: antdOrder("date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 4 }),
+      render: (_, persona) => (
+        <Space>
+          <Tooltip title={t`Commentaires`}>
+            <Button
+              icon={<CommentOutlined />}
+              onClick={() => setCommented(persona)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => openEdit(persona)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={persona.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                persona.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(persona)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(persona)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !personasQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -220,104 +334,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       </Flex>
 
       <Table<Persona>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            dataIndex: "title",
-            sorter: true,
-            sortOrder: antdOrder("title"),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            sorter: true,
-            sortOrder: antdOrder("type"),
-            filters: dtoEnums.PersonaType.map((value) => ({
-              text: t(PERSONA_TYPE_LABELS[value]),
-              value,
-            })),
-            filteredValue: types.length ? types : null,
-            render: (type: Type) => <PersonaTypeTag type={type} />,
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.PersonaStatus.map((value) => ({
-              text: t(PERSONA_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => <PersonaStatusTag status={status} />,
-          },
-          {
-            title: t`Tags`,
-            key: "tags",
-            dataIndex: "tags",
-            filters: tagFilters,
-            filteredValue: tagIds.length ? tagIds : null,
-            render: (tags: Persona["tags"]) => <TagsCell tags={tags} />,
-          },
-          {
-            title: t`Créé le`,
-            key: "date",
-            dataIndex: "date",
-            sorter: true,
-            sortOrder: antdOrder("date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, persona) => (
-              <Space>
-                <Tooltip title={t`Commentaires`}>
-                  <Button
-                    icon={<CommentOutlined />}
-                    onClick={() => setCommented(persona)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(persona)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={persona.status === "active" ? t`Archiver` : t`Activer`}
-                >
-                  <Button
-                    icon={
-                      persona.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(persona)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(persona)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={personas}
         // A persona has no page of its own — its description would be invisible
         // anywhere else.
@@ -337,6 +354,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns, EXPAND_COLUMN_WIDTH)}
         size="small"
       />
 

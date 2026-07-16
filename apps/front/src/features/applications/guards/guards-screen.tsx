@@ -10,6 +10,7 @@ import { App, Button, Empty, Flex, Table, Tag, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   ApplicationStatusTag,
   GuardTypeTag,
@@ -101,6 +102,80 @@ export function GuardsScreen({
     });
   }
 
+  const columns: TableProps<Guard>["columns"] = [
+    {
+      title: t`Titre`,
+      dataIndex: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (title: string) => (
+        <Typography.Text strong>{title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Type`,
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: Guard["type"]) => <GuardTypeTag type={type} />,
+    },
+    {
+      title: t`Emplacement`,
+      dataIndex: "fieldType",
+      width: COL.text,
+      ellipsis: true,
+      render: (fieldType: Guard["fieldType"]) =>
+        t(GUARD_FIELD_TYPE_LABELS[fieldType]),
+    },
+    {
+      title: t`Clé`,
+      dataIndex: "fieldKey",
+      width: COL.text,
+      render: (fieldKey: string) => <Tag>{fieldKey}</Tag>,
+    },
+    {
+      title: t`Format`,
+      dataIndex: "fieldFormat",
+      width: COL.text,
+      ellipsis: true,
+      render: (fieldFormat: string | null) => fieldFormat ?? "—",
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: Guard["status"]) => (
+        <ApplicationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Guard["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3 }),
+      render: (_, guard) => (
+        <RowActions
+          active={guard.status === "active"}
+          onDelete={() => confirmDelete(guard)}
+          onEdit={() => {
+            setEditing(guard);
+            setFormOpen(true);
+          }}
+          onToggleStatus={() => toggleStatus(guard)}
+        />
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
@@ -123,72 +198,13 @@ export function GuardsScreen({
         <Empty description={t`Aucun guard`} />
       ) : (
         <Table<Guard>
-          columns={[
-            {
-              title: t`Titre`,
-              dataIndex: "title",
-              render: (title: string) => (
-                <Typography.Text strong>{title}</Typography.Text>
-              ),
-            },
-            {
-              title: t`Type`,
-              dataIndex: "type",
-              render: (type: Guard["type"]) => <GuardTypeTag type={type} />,
-            },
-            {
-              title: t`Emplacement`,
-              dataIndex: "fieldType",
-              render: (fieldType: Guard["fieldType"]) =>
-                t(GUARD_FIELD_TYPE_LABELS[fieldType]),
-            },
-            {
-              title: t`Clé`,
-              dataIndex: "fieldKey",
-              render: (fieldKey: string) => <Tag>{fieldKey}</Tag>,
-            },
-            {
-              title: t`Format`,
-              dataIndex: "fieldFormat",
-              render: (fieldFormat: string | null) => fieldFormat ?? "—",
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              render: (status: Guard["status"]) => (
-                <ApplicationStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Tags`,
-              key: "tags",
-              dataIndex: "tags",
-              filters: tagFilters,
-              filteredValue: tagIds.length ? tagIds : null,
-              render: (tags: Guard["tags"]) => <TagsCell tags={tags} />,
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, guard) => (
-                <RowActions
-                  active={guard.status === "active"}
-                  onDelete={() => confirmDelete(guard)}
-                  onEdit={() => {
-                    setEditing(guard);
-                    setFormOpen(true);
-                  }}
-                  onToggleStatus={() => toggleStatus(guard)}
-                />
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={guards}
           loading={guardsQuery.isLoading}
           onChange={onChange}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

@@ -13,6 +13,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -27,6 +28,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { VersionStatusTag } from "@/features/databases/database-tags";
 import { formatVersion } from "@/features/databases/labels";
 import { VersionFormModal } from "@/features/databases/versions/version-form-modal";
@@ -118,6 +120,105 @@ export function VersionsScreen({
       />
     );
 
+  const columns: TableProps<DatabaseVersion>["columns"] = [
+    {
+      title: t`Version`,
+      key: "version",
+      width: COL.text,
+      ellipsis: true,
+      render: (_, version) => (
+        <Typography.Text>{formatVersion(version.version)}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: DatabaseVersion["status"]) => (
+        <VersionStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Début`,
+      key: "startDate",
+      dataIndex: "startDate",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: t`Fin`,
+      key: "endDate",
+      dataIndex: "endDate",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, version) => (
+        <Space>
+          <Link
+            params={{ accountId, databaseId, versionId: version.id }}
+            to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setForm(version)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={version.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                version.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(version)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(version)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (!versionsQuery.isLoading && versions.length === 0) {
     return (
       <Flex gap={16} vertical>
@@ -156,101 +257,12 @@ export function VersionsScreen({
       </Flex>
 
       <Table<DatabaseVersion>
-        columns={[
-          {
-            title: t`Version`,
-            key: "version",
-            render: (_, version) => (
-              <Typography.Text>
-                {formatVersion(version.version)}
-              </Typography.Text>
-            ),
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            render: (status: DatabaseVersion["status"]) => (
-              <VersionStatusTag status={status} />
-            ),
-          },
-          {
-            title: t`Début`,
-            key: "startDate",
-            dataIndex: "startDate",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: t`Fin`,
-            key: "endDate",
-            dataIndex: "endDate",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: t`Créée le`,
-            key: "date",
-            dataIndex: "date",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, version) => (
-              <Space>
-                <Link
-                  params={{ accountId, databaseId, versionId: version.id }}
-                  to="/accounts/$accountId/databases/$databaseId/versions/$versionId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setForm(version)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={version.status === "active" ? t`Archiver` : t`Activer`}
-                >
-                  <Button
-                    icon={
-                      version.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(version)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(version)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={versions}
         loading={versionsQuery.isLoading}
         pagination={false}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

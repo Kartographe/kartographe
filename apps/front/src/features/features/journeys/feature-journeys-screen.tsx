@@ -5,6 +5,7 @@
 import { DisconnectOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -19,6 +20,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
 import { LinkJourneyModal } from "@/features/features/journeys/link-journey-modal";
 import {
@@ -125,6 +127,77 @@ export function FeatureJourneysScreen({
     />
   );
 
+  const columns: TableProps<FeatureJourney>["columns"] = [
+    {
+      title: t`Parcours`,
+      key: "journey",
+      width: COL.title,
+      ellipsis: true,
+      render: (_, link) => {
+        const journey = journeyById.get(link.journeyId);
+        return journey ? (
+          <Typography.Text strong>{journey.title}</Typography.Text>
+        ) : (
+          // Beyond the listing's page, or archived out of it.
+          <Typography.Text type="secondary">{t`Parcours introuvable`}</Typography.Text>
+        );
+      },
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      width: COL.type,
+      render: (_, link) => {
+        const journey = journeyById.get(link.journeyId);
+        return journey ? <JourneyTypeTag type={journey.type} /> : "—";
+      },
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      width: COL.status,
+      render: (_, link) => {
+        const journey = journeyById.get(link.journeyId);
+        return journey ? <JourneyStatusTag status={journey.status} /> : "—";
+      },
+    },
+    {
+      title: t`Lié par`,
+      key: "ownerId",
+      dataIndex: "ownerId",
+      width: COL.text,
+      ellipsis: true,
+      render: (ownerId: string) => users.name(ownerId),
+    },
+    {
+      title: t`Lié le`,
+      key: "date",
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 1 }),
+      render: (_, link) => (
+        <Space>
+          <Tooltip title={t`Détacher`}>
+            <Button
+              danger
+              icon={<DisconnectOutlined />}
+              onClick={() => confirmUnlink(link)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (!linksQuery.isLoading && links.length === 0) {
     return (
       <Flex gap={16} vertical>
@@ -151,75 +224,12 @@ export function FeatureJourneysScreen({
       </Flex>
 
       <Table<FeatureJourney>
-        columns={[
-          {
-            title: t`Parcours`,
-            key: "journey",
-            render: (_, link) => {
-              const journey = journeyById.get(link.journeyId);
-              return journey ? (
-                <Typography.Text strong>{journey.title}</Typography.Text>
-              ) : (
-                // Beyond the listing's page, or archived out of it.
-                <Typography.Text type="secondary">{t`Parcours introuvable`}</Typography.Text>
-              );
-            },
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            render: (_, link) => {
-              const journey = journeyById.get(link.journeyId);
-              return journey ? <JourneyTypeTag type={journey.type} /> : "—";
-            },
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            render: (_, link) => {
-              const journey = journeyById.get(link.journeyId);
-              return journey ? (
-                <JourneyStatusTag status={journey.status} />
-              ) : (
-                "—"
-              );
-            },
-          },
-          {
-            title: t`Lié par`,
-            key: "ownerId",
-            dataIndex: "ownerId",
-            render: (ownerId: string) => users.name(ownerId),
-          },
-          {
-            title: t`Lié le`,
-            key: "date",
-            dataIndex: "date",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, link) => (
-              <Space>
-                <Tooltip title={t`Détacher`}>
-                  <Button
-                    danger
-                    icon={<DisconnectOutlined />}
-                    onClick={() => confirmUnlink(link)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={links}
         loading={linksQuery.isLoading}
         pagination={false}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

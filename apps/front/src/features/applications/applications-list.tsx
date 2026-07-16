@@ -29,6 +29,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { ApplicationFormModal } from "@/features/applications/application-form-modal";
 import {
   ApplicationStatusTag,
@@ -191,6 +192,128 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     />
   );
 
+  const columns: TableProps<Application>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      dataIndex: "title",
+      sorter: true,
+      sortOrder: antdOrder("title"),
+      width: COL.title,
+      render: (title: string, application) => (
+        <Flex vertical>
+          <Typography.Text ellipsis>{title}</Typography.Text>
+          {application.description ? (
+            <Typography.Text ellipsis style={{ fontSize: 12 }} type="secondary">
+              {application.description}
+            </Typography.Text>
+          ) : null}
+        </Flex>
+      ),
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      sorter: true,
+      sortOrder: antdOrder("type"),
+      width: COL.type,
+      filters: dtoEnums.ApplicationType.map((value) => ({
+        text: t(APPLICATION_TYPE_LABELS[value]),
+        value,
+      })),
+      filteredValue: types.length ? types : null,
+      render: (type: Type) => <ApplicationTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.ApplicationStatus.map((value) => ({
+        text: t(APPLICATION_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <ApplicationStatusTag status={status} />,
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Application["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      sorter: true,
+      sortOrder: antdOrder("date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, application) => (
+        <Space>
+          <Link
+            params={{ accountId, applicationId: application.id }}
+            to="/accounts/$accountId/applications/$applicationId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => openEdit(application)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={application.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                application.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(application)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(application)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !applicationsQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -219,127 +342,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       </Flex>
 
       <Table<Application>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            dataIndex: "title",
-            sorter: true,
-            sortOrder: antdOrder("title"),
-            render: (title: string, application) => (
-              <Flex vertical>
-                <Typography.Text>{title}</Typography.Text>
-                {application.description ? (
-                  <Typography.Text
-                    ellipsis
-                    style={{ fontSize: 12 }}
-                    type="secondary"
-                  >
-                    {application.description}
-                  </Typography.Text>
-                ) : null}
-              </Flex>
-            ),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            sorter: true,
-            sortOrder: antdOrder("type"),
-            filters: dtoEnums.ApplicationType.map((value) => ({
-              text: t(APPLICATION_TYPE_LABELS[value]),
-              value,
-            })),
-            filteredValue: types.length ? types : null,
-            render: (type: Type) => <ApplicationTypeTag type={type} />,
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.ApplicationStatus.map((value) => ({
-              text: t(APPLICATION_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => (
-              <ApplicationStatusTag status={status} />
-            ),
-          },
-          {
-            title: t`Tags`,
-            key: "tags",
-            dataIndex: "tags",
-            filters: tagFilters,
-            filteredValue: tagIds.length ? tagIds : null,
-            render: (tags: Application["tags"]) => <TagsCell tags={tags} />,
-          },
-          {
-            title: t`Créée le`,
-            key: "date",
-            dataIndex: "date",
-            sorter: true,
-            sortOrder: antdOrder("date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, application) => (
-              <Space>
-                <Link
-                  params={{ accountId, applicationId: application.id }}
-                  to="/accounts/$accountId/applications/$applicationId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(application)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={
-                    application.status === "active" ? t`Archiver` : t`Activer`
-                  }
-                >
-                  <Button
-                    icon={
-                      application.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(application)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(application)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={applications}
         loading={applicationsQuery.isLoading}
         onChange={onChange}
@@ -351,6 +354,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

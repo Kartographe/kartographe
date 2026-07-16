@@ -5,12 +5,14 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Empty, Flex, Space, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
 import { InviteMembersModal } from "@/features/accounts/invite-members-modal";
 import { INVITATION_STATUS_LABELS } from "@/features/accounts/labels";
@@ -80,6 +82,76 @@ export function AccountInvitations({
     });
   }
 
+  const columns: TableProps<Invitation>["columns"] = [
+    {
+      title: t`Email`,
+      dataIndex: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      width: COL.email,
+      ellipsis: true,
+      render: (email: string) => <Typography.Text>{email}</Typography.Text>,
+    },
+    {
+      title: t`Rôle`,
+      dataIndex: "role",
+      width: COL.role,
+      render: (role: Invitation["role"]) => <AccountRoleTag role={role} />,
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      filters: dtoEnums.AccountUserInvitationStatus.map((value) => ({
+        text: t(INVITATION_STATUS_LABELS[value]),
+        value,
+      })),
+      onFilter: (value, invitation) => invitation.status === value,
+      render: (status: Invitation["status"]) => (
+        <InvitationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Expire le`,
+      dataIndex: "expireDate",
+      sorter: (a, b) =>
+        new Date(a.expireDate ?? 0).getTime() -
+        new Date(b.expireDate ?? 0).getTime(),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ labelled: 2 }),
+      render: (_, invitation) => (
+        <Space>
+          {invitation.status === "standby" ||
+          invitation.status === "expired" ? (
+            <Button
+              loading={resendMutation.isPending}
+              onClick={() => resend(invitation)}
+              size="small"
+            >
+              {t`Renvoyer`}
+            </Button>
+          ) : null}
+          {invitation.status === "standby" ? (
+            <Button
+              danger
+              onClick={() => confirmCancel(invitation)}
+              size="small"
+            >
+              {t`Annuler`}
+            </Button>
+          ) : null}
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
@@ -99,71 +171,7 @@ export function AccountInvitations({
         <Empty description={t`Aucune invitation`} />
       ) : (
         <Table<Invitation>
-          columns={[
-            {
-              title: t`Email`,
-              dataIndex: "email",
-              sorter: (a, b) => a.email.localeCompare(b.email),
-              render: (email: string) => (
-                <Typography.Text>{email}</Typography.Text>
-              ),
-            },
-            {
-              title: t`Rôle`,
-              dataIndex: "role",
-              render: (role: Invitation["role"]) => (
-                <AccountRoleTag role={role} />
-              ),
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              filters: dtoEnums.AccountUserInvitationStatus.map((value) => ({
-                text: t(INVITATION_STATUS_LABELS[value]),
-                value,
-              })),
-              onFilter: (value, invitation) => invitation.status === value,
-              render: (status: Invitation["status"]) => (
-                <InvitationStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Expire le`,
-              dataIndex: "expireDate",
-              sorter: (a, b) =>
-                new Date(a.expireDate ?? 0).getTime() -
-                new Date(b.expireDate ?? 0).getTime(),
-              render: (value: string | null) =>
-                value ? dayjs(value).format("DD/MM/YYYY") : "—",
-            },
-            {
-              title: "",
-              key: "actions",
-              render: (_, invitation) => (
-                <Space>
-                  {invitation.status === "standby" ||
-                  invitation.status === "expired" ? (
-                    <Button
-                      loading={resendMutation.isPending}
-                      onClick={() => resend(invitation)}
-                      size="small"
-                    >
-                      {t`Renvoyer`}
-                    </Button>
-                  ) : null}
-                  {invitation.status === "standby" ? (
-                    <Button
-                      danger
-                      onClick={() => confirmCancel(invitation)}
-                      size="small"
-                    >
-                      {t`Annuler`}
-                    </Button>
-                  ) : null}
-                </Space>
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={invitations}
           loading={invitationsQuery.isLoading}
           pagination={{
@@ -173,6 +181,7 @@ export function AccountInvitations({
             showSizeChanger: true,
           }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

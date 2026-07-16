@@ -7,6 +7,7 @@ import { Alert, Flex, Progress, Spin, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { COL, scrollX } from "@/components/table/columns";
 import {
   USAGE_ENTITY_LABELS,
   USAGE_GROUP_LABELS,
@@ -17,6 +18,9 @@ type UsageEntry = components["schemas"]["UsageEntry"];
 type UsageGroup = components["schemas"]["UsageGroup"];
 
 const FULL_PERCENT = 100;
+
+/** A `UsageBar` cell: a 120px-min progress bar, an 8px gap and its caption. */
+const USAGE_BAR_COL = 260;
 
 function percentOf(value: number, max: number): number {
   if (max <= 0) {
@@ -72,7 +76,8 @@ export function AccountUsageScreen({ accountId }: { accountId: string }) {
           return <Typography.Text>{label ? t(label) : key}</Typography.Text>;
         },
         title: t`Entité`,
-        width: "22%",
+        ellipsis: true,
+        width: COL.text,
       },
       {
         key: "usage",
@@ -84,6 +89,7 @@ export function AccountUsageScreen({ accountId }: { accountId: string }) {
           />
         ),
         title: t`Utilisation`,
+        width: USAGE_BAR_COL,
       },
     ];
     if (hasStorage) {
@@ -105,6 +111,7 @@ export function AccountUsageScreen({ accountId }: { accountId: string }) {
           );
         },
         title: t`Stockage`,
+        width: USAGE_BAR_COL,
       });
     }
     return columns;
@@ -132,16 +139,18 @@ export function AccountUsageScreen({ accountId }: { accountId: string }) {
 
       {usageQuery.data?.item.groups.map((group) => {
         const groupLabel = USAGE_GROUP_LABELS[group.key];
+        const columns = columnsFor(group);
         return (
           <Flex gap={8} key={group.key} vertical>
             <Typography.Title level={5} style={{ margin: 0 }}>
               {groupLabel ? t(groupLabel) : group.key}
             </Typography.Title>
             <Table<UsageEntry>
-              columns={columnsFor(group)}
+              columns={columns}
               dataSource={group.entries}
               pagination={false}
               rowKey="key"
+              scroll={scrollX(columns)}
               size="small"
             />
           </Flex>

@@ -4,10 +4,12 @@
 
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Flex, Select, Space, Table, Tag, Typography } from "antd";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { AccountRoleTag } from "@/features/accounts/account-role-tag";
 import {
   MEMBERSHIP_TYPE_LABELS,
@@ -89,94 +91,105 @@ export function AccountMembers({
     });
   }
 
+  const columns: TableProps<Member>["columns"] = [
+    {
+      title: t`Membre`,
+      dataIndex: ["user", "email"],
+      sorter: (a, b) => a.user.email.localeCompare(b.user.email),
+      width: COL.email,
+      render: (_, member) => {
+        const name = [member.user.firstName, member.user.lastName]
+          .filter(Boolean)
+          .join(" ");
+        return (
+          <Flex vertical>
+            <Typography.Text ellipsis strong>
+              {name || member.user.email}
+              {member.id === myMembershipId ? (
+                <Tag style={{ marginInlineStart: 8 }}>{t`Vous`}</Tag>
+              ) : null}
+            </Typography.Text>
+            {name ? (
+              <Typography.Text
+                ellipsis
+                style={{ fontSize: 12 }}
+                type="secondary"
+              >
+                {member.user.email}
+              </Typography.Text>
+            ) : null}
+          </Flex>
+        );
+      },
+    },
+    {
+      // Wider than `COL.role`: this cell holds the inline role `Select`
+      // (`minWidth: 160`), not just a tag.
+      title: t`Rôle`,
+      dataIndex: "role",
+      width: COL.text,
+      filters: dtoEnums.AccountUserRole.map((value) => ({
+        text: t(ROLE_LABELS[value]),
+        value,
+      })),
+      onFilter: (value, member) => member.role === value,
+      render: (role: Role, member) => {
+        const canEdit =
+          isAdmin &&
+          member.id !== myMembershipId &&
+          !(role === "owner" && activeOwnerCount <= 1);
+        if (!canEdit) {
+          return <AccountRoleTag role={role} />;
+        }
+        return (
+          <Select
+            loading={updateRoleMutation.isPending}
+            onChange={(value: Role) => changeRole(member, value)}
+            options={roleOptions}
+            size="small"
+            style={{ minWidth: 160 }}
+            value={role}
+          />
+        );
+      },
+    },
+    {
+      title: t`Type`,
+      dataIndex: "type",
+      width: COL.type,
+      ellipsis: true,
+      filters: [
+        { text: t(MEMBERSHIP_TYPE_LABELS.creator), value: "creator" },
+        { text: t(MEMBERSHIP_TYPE_LABELS.guest), value: "guest" },
+      ],
+      onFilter: (value, member) => member.type === value,
+      render: (type: Member["type"]) => t(MEMBERSHIP_TYPE_LABELS[type]),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ labelled: 1 }),
+      render: (_, member) => {
+        const canRemove =
+          isAdmin &&
+          member.id !== myMembershipId &&
+          !(member.role === "owner" && activeOwnerCount <= 1);
+        return canRemove ? (
+          <Space>
+            <Button danger onClick={() => confirmRemove(member)} size="small">
+              {t`Retirer`}
+            </Button>
+          </Space>
+        ) : null;
+      },
+    },
+  ];
+
   return (
     <Table<Member>
-      columns={[
-        {
-          title: t`Membre`,
-          dataIndex: ["user", "email"],
-          sorter: (a, b) => a.user.email.localeCompare(b.user.email),
-          render: (_, member) => {
-            const name = [member.user.firstName, member.user.lastName]
-              .filter(Boolean)
-              .join(" ");
-            return (
-              <Flex vertical>
-                <Typography.Text strong>
-                  {name || member.user.email}
-                  {member.id === myMembershipId ? (
-                    <Tag style={{ marginInlineStart: 8 }}>{t`Vous`}</Tag>
-                  ) : null}
-                </Typography.Text>
-                {name ? (
-                  <Typography.Text style={{ fontSize: 12 }} type="secondary">
-                    {member.user.email}
-                  </Typography.Text>
-                ) : null}
-              </Flex>
-            );
-          },
-        },
-        {
-          title: t`Rôle`,
-          dataIndex: "role",
-          filters: dtoEnums.AccountUserRole.map((value) => ({
-            text: t(ROLE_LABELS[value]),
-            value,
-          })),
-          onFilter: (value, member) => member.role === value,
-          render: (role: Role, member) => {
-            const canEdit =
-              isAdmin &&
-              member.id !== myMembershipId &&
-              !(role === "owner" && activeOwnerCount <= 1);
-            if (!canEdit) {
-              return <AccountRoleTag role={role} />;
-            }
-            return (
-              <Select
-                loading={updateRoleMutation.isPending}
-                onChange={(value: Role) => changeRole(member, value)}
-                options={roleOptions}
-                size="small"
-                style={{ minWidth: 160 }}
-                value={role}
-              />
-            );
-          },
-        },
-        {
-          title: t`Type`,
-          dataIndex: "type",
-          filters: [
-            { text: t(MEMBERSHIP_TYPE_LABELS.creator), value: "creator" },
-            { text: t(MEMBERSHIP_TYPE_LABELS.guest), value: "guest" },
-          ],
-          onFilter: (value, member) => member.type === value,
-          render: (type: Member["type"]) => t(MEMBERSHIP_TYPE_LABELS[type]),
-        },
-        {
-          title: "",
-          key: "actions",
-          render: (_, member) => {
-            const canRemove =
-              isAdmin &&
-              member.id !== myMembershipId &&
-              !(member.role === "owner" && activeOwnerCount <= 1);
-            return canRemove ? (
-              <Space>
-                <Button
-                  danger
-                  onClick={() => confirmRemove(member)}
-                  size="small"
-                >
-                  {t`Retirer`}
-                </Button>
-              </Space>
-            ) : null;
-          },
-        },
-      ]}
+      columns={columns}
       dataSource={members}
       loading={membersQuery.isLoading}
       pagination={{
@@ -186,6 +199,7 @@ export function AccountMembers({
         showSizeChanger: true,
       }}
       rowKey="id"
+      scroll={scrollX(columns)}
       size="small"
     />
   );

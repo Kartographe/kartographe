@@ -5,11 +5,13 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   ApplicationStatusTag,
   EnvironmentTypeTag,
@@ -108,6 +110,71 @@ export function EnvironmentsScreen({
     />
   );
 
+  const columns: TableProps<Environment>["columns"] = [
+    {
+      title: t`Titre`,
+      dataIndex: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (title: string) => (
+        <Typography.Text strong>{title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Type`,
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: Environment["type"]) => <EnvironmentTypeTag type={type} />,
+    },
+    {
+      title: t`URL`,
+      dataIndex: "url",
+      width: COL.url,
+      ellipsis: true,
+      render: (url: string | null) =>
+        url ? (
+          <Typography.Link href={url} target="_blank">
+            {url}
+          </Typography.Link>
+        ) : (
+          "—"
+        ),
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: Environment["status"]) => (
+        <ApplicationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3 }),
+      render: (_, environment) => (
+        <RowActions
+          active={environment.status === "active"}
+          onDelete={() => confirmDelete(environment)}
+          onEdit={() => {
+            setEditing(environment);
+            setFormOpen(true);
+          }}
+          onToggleStatus={() => toggleStatus(environment)}
+        />
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
@@ -123,66 +190,12 @@ export function EnvironmentsScreen({
         <Empty description={t`Aucun environnement`} />
       ) : (
         <Table<Environment>
-          columns={[
-            {
-              title: t`Titre`,
-              dataIndex: "title",
-              render: (title: string) => (
-                <Typography.Text strong>{title}</Typography.Text>
-              ),
-            },
-            {
-              title: t`Type`,
-              dataIndex: "type",
-              render: (type: Environment["type"]) => (
-                <EnvironmentTypeTag type={type} />
-              ),
-            },
-            {
-              title: t`URL`,
-              dataIndex: "url",
-              render: (url: string | null) =>
-                url ? (
-                  <Typography.Link href={url} target="_blank">
-                    {url}
-                  </Typography.Link>
-                ) : (
-                  "—"
-                ),
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              render: (status: Environment["status"]) => (
-                <ApplicationStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Créé le`,
-              dataIndex: "date",
-              render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, environment) => (
-                <RowActions
-                  active={environment.status === "active"}
-                  onDelete={() => confirmDelete(environment)}
-                  onEdit={() => {
-                    setEditing(environment);
-                    setFormOpen(true);
-                  }}
-                  onToggleStatus={() => toggleStatus(environment)}
-                />
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={environments}
           loading={environmentsQuery.isLoading}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

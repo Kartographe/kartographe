@@ -11,6 +11,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -25,6 +26,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import {
   MigrationStatusTag,
   MigrationTypeTag,
@@ -103,6 +105,96 @@ export function MigrationsScreen({
       />
     );
 
+  const columns: TableProps<DatabaseMigration>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (_, migration) => (
+        <Typography.Text>{migration.title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Versions`,
+      key: "versions",
+      width: COL.text,
+      render: (_, migration) => (
+        <MigrationEndpoints
+          accountId={accountId}
+          databaseId={databaseId}
+          migration={migration}
+          versions={versions}
+        />
+      ),
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: DatabaseMigration["type"]) => (
+        <MigrationTypeTag type={type} />
+      ),
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: DatabaseMigration["status"]) => (
+        <MigrationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 2, labelled: 1 }),
+      render: (_, migration) => (
+        <Space>
+          <Link
+            params={{ accountId, databaseId, migrationId: migration.id }}
+            to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setForm(migration)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(migration)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (!migrationsQuery.isLoading && migrations.length === 0) {
     return (
       <Flex gap={16} vertical>
@@ -141,90 +233,12 @@ export function MigrationsScreen({
       </Flex>
 
       <Table<DatabaseMigration>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            render: (_, migration) => (
-              <Typography.Text>{migration.title}</Typography.Text>
-            ),
-          },
-          {
-            title: t`Versions`,
-            key: "versions",
-            render: (_, migration) => (
-              <MigrationEndpoints
-                accountId={accountId}
-                databaseId={databaseId}
-                migration={migration}
-                versions={versions}
-              />
-            ),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            render: (type: DatabaseMigration["type"]) => (
-              <MigrationTypeTag type={type} />
-            ),
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            render: (status: DatabaseMigration["status"]) => (
-              <MigrationStatusTag status={status} />
-            ),
-          },
-          {
-            title: t`Créée le`,
-            key: "date",
-            dataIndex: "date",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, migration) => (
-              <Space>
-                <Link
-                  params={{ accountId, databaseId, migrationId: migration.id }}
-                  to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setForm(migration)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(migration)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={migrations}
         loading={migrationsQuery.isLoading}
         pagination={false}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

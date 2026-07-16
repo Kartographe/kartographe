@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import {
   App,
   Button,
@@ -27,6 +28,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
 import {
   FeatureFileStatusTag,
@@ -42,6 +44,9 @@ const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/features/{feature_id}/files",
 ];
+
+/** No `COL` key fits a file size — "1,2 Mo" and its header need no more. */
+const SIZE_WIDTH = 120;
 
 export function FeatureFilesScreen({
   accountId,
@@ -170,6 +175,118 @@ export function FeatureFilesScreen({
     />
   );
 
+  const columns: TableProps<FeatureFile>["columns"] = [
+    {
+      title: t`Nom`,
+      key: "name",
+      dataIndex: "name",
+      width: COL.title,
+      ellipsis: true,
+      render: (name: string) => (
+        <Typography.Text strong>{name}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Fichier`,
+      key: "fileName",
+      dataIndex: "fileName",
+      width: COL.text,
+      ellipsis: true,
+      render: (fileName: string) => (
+        <Typography.Text code ellipsis>
+          {fileName}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: t`Type`,
+      key: "type",
+      dataIndex: "type",
+      width: COL.type,
+      render: (type: FeatureFile["type"]) => <FeatureFileTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: FeatureFile["status"]) => (
+        <FeatureFileStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Taille`,
+      key: "fileSize",
+      dataIndex: "fileSize",
+      width: SIZE_WIDTH,
+      render: (fileSize: number) => formatFileSize(fileSize, i18n.locale),
+    },
+    {
+      title: t`Déposé par`,
+      key: "ownerId",
+      dataIndex: "ownerId",
+      width: COL.text,
+      ellipsis: true,
+      render: (ownerId: string) => users.name(ownerId),
+    },
+    {
+      title: t`Déposé le`,
+      key: "date",
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 4 }),
+      render: (_, file) => (
+        <Space>
+          <Tooltip title={t`Télécharger`}>
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={() => download(file)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => setEditing(file)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={file.status === "archived" ? t`Restaurer` : t`Archiver`}
+          >
+            <Button
+              icon={
+                file.status === "archived" ? (
+                  <RocketOutlined />
+                ) : (
+                  <InboxOutlined />
+                )
+              }
+              onClick={() => toggleStatus(file)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(file)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (!filesQuery.isLoading && files.length === 0) {
     return (
       <Flex gap={16} vertical>
@@ -196,113 +313,12 @@ export function FeatureFilesScreen({
       </Flex>
 
       <Table<FeatureFile>
-        columns={[
-          {
-            title: t`Nom`,
-            key: "name",
-            dataIndex: "name",
-            render: (name: string) => (
-              <Typography.Text strong>{name}</Typography.Text>
-            ),
-          },
-          {
-            title: t`Fichier`,
-            key: "fileName",
-            dataIndex: "fileName",
-            render: (fileName: string) => (
-              <Typography.Text code ellipsis>
-                {fileName}
-              </Typography.Text>
-            ),
-          },
-          {
-            title: t`Type`,
-            key: "type",
-            dataIndex: "type",
-            render: (type: FeatureFile["type"]) => (
-              <FeatureFileTypeTag type={type} />
-            ),
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            render: (status: FeatureFile["status"]) => (
-              <FeatureFileStatusTag status={status} />
-            ),
-          },
-          {
-            title: t`Taille`,
-            key: "fileSize",
-            dataIndex: "fileSize",
-            render: (fileSize: number) => formatFileSize(fileSize, i18n.locale),
-          },
-          {
-            title: t`Déposé par`,
-            key: "ownerId",
-            dataIndex: "ownerId",
-            render: (ownerId: string) => users.name(ownerId),
-          },
-          {
-            title: t`Déposé le`,
-            key: "date",
-            dataIndex: "date",
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, file) => (
-              <Space>
-                <Tooltip title={t`Télécharger`}>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    onClick={() => download(file)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setEditing(file)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={
-                    file.status === "archived" ? t`Restaurer` : t`Archiver`
-                  }
-                >
-                  <Button
-                    icon={
-                      file.status === "archived" ? (
-                        <RocketOutlined />
-                      ) : (
-                        <InboxOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(file)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(file)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={files}
         loading={filesQuery.isLoading}
         pagination={false}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 

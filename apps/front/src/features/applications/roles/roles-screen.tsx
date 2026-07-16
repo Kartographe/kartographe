@@ -5,11 +5,13 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import type { TableProps } from "antd";
 import { App, Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { ApplicationStatusTag } from "@/features/applications/application-tags";
 import { RoleFormModal } from "@/features/applications/roles/role-form-modal";
 import { RowActions } from "@/features/applications/row-actions";
@@ -90,6 +92,59 @@ export function RolesScreen({
     });
   }
 
+  const columns: TableProps<Role>["columns"] = [
+    {
+      title: t`Titre`,
+      dataIndex: "title",
+      width: COL.title,
+      ellipsis: true,
+      render: (title: string) => (
+        <Typography.Text strong>{title}</Typography.Text>
+      ),
+    },
+    {
+      title: t`Description`,
+      dataIndex: "description",
+      width: COL.description,
+      ellipsis: true,
+      render: (description: Role["description"]) =>
+        richTextToPlainText(description) || "—",
+    },
+    {
+      title: t`Statut`,
+      dataIndex: "status",
+      width: COL.status,
+      render: (status: Role["status"]) => (
+        <ApplicationStatusTag status={status} />
+      ),
+    },
+    {
+      title: t`Créé le`,
+      hidden: true,
+      dataIndex: "date",
+      width: COL.date,
+      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3 }),
+      render: (_, role) => (
+        <RowActions
+          active={role.status === "active"}
+          onDelete={() => confirmDelete(role)}
+          onEdit={() => {
+            setEditing(role);
+            setFormOpen(true);
+          }}
+          onToggleStatus={() => toggleStatus(role)}
+        />
+      ),
+    },
+  ];
+
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
@@ -112,53 +167,12 @@ export function RolesScreen({
         <Empty description={t`Aucun rôle`} />
       ) : (
         <Table<Role>
-          columns={[
-            {
-              title: t`Titre`,
-              dataIndex: "title",
-              render: (title: string) => (
-                <Typography.Text strong>{title}</Typography.Text>
-              ),
-            },
-            {
-              title: t`Description`,
-              dataIndex: "description",
-              render: (description: Role["description"]) =>
-                richTextToPlainText(description) || "—",
-            },
-            {
-              title: t`Statut`,
-              dataIndex: "status",
-              render: (status: Role["status"]) => (
-                <ApplicationStatusTag status={status} />
-              ),
-            },
-            {
-              title: t`Créé le`,
-              dataIndex: "date",
-              render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
-            },
-            {
-              title: "",
-              key: "actions",
-              align: "right",
-              render: (_, role) => (
-                <RowActions
-                  active={role.status === "active"}
-                  onDelete={() => confirmDelete(role)}
-                  onEdit={() => {
-                    setEditing(role);
-                    setFormOpen(true);
-                  }}
-                  onToggleStatus={() => toggleStatus(role)}
-                />
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={roles}
           loading={rolesQuery.isLoading}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
+          scroll={scrollX(columns)}
           size="small"
         />
       )}

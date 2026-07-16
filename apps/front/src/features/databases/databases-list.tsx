@@ -29,6 +29,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
+import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { DatabaseFormModal } from "@/features/databases/database-form-modal";
 import {
   DatabaseStatusTag,
@@ -189,6 +190,119 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     />
   );
 
+  const columns: TableProps<Database>["columns"] = [
+    {
+      title: t`Titre`,
+      key: "title",
+      dataIndex: "title",
+      sorter: true,
+      sortOrder: antdOrder("title"),
+      width: COL.title,
+      ellipsis: true,
+    },
+    {
+      title: t`Moteur`,
+      key: "type",
+      dataIndex: "type",
+      sorter: true,
+      sortOrder: antdOrder("type"),
+      width: COL.type,
+      filters: dtoEnums.DatabaseType.map((value) => ({
+        text: t(DATABASE_TYPE_LABELS[value]),
+        value,
+      })),
+      filteredValue: types.length ? types : null,
+      render: (type: Type) => <DatabaseTypeTag type={type} />,
+    },
+    {
+      title: t`Statut`,
+      key: "status",
+      dataIndex: "status",
+      sorter: true,
+      sortOrder: antdOrder("status"),
+      width: COL.status,
+      filters: dtoEnums.DatabaseStatus.map((value) => ({
+        text: t(DATABASE_STATUS_LABELS[value]),
+        value,
+      })),
+      filteredValue: statuses.length ? statuses : null,
+      render: (status: Status) => <DatabaseStatusTag status={status} />,
+    },
+    {
+      title: t`Tags`,
+      key: "tags",
+      dataIndex: "tags",
+      width: COL.tags,
+      filters: tagFilters,
+      filteredValue: tagIds.length ? tagIds : null,
+      render: (tags: Database["tags"]) => <TagsCell tags={tags} />,
+    },
+    {
+      title: t`Créée le`,
+      hidden: true,
+      key: "date",
+      dataIndex: "date",
+      sorter: true,
+      sortOrder: antdOrder("date"),
+      width: COL.date,
+      render: (value: string | null) =>
+        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "right",
+      fixed: "right",
+      width: actionsWidth({ icons: 3, labelled: 1 }),
+      render: (_, database) => (
+        <Space>
+          <Link
+            params={{ accountId, databaseId: database.id }}
+            to="/accounts/$accountId/databases/$databaseId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Modifier`}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => openEdit(database)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip
+            title={database.status === "active" ? t`Archiver` : t`Activer`}
+          >
+            <Button
+              icon={
+                database.status === "active" ? (
+                  <InboxOutlined />
+                ) : (
+                  <RocketOutlined />
+                )
+              }
+              onClick={() => toggleStatus(database)}
+              size="small"
+            />
+          </Tooltip>
+          <Tooltip title={t`Supprimer`}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => confirmDelete(database)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
+
   if (total === 0 && !hasFilters && !databasesQuery.isLoading) {
     return (
       <Flex gap={16} vertical>
@@ -217,111 +331,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       </Flex>
 
       <Table<Database>
-        columns={[
-          {
-            title: t`Titre`,
-            key: "title",
-            dataIndex: "title",
-            sorter: true,
-            sortOrder: antdOrder("title"),
-          },
-          {
-            title: t`Moteur`,
-            key: "type",
-            dataIndex: "type",
-            sorter: true,
-            sortOrder: antdOrder("type"),
-            filters: dtoEnums.DatabaseType.map((value) => ({
-              text: t(DATABASE_TYPE_LABELS[value]),
-              value,
-            })),
-            filteredValue: types.length ? types : null,
-            render: (type: Type) => <DatabaseTypeTag type={type} />,
-          },
-          {
-            title: t`Statut`,
-            key: "status",
-            dataIndex: "status",
-            sorter: true,
-            sortOrder: antdOrder("status"),
-            filters: dtoEnums.DatabaseStatus.map((value) => ({
-              text: t(DATABASE_STATUS_LABELS[value]),
-              value,
-            })),
-            filteredValue: statuses.length ? statuses : null,
-            render: (status: Status) => <DatabaseStatusTag status={status} />,
-          },
-          {
-            title: t`Tags`,
-            key: "tags",
-            dataIndex: "tags",
-            filters: tagFilters,
-            filteredValue: tagIds.length ? tagIds : null,
-            render: (tags: Database["tags"]) => <TagsCell tags={tags} />,
-          },
-          {
-            title: t`Créée le`,
-            key: "date",
-            dataIndex: "date",
-            sorter: true,
-            sortOrder: antdOrder("date"),
-            render: (value: string | null) =>
-              value ? dayjs(value).format("DD/MM/YYYY") : "—",
-          },
-          {
-            title: "",
-            key: "actions",
-            align: "right",
-            render: (_, database) => (
-              <Space>
-                <Link
-                  params={{ accountId, databaseId: database.id }}
-                  to="/accounts/$accountId/databases/$databaseId"
-                >
-                  <Button
-                    icon={<ArrowRightOutlined />}
-                    iconPosition="end"
-                    size="small"
-                  >
-                    {t`Accéder`}
-                  </Button>
-                </Link>
-                <Tooltip title={t`Modifier`}>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(database)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip
-                  title={
-                    database.status === "active" ? t`Archiver` : t`Activer`
-                  }
-                >
-                  <Button
-                    icon={
-                      database.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(database)}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={t`Supprimer`}>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() => confirmDelete(database)}
-                    size="small"
-                  />
-                </Tooltip>
-              </Space>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={databases}
         loading={databasesQuery.isLoading}
         onChange={onChange}
@@ -333,6 +343,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
+        scroll={scrollX(columns)}
         size="small"
       />
 
