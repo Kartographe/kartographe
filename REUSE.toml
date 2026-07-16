@@ -62,13 +62,21 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 ChallengeMyProject"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
-# --- The root LICENSE is the verbatim AGPL text, kept at the root for GitHub's
-# --- licence detection (LICENSES/AGPL-3.0-only.txt is the same text in its
-# --- REUSE location). The FSF authored that text and its terms forbid altering
-# --- it, so it cannot take a Kartographe header: the copyright below is the
-# --- FSF's, on the licence text itself, and says nothing about our code.
+# --- The root LICENSE is our scope preamble followed by the verbatim AGPL
+# --- text. Two copyright holders, and the distinction matters: the preamble is
+# --- ours and states where the AGPL/Elastic boundary falls; the licence text
+# --- below it is the FSF's and is reproduced unaltered, as its own terms
+# --- require. Prepending a notice is not altering the text -- it is what
+# --- GitLab, PostHog and others have done for years, and it keeps the split
+# --- visible in the one file people actually open.
+# ---
+# --- LICENSES/AGPL-3.0-only.txt holds the same licence text with no preamble,
+# --- which is the copy REUSE reads.
 [[annotations]]
 path = "LICENSE"
 precedence = "aggregate"
-SPDX-FileCopyrightText = "2007 Free Software Foundation, Inc. <https://fsf.org/>"
+SPDX-FileCopyrightText = [
+    "2026 ChallengeMyProject",
+    "2007 Free Software Foundation, Inc. <https://fsf.org/>",
+]
 SPDX-License-Identifier = "AGPL-3.0-only"

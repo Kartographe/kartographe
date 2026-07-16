@@ -44,12 +44,34 @@ for the core. The Elastic License 2.0 does not permit it for `ee/`. Talk to us.
 
 ## Why the split is drawn this way
 
-Combining AGPL code and proprietary code in one program is only lawful for the
-party that holds copyright on both — a copyright holder cannot infringe its own
-license. ChallengeMyProject holds copyright on all of Kartographe, which is why
-this arrangement works, and why [`CONTRIBUTING.md`](./CONTRIBUTING.md) requires
-a CLA. Without consolidated copyright, the split would not survive contact with
-a lawyer.
+Combining AGPL code and proprietary code in one running program is lawful only
+for the party holding copyright on both parts: a copyright holder cannot
+infringe its own licence. That is not a reading of ours — it is the FSF's own
+position, that [the GPL "is a license from the developer for others to use,
+distribute and change… The developer itself is not bound by
+it"](https://www.gnu.org/licenses/gpl-faq.html#DeveloperViolate).
+
+ChallengeMyProject holds copyright on all of Kartographe, which is why this
+arrangement works, and why [`CONTRIBUTING.md`](./CONTRIBUTING.md) requires a
+CLA. The moment a third party contributes to the AGPL core without one, the
+core becomes jointly owned, `ee/` becomes a combined work infringing *their*
+copyright, and the AGPL requires the whole to be AGPL. The split does not
+survive that.
+
+This is not a theory we invented either. Among comparable projects the
+correlation is exact: a permissive core needs no CLA, because MIT already
+permits the proprietary combination — GitLab asks only for a DCO, PostHog for
+nothing at all. A copyleft core alongside proprietary code always has one:
+Metabase, Grafana, Elastic.
+
+Kartographe is in the second group, so GitLab's DCO-only model is not available
+to us however often it gets cited: their core is MIT, not AGPL, and their CLA
+still covers their `ee/`. Our nearest precedent is Metabase — an AGPL core with
+a proprietary `enterprise/` directory in the same repository — which asks
+contributors for rather more than we do.
+
+The one project that ran an AGPL core with a proprietary `ee/` and no CLA was
+Cal.com. It went closed-source in April 2026.
 
 ## The rule for what goes in `ee/`
 

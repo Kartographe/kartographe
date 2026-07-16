@@ -1,3 +1,33 @@
+The Kartographe Software
+
+Copyright (c) 2026 ChallengeMyProject (SIREN 880 614 110)
+https://www.challengemyproject.bzh
+
+Portions of this software are licensed as follows:
+
+* All content that resides under an "ee/" directory of this repository
+  ("apps/back/ee" and "apps/front/src/ee"), if those directories exist, is
+  licensed under the license defined in the "LICENSE" file inside that
+  directory (the Elastic License 2.0). Those directories are the Enterprise
+  Edition and are NOT covered by the AGPLv3 below.
+
+* All third party components incorporated into the Kartographe Software are
+  licensed under the original license provided by the owner of the applicable
+  component.
+
+* Content outside of the above mentioned directories or restrictions above is
+  available under the "AGPLv3" license as defined below.
+
+Deleting the "ee/" directories leaves a complete, working, AGPLv3-only
+Kartographe. That is not a side effect: continuous integration deletes them and
+runs the test suite on every change, precisely so that this stays true.
+
+See LICENSING.md for the scope of this split, why it is drawn where it is, and
+what it means for you. See NOTICE for the copyright holder and the AGPLv3
+section 13 source offer.
+
+----------------------------------------------------------------------------
+
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
