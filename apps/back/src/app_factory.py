@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -59,6 +63,8 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
         description=info["description"],
         version=settings.app_version,
         servers=info["servers"],
+        license_info=info["license_info"],
+        contact=info["contact"],
         debug=settings.app_debug,
         docs_url=None,
         redoc_url=None,
