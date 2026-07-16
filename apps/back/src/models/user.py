@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `user` table — one row per human or machine account."""
 
 from datetime import datetime

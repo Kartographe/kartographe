@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Shared helpers for the entity managers.
 
 The application/feature domains all expose the same lifecycle verbs (partial

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Email template rendering.
 
 Each transactional email has an HTML template under `templates/` with

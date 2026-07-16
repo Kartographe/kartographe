@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Read-only access to the global reference catalogues.
 
 Action and assertion types are seeded by a data migration; this manager only

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Transactional email for account invitations.
 
 Builds the recipient deep-link (`/me/invitations?id=…&token=…` against

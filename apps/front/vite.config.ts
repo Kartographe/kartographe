@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { lingui } from "@lingui/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 # Multi-stage build: compile the Vite bundle with ##VITE_*## placeholders,
 # then serve it with nginx. The placeholders are substituted at container
 # start by docker/prepare.sh (installed into /docker-entrypoint.d), so the

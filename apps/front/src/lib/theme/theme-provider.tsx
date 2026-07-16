@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { StyleProvider } from "@ant-design/cssinjs";
 import { App as AntdApp, theme as antdTheme, ConfigProvider } from "antd";
 import frFR from "antd/locale/fr_FR";

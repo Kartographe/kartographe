@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../scenarios/{scenario_id}/steps/{step_id}/comments`.
 
 List and post comments on a journey scenario step. Any account member may read

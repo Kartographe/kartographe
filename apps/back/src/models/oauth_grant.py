@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `oauth_grant` table — an issued user↔client OAuth authorization.
 
 Source of truth for token validation: every OAuth access/refresh JWT carries

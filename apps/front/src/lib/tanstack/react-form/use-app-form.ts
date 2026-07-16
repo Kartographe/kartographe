@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { createFormHook } from "@tanstack/react-form";
 import { CheckboxField } from "@/lib/tanstack/react-form/fields/checkbox-field";
 import { ColorField } from "@/lib/tanstack/react-form/fields/color-field";

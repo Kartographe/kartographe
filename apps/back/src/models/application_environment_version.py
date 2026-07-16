@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `application_environment_version` table — a version deployed to an
 environment (a deployment record)."""
 

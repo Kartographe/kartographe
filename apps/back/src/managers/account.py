@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Account lifecycle + membership resolution.
 
 Business logic for creating a workspace, listing the ones a user belongs to,

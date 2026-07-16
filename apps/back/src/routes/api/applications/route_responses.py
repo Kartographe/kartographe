@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../applications/{application_id}/routes/{route_id}/responses`.
 
 Documented responses of a route. Reads are open to any account member; writes

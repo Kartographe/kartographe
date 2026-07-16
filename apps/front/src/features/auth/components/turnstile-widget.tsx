@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { useEffect, useRef } from "react";
 import { env } from "@/lib/env/env";
 import { resolveIsDark, useThemeStore } from "@/lib/theme/theme-store";

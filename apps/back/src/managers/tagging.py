@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Shared tagging primitives: the entity registry and the `tag_ids` overlap filter.
 
 Tagged entities carry their tags as a `tag_ids` UUID array rather than a join

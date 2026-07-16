@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Feature file lifecycle: upload, metadata edits, archive/restore, delete.
 
 Binary storage goes through `FileManager` (validation + backend). The stored

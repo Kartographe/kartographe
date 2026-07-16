@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Shared query-parameter primitives for listing endpoints.
 
 Listings accept a page cursor, a page size (constrained to a fixed set), and a

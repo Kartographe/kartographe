@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { MutationCache, QueryClient } from "@tanstack/react-query";
 import { extractApiErrorDetail } from "@/api/error-messages";
 import { getMessageApi } from "@/lib/antd/message-bridge";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /**
  * Tiny pub/sub used to funnel every "you are no longer signed in" signal —
  * a 401, a failed refresh, or a manual logout — to a single listener that

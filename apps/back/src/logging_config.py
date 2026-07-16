@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Process-wide logging setup, driven by the per-typology `LOG_LEVEL_*` settings."""
 
 import logging

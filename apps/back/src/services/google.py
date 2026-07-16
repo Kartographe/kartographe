@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Google Sign-In: verify an ID token minted for our OAuth client."""
 
 from google.auth.transport import requests as google_requests

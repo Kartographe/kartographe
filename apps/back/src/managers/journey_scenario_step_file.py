@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Step file lifecycle: upload, metadata edits, archive/restore, delete."""
 
 from fastapi import UploadFile

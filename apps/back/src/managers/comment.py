@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Comment lifecycle: post on an entity, reply, edit, remove and delete.
 
 Comments are polymorphic — attached to an entity by (`entity_type`,

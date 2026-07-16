@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Resolve the entity a comment points at, batched by entity type.
 
 Comments are polymorphic — they carry an (`entity_type`, `entity_id`) pair

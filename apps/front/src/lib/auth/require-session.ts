@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { redirect } from "@tanstack/react-router";
 import { stashPostLoginReturn } from "@/lib/auth/post-login-return";
 import {

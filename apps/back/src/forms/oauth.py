@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Input schema for OAuth dynamic client registration (RFC 7591).
 
 OAuth uses a snake_case wire shape, so these are plain Pydantic models (no

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/services` — services tracked in an account.
 
 Reads are open to any account member; writes are restricted to owners,

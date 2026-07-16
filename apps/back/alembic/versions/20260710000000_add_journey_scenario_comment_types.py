@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """add journey scenario comment entity types
 
 Scenarios and their steps can be commented, so `comment_entity_type` gains the

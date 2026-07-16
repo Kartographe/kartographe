@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/invitations` — invite members to an account.
 
 Entirely restricted to owners/administrators (router-level guard). Creating an

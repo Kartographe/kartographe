@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/core/databaseColumnTypes` — global catalogue of SQL column types.
 
 Reference data shared by every account; any authenticated user may read it,

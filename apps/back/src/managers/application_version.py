@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Version lifecycle: listing, creation, status flips and cascading delete."""
 
 from sqlmodel import select

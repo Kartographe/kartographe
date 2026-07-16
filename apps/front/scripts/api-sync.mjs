@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { execSync } from "node:child_process";
 import { unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

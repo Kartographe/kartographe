@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Account usage report — live-row counts per tracked entity, grouped by typology.
 
 Each `UsageEntry` reports how many live (`enabled`) records the account holds for

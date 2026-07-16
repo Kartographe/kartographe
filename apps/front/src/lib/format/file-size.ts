@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 const BYTES_PER_UNIT = 1024;
 const SIZE_UNITS = ["o", "Ko", "Mo", "Go"];
 

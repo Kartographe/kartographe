@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Form } from "antd";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { RichTextEditor } from "@/lib/rich-text/rich-text-editor";

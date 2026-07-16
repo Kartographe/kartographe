@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `account_user` table — a user's membership (seat) in an account.
 
 Carries the member's `role`, which drives all account authorization. A partial

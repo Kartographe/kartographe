@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Recipient-side invitations (the signed-in user's pending seats).
 
 Invitations are matched to the user by **email**. Accepting one creates a guest

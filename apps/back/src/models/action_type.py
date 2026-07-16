@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `action_type` table — global catalogue of step actions.
 
 Reference data (not account-scoped), seeded by a data migration. Each row

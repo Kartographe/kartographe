@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/me/invitations` — invitations addressed to the signed-in user.
 
 Root-mounted (unversioned, like the rest of `/me`) and excluded from the MCP

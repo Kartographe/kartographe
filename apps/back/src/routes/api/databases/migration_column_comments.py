@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../migrations/{database_migration_id}/columns/{database_migration_column_id}/comments`.
 
 List and post comments on a migration column step. Any account member may read and post.

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Card } from "antd";
 import type { ReactNode } from "react";
 import { LogoHorizontal } from "@/components/logo-horizontal";

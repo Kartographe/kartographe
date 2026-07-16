@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../applications/{application_id}/routes/{route_id}/comments`.
 
 List and post comments on an application route. Any account member may read and

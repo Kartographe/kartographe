@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Input schema for the SPA OAuth consent endpoints (camelCase)."""
 
 from src.forms._base import CamelBase

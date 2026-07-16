@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Form, Input } from "antd";
 import { useRef } from "react";
 import { splitRoutePath } from "@/lib/route-path/route-path";

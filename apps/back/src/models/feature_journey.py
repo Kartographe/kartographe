@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `feature_journey` table — a journey linked to a feature.
 
 Junction between an account `Feature` and a `Journey` of the same account.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/usage` — the account's usage against its quotas.
 
 Read-only aggregate powering the administration › Usage screen: for every

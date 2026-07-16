@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """JWT token managers.
 
 Every token is an HS256 JWT signed with `JWT_SECRET`, carrying the standard

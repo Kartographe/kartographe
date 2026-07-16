@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/oauth/*` and `/.well-known/*` — OAuth discovery + flow, root-mounted.
 
 The flow endpoints live at the root (outside the `/mcp` transport mount), so the

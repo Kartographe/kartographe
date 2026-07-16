@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { App, message as staticMessage } from "antd";
 import type { MessageInstance } from "antd/es/message/interface";
 import { useEffect } from "react";

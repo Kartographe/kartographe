@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Member (seat) management, with all the authorization guards.
 
 Every mutation defends the same invariants: a member cannot act on their own

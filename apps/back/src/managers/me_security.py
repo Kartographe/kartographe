@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Current-user security: password, TOTP, recovery codes, security keys, logs.
 
 Owns the authenticated user's own credential + second-factor lifecycle (as

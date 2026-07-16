@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Table lifecycle: listing, creation (with nested columns), status flips,
 cascading delete and item building.
 

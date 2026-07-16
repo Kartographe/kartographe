@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `database_version` table — a version of a database's schema.
 
 Activating a version archives the previously active one (stamping its

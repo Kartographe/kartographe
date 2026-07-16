@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `oauth_client` table — a dynamically registered OAuth client (integration).
 
 The row's UUID primary key **is** the OAuth `client_id`. `client_secret_hash`

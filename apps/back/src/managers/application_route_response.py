@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Route response lifecycle: listing, creation, update and delete.
 
 Deleting a response also soft-deletes the examples that reference it (an example

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/applications/*` — applications and everything that
 hangs off them: environments, versions, deployments and feature links.
 

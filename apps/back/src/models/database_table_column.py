@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `database_table_column` table — a column of a database table.
 
 A column may model a foreign key by pointing at another table

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Step lifecycle: tree management, action/parameter validation, cascade delete.
 
 Steps form a tree inside a scenario. A step may reference a global

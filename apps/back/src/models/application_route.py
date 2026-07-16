@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `application_route` table — an HTTP route exposed by an application.
 
 Carries the request contract (method, path, accepted formats and the

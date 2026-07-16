@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `oauth_authorization_request` table — a pending OAuth authorization.
 
 One row covers both the device flow and the authorization-code (PKCE) flow via

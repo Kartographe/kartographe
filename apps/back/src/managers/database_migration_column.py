@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Migration column-step lifecycle: creation/update with reference validation.
 
 Each side of a step is checked against the version it belongs to: a source table

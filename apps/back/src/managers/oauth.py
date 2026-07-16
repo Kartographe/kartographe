@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """OAuth 2.1 authorization-server business logic.
 
 Supports dynamic client registration (RFC 7591), the device flow (RFC 8628),

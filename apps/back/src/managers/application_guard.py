@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Guard lifecycle: listing, creation, status flips and delete.
 
 Deleting a guard also removes its id from every route's `application_guard_ids`

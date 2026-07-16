@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Flex, Spin } from "antd";
 import { $api } from "@/api/$api";
 import { AccountInvitations } from "@/features/accounts/account-invitations";

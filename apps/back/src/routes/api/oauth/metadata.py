@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """OAuth discovery documents (RFC 8414 / RFC 9728), root-mounted and public."""
 
 from fastapi import APIRouter, Request

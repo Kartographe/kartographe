@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { ColorPicker, Form } from "antd";
 import { firstFieldError } from "@/lib/tanstack/react-form/field-error";
 import { useFieldContext } from "@/lib/tanstack/react-form/form-contexts";

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /**
  * Minimal WebAuthn helpers. The backend (py_webauthn) speaks the standard
  * base64url-encoded JSON format; the browser's `navigator.credentials` speaks

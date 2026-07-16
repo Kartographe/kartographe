@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Migration lifecycle: creation/update with reference validation, status, delete.
 
 A migration is scoped to its **source** database — the one behind `{database_id}`

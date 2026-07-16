@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/tags` — colored labels for account entities.
 
 Reads and tag creation are open to any account member — tagging is part of

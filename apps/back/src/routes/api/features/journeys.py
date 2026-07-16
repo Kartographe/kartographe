@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/features/{feature_id}/journeys` — feature ↔ journey.
 
 Links between a feature and the account's journeys. Reads are open to any account

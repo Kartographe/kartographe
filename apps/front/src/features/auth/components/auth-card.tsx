@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Card, Flex, Typography } from "antd";
 import type { ReactNode } from "react";
 import { Logo } from "@/components/logo";

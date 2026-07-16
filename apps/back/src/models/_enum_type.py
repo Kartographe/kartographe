@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Postgres enum naming/storage convention.
 
 By default SQLAlchemy names the Postgres enum type after the Python class name

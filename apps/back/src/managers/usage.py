@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Account usage: live-row counts per tracked entity, grouped by typology.
 
 For every entity type the account owns, we count the live (`enabled`) rows

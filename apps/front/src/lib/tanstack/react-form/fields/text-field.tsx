@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import type { InputProps } from "antd";
 import { Form, Input } from "antd";
 import { firstFieldError } from "@/lib/tanstack/react-form/field-error";

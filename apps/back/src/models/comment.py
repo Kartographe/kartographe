@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `comment` table — a threaded comment on an account entity.
 
 Polymorphic: a comment targets an entity by (`entity_type`, `entity_id`) rather

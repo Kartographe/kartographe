@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { splitRoutePath } from "@/lib/route-path/route-path";
 
 /** Renders an API path, highlighting its `{variable}` segments. */

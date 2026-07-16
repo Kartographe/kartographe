@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/{account_id}/applications/{application_id}/routes`.
 
 HTTP routes exposed by an application. Reads are open to any account member;

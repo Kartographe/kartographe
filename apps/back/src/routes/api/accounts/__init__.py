@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts/*` — multi-tenant workspaces, members and invitations.
 
 Mounted under the versioned router, so every endpoint here is also exposed as

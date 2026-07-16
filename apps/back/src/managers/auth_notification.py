@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Transactional emails for the authentication flow.
 
 Builds the front-end links (against `APP_URL`), renders the matching template

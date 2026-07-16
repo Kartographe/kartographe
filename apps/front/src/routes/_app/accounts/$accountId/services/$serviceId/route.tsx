@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { useLingui } from "@lingui/react/macro";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Button, Flex, Result, Spin } from "antd";

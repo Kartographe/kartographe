@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Transactional email service.
 
 Pluggable by `SERVICE_EMAIL_TYPE`:

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 const DEFAULT_ERROR = "Une erreur est survenue. Veuillez réessayer.";
 
 /**

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Authentication business logic.
 
 Orchestrates users, credentials, second factors and the audit log. Routes stay

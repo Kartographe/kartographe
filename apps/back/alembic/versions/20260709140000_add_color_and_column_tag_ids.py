@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """add color to tables/columns and tag_ids to columns
 
 Columns can now be tagged, so `tag_entity_type` gains a `database_table_column`

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Enumerations shared across the persistence layer.
 
 Every enum is a `str`-backed `Enum` so SQLModel/SQLAlchemy persists the **value**

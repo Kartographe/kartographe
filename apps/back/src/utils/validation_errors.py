@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Global handler rewriting FastAPI/Pydantic 422 into the API's error envelope.
 
 The raw Pydantic response leaks internal type tags (`string_too_short`, …) and

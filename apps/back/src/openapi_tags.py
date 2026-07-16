@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Tag metadata for the FastAPI app.
 
 Single source of truth for the `openapi_tags=[…]` passed to `FastAPI(...)`.

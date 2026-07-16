@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { onSessionExpired } from "@/lib/auth/auth-events";

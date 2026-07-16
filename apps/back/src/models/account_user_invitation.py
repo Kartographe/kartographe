@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `account_user_invitation` table — a pending seat offered to an email.
 
 On acceptance, the recipient (matched by email) gets an `AccountUser` seat

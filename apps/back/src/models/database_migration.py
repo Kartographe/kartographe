@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `database_migration` table — a planned move between two database versions.
 
 A migration always leaves from a version of its source database and lands on a

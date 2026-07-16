@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../services/{service_id}/actions/{action_id}/comments`.
 
 List and post comments on a service action. Any account member may read and post.

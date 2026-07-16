@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Assertion lifecycle: creation with parameter validation, status flips, delete."""
 
 import uuid

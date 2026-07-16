@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 set -e
 
 # Apply database migrations before boot when RUN_MIGRATIONS=true. Left off by

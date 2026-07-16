@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `account` table — a workspace users belong to via `AccountUser`.
 
 An account is the tenancy boundary: every member holds a role (`AccountUser`)

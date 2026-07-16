@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """User-facing OAuth consent logic (the SPA authorize/grants endpoints)."""
 
 import secrets

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Tag lifecycle: listing, creation, update and delete.
 
 Deleting a tag also removes its id from the `tag_ids` array of the entity table

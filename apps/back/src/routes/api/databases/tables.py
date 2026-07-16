@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../databases/{database_id}/versions/{database_version_id}/tables`.
 
 Tables of a database version. Reads are open to any account member; writes are

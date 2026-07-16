@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Deployment lifecycle: deploy a version onto an environment, then drive its
 state (standby → finished / error / cancelled)."""
 

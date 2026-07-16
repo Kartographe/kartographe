@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `journey_scenario_step` table — a step (étape) inside a scenario.
 
 Steps form a tree via the optional self-referential

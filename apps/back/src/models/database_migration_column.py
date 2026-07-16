@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `database_migration_column` table — one column-level step of a migration.
 
 The step's `type` says how to read the two sides: a `creation` only lands on the

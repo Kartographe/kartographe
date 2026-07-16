@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments`.
 
 List and post comments on a database table. Any account member may read and post.

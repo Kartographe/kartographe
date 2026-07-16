@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `application_route_table` table — a link between a route and a DB table.
 
 Records which database table a route reads or writes, and through which part of

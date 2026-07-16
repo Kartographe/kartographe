@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """add application_route to comment_entity_type
 
 The `comment_entity_type` enum already exists in the database, so the new value

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../applications/{application_id}/routes/{route_id}/tables`.
 
 Links between a route and the account's database tables. Reads are open to any

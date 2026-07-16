@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { Plural, Trans } from "@lingui/react/macro";
 import { Tooltip, Typography } from "antd";
 import dayjs from "dayjs";

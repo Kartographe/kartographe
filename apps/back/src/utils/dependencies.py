@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Value-producing FastAPI dependencies.
 
 Everything a handler consumes as a *value* lives here (session, request IP,

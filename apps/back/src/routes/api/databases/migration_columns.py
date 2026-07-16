@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../databases/{database_id}/migrations/{database_migration_id}/columns`.
 
 Column-level steps of a migration. Reads are open to any account member;

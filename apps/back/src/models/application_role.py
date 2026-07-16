@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `application_role` table — an authorization role of an application.
 
 Named role that routes can require; carries a rich-text description.

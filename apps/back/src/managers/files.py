@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """File-handling business logic: validation, image processing, key generation.
 
 Sits between feature managers and the storage backend (`services/files.py`).

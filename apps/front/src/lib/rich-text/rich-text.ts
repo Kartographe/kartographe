@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /**
  * Rich-text fields (descriptions, comments) travel over the API as free-form
  * document objects. The front stores Tiptap/ProseMirror JSON in them.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/auth/*` — authentication surface.
 
 Mounted at the **root** (not under `/v1`): the auth endpoints move lock-step

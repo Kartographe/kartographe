@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "@/api/generated/schema";
 import { emitSessionExpired } from "@/lib/auth/auth-events";

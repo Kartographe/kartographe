@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Response model for the `/health` ops probe."""
 
 from pydantic import BaseModel, ConfigDict, Field

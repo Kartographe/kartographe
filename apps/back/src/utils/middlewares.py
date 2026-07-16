@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Guard dependencies — read the request and raise to deny.
 
 Naming convention: `require_<thing>(...)` for the function, plus a pre-wrapped

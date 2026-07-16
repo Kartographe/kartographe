@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/accounts` — workspaces the signed-in user belongs to.
 
 Versioned surface, so these are also exposed as MCP tools: an agent holding a

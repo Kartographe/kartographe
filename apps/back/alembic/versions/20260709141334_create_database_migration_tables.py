@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """create database migration tables
 
 Migrations can be commented, so `comment_entity_type` gains the two new members.

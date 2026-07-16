@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Route lifecycle: creation/update with guard/role/version validation, status
 flips and cascading delete."""
 

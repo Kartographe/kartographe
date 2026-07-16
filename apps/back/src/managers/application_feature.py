@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Application ↔ feature links: attach an account feature to an application and
 track the version window during which it is present."""
 

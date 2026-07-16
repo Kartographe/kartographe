@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from collections.abc import Generator
 
 from sqlmodel import Session, SQLModel, create_engine

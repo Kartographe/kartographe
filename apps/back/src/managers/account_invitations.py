@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Account-side invitation management (owners/administrators invite members).
 
 Sends one email per newly-created invitation. Enforces the same

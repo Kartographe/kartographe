@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `service_action` table — an action exposed by a service.
 
 `method` and `path` describe the HTTP call when the action is an endpoint; both

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { MeSideNav } from "@/features/account/components/me-side-nav";
 

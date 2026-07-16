@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { useLingui } from "@lingui/react/macro";
 import { Button, Divider, Empty, Flex, Spin } from "antd";
 import { useState } from "react";

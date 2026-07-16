@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/me/integrations/*` — the signed-in user's OAuth consent + connected-integrations endpoints."""
 
 from fastapi import APIRouter

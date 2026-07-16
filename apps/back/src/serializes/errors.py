@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Error response envelopes surfaced in OpenAPI (Scalar / MCP / generated client)."""
 
 from src.serializes._base import CamelBase

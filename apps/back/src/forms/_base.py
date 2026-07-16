@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """Shared base for input schemas (`src/forms/`, `src/filters/`).
 
 Mirror of the serializer `CamelBase`: the front sends camelCase, Python reads

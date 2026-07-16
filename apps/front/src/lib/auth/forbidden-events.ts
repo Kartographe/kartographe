@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /**
  * Sibling of `auth-events` for the "signed in, but not allowed here" case: a
  * 403 on a resource the user can't reach (a foreign account, a page above their

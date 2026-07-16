@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../scenarios/{scenario_id}/steps/{step_id}/routes`.
 
 Links between a scenario step and the application routes it exercises. Reads are

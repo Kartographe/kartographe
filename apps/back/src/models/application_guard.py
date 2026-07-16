@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """The `application_guard` table — an authentication guard for an application.
 
 Describes where and how a credential is carried on a request (bearer header,

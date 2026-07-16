@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """File storage backends: local disk or S3-compatible object storage.
 
 Selected by `STORAGE_BACKEND`. Callers store an opaque **key** (returned by the

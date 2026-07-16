@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`.../versions/{database_version_id}/tables/{database_table_id}/columns`.
 
 Columns of a database table. Reads are open to any account member; writes are

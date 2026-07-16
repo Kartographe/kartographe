@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 ChallengeMyProject
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { components } from "@/api/generated/schema";

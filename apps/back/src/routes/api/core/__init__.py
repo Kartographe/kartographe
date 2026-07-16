@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 """`/v1/core/*` — global reference catalogues (action & assertion types).
 
 Read-only, not account-scoped: any authenticated user may read them. Mounted
