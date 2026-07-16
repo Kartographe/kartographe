@@ -1,0 +1,91 @@
+# SPDX-FileCopyrightText: 2026 ChallengeMyProject
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+name: License
+
+# Kartographe is open core: AGPL-3.0 everywhere except the `ee/` directories,
+# which are Elastic License 2.0. See LICENSING.md.
+#
+# This workflow is the only thing that actually keeps that split honest. The
+# IDE copyright profiles and the CLAUDE.md rules live in gitignored files, so
+# they help whoever has them configured and nobody else. These jobs run for
+# everyone, every time.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reuse:
+    name: REUSE compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fails if any file lacks an SPDX header or a REUSE.toml entry, or if an
+      # SPDX identifier is unknown or deprecated. A new file with no header is
+      # a licensing hole, so it is a build failure.
+      - uses: fsfe/reuse-action@v5
+
+  no-ee-imports:
+    name: Core does not import ee
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Boundary rule 1: the dependency points one way, `ee` -> `src`, never
+      # the reverse. The core reaches ee only through the entitlements provider
+      # registry, via a guarded import in app_factory.
+      #
+      # Scoped to the backend on purpose: that is where entitlements are
+      # enforced. The frontend is not an enforcement surface (it only renders
+      # what the API already authorises), so its ee/ boundary is a licensing
+      # one -- headers -- not a build one.
+      - name: Backend core must not import ee
+        run: |
+          if grep -rnE '^[[:space:]]*(from|import)[[:space:]]+ee(\.|[[:space:]]|$)' \
+               apps/back/src apps/back/server_api.py; then
+            echo "::error::apps/back/src imports from ee/. The core must not depend on the Enterprise Edition. See LICENSING.md."
+            exit 1
+          fi
+          echo "OK: the backend core does not import ee."
+
+  core-without-ee:
+    name: Backend core boots and tests without ee
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install backend dependencies
+        working-directory: apps/back
+        # Mirrors the Dockerfile (pip + requirements.txt); pipenv is local-dev
+        # only. pytest/httpx are the Pipfile dev-packages.
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir pytest httpx
+
+      # Boundary rule 2, and the only proof that the split is real. Whatever
+      # the file headers claim, if the AGPL core cannot stand up on its own
+      # then it is not an AGPL core, it is a demo of one.
+      - name: Delete the Enterprise Edition
+        run: rm -rf apps/back/ee
+
+      - name: Import the app without ee
+        working-directory: apps/back
+        # Catches an unguarded `import ee` that grep would miss (a lazy import
+        # inside a function, an importlib call).
+        run: python -c "import server_api; print('OK: the app builds without ee.')"
+
+      - name: Run the test suite without ee
+        working-directory: apps/back
+        run: pytest -q
