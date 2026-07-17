@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -85,15 +83,10 @@ export function ServicesList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/services/{service_id}",
-    { meta: { successMessage: t`Service activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/services/{service_id}",
-    { meta: { successMessage: t`Service archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -121,19 +114,11 @@ export function ServicesList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(service: Service) {
-    const params = { path: { account_id: accountId, service_id: service.id } };
-    if (service.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(service: Service, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -231,7 +216,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <ServiceStatusTag status={status} />,
+      render: (status: Status, service) => (
+        <ServiceStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(service, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Créé le`,
@@ -249,7 +240,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, service) => (
         <Space>
           <Link
@@ -268,21 +259,6 @@ export function ServicesList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(service)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={service.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                service.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(service)}
               size="small"
             />
           </Tooltip>

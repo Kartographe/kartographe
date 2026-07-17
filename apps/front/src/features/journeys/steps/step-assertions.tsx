@@ -2,13 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InboxOutlined,
-  PlusOutlined,
-  RocketOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -65,15 +59,10 @@ export function StepAssertions({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}",
-    { meta: { successMessage: t`Assertion activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}",
-    { meta: { successMessage: t`Assertion archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -87,19 +76,14 @@ export function StepAssertions({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(assertion: Assertion) {
-    const params = { path: { ...path, assertion_id: assertion.id } };
-    if (assertion.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    assertion: Assertion,
+    status: Assertion["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, assertion_id: assertion.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -165,24 +149,6 @@ export function StepAssertions({
                     size="small"
                   />
                 </Tooltip>,
-                <Tooltip
-                  key="status"
-                  title={
-                    assertion.status === "active" ? t`Archiver` : t`Activer`
-                  }
-                >
-                  <Button
-                    icon={
-                      assertion.status === "active" ? (
-                        <InboxOutlined />
-                      ) : (
-                        <RocketOutlined />
-                      )
-                    }
-                    onClick={() => toggleStatus(assertion)}
-                    size="small"
-                  />
-                </Tooltip>,
                 <Tooltip key="delete" title={t`Supprimer`}>
                   <Button
                     danger
@@ -204,7 +170,11 @@ export function StepAssertions({
                 title={
                   <Space>
                     {assertionTypes.label(assertion.assertionTypeId)}
-                    <AssertionStatusTag status={assertion.status} />
+                    <AssertionStatusTag
+                      loading={statusMutation.isPending}
+                      onChange={(next) => changeStatus(assertion, next)}
+                      status={assertion.status}
+                    />
                   </Space>
                 }
               />

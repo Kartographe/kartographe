@@ -36,12 +36,22 @@ import {
 
 type S = components["schemas"];
 
-export function DatabaseStatusTag({ status }: { status: S["DatabaseStatus"] }) {
+export function DatabaseStatusTag({
+  status,
+  onChange,
+  loading,
+}: {
+  status: S["DatabaseStatus"];
+  onChange?: (status: S["DatabaseStatus"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={DATABASE_STATUS_COLORS}
       descriptions={DATABASE_STATUS_DESCRIPTIONS}
       labels={DATABASE_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
@@ -60,14 +70,20 @@ export function DatabaseTypeTag({ type }: { type: S["DatabaseType"] }) {
 
 export function TableStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["DatabaseTableStatus"];
+  onChange?: (status: S["DatabaseTableStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={TABLE_STATUS_COLORS}
       descriptions={TABLE_STATUS_DESCRIPTIONS}
       labels={TABLE_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
@@ -86,14 +102,20 @@ export function TableTypeTag({ type }: { type: S["DatabaseTableType"] }) {
 
 export function VersionStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["DatabaseVersionStatus"];
+  onChange?: (status: S["DatabaseVersionStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={VERSION_STATUS_COLORS}
       descriptions={VERSION_STATUS_DESCRIPTIONS}
       labels={VERSION_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

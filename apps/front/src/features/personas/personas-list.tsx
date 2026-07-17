@@ -6,9 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -101,15 +99,10 @@ export function PersonasList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/personas/{persona_id}",
-    { meta: { successMessage: t`Persona activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/personas/{persona_id}",
-    { meta: { successMessage: t`Persona archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -136,19 +129,11 @@ export function PersonasList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(persona: Persona) {
-    const params = { path: { account_id: accountId, persona_id: persona.id } };
-    if (persona.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(persona: Persona, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, persona_id: persona.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -238,7 +223,13 @@ export function PersonasList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <PersonaStatusTag status={status} />,
+      render: (status: Status, persona) => (
+        <PersonaStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(persona, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Tags`,
@@ -265,7 +256,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 4 }),
+      width: actionsWidth({ icons: 3 }),
       render: (_, persona) => (
         <Space>
           <Tooltip title={t`Commentaires`}>
@@ -279,21 +270,6 @@ export function PersonasList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(persona)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={persona.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                persona.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(persona)}
               size="small"
             />
           </Tooltip>

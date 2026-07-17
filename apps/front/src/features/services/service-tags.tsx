@@ -21,12 +21,22 @@ import {
 
 type S = components["schemas"];
 
-export function ServiceStatusTag({ status }: { status: S["ServiceStatus"] }) {
+export function ServiceStatusTag({
+  status,
+  onChange,
+  loading,
+}: {
+  status: S["ServiceStatus"];
+  onChange?: (status: S["ServiceStatus"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={SERVICE_STATUS_COLORS}
       descriptions={SERVICE_STATUS_DESCRIPTIONS}
       labels={SERVICE_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
@@ -45,14 +55,20 @@ export function ServiceTypeTag({ type }: { type: S["ServiceType"] }) {
 
 export function ActionStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["ServiceActionStatus"];
+  onChange?: (status: S["ServiceActionStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={ACTION_STATUS_COLORS}
       descriptions={ACTION_STATUS_DESCRIPTIONS}
       labels={ACTION_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

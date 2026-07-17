@@ -6,9 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -80,15 +78,10 @@ export function RoutesScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/roles",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}",
-    { meta: { successMessage: t`Route activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}",
-    { meta: { successMessage: t`Route archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -108,19 +101,14 @@ export function RoutesScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(route: ApplicationRoute) {
-    const params = { path: { ...path, route_id: route.id } };
-    if (route.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    route: ApplicationRoute,
+    status: ApplicationRoute["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, route_id: route.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -142,10 +130,8 @@ export function RoutesScreen({
 
   const items = routes.map((route) => {
     const color = HTTP_METHOD_COLORS[route.method];
-    // Dimming tracks "archived"; the button tracks "active" — a draft is neither
-    // dimmed nor archivable, it is waiting to be activated.
+    // Dimming tracks "archived" — a draft is neither dimmed nor active.
     const archived = route.status === "archived";
-    const isActive = route.status === "active";
     return {
       key: route.id,
       style: {
@@ -162,7 +148,11 @@ export function RoutesScreen({
           <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
             {route.title ?? ""}
           </Typography.Text>
-          <ApplicationStatusTag status={route.status} />
+          <ApplicationStatusTag
+            loading={statusMutation.isPending}
+            onChange={(next) => changeStatus(route, next)}
+            status={route.status}
+          />
         </Flex>
       ),
       extra: (
@@ -181,13 +171,6 @@ export function RoutesScreen({
                 setEditing(route);
                 setFormOpen(true);
               }}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title={isActive ? t`Archiver` : t`Activer`}>
-            <Button
-              icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
-              onClick={() => toggleStatus(route)}
               size="small"
             />
           </Tooltip>

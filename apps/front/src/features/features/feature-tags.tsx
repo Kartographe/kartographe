@@ -21,12 +21,22 @@ import {
 
 type S = components["schemas"];
 
-export function FeatureStatusTag({ status }: { status: S["FeatureStatus"] }) {
+export function FeatureStatusTag({
+  status,
+  onChange,
+  loading,
+}: {
+  status: S["FeatureStatus"];
+  onChange?: (status: S["FeatureStatus"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={FEATURE_STATUS_COLORS}
       descriptions={FEATURE_STATUS_DESCRIPTIONS}
       labels={FEATURE_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

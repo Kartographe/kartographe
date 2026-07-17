@@ -15,12 +15,22 @@ import {
 
 type S = components["schemas"];
 
-export function PersonaStatusTag({ status }: { status: S["PersonaStatus"] }) {
+export function PersonaStatusTag({
+  status,
+  onChange,
+  loading,
+}: {
+  status: S["PersonaStatus"];
+  onChange?: (status: S["PersonaStatus"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={PERSONA_STATUS_COLORS}
       descriptions={PERSONA_STATUS_DESCRIPTIONS}
       labels={PERSONA_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

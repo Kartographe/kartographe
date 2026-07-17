@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -98,15 +96,10 @@ export function JourneysList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
-    { meta: { successMessage: t`Parcours activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/journeys/{journey_id}",
-    { meta: { successMessage: t`Parcours archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -136,19 +129,11 @@ export function JourneysList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(journey: Journey) {
-    const params = { path: { account_id: accountId, journey_id: journey.id } };
-    if (journey.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(journey: Journey, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -260,7 +245,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <JourneyStatusTag status={status} />,
+      render: (status: Status, journey) => (
+        <JourneyStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(journey, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Tags`,
@@ -287,7 +278,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, journey) => (
         <Space>
           <Link
@@ -306,21 +297,6 @@ export function JourneysList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(journey)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={journey.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                journey.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(journey)}
               size="small"
             />
           </Tooltip>

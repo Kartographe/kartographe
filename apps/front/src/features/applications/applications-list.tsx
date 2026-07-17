@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -91,15 +89,10 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}",
-    { meta: { successMessage: t`Application activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}",
-    { meta: { successMessage: t`Application archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -128,21 +121,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(application: Application) {
-    const params = {
-      path: { account_id: accountId, application_id: application.id },
-    };
-    if (application.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(application: Application, status: Status) {
+    await statusMutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, application_id: application.id },
+      },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -243,7 +228,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <ApplicationStatusTag status={status} />,
+      render: (status: Status, application) => (
+        <ApplicationStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(application, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Tags`,
@@ -270,7 +261,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, application) => (
         <Space>
           <Link
@@ -289,21 +280,6 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(application)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={application.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                application.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(application)}
               size="small"
             />
           </Tooltip>

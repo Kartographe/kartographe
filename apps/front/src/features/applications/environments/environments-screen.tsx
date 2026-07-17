@@ -46,15 +46,10 @@ export function EnvironmentsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/environments",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
-    { meta: { successMessage: t`Environnement activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
-    { meta: { successMessage: t`Environnement archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -73,19 +68,14 @@ export function EnvironmentsScreen({
     setFormOpen(true);
   }
 
-  async function toggleStatus(environment: Environment) {
-    const params = { path: { ...path, environment_id: environment.id } };
-    if (environment.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    environment: Environment,
+    status: Environment["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, environment_id: environment.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -150,8 +140,12 @@ export function EnvironmentsScreen({
       title: t`Statut`,
       dataIndex: "status",
       width: COL.status,
-      render: (status: Environment["status"]) => (
-        <ApplicationStatusTag status={status} />
+      render: (status: Environment["status"], environment) => (
+        <ApplicationStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(environment, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -166,16 +160,14 @@ export function EnvironmentsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3 }),
+      width: actionsWidth({ icons: 2 }),
       render: (_, environment) => (
         <RowActions
-          active={environment.status === "active"}
           onDelete={() => confirmDelete(environment)}
           onEdit={() => {
             setEditing(environment);
             setFormOpen(true);
           }}
-          onToggleStatus={() => toggleStatus(environment)}
         />
       ),
     },

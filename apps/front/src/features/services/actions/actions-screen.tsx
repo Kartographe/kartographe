@@ -6,9 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -41,6 +39,7 @@ import {
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type ServiceAction = components["schemas"]["ServiceActionItem"];
+type Status = components["schemas"]["ServiceActionStatus"];
 
 const LIST_KEY = [
   "get",
@@ -85,15 +84,10 @@ export function ActionsScreen({
     "/v1/accounts/{account_id}/services/{service_id}/actions",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
-    { meta: { successMessage: t`Action activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
-    { meta: { successMessage: t`Action archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -107,19 +101,11 @@ export function ActionsScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(action: ServiceAction) {
-    const params = { path: { ...path, action_id: action.id } };
-    if (action.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(action: ServiceAction, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, action_id: action.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -140,8 +126,6 @@ export function ActionsScreen({
   }
 
   const items = actions.map((action) => {
-    // The button tracks "active": a draft is not archivable, it is activated.
-    const isActive = action.status === "active";
     return {
       key: action.id,
       style: panelStyle(action),
@@ -153,7 +137,11 @@ export function ActionsScreen({
             {action.title}
           </Typography.Text>
           <ActionTypeTag type={action.type} />
-          <ActionStatusTag status={action.status} />
+          <ActionStatusTag
+            loading={statusMutation.isPending}
+            onChange={(next) => changeStatus(action, next)}
+            status={action.status}
+          />
         </Flex>
       ),
       extra: (
@@ -172,13 +160,6 @@ export function ActionsScreen({
                 setEditing(action);
                 setFormOpen(true);
               }}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title={isActive ? t`Archiver` : t`Activer`}>
-            <Button
-              icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
-              onClick={() => toggleStatus(action)}
               size="small"
             />
           </Tooltip>

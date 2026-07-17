@@ -47,15 +47,10 @@ export function VersionsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/versions",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
-    { meta: { successMessage: t`Version activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
-    { meta: { successMessage: t`Version archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -69,19 +64,11 @@ export function VersionsScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(version: Version) {
-    const params = { path: { ...path, version_id: version.id } };
-    if (version.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(version: Version, status: Version["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, version_id: version.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -127,8 +114,12 @@ export function VersionsScreen({
       title: t`Statut`,
       dataIndex: "status",
       width: COL.status,
-      render: (status: Version["status"]) => (
-        <ApplicationStatusTag status={status} />
+      render: (status: Version["status"], version) => (
+        <ApplicationStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(version, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -143,16 +134,14 @@ export function VersionsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3 }),
+      width: actionsWidth({ icons: 2 }),
       render: (_, version) => (
         <RowActions
-          active={version.status === "active"}
           onDelete={() => confirmDelete(version)}
           onEdit={() => {
             setEditing(version);
             setFormOpen(true);
           }}
-          onToggleStatus={() => toggleStatus(version)}
         />
       ),
     },

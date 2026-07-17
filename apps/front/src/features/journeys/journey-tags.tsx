@@ -33,12 +33,22 @@ import {
 
 type S = components["schemas"];
 
-export function JourneyStatusTag({ status }: { status: S["JourneyStatus"] }) {
+export function JourneyStatusTag({
+  status,
+  onChange,
+  loading,
+}: {
+  status: S["JourneyStatus"];
+  onChange?: (status: S["JourneyStatus"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={JOURNEY_STATUS_COLORS}
       descriptions={JOURNEY_STATUS_DESCRIPTIONS}
       labels={JOURNEY_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
@@ -57,14 +67,20 @@ export function JourneyTypeTag({ type }: { type: S["JourneyType"] }) {
 
 export function ScenarioStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["JourneyScenarioStatus"];
+  onChange?: (status: S["JourneyScenarioStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={SCENARIO_STATUS_COLORS}
       descriptions={SCENARIO_STATUS_DESCRIPTIONS}
       labels={SCENARIO_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
@@ -128,14 +144,20 @@ export function StepFileStatusTag({
 
 export function AssertionStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["JourneyScenarioStepAssertionStatus"];
+  onChange?: (status: S["JourneyScenarioStepAssertionStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={ASSERTION_STATUS_COLORS}
       descriptions={ASSERTION_STATUS_DESCRIPTIONS}
       labels={ASSERTION_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

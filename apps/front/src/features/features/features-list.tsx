@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -93,15 +91,10 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/features/{feature_id}",
-    { meta: { successMessage: t`Fonctionnalité activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/features/{feature_id}",
-    { meta: { successMessage: t`Fonctionnalité archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -128,19 +121,11 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(feature: Feature) {
-    const params = { path: { account_id: accountId, feature_id: feature.id } };
-    if (feature.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(feature: Feature, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -230,7 +215,13 @@ export function FeaturesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <FeatureStatusTag status={status} />,
+      render: (status: Status, feature) => (
+        <FeatureStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(feature, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Tags`,
@@ -257,7 +248,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, feature) => (
         <Space>
           <Link
@@ -276,21 +267,6 @@ export function FeaturesList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(feature)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={feature.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                feature.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(feature)}
               size="small"
             />
           </Tooltip>

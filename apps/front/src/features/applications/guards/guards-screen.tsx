@@ -50,15 +50,10 @@ export function GuardsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/guards",
     { params: { path, query: tagIds.length ? { tagIds } : {} } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
-    { meta: { successMessage: t`Guard activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
-    { meta: { successMessage: t`Guard archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -76,19 +71,11 @@ export function GuardsScreen({
     setTagIds((filters.tags as string[] | null) ?? []);
   };
 
-  async function toggleStatus(guard: Guard) {
-    const params = { path: { ...path, guard_id: guard.id } };
-    if (guard.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(guard: Guard, status: Guard["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, guard_id: guard.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -149,8 +136,12 @@ export function GuardsScreen({
       title: t`Statut`,
       dataIndex: "status",
       width: COL.status,
-      render: (status: Guard["status"]) => (
-        <ApplicationStatusTag status={status} />
+      render: (status: Guard["status"], guard) => (
+        <ApplicationStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(guard, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -167,16 +158,14 @@ export function GuardsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3 }),
+      width: actionsWidth({ icons: 2 }),
       render: (_, guard) => (
         <RowActions
-          active={guard.status === "active"}
           onDelete={() => confirmDelete(guard)}
           onEdit={() => {
             setEditing(guard);
             setFormOpen(true);
           }}
-          onToggleStatus={() => toggleStatus(guard)}
         />
       ),
     },

@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -60,15 +58,10 @@ export function VersionsScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/versions",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}",
-    { meta: { successMessage: t`Version activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}",
-    { meta: { successMessage: t`Version archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -82,19 +75,14 @@ export function VersionsScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(version: DatabaseVersion) {
-    const params = { path: { ...path, database_version_id: version.id } };
-    if (version.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    version: DatabaseVersion,
+    status: DatabaseVersion["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, database_version_id: version.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -141,8 +129,12 @@ export function VersionsScreen({
       key: "status",
       dataIndex: "status",
       width: COL.status,
-      render: (status: DatabaseVersion["status"]) => (
-        <VersionStatusTag status={status} />
+      render: (status: DatabaseVersion["status"], version) => (
+        <VersionStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(version, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -175,7 +167,7 @@ export function VersionsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, version) => (
         <Space>
           <Link
@@ -194,21 +186,6 @@ export function VersionsScreen({
             <Button
               icon={<EditOutlined />}
               onClick={() => setForm(version)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={version.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                version.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(version)}
               size="small"
             />
           </Tooltip>

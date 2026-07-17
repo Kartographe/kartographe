@@ -6,9 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { Plural, useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -102,15 +100,10 @@ export function TablesScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
-    { meta: { successMessage: t`Table activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
-    { meta: { successMessage: t`Table archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteTableMutation = $api.useMutation(
     "delete",
@@ -131,19 +124,14 @@ export function TablesScreen({
     queryClient.invalidateQueries({ queryKey: TABLES_KEY });
   }
 
-  async function toggleStatus(table: DatabaseTable) {
-    const params = { path: { ...path, database_table_id: table.id } };
-    if (table.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    table: DatabaseTable,
+    status: DatabaseTable["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, database_table_id: table.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -204,7 +192,11 @@ export function TablesScreen({
           {(table.columns ?? []).length}
         </Typography.Text>
         <TableTypeTag type={table.type} />
-        <TableStatusTag status={table.status} />
+        <TableStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(table, next)}
+          status={table.status}
+        />
       </Flex>
     ),
     extra: (
@@ -220,15 +212,6 @@ export function TablesScreen({
           <Button
             icon={<EditOutlined />}
             onClick={() => setTableForm(table)}
-            size="small"
-          />
-        </Tooltip>
-        <Tooltip title={table.status === "active" ? t`Archiver` : t`Activer`}>
-          <Button
-            icon={
-              table.status === "active" ? <InboxOutlined /> : <RocketOutlined />
-            }
-            onClick={() => toggleStatus(table)}
             size="small"
           />
         </Tooltip>

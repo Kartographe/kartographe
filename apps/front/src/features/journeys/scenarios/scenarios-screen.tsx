@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -63,15 +61,10 @@ export function ScenariosScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
-    { meta: { successMessage: t`Scénario activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
-    { meta: { successMessage: t`Scénario archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -85,19 +78,14 @@ export function ScenariosScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(scenario: JourneyScenario) {
-    const params = { path: { ...path, scenario_id: scenario.id } };
-    if (scenario.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(
+    scenario: JourneyScenario,
+    status: JourneyScenario["status"]
+  ) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, scenario_id: scenario.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -162,8 +150,12 @@ export function ScenariosScreen({
       key: "status",
       dataIndex: "status",
       width: COL.status,
-      render: (status: JourneyScenario["status"]) => (
-        <ScenarioStatusTag status={status} />
+      render: (status: JourneyScenario["status"], scenario) => (
+        <ScenarioStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(scenario, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -180,7 +172,7 @@ export function ScenariosScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, scenario) => (
         <Space>
           <Link
@@ -199,21 +191,6 @@ export function ScenariosScreen({
             <Button
               icon={<EditOutlined />}
               onClick={() => setForm(scenario)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={scenario.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                scenario.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(scenario)}
               size="small"
             />
           </Tooltip>

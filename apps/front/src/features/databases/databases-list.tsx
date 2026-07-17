@@ -6,9 +6,7 @@ import {
   ArrowRightOutlined,
   DeleteOutlined,
   EditOutlined,
-  InboxOutlined,
   PlusOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -91,15 +89,10 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     }
   );
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/databases/{database_id}",
-    { meta: { successMessage: t`Base de données activée` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/databases/{database_id}",
-    { meta: { successMessage: t`Base de données archivée` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -128,21 +121,11 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     setFormOpen(true);
   }
 
-  async function toggleStatus(database: Database) {
-    const params = {
-      path: { account_id: accountId, database_id: database.id },
-    };
-    if (database.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(database: Database, status: Status) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, database_id: database.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -232,7 +215,13 @@ export function DatabasesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: statuses.length ? statuses : null,
-      render: (status: Status) => <DatabaseStatusTag status={status} />,
+      render: (status: Status, database) => (
+        <DatabaseStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(database, next)}
+          status={status}
+        />
+      ),
     },
     {
       title: t`Tags`,
@@ -259,7 +248,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3, labelled: 1 }),
+      width: actionsWidth({ icons: 2, labelled: 1 }),
       render: (_, database) => (
         <Space>
           <Link
@@ -278,21 +267,6 @@ export function DatabasesList({ accountId }: { accountId: string }) {
             <Button
               icon={<EditOutlined />}
               onClick={() => openEdit(database)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={database.status === "active" ? t`Archiver` : t`Activer`}
-          >
-            <Button
-              icon={
-                database.status === "active" ? (
-                  <InboxOutlined />
-                ) : (
-                  <RocketOutlined />
-                )
-              }
-              onClick={() => toggleStatus(database)}
               size="small"
             />
           </Tooltip>

@@ -29,14 +29,20 @@ type S = components["schemas"];
 
 export function ApplicationStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["ApplicationStatus"];
+  onChange?: (status: S["ApplicationStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={APPLICATION_STATUS_COLORS}
       descriptions={APPLICATION_STATUS_DESCRIPTIONS}
       labels={APPLICATION_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );

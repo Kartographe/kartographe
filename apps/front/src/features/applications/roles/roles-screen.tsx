@@ -44,15 +44,10 @@ export function RolesScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/roles",
     { params: { path } }
   );
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}",
-    { meta: { successMessage: t`Rôle activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}",
-    { meta: { successMessage: t`Rôle archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -66,19 +61,11 @@ export function RolesScreen({
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
-  async function toggleStatus(role: Role) {
-    const params = { path: { ...path, role_id: role.id } };
-    if (role.status === "active") {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(role: Role, status: Role["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { ...path, role_id: role.id } },
+      body: { status },
+    });
     invalidate();
   }
 
@@ -120,8 +107,12 @@ export function RolesScreen({
       title: t`Statut`,
       dataIndex: "status",
       width: COL.status,
-      render: (status: Role["status"]) => (
-        <ApplicationStatusTag status={status} />
+      render: (status: Role["status"], role) => (
+        <ApplicationStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(role, next)}
+          status={status}
+        />
       ),
     },
     {
@@ -136,16 +127,14 @@ export function RolesScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3 }),
+      width: actionsWidth({ icons: 2 }),
       render: (_, role) => (
         <RowActions
-          active={role.status === "active"}
           onDelete={() => confirmDelete(role)}
           onEdit={() => {
             setEditing(role);
             setFormOpen(true);
           }}
-          onToggleStatus={() => toggleStatus(role)}
         />
       ),
     },
