@@ -19,7 +19,7 @@ _EXPIRED = {401: {"model": ErrorResponse, "description": "Verification session e
 
 @router.post(
     "/otp",
-    operation_id="api.auth.twoFactor.otp",
+    operation_id="api_auth_twoFactor_otp",
     summary="Complete login with an authenticator code",
     description="Second-factor step: exchange the intermediate token and a 6-digit authenticator code for a full session.",
     response_model=TokenResponse,
@@ -37,7 +37,7 @@ def two_factor_otp(form: TwoFactorForm, manager: AuthManagerDep) -> TokenRespons
 
 @router.post(
     "/recoveryCode",
-    operation_id="api.auth.twoFactor.recoveryCode",
+    operation_id="api_auth_twoFactor_recoveryCode",
     summary="Complete login with a recovery code",
     description="Second-factor fallback: exchange the intermediate token and a one-time recovery code for a full session.",
     response_model=TokenResponse,
@@ -55,7 +55,7 @@ def two_factor_recovery_code(form: TwoFactorForm, manager: AuthManagerDep) -> To
 
 @router.post(
     "/u2f/options",
-    operation_id="api.auth.twoFactor.u2f.options",
+    operation_id="api_auth_twoFactor_u2f_options",
     summary="Get security-key assertion options",
     description="Start a security-key login: returns the WebAuthn options for `navigator.credentials.get` plus a token binding them to this login.",
     response_model=ItemResponse[U2FAssertionOptionsItem],
@@ -68,7 +68,7 @@ def two_factor_u2f_options(form: U2FAssertionOptionsForm, manager: AuthManagerDe
 
 @router.post(
     "/u2f",
-    operation_id="api.auth.twoFactor.u2f",
+    operation_id="api_auth_twoFactor_u2f",
     summary="Complete login with a security key",
     description="Second-factor step: verify the browser's WebAuthn assertion and return a full session.",
     response_model=TokenResponse,

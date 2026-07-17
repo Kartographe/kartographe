@@ -48,7 +48,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.routes.tables.list",
+    operation_id="api_applications_routes_tables_list",
     summary="List route tables",
     description="List the database-table links of a route, in insertion order. Any member may read.",
     response_model=ListingResponse[ApplicationRouteTableItem],
@@ -65,7 +65,7 @@ def list_route_tables(
 
 @router.post(
     "",
-    operation_id="api.applications.routes.tables.create",
+    operation_id="api_applications_routes_tables_create",
     summary="Link a database table",
     description=(
         "Link the route to a database table of the account, recording the exchange part and the "
@@ -89,7 +89,7 @@ def create_route_table(
 
 @router.get(
     "/{route_table_id}",
-    operation_id="api.applications.routes.tables.get",
+    operation_id="api_applications_routes_tables_get",
     summary="Get a route table link",
     description="Return a single database-table link of the route. Any member may read.",
     response_model=ItemResponse[ApplicationRouteTableItem],
@@ -103,7 +103,7 @@ def get_route_table(
 
 @router.patch(
     "/{route_table_id}",
-    operation_id="api.applications.routes.tables.update",
+    operation_id="api_applications_routes_tables_update",
     summary="Update a route table link",
     description=(
         "Partially update a link (database table, type, action). A changed table must belong to "
@@ -125,7 +125,7 @@ def update_route_table(
 
 @router.delete(
     "/{route_table_id}",
-    operation_id="api.applications.routes.tables.delete",
+    operation_id="api_applications_routes_tables_delete",
     summary="Delete a route table link",
     description="Soft-delete a database-table link. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

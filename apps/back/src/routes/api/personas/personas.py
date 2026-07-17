@@ -47,7 +47,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.personas.list",
+    operation_id="api_personas_list",
     summary="List personas",
     description=(
         "List the personas of the account. Filter by status and/or type (repeat the query param "
@@ -87,7 +87,7 @@ def list_personas(
 
 @router.post(
     "",
-    operation_id="api.personas.create",
+    operation_id="api_personas_create",
     summary="Create a persona",
     description="Create a persona. It starts as a draft. Editing roles only.",
     response_model=ItemResponse[PersonaItem],
@@ -108,7 +108,7 @@ def create_persona(
 
 @router.get(
     "/{persona_id}",
-    operation_id="api.personas.get",
+    operation_id="api_personas_get",
     summary="Get a persona",
     description="Return a single persona of the account. Any member may read.",
     response_model=ItemResponse[PersonaItem],
@@ -122,7 +122,7 @@ def get_persona(
 
 @router.patch(
     "/{persona_id}",
-    operation_id="api.personas.update",
+    operation_id="api_personas_update",
     summary="Update a persona",
     description="Partially update a persona (type, title, description, status). Editing roles only.",
     response_model=ItemResponse[PersonaItem],
@@ -140,7 +140,7 @@ def update_persona(
 
 @router.delete(
     "/{persona_id}",
-    operation_id="api.personas.delete",
+    operation_id="api_personas_delete",
     summary="Delete a persona",
     description="Soft-delete a persona. Editing roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

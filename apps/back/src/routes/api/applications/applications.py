@@ -43,7 +43,7 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 
 @router.get(
     "",
-    operation_id="api.applications.list",
+    operation_id="api_applications_list",
     summary="List applications",
     description=(
         "List the applications of the account. Filter by status and/or type (repeat the query "
@@ -83,7 +83,7 @@ def list_applications(
 
 @router.post(
     "",
-    operation_id="api.applications.create",
+    operation_id="api_applications_create",
     summary="Create an application",
     description="Create an application. It starts as a draft owned by the caller. Owners/administrators only.",
     response_model=ItemResponse[ApplicationItem],
@@ -105,7 +105,7 @@ def create_application(
 
 @router.get(
     "/{application_id}",
-    operation_id="api.applications.get",
+    operation_id="api_applications_get",
     summary="Get an application",
     description="Return a single application of the account. Any member may read.",
     response_model=ItemResponse[ApplicationItem],
@@ -119,7 +119,7 @@ def get_application(
 
 @router.patch(
     "/{application_id}",
-    operation_id="api.applications.update",
+    operation_id="api_applications_update",
     summary="Update an application",
     description="Partially update an application (title, description, type, status). Owners/administrators only.",
     response_model=ItemResponse[ApplicationItem],
@@ -137,7 +137,7 @@ def update_application(
 
 @router.delete(
     "/{application_id}",
-    operation_id="api.applications.delete",
+    operation_id="api_applications_delete",
     summary="Delete an application",
     description=(
         "Soft-delete an application. Its environments, versions, deployments and feature links "

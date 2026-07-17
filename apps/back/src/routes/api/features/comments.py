@@ -31,7 +31,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Feature not found"}}
 
 @router.get(
     "",
-    operation_id="api.features.comments.list",
+    operation_id="api_features_comments_list",
     summary="List feature comments",
     description="List the root comments on a feature, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -49,7 +49,7 @@ def list_feature_comments(
 
 @router.post(
     "",
-    operation_id="api.features.comments.create",
+    operation_id="api_features_comments_create",
     summary="Comment on a feature",
     description="Post a comment on a feature. Any member may post.",
     response_model=ItemResponse[CommentItem],

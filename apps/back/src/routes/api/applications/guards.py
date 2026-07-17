@@ -48,7 +48,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.guards.list",
+    operation_id="api_applications_guards_list",
     summary="List guards",
     description=(
         "List the authentication guards of an application, most recent first. Any member may read. "
@@ -71,7 +71,7 @@ def list_guards(
 
 @router.post(
     "",
-    operation_id="api.applications.guards.create",
+    operation_id="api_applications_guards_create",
     summary="Create a guard",
     description="Create an authentication guard. It starts as a draft owned by the caller. Dev roles only.",
     response_model=ItemResponse[ApplicationGuardItem],
@@ -100,7 +100,7 @@ def create_guard(
 
 @router.get(
     "/{guard_id}",
-    operation_id="api.applications.guards.get",
+    operation_id="api_applications_guards_get",
     summary="Get a guard",
     description="Return a single guard of the application. Any member may read.",
     response_model=ItemResponse[ApplicationGuardItem],
@@ -114,7 +114,7 @@ def get_guard(
 
 @router.patch(
     "/{guard_id}",
-    operation_id="api.applications.guards.update",
+    operation_id="api_applications_guards_update",
     summary="Update a guard",
     description="Partially update a guard (type, title, field type/key/format, status). Dev roles only.",
     response_model=ItemResponse[ApplicationGuardItem],
@@ -132,7 +132,7 @@ def update_guard(
 
 @router.delete(
     "/{guard_id}",
-    operation_id="api.applications.guards.delete",
+    operation_id="api_applications_guards_delete",
     summary="Delete a guard",
     description="Soft-delete a guard and detach it from every route that referenced it. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

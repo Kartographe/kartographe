@@ -60,7 +60,7 @@ _DATA_DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.versions.tables.columns.list",
+    operation_id="api_databases_versions_tables_columns_list",
     summary="List columns",
     description=(
         "List the columns of a table, in insertion order. Any member may read. "
@@ -83,7 +83,7 @@ def list_columns(
 
 @router.post(
     "",
-    operation_id="api.databases.versions.tables.columns.create",
+    operation_id="api_databases_versions_tables_columns_create",
     summary="Create a column",
     description=(
         "Create a column on the table. It references a catalogued column type and may model a "
@@ -121,7 +121,7 @@ def create_column(
 
 @router.post(
     "/reorder",
-    operation_id="api.databases.versions.tables.columns.reorder",
+    operation_id="api_databases_versions_tables_columns_reorder",
     summary="Reorder columns",
     description=(
         "Reorder the columns of a table. Send `columnIds` — every column of the table in its new "
@@ -145,7 +145,7 @@ def reorder_columns(
 
 @router.get(
     "/{database_table_column_id}",
-    operation_id="api.databases.versions.tables.columns.get",
+    operation_id="api_databases_versions_tables_columns_get",
     summary="Get a column",
     description="Return a single column of the table. Any member may read.",
     response_model=ItemResponse[DatabaseTableColumnItem],
@@ -159,7 +159,7 @@ def get_column(
 
 @router.patch(
     "/{database_table_column_id}",
-    operation_id="api.databases.versions.tables.columns.update",
+    operation_id="api_databases_versions_tables_columns_update",
     summary="Update a column",
     description=(
         "Partially update a column (type, foreign key, nullable, unique, default, name, "
@@ -181,7 +181,7 @@ def update_column(
 
 @router.delete(
     "/{database_table_column_id}",
-    operation_id="api.databases.versions.tables.columns.delete",
+    operation_id="api_databases_versions_tables_columns_delete",
     summary="Delete a column",
     description="Soft-delete a column. Data roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

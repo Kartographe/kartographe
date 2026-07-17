@@ -32,7 +32,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Table not found"}}
 
 @router.get(
     "",
-    operation_id="api.databases.versions.tables.comments.list",
+    operation_id="api_databases_versions_tables_comments_list",
     summary="List table comments",
     description="List the root comments on a database table, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -50,7 +50,7 @@ def list_table_comments(
 
 @router.post(
     "",
-    operation_id="api.databases.versions.tables.comments.create",
+    operation_id="api_databases_versions_tables_comments_create",
     summary="Comment on a table",
     description="Post a comment on a database table. Any member may post.",
     response_model=ItemResponse[CommentItem],

@@ -31,7 +31,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Persona not found"}}
 
 @router.get(
     "",
-    operation_id="api.personas.comments.list",
+    operation_id="api_personas_comments_list",
     summary="List persona comments",
     description="List the root comments on a persona, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -49,7 +49,7 @@ def list_persona_comments(
 
 @router.post(
     "",
-    operation_id="api.personas.comments.create",
+    operation_id="api_personas_comments_create",
     summary="Comment on a persona",
     description="Post a comment on a persona. Any member may post.",
     response_model=ItemResponse[CommentItem],

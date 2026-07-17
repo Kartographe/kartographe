@@ -57,7 +57,7 @@ def _invitation_item(invitation: AccountUserInvitation) -> MeInvitationItem:
 
 @router.get(
     "",
-    operation_id="api.me.invitations.list",
+    operation_id="api_me_invitations_list",
     summary="List my invitations",
     description="List invitations addressed to the signed-in user's email, optionally filtered by status.",
     response_model=ListingResponse[MeInvitationItem],
@@ -73,7 +73,7 @@ def list_invitations(
 
 @router.get(
     "/{invitation_id}",
-    operation_id="api.me.invitations.get",
+    operation_id="api_me_invitations_get",
     summary="Get one of my invitations",
     description="Return a single invitation addressed to the signed-in user.",
     response_model=ItemResponse[MeInvitationItem],
@@ -87,7 +87,7 @@ def get_invitation(
 
 @router.post(
     "/{invitation_id}/accept",
-    operation_id="api.me.invitations.accept",
+    operation_id="api_me_invitations_accept",
     summary="Accept an invitation",
     description="Accept a pending invitation and join the account as a guest member.",
     response_model=SuccessResponse,
@@ -103,7 +103,7 @@ def accept_invitation(
 
 @router.post(
     "/{invitation_id}/refuse",
-    operation_id="api.me.invitations.refuse",
+    operation_id="api_me_invitations_refuse",
     summary="Refuse an invitation",
     description="Decline a pending invitation.",
     response_model=SuccessResponse,

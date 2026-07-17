@@ -45,7 +45,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.services.actions.list",
+    operation_id="api_services_actions_list",
     summary="List service actions",
     description="List the actions of a service, most recent first. Any member may read.",
     response_model=ListingResponse[ServiceActionItem],
@@ -62,7 +62,7 @@ def list_actions(
 
 @router.post(
     "",
-    operation_id="api.services.actions.create",
+    operation_id="api_services_actions_create",
     summary="Create a service action",
     description="Create an action. It starts as a draft owned by the caller. Dev roles only.",
     response_model=ItemResponse[ServiceActionItem],
@@ -90,7 +90,7 @@ def create_action(
 
 @router.get(
     "/{action_id}",
-    operation_id="api.services.actions.get",
+    operation_id="api_services_actions_get",
     summary="Get a service action",
     description="Return a single action of the service. Any member may read.",
     response_model=ItemResponse[ServiceActionItem],
@@ -104,7 +104,7 @@ def get_action(
 
 @router.patch(
     "/{action_id}",
-    operation_id="api.services.actions.update",
+    operation_id="api_services_actions_update",
     summary="Update a service action",
     description="Partially update an action (type, title, description, method, path, status). Dev roles only.",
     response_model=ItemResponse[ServiceActionItem],
@@ -122,7 +122,7 @@ def update_action(
 
 @router.delete(
     "/{action_id}",
-    operation_id="api.services.actions.delete",
+    operation_id="api_services_actions_delete",
     summary="Delete a service action",
     description="Soft-delete a single action. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

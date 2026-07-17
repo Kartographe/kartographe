@@ -48,7 +48,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.features.journeys.list",
+    operation_id="api_features_journeys_list",
     summary="List feature journeys",
     description="List the journeys linked to a feature, most recent first. Any member may read.",
     response_model=ListingResponse[FeatureJourneyItem],
@@ -65,7 +65,7 @@ def list_feature_journeys(
 
 @router.post(
     "",
-    operation_id="api.features.journeys.create",
+    operation_id="api_features_journeys_create",
     summary="Link a journey",
     description=(
         "Link an existing account journey to the feature. The journey must belong to the same "
@@ -90,7 +90,7 @@ def create_feature_journey(
 
 @router.get(
     "/{feature_journey_id}",
-    operation_id="api.features.journeys.get",
+    operation_id="api_features_journeys_get",
     summary="Get a feature journey",
     description="Return a single journey link of the feature. Any member may read.",
     response_model=ItemResponse[FeatureJourneyItem],
@@ -104,7 +104,7 @@ def get_feature_journey(
 
 @router.delete(
     "/{feature_journey_id}",
-    operation_id="api.features.journeys.delete",
+    operation_id="api_features_journeys_delete",
     summary="Unlink a journey",
     description="Soft-delete a journey link. Editing roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

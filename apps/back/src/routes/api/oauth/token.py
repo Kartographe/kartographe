@@ -17,7 +17,7 @@ _DEVICE_GRANT = "urn:ietf:params:oauth:grant-type:device_code"
 
 @router.post(
     "/token",
-    operation_id="api.oauth.token",
+    operation_id="api_oauth_token",
     summary="Token endpoint",
     description="Exchange an authorization code, device code or refresh token for an access + refresh token pair.",
     response_model=OauthTokenResponse,

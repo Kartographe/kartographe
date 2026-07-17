@@ -14,7 +14,7 @@ router = APIRouter(prefix="/password")
 
 @router.post(
     "/forgot",
-    operation_id="api.auth.password.forgot",
+    operation_id="api_auth_password_forgot",
     summary="Request a password-reset email",
     description="Send a password-reset link to the given email. Always succeeds so registered emails aren't revealed.",
     response_model=SuccessResponse,
@@ -27,7 +27,7 @@ def forgot_password(form: ForgotPasswordForm, manager: AuthManagerDep) -> Succes
 
 @router.post(
     "/reset",
-    operation_id="api.auth.password.reset",
+    operation_id="api_auth_password_reset",
     summary="Set a new password from a reset link",
     description="Set a new password using the token from the reset email. Invalidates all existing sessions.",
     response_model=SuccessResponse,

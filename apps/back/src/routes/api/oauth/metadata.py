@@ -21,7 +21,7 @@ def _base_url(request: Request) -> str:
 
 @router.get(
     "/.well-known/oauth-authorization-server",
-    operation_id="api.oauth.metadata.authorizationServer",
+    operation_id="api_oauth_metadata_authorizationServer",
     summary="OAuth authorization server metadata",
     description="RFC 8414 discovery document describing the OAuth endpoints and capabilities.",
     response_model=OauthMetadataDocument,
@@ -61,7 +61,7 @@ router.add_api_route(
     "/.well-known/oauth-protected-resource",
     protected_resource,
     methods=["GET"],
-    operation_id="api.oauth.metadata.protectedResource",
+    operation_id="api_oauth_metadata_protectedResource",
     summary="OAuth protected resource metadata",
     response_model=OauthMetadataDocument,
     tags=["api.oauth.metadata"],

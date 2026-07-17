@@ -58,7 +58,7 @@ def _invitation_item(invitation: AccountUserInvitation) -> AccountInvitationItem
 
 @router.get(
     "",
-    operation_id="api.accounts.invitations.list",
+    operation_id="api_accounts_invitations_list",
     summary="List account invitations",
     description="List all invitations of the account (pending and resolved). Owners/administrators only.",
     response_model=ListingResponse[AccountInvitationItem],
@@ -73,7 +73,7 @@ def list_invitations(
 
 @router.post(
     "",
-    operation_id="api.accounts.invitations.create",
+    operation_id="api_accounts_invitations_create",
     summary="Invite members",
     description=(
         "Invite one or more emails to the account with a single role. Emails already "
@@ -97,7 +97,7 @@ def create_invitations(
 
 @router.get(
     "/{invitation_id}",
-    operation_id="api.accounts.invitations.get",
+    operation_id="api_accounts_invitations_get",
     summary="Get an invitation",
     description="Return a single invitation of the account.",
     response_model=ItemResponse[AccountInvitationItem],
@@ -109,7 +109,7 @@ def get_invitation(invitation: CurrentAccountInvitationDep) -> ItemResponse[Acco
 
 @router.put(
     "/{invitation_id}",
-    operation_id="api.accounts.invitations.update",
+    operation_id="api_accounts_invitations_update",
     summary="Change an invitation's role",
     description="Change the role of a pending invitation. Only an owner can set the owner role.",
     response_model=ItemResponse[AccountInvitationItem],
@@ -127,7 +127,7 @@ def update_invitation(
 
 @router.delete(
     "/{invitation_id}",
-    operation_id="api.accounts.invitations.cancel",
+    operation_id="api_accounts_invitations_cancel",
     summary="Cancel an invitation",
     description="Cancel a pending invitation. Returns the cancelled invitation.",
     response_model=ItemResponse[AccountInvitationItem],
@@ -142,7 +142,7 @@ def cancel_invitation(
 
 @router.post(
     "/{invitation_id}/resend",
-    operation_id="api.accounts.invitations.resend",
+    operation_id="api_accounts_invitations_resend",
     summary="Resend an invitation",
     description=(
         "Re-send a standby or expired invitation with a fresh 7-day expiry (same link). "

@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post(
     "/refresh",
-    operation_id="api.auth.refresh",
+    operation_id="api_auth_refresh",
     summary="Exchange a refresh token for a new token pair",
     description="Trade a valid refresh token for a fresh access + refresh pair. Call it when the access token has expired.",
     response_model=TokenResponse,

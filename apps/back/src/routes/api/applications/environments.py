@@ -46,7 +46,7 @@ _DEV_LEAD = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.environments.list",
+    operation_id="api_applications_environments_list",
     summary="List environments",
     description="List the environments of an application, most recent first. Any member may read.",
     response_model=ListingResponse[ApplicationEnvironmentItem],
@@ -63,7 +63,7 @@ def list_environments(
 
 @router.post(
     "",
-    operation_id="api.applications.environments.create",
+    operation_id="api_applications_environments_create",
     summary="Create an environment",
     description=(
         "Create a deployment environment. It starts as a draft owned by the caller. "
@@ -94,7 +94,7 @@ def create_environment(
 
 @router.get(
     "/{environment_id}",
-    operation_id="api.applications.environments.get",
+    operation_id="api_applications_environments_get",
     summary="Get an environment",
     description="Return a single environment of the application. Any member may read.",
     response_model=ItemResponse[ApplicationEnvironmentItem],
@@ -108,7 +108,7 @@ def get_environment(
 
 @router.patch(
     "/{environment_id}",
-    operation_id="api.applications.environments.update",
+    operation_id="api_applications_environments_update",
     summary="Update an environment",
     description=(
         "Partially update an environment (type, title, description, url, status). "
@@ -129,7 +129,7 @@ def update_environment(
 
 @router.delete(
     "/{environment_id}",
-    operation_id="api.applications.environments.delete",
+    operation_id="api_applications_environments_delete",
     summary="Delete an environment",
     description=(
         "Soft-delete an environment; its deployment records are soft-deleted as well. "

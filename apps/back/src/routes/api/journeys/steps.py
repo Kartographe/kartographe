@@ -51,7 +51,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.steps.list",
+    operation_id="api_journeys_scenarios_steps_list",
     summary="List steps",
     description=(
         "List the steps of a scenario, in insertion order. Any member may read. "
@@ -74,7 +74,7 @@ def list_steps(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.steps.create",
+    operation_id="api_journeys_scenarios_steps_create",
     summary="Create a step",
     description=(
         "Insert a step in the scenario. A parent step (if any) must belong to the same scenario, "
@@ -108,7 +108,7 @@ def create_step(
 
 @router.get(
     "/{step_id}",
-    operation_id="api.journeys.scenarios.steps.get",
+    operation_id="api_journeys_scenarios_steps_get",
     summary="Get a step",
     description="Return a single step of the scenario. Any member may read.",
     response_model=ItemResponse[JourneyScenarioStepItem],
@@ -122,7 +122,7 @@ def get_step(
 
 @router.patch(
     "/{step_id}",
-    operation_id="api.journeys.scenarios.steps.update",
+    operation_id="api_journeys_scenarios_steps_update",
     summary="Update a step",
     description=(
         "Partially update a step (parent, title, description, action, optional, parameters). "
@@ -144,7 +144,7 @@ def update_step(
 
 @router.delete(
     "/{step_id}",
-    operation_id="api.journeys.scenarios.steps.delete",
+    operation_id="api_journeys_scenarios_steps_delete",
     summary="Delete a step",
     description=(
         "Soft-delete a step and its whole subtree (descendant steps, files and assertions). "

@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.get(
     "/authorize",
-    operation_id="api.oauth.authorize",
+    operation_id="api_oauth_authorize",
     summary="Authorization endpoint (redirects to the consent screen)",
     description="Start the authorization-code + PKCE flow, then redirect the browser to the SPA consent page.",
     response_model=None,

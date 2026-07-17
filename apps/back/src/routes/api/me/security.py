@@ -34,7 +34,7 @@ _BAD_REQUEST = {400: {"model": ErrorResponse, "description": "Invalid input"}}
 
 @router.get(
     "",
-    operation_id="api.me.security.overview",
+    operation_id="api_me_security_overview",
     summary="Get the account's security overview",
     description="Return whether a password, Google link, authenticator, recovery codes and security keys are set.",
     response_model=ItemResponse[SecurityOverviewItem],
@@ -46,7 +46,7 @@ def overview(user: CurrentUserDep, manager: MeSecurityManagerDep) -> ItemRespons
 
 @router.post(
     "/password",
-    operation_id="api.me.security.password.create",
+    operation_id="api_me_security_password_create",
     summary="Set a password on the account",
     description="Set a password on an account that doesn't have one yet (e.g. created via Google).",
     response_model=SuccessResponse,
@@ -59,7 +59,7 @@ def create_password(form: CreatePasswordForm, user: CurrentUserDep, manager: MeS
 
 @router.patch(
     "/password",
-    operation_id="api.me.security.password.update",
+    operation_id="api_me_security_password_update",
     summary="Change the account password",
     description="Change the password. Requires the current password and signs out other sessions.",
     response_model=SuccessResponse,
@@ -72,7 +72,7 @@ def update_password(form: UpdatePasswordForm, user: CurrentUserDep, manager: MeS
 
 @router.get(
     "/otp",
-    operation_id="api.me.security.otp.list",
+    operation_id="api_me_security_otp_list",
     summary="List active authenticators",
     description="List the authenticators (TOTP) currently active on the account.",
     response_model=ListingResponse[OtpMethodItem],
@@ -84,7 +84,7 @@ def list_otp(user: CurrentUserDep, manager: MeSecurityManagerDep) -> ListingResp
 
 @router.post(
     "/otp",
-    operation_id="api.me.security.otp.generate",
+    operation_id="api_me_security_otp_generate",
     summary="Start authenticator (TOTP) setup",
     description="Generate a new authenticator secret and its provisioning URI (render as a QR code). Confirm it with a code to activate.",
     response_model=ItemResponse[OtpProvisioningItem],
@@ -96,7 +96,7 @@ def generate_otp(user: CurrentUserDep, manager: MeSecurityManagerDep) -> ItemRes
 
 @router.post(
     "/otp/{otp_id}/activate",
-    operation_id="api.me.security.otp.activate",
+    operation_id="api_me_security_otp_activate",
     summary="Confirm and activate an authenticator",
     description="Confirm the pending authenticator with a live 6-digit code. Returns a fresh set of one-time recovery codes.",
     response_model=ItemResponse[RecoveryCodesItem],
@@ -110,7 +110,7 @@ def activate_otp(
 
 @router.delete(
     "/otp/{otp_id}",
-    operation_id="api.me.security.otp.disable",
+    operation_id="api_me_security_otp_disable",
     summary="Remove an authenticator",
     description="Disable a registered authenticator.",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -122,7 +122,7 @@ def disable_otp(otp_id: uuid.UUID, user: CurrentUserDep, manager: MeSecurityMana
 
 @router.post(
     "/recovery-codes",
-    operation_id="api.me.security.recoveryCodes.regenerate",
+    operation_id="api_me_security_recoveryCodes_regenerate",
     summary="Regenerate recovery codes",
     description="Replace all recovery codes with a fresh set. The old codes stop working immediately.",
     response_model=ItemResponse[RecoveryCodesItem],
@@ -134,7 +134,7 @@ def regenerate_recovery_codes(user: CurrentUserDep, manager: MeSecurityManagerDe
 
 @router.get(
     "/u2f",
-    operation_id="api.me.security.u2f.list",
+    operation_id="api_me_security_u2f_list",
     summary="List registered security keys",
     description="List the WebAuthn security keys registered on the account.",
     response_model=ListingResponse[SecurityKeyItem],
@@ -146,7 +146,7 @@ def list_security_keys(user: CurrentUserDep, manager: MeSecurityManagerDep) -> L
 
 @router.post(
     "/u2f/options",
-    operation_id="api.me.security.u2f.options",
+    operation_id="api_me_security_u2f_options",
     summary="Get security-key registration options",
     description="Start registering a security key: returns WebAuthn options for `navigator.credentials.create` plus a binding token.",
     response_model=ItemResponse[U2FRegistrationOptionsItem],
@@ -158,7 +158,7 @@ def u2f_registration_options(user: CurrentUserDep, manager: MeSecurityManagerDep
 
 @router.post(
     "/u2f",
-    operation_id="api.me.security.u2f.register",
+    operation_id="api_me_security_u2f_register",
     summary="Register a security key",
     description="Finish registering a security key with the browser's attestation and an optional label.",
     response_model=ItemResponse[SecurityKeyItem],
@@ -176,7 +176,7 @@ def register_security_key(
 
 @router.patch(
     "/u2f/{u2f_id}",
-    operation_id="api.me.security.u2f.rename",
+    operation_id="api_me_security_u2f_rename",
     summary="Rename a security key",
     description="Change the label of a registered security key.",
     response_model=ItemResponse[SecurityKeyItem],
@@ -190,7 +190,7 @@ def rename_security_key(
 
 @router.delete(
     "/u2f/{u2f_id}",
-    operation_id="api.me.security.u2f.disable",
+    operation_id="api_me_security_u2f_disable",
     summary="Remove a security key",
     description="Unregister a security key.",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -202,7 +202,7 @@ def disable_security_key(u2f_id: uuid.UUID, user: CurrentUserDep, manager: MeSec
 
 @router.get(
     "/logs",
-    operation_id="api.me.security.logs.list",
+    operation_id="api_me_security_logs_list",
     summary="List recent authentication activity",
     description="Return the most recent authentication-log entries for the account (newest first).",
     response_model=ListingResponse[SecurityLogItem],

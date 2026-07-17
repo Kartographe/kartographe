@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post(
     "/register",
-    operation_id="api.oauth.register",
+    operation_id="api_oauth_register",
     summary="Register an OAuth client",
     description="Dynamic client registration (RFC 7591). Returns the client id (and secret for confidential clients).",
     response_model=OauthClientRegistrationResponse,

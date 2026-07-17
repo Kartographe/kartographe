@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post(
     "/register",
-    operation_id="api.auth.register",
+    operation_id="api_auth_register",
     summary="Create a new account",
     description=(
         "Register a new email/password account. Always succeeds (a taken email "

@@ -31,7 +31,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Database not found"}
 
 @router.get(
     "",
-    operation_id="api.databases.comments.list",
+    operation_id="api_databases_comments_list",
     summary="List database comments",
     description="List the root comments on a database, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -49,7 +49,7 @@ def list_database_comments(
 
 @router.post(
     "",
-    operation_id="api.databases.comments.create",
+    operation_id="api_databases_comments_create",
     summary="Comment on a database",
     description="Post a comment on a database. Any member may post.",
     response_model=ItemResponse[CommentItem],

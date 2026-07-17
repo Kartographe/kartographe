@@ -49,7 +49,7 @@ _CONTRIBUTOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.roles.list",
+    operation_id="api_applications_roles_list",
     summary="List roles",
     description="List the authorization roles of an application, most recent first. Any member may read.",
     response_model=ListingResponse[ApplicationRoleItem],
@@ -66,7 +66,7 @@ def list_roles(
 
 @router.post(
     "",
-    operation_id="api.applications.roles.create",
+    operation_id="api_applications_roles_create",
     summary="Create a role",
     description="Create an authorization role. It starts as a draft owned by the caller. Contributors only.",
     response_model=ItemResponse[ApplicationRoleItem],
@@ -86,7 +86,7 @@ def create_role(
 
 @router.get(
     "/{role_id}",
-    operation_id="api.applications.roles.get",
+    operation_id="api_applications_roles_get",
     summary="Get a role",
     description="Return a single role of the application. Any member may read.",
     response_model=ItemResponse[ApplicationRoleItem],
@@ -100,7 +100,7 @@ def get_role(
 
 @router.patch(
     "/{role_id}",
-    operation_id="api.applications.roles.update",
+    operation_id="api_applications_roles_update",
     summary="Update a role",
     description="Partially update a role (title, description, status). Contributors only.",
     response_model=ItemResponse[ApplicationRoleItem],
@@ -118,7 +118,7 @@ def update_role(
 
 @router.delete(
     "/{role_id}",
-    operation_id="api.applications.roles.delete",
+    operation_id="api_applications_roles_delete",
     summary="Delete a role",
     description="Soft-delete a role and detach it from every route that referenced it. Contributors only.",
     status_code=status.HTTP_204_NO_CONTENT,

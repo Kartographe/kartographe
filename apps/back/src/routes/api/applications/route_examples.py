@@ -48,7 +48,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.routes.examples.list",
+    operation_id="api_applications_routes_examples_list",
     summary="List route examples",
     description="List the examples of a route, in insertion order. Any member may read.",
     response_model=ListingResponse[ApplicationRouteExampleItem],
@@ -65,7 +65,7 @@ def list_examples(
 
 @router.post(
     "",
-    operation_id="api.applications.routes.examples.create",
+    operation_id="api_applications_routes_examples_create",
     summary="Create a route example",
     description=(
         "Create a request/response example. The referenced response must belong to the route. "
@@ -95,7 +95,7 @@ def create_example(
 
 @router.get(
     "/{example_id}",
-    operation_id="api.applications.routes.examples.get",
+    operation_id="api_applications_routes_examples_get",
     summary="Get a route example",
     description="Return a single example of the route. Any member may read.",
     response_model=ItemResponse[ApplicationRouteExampleItem],
@@ -109,7 +109,7 @@ def get_example(
 
 @router.patch(
     "/{example_id}",
-    operation_id="api.applications.routes.examples.update",
+    operation_id="api_applications_routes_examples_update",
     summary="Update a route example",
     description=(
         "Partially update an example. A changed response reference must belong to the route. "
@@ -131,7 +131,7 @@ def update_example(
 
 @router.delete(
     "/{example_id}",
-    operation_id="api.applications.routes.examples.delete",
+    operation_id="api_applications_routes_examples_delete",
     summary="Delete a route example",
     description="Soft-delete an example. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

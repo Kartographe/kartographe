@@ -56,7 +56,7 @@ def _file_item(
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.steps.files.list",
+    operation_id="api_journeys_scenarios_steps_files_list",
     summary="List step files",
     description="List the files attached to a step, most recent first. Any member may read.",
     response_model=ListingResponse[JourneyScenarioStepFileItem],
@@ -73,7 +73,7 @@ def list_files(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.steps.files.create",
+    operation_id="api_journeys_scenarios_steps_files_create",
     summary="Upload a step file",
     description=(
         "Upload a file (multipart, field `file`) and attach it to the step. Editing roles only."
@@ -100,7 +100,7 @@ def create_file(
 
 @router.get(
     "/{step_file_id}",
-    operation_id="api.journeys.scenarios.steps.files.get",
+    operation_id="api_journeys_scenarios_steps_files_get",
     summary="Get a step file",
     description=(
         "Return a single file of the step, including a time-limited `downloadUrl`. "
@@ -119,7 +119,7 @@ def get_file(
 
 @router.patch(
     "/{step_file_id}",
-    operation_id="api.journeys.scenarios.steps.files.update",
+    operation_id="api_journeys_scenarios_steps_files_update",
     summary="Update a step file",
     description="Partially update a file's metadata (type, name, description). Editing roles only.",
     response_model=ItemResponse[JourneyScenarioStepFileItem],
@@ -137,7 +137,7 @@ def update_file(
 
 @router.post(
     "/{step_file_id}/activate",
-    operation_id="api.journeys.scenarios.steps.files.activate",
+    operation_id="api_journeys_scenarios_steps_files_activate",
     summary="Restore a step file",
     description="Restore an archived file to the uploaded state. Editing roles only.",
     response_model=ItemResponse[JourneyScenarioStepFileItem],
@@ -154,7 +154,7 @@ def activate_file(
 
 @router.post(
     "/{step_file_id}/archive",
-    operation_id="api.journeys.scenarios.steps.files.archive",
+    operation_id="api_journeys_scenarios_steps_files_archive",
     summary="Archive a step file",
     description="Set the file status to archived. Editing roles only.",
     response_model=ItemResponse[JourneyScenarioStepFileItem],
@@ -171,7 +171,7 @@ def archive_file(
 
 @router.delete(
     "/{step_file_id}",
-    operation_id="api.journeys.scenarios.steps.files.delete",
+    operation_id="api_journeys_scenarios_steps_files_delete",
     summary="Delete a step file",
     description="Soft-delete a file. Editing roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

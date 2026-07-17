@@ -45,7 +45,7 @@ _DATA = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.versions.list",
+    operation_id="api_databases_versions_list",
     summary="List database versions",
     description="List the versions of a database, most recent first. Any member may read.",
     response_model=ListingResponse[DatabaseVersionItem],
@@ -62,7 +62,7 @@ def list_versions(
 
 @router.post(
     "",
-    operation_id="api.databases.versions.create",
+    operation_id="api_databases_versions_create",
     summary="Create a database version",
     description="Create a version. It starts as a draft. Data roles only.",
     response_model=ItemResponse[DatabaseVersionItem],
@@ -81,7 +81,7 @@ def create_version(
 
 @router.get(
     "/{database_version_id}",
-    operation_id="api.databases.versions.get",
+    operation_id="api_databases_versions_get",
     summary="Get a database version",
     description="Return a single version of the database. Any member may read.",
     response_model=ItemResponse[DatabaseVersionItem],
@@ -95,7 +95,7 @@ def get_version(
 
 @router.patch(
     "/{database_version_id}",
-    operation_id="api.databases.versions.update",
+    operation_id="api_databases_versions_update",
     summary="Update a database version",
     description=(
         "Partially update a version (version tuple, status). Data roles only.\n\n"
@@ -118,7 +118,7 @@ def update_version(
 
 @router.delete(
     "/{database_version_id}",
-    operation_id="api.databases.versions.delete",
+    operation_id="api_databases_versions_delete",
     summary="Delete a database version",
     description=(
         "Soft-delete a version; its tables and columns are soft-deleted as well. Data roles only."

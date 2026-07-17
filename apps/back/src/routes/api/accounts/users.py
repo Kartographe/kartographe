@@ -51,7 +51,7 @@ def _member_item(account_user: AccountUser, user: User) -> AccountUserItem:
 
 @router.get(
     "",
-    operation_id="api.accounts.users.list",
+    operation_id="api_accounts_users_list",
     summary="List account members",
     description="List every member of the account with their role, type and status. Any member may read.",
     response_model=ListingResponse[AccountUserItem],
@@ -68,7 +68,7 @@ def list_members(
 
 @router.get(
     "/{account_user_id}",
-    operation_id="api.accounts.users.get",
+    operation_id="api_accounts_users_get",
     summary="Get an account member",
     description="Return a single member of the account.",
     response_model=ItemResponse[AccountUserItem],
@@ -82,7 +82,7 @@ def get_member(
 
 @router.patch(
     "/{account_user_id}",
-    operation_id="api.accounts.users.update",
+    operation_id="api_accounts_users_update",
     summary="Change a member's role",
     description=(
         "Change a member's role. Owners/administrators only. You cannot change your "
@@ -103,7 +103,7 @@ def update_member_role(
 
 @router.delete(
     "/{account_user_id}",
-    operation_id="api.accounts.users.delete",
+    operation_id="api_accounts_users_delete",
     summary="Remove a member",
     description=(
         "Remove a member from the account. Owners/administrators only. You cannot "
@@ -122,7 +122,7 @@ def delete_member(
 
 @router.post(
     "/{account_user_id}/leave",
-    operation_id="api.accounts.users.leave",
+    operation_id="api_accounts_users_leave",
     summary="Force a member out",
     description=(
         "Deactivate a member's seat, keeping the row for audit. Owners/administrators "

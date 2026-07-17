@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post(
     "/login",
-    operation_id="api.auth.login",
+    operation_id="api_auth_login",
     summary="Sign in with email and password",
     description=(
         "Authenticate with email and password. On success returns an access + "

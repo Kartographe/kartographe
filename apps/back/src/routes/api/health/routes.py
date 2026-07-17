@@ -12,7 +12,7 @@ router = APIRouter(prefix="/health", tags=["api.health"])
 
 @router.get(
     "",
-    operation_id="api.health.check",
+    operation_id="api_health_check",
     summary="Liveness probe",
     description=(
         "Lightweight liveness probe for monitoring tooling (load balancers, "

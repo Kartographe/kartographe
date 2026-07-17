@@ -48,7 +48,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.routes.responses.list",
+    operation_id="api_applications_routes_responses_list",
     summary="List route responses",
     description="List the documented responses of a route, in insertion order. Any member may read.",
     response_model=ListingResponse[ApplicationRouteResponseItem],
@@ -65,7 +65,7 @@ def list_responses(
 
 @router.post(
     "",
-    operation_id="api.applications.routes.responses.create",
+    operation_id="api_applications_routes_responses_create",
     summary="Create a route response",
     description="Document a response of the route (status code, format, body schema). Dev roles only.",
     response_model=ItemResponse[ApplicationRouteResponseItem],
@@ -86,7 +86,7 @@ def create_response(
 
 @router.get(
     "/{response_id}",
-    operation_id="api.applications.routes.responses.get",
+    operation_id="api_applications_routes_responses_get",
     summary="Get a route response",
     description="Return a single response of the route. Any member may read.",
     response_model=ItemResponse[ApplicationRouteResponseItem],
@@ -100,7 +100,7 @@ def get_response(
 
 @router.patch(
     "/{response_id}",
-    operation_id="api.applications.routes.responses.update",
+    operation_id="api_applications_routes_responses_update",
     summary="Update a route response",
     description="Partially update a response (status code, format, body schema). Dev roles only.",
     response_model=ItemResponse[ApplicationRouteResponseItem],
@@ -118,7 +118,7 @@ def update_response(
 
 @router.delete(
     "/{response_id}",
-    operation_id="api.applications.routes.responses.delete",
+    operation_id="api_applications_routes_responses_delete",
     summary="Delete a route response",
     description="Soft-delete a response and the examples that reference it. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

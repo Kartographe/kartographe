@@ -38,7 +38,7 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 
 @router.get(
     "",
-    operation_id="api.tags.list",
+    operation_id="api_tags_list",
     summary="List tags",
     description="List the tags of the account, optionally filtered by entity type. Any member may read.",
     response_model=ListingResponse[TagItem],
@@ -56,7 +56,7 @@ def list_tags(
 
 @router.post(
     "",
-    operation_id="api.tags.create",
+    operation_id="api_tags_create",
     summary="Create a tag",
     description="Create a tag for a given entity type. Any member may create.",
     response_model=ItemResponse[TagItem],
@@ -81,7 +81,7 @@ def create_tag(
 
 @router.get(
     "/{tag_id}",
-    operation_id="api.tags.get",
+    operation_id="api_tags_get",
     summary="Get a tag",
     description="Return a single tag of the account. Any member may read.",
     response_model=ItemResponse[TagItem],
@@ -93,7 +93,7 @@ def get_tag(_: CurrentAccountUserDep, tag: CurrentTagDep) -> ItemResponse[TagIte
 
 @router.patch(
     "/{tag_id}",
-    operation_id="api.tags.update",
+    operation_id="api_tags_update",
     summary="Update a tag",
     description="Partially update a tag (label, colors). Owners and administrators only.",
     response_model=ItemResponse[TagItem],
@@ -111,7 +111,7 @@ def update_tag(
 
 @router.delete(
     "/{tag_id}",
-    operation_id="api.tags.delete",
+    operation_id="api_tags_delete",
     summary="Delete a tag",
     description="Soft-delete a tag and detach it from every entity that carried it. Owners and administrators only.",
     status_code=status.HTTP_204_NO_CONTENT,

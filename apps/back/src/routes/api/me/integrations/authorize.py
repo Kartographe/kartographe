@@ -39,7 +39,7 @@ def _to_item(request: OauthAuthorizationRequest) -> MeIntegrationAuthorizationRe
 
 @router.get(
     "/authorize/by-user-code/{user_code}",
-    operation_id="api.me.integrations.authorize.byUserCode",
+    operation_id="api_me_integrations_authorize_byUserCode",
     summary="Look up a pending device-flow request by its user code",
     description="Resolve the pending authorization behind a device-flow user code, for the consent screen.",
     response_model=ItemResponse[MeIntegrationAuthorizationRequestItem],
@@ -56,7 +56,7 @@ def by_user_code(
 
 @router.get(
     "/authorize/{request_id}",
-    operation_id="api.me.integrations.authorize.get",
+    operation_id="api_me_integrations_authorize_get",
     summary="Get a pending authorization request",
     description="Fetch the details shown on the consent screen for an authorization-code request.",
     response_model=ItemResponse[MeIntegrationAuthorizationRequestItem],
@@ -71,7 +71,7 @@ def get_request(
 
 @router.post(
     "/authorize/{request_id}/approve",
-    operation_id="api.me.integrations.authorize.approve",
+    operation_id="api_me_integrations_authorize_approve",
     summary="Approve an authorization request",
     description="Grant the client the chosen scope. Returns a redirect URL for the auth-code flow, or null for device.",
     response_model=ItemResponse[MeIntegrationAuthorizeResponse],
@@ -89,7 +89,7 @@ def approve(
 
 @router.post(
     "/authorize/{request_id}/deny",
-    operation_id="api.me.integrations.authorize.deny",
+    operation_id="api_me_integrations_authorize_deny",
     summary="Deny an authorization request",
     description="Refuse the client. Returns a redirect URL (with `error=access_denied`) for the auth-code flow, else null.",
     response_model=ItemResponse[MeIntegrationAuthorizeResponse],

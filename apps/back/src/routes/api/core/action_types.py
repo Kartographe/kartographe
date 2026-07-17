@@ -21,7 +21,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Action type not foun
 
 @router.get(
     "",
-    operation_id="api.core.actionTypes.list",
+    operation_id="api_core_actionTypes_list",
     summary="List action types",
     description="List every available step action and the shape of its parameters.",
     response_model=ListingResponse[ActionTypeItem],
@@ -33,7 +33,7 @@ def list_action_types(_: CurrentUserDep, manager: CoreManagerDep) -> ListingResp
 
 @router.get(
     "/{action_type_id}",
-    operation_id="api.core.actionTypes.get",
+    operation_id="api_core_actionTypes_get",
     summary="Get an action type",
     description="Return a single action type and the shape of its parameters.",
     response_model=ItemResponse[ActionTypeItem],

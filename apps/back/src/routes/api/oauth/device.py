@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post(
     "/device/authorize",
-    operation_id="api.oauth.device.authorize",
+    operation_id="api_oauth_device_authorize",
     summary="Device authorization endpoint",
     description="Start the device flow (RFC 8628). Returns a device code and a user code to enter at the verification URI.",
     response_model=OauthDeviceAuthorizationResponse,

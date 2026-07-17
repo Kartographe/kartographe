@@ -50,7 +50,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.journeys.list",
+    operation_id="api_journeys_list",
     summary="List journeys",
     description=(
         "List the journeys of the account. Filter by status and/or type (repeat the query param "
@@ -93,7 +93,7 @@ def list_journeys(
 
 @router.post(
     "",
-    operation_id="api.journeys.create",
+    operation_id="api_journeys_create",
     summary="Create a journey",
     description=(
         "Create a journey. It starts as a draft owned by the caller. Any referenced persona "
@@ -124,7 +124,7 @@ def create_journey(
 
 @router.get(
     "/{journey_id}",
-    operation_id="api.journeys.get",
+    operation_id="api_journeys_get",
     summary="Get a journey",
     description="Return a single journey of the account. Any member may read.",
     response_model=ItemResponse[JourneyItem],
@@ -138,7 +138,7 @@ def get_journey(
 
 @router.patch(
     "/{journey_id}",
-    operation_id="api.journeys.update",
+    operation_id="api_journeys_update",
     summary="Update a journey",
     description=(
         "Partially update a journey (type, title, description, personas, status). Any referenced persona "
@@ -160,7 +160,7 @@ def update_journey(
 
 @router.delete(
     "/{journey_id}",
-    operation_id="api.journeys.delete",
+    operation_id="api_journeys_delete",
     summary="Delete a journey",
     description=(
         "Soft-delete a journey; its scenarios, steps, files, assertions and feature links are "

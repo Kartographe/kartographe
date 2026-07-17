@@ -59,7 +59,7 @@ _DATA_DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.migrations.columns.list",
+    operation_id="api_databases_migrations_columns_list",
     summary="List migration columns",
     description="List the column steps of a migration, in insertion order. Any member may read.",
     response_model=ListingResponse[DatabaseMigrationColumnItem],
@@ -79,7 +79,7 @@ def list_migration_columns(
 
 @router.post(
     "",
-    operation_id="api.databases.migrations.columns.create",
+    operation_id="api_databases_migrations_columns_create",
     summary="Create a migration column",
     description=(
         "Add a column step to the migration. Source endpoints must belong to the migration's "
@@ -113,7 +113,7 @@ def create_migration_column(
 
 @router.get(
     "/{database_migration_column_id}",
-    operation_id="api.databases.migrations.columns.get",
+    operation_id="api_databases_migrations_columns_get",
     summary="Get a migration column",
     description="Return a single column step of the migration. Any member may read.",
     response_model=ItemResponse[DatabaseMigrationColumnItem],
@@ -127,7 +127,7 @@ def get_migration_column(
 
 @router.patch(
     "/{database_migration_column_id}",
-    operation_id="api.databases.migrations.columns.update",
+    operation_id="api_databases_migrations_columns_update",
     summary="Update a migration column",
     description=(
         "Partially update a column step (type, source and destination endpoints, transformation "
@@ -149,7 +149,7 @@ def update_migration_column(
 
 @router.post(
     "/{database_migration_column_id}/draft",
-    operation_id="api.databases.migrations.columns.draft",
+    operation_id="api_databases_migrations_columns_draft",
     summary="Move a migration column back to draft",
     description="Set the column step status back to draft. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationColumnItem],
@@ -166,7 +166,7 @@ def draft_migration_column(
 
 @router.post(
     "/{database_migration_column_id}/to_be_confirmed",
-    operation_id="api.databases.migrations.columns.toBeConfirmed",
+    operation_id="api_databases_migrations_columns_toBeConfirmed",
     summary="Submit a migration column for confirmation",
     description="Set the column step status to awaiting confirmation. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationColumnItem],
@@ -183,7 +183,7 @@ def to_be_confirmed_migration_column(
 
 @router.post(
     "/{database_migration_column_id}/confirmed",
-    operation_id="api.databases.migrations.columns.confirmed",
+    operation_id="api_databases_migrations_columns_confirmed",
     summary="Confirm a migration column",
     description="Set the column step status to confirmed. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationColumnItem],
@@ -200,7 +200,7 @@ def confirm_migration_column(
 
 @router.delete(
     "/{database_migration_column_id}",
-    operation_id="api.databases.migrations.columns.delete",
+    operation_id="api_databases_migrations_columns_delete",
     summary="Delete a migration column",
     description="Soft-delete a column step of the migration. Data roles and developers only.",
     status_code=status.HTTP_204_NO_CONTENT,

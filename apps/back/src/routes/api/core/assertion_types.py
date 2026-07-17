@@ -21,7 +21,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Assertion type not f
 
 @router.get(
     "",
-    operation_id="api.core.assertionTypes.list",
+    operation_id="api_core_assertionTypes_list",
     summary="List assertion types",
     description="List every available step assertion and the shape of its parameters.",
     response_model=ListingResponse[AssertionTypeItem],
@@ -35,7 +35,7 @@ def list_assertion_types(
 
 @router.get(
     "/{assertion_type_id}",
-    operation_id="api.core.assertionTypes.get",
+    operation_id="api_core_assertionTypes_get",
     summary="Get an assertion type",
     description="Return a single assertion type and the shape of its parameters.",
     response_model=ItemResponse[AssertionTypeItem],

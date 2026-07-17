@@ -38,7 +38,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account or comment n
 
 @router.get(
     "",
-    operation_id="api.comments.list",
+    operation_id="api_comments_list",
     summary="List comments",
     description=(
         "List the comments of the account, most recent first. Filter by entity type, entity id, "
@@ -87,7 +87,7 @@ def list_comments(
 
 @router.get(
     "/{comment_id}",
-    operation_id="api.comments.get",
+    operation_id="api_comments_get",
     summary="Get a comment",
     description="Return a single comment of the account. Any member may read.",
     response_model=ItemResponse[CommentItem],
@@ -99,7 +99,7 @@ def get_comment(_: CurrentAccountUserDep, comment: CurrentCommentDep) -> ItemRes
 
 @router.patch(
     "/{comment_id}",
-    operation_id="api.comments.update",
+    operation_id="api_comments_update",
     summary="Edit a comment",
     description="Edit a comment's content. The author or an owner/administrator only.",
     response_model=ItemResponse[CommentItem],
@@ -114,7 +114,7 @@ def update_comment(
 
 @router.post(
     "/{comment_id}/remove",
-    operation_id="api.comments.remove",
+    operation_id="api_comments_remove",
     summary="Remove a comment",
     description=(
         "Mark a comment as removed and drop its content, keeping the thread. "
@@ -132,7 +132,7 @@ def remove_comment(
 
 @router.delete(
     "/{comment_id}",
-    operation_id="api.comments.delete",
+    operation_id="api_comments_delete",
     summary="Delete a comment",
     description=(
         "Soft-delete a comment and its direct replies. The author or an owner/administrator only."
@@ -146,7 +146,7 @@ def delete_comment(comment: ModifiableCommentDep, manager: CommentManagerDep) ->
 
 @router.get(
     "/{comment_id}/replies",
-    operation_id="api.comments.replies.list",
+    operation_id="api_comments_replies_list",
     summary="List replies",
     description="List the direct replies to a comment, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -161,7 +161,7 @@ def list_replies(
 
 @router.post(
     "/{comment_id}/replies",
-    operation_id="api.comments.replies.create",
+    operation_id="api_comments_replies_create",
     summary="Reply to a comment",
     description="Post a reply to a comment. Any member may reply.",
     response_model=ItemResponse[CommentItem],

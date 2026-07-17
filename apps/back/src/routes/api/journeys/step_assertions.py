@@ -52,7 +52,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.steps.assertions.list",
+    operation_id="api_journeys_scenarios_steps_assertions_list",
     summary="List assertions",
     description="List the assertions of a step, most recent first. Any member may read.",
     response_model=ListingResponse[JourneyScenarioStepAssertionItem],
@@ -71,7 +71,7 @@ def list_assertions(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.steps.assertions.create",
+    operation_id="api_journeys_scenarios_steps_assertions_create",
     summary="Create an assertion",
     description=(
         "Attach an assertion to the step. `parameters` must match the assertion type's schema. "
@@ -96,7 +96,7 @@ def create_assertion(
 
 @router.get(
     "/{assertion_id}",
-    operation_id="api.journeys.scenarios.steps.assertions.get",
+    operation_id="api_journeys_scenarios_steps_assertions_get",
     summary="Get an assertion",
     description="Return a single assertion of the step. Any member may read.",
     response_model=ItemResponse[JourneyScenarioStepAssertionItem],
@@ -110,7 +110,7 @@ def get_assertion(
 
 @router.patch(
     "/{assertion_id}",
-    operation_id="api.journeys.scenarios.steps.assertions.update",
+    operation_id="api_journeys_scenarios_steps_assertions_update",
     summary="Update an assertion",
     description=(
         "Partially update an assertion (assertion type, parameters, status). `parameters` must match the "
@@ -131,7 +131,7 @@ def update_assertion(
 
 @router.delete(
     "/{assertion_id}",
-    operation_id="api.journeys.scenarios.steps.assertions.delete",
+    operation_id="api_journeys_scenarios_steps_assertions_delete",
     summary="Delete an assertion",
     description="Soft-delete an assertion. Editing roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -50,7 +50,7 @@ _CONTRIBUTOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.features.list",
+    operation_id="api_applications_features_list",
     summary="List application features",
     description="List the features attached to an application, most recent first. Any member may read.",
     response_model=ListingResponse[ApplicationFeatureItem],
@@ -67,7 +67,7 @@ def list_application_features(
 
 @router.post(
     "",
-    operation_id="api.applications.features.create",
+    operation_id="api_applications_features_create",
     summary="Attach a feature",
     description=(
         "Attach an existing account feature to the application. The feature must belong to the "
@@ -92,7 +92,7 @@ def create_application_feature(
 
 @router.get(
     "/{application_feature_id}",
-    operation_id="api.applications.features.get",
+    operation_id="api_applications_features_get",
     summary="Get an application feature",
     description="Return a single feature link of the application. Any member may read.",
     response_model=ItemResponse[ApplicationFeatureItem],
@@ -106,7 +106,7 @@ def get_application_feature(
 
 @router.patch(
     "/{application_feature_id}",
-    operation_id="api.applications.features.update",
+    operation_id="api_applications_features_update",
     summary="Update an application feature",
     description=(
         "Update the feature's presence window (start/end dates and versions). Any referenced "
@@ -128,7 +128,7 @@ def update_application_feature(
 
 @router.delete(
     "/{application_feature_id}",
-    operation_id="api.applications.features.delete",
+    operation_id="api_applications_features_delete",
     summary="Detach a feature",
     description="Soft-delete a feature link. Every contributing role may detach features.",
     status_code=status.HTTP_204_NO_CONTENT,

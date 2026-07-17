@@ -55,7 +55,7 @@ def _file_item(feature_file: FeatureFile, *, download_url: str | None = None) ->
 
 @router.get(
     "",
-    operation_id="api.features.files.list",
+    operation_id="api_features_files_list",
     summary="List feature files",
     description="List the files attached to a feature, most recent first. Any member may read.",
     response_model=ListingResponse[FeatureFileItem],
@@ -72,7 +72,7 @@ def list_files(
 
 @router.post(
     "",
-    operation_id="api.features.files.create",
+    operation_id="api_features_files_create",
     summary="Upload a feature file",
     description=(
         "Upload a file (multipart, field `file`) and attach it to the feature. "
@@ -100,7 +100,7 @@ def create_file(
 
 @router.get(
     "/{feature_file_id}",
-    operation_id="api.features.files.get",
+    operation_id="api_features_files_get",
     summary="Get a feature file",
     description=(
         "Return a single file of the feature, including a time-limited `downloadUrl`. "
@@ -119,7 +119,7 @@ def get_file(
 
 @router.patch(
     "/{feature_file_id}",
-    operation_id="api.features.files.update",
+    operation_id="api_features_files_update",
     summary="Update a feature file",
     description=(
         "Partially update a file's metadata (type, name, description). "
@@ -140,7 +140,7 @@ def update_file(
 
 @router.post(
     "/{feature_file_id}/activate",
-    operation_id="api.features.files.activate",
+    operation_id="api_features_files_activate",
     summary="Restore a feature file",
     description="Restore an archived file to the uploaded state. Every contributing role may do this.",
     response_model=ItemResponse[FeatureFileItem],
@@ -157,7 +157,7 @@ def activate_file(
 
 @router.post(
     "/{feature_file_id}/archive",
-    operation_id="api.features.files.archive",
+    operation_id="api_features_files_archive",
     summary="Archive a feature file",
     description="Set the file status to archived. Every contributing role may do this.",
     response_model=ItemResponse[FeatureFileItem],
@@ -174,7 +174,7 @@ def archive_file(
 
 @router.delete(
     "/{feature_file_id}",
-    operation_id="api.features.files.delete",
+    operation_id="api_features_files_delete",
     summary="Delete a feature file",
     description="Soft-delete a file. Every contributing role may delete files.",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -31,7 +31,7 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 
 @router.get(
     "",
-    operation_id="api.accounts.usage.get",
+    operation_id="api_accounts_usage_get",
     summary="Get account usage",
     description=(
         "Return the account's usage: for every tracked entity type, the number of live "

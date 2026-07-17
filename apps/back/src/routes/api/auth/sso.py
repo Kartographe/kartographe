@@ -14,7 +14,7 @@ router = APIRouter(prefix="/sso")
 
 @router.post(
     "/google",
-    operation_id="api.auth.sso.google",
+    operation_id="api_auth_sso_google",
     summary="Sign in with Google",
     description=(
         "Authenticate with a Google ID token obtained in the browser. Creates "

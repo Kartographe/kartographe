@@ -16,7 +16,7 @@ router = APIRouter(prefix="/me/integrations", tags=["api.me.integrations"])
 
 @router.get(
     "/grants",
-    operation_id="api.me.integrations.grants.list",
+    operation_id="api_me_integrations_grants_list",
     summary="List connected integrations",
     description="List the integrations with an active grant on the account.",
     response_model=ListingResponse[MeIntegrationGrantItem],
@@ -39,7 +39,7 @@ def list_grants(user: CurrentUserDep, manager: MeIntegrationsManagerDep) -> List
 
 @router.delete(
     "/grants/{grant_id}",
-    operation_id="api.me.integrations.grants.revoke",
+    operation_id="api_me_integrations_grants_revoke",
     summary="Revoke a connected integration",
     description="Revoke the grant, immediately invalidating the integration's tokens.",
     status_code=status.HTTP_204_NO_CONTENT,

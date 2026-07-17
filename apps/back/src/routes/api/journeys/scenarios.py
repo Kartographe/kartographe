@@ -52,7 +52,7 @@ _EDITOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.list",
+    operation_id="api_journeys_scenarios_list",
     summary="List scenarios",
     description=(
         "List the scenarios of a journey, most recent first. Any member may read. "
@@ -75,7 +75,7 @@ def list_scenarios(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.create",
+    operation_id="api_journeys_scenarios_create",
     summary="Create a scenario",
     description=(
         "Create a scenario. It starts as a draft owned by the caller. Any referenced persona "
@@ -109,7 +109,7 @@ def create_scenario(
 
 @router.get(
     "/{scenario_id}",
-    operation_id="api.journeys.scenarios.get",
+    operation_id="api_journeys_scenarios_get",
     summary="Get a scenario",
     description="Return a single scenario of the journey. Any member may read.",
     response_model=ItemResponse[JourneyScenarioItem],
@@ -123,7 +123,7 @@ def get_scenario(
 
 @router.patch(
     "/{scenario_id}",
-    operation_id="api.journeys.scenarios.update",
+    operation_id="api_journeys_scenarios_update",
     summary="Update a scenario",
     description=(
         "Partially update a scenario (type, personas, title, criticity, description, status). Any "
@@ -145,7 +145,7 @@ def update_scenario(
 
 @router.delete(
     "/{scenario_id}",
-    operation_id="api.journeys.scenarios.delete",
+    operation_id="api_journeys_scenarios_delete",
     summary="Delete a scenario",
     description=(
         "Soft-delete a scenario; its steps, files and assertions are soft-deleted as well. "

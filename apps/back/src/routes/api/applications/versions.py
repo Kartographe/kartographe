@@ -43,7 +43,7 @@ _DEV_LEAD = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.versions.list",
+    operation_id="api_applications_versions_list",
     summary="List versions",
     description="List the versions of an application, most recent first. Any member may read.",
     response_model=ListingResponse[ApplicationVersionItem],
@@ -60,7 +60,7 @@ def list_versions(
 
 @router.post(
     "",
-    operation_id="api.applications.versions.create",
+    operation_id="api_applications_versions_create",
     summary="Create a version",
     description=(
         "Create a version. It starts as a draft owned by the caller. "
@@ -90,7 +90,7 @@ def create_version(
 
 @router.get(
     "/{version_id}",
-    operation_id="api.applications.versions.get",
+    operation_id="api_applications_versions_get",
     summary="Get a version",
     description="Return a single version of the application. Any member may read.",
     response_model=ItemResponse[ApplicationVersionItem],
@@ -104,7 +104,7 @@ def get_version(
 
 @router.patch(
     "/{version_id}",
-    operation_id="api.applications.versions.update",
+    operation_id="api_applications_versions_update",
     summary="Update a version",
     description=(
         "Partially update a version (type, title, version, description, status). "
@@ -125,7 +125,7 @@ def update_version(
 
 @router.delete(
     "/{version_id}",
-    operation_id="api.applications.versions.delete",
+    operation_id="api_applications_versions_delete",
     summary="Delete a version",
     description=(
         "Soft-delete a version; deployment records referencing it are soft-deleted as well. "

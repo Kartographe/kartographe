@@ -17,7 +17,7 @@ _UNAUTHORIZED = {401: {"model": ErrorResponse, "description": "Authentication re
 
 @router.get(
     "",
-    operation_id="api.me.get",
+    operation_id="api_me_get",
     summary="Get the signed-in user's profile",
     description="Return the profile of the currently authenticated user.",
     response_model=ItemResponse[MeItem],
@@ -30,7 +30,7 @@ def get_me(user: CurrentUserDep, manager: MeManagerDep) -> ItemResponse[MeItem]:
 
 @router.patch(
     "",
-    operation_id="api.me.update",
+    operation_id="api_me_update",
     summary="Update the signed-in user's profile",
     description="Partially update the current user's profile — only the fields sent are changed.",
     response_model=ItemResponse[MeItem],
@@ -44,7 +44,7 @@ def update_me(form: MePatchForm, user: CurrentUserDep, manager: MeManagerDep) ->
 
 @router.post(
     "/picture",
-    operation_id="api.me.setPicture",
+    operation_id="api_me_setPicture",
     summary="Upload the signed-in user's profile picture",
     description=(
         "Upload a profile picture (multipart, field `file`). The image is "

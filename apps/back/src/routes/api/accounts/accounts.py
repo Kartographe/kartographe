@@ -40,7 +40,7 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 
 @router.get(
     "",
-    operation_id="api.accounts.list",
+    operation_id="api_accounts_list",
     summary="List my accounts",
     description=(
         "List the workspaces the signed-in user is an active member of, with their role in each. "
@@ -74,7 +74,7 @@ def list_accounts(
 
 @router.post(
     "",
-    operation_id="api.accounts.create",
+    operation_id="api_accounts_create",
     summary="Create an account",
     description="Create a new workspace. The caller automatically becomes its owner.",
     response_model=ItemResponse[AccountItem],
@@ -91,7 +91,7 @@ def create_account(
 
 @router.get(
     "/{account_id}",
-    operation_id="api.accounts.get",
+    operation_id="api_accounts_get",
     summary="Get an account",
     description="Return a workspace the caller is a member of, including the caller's role.",
     response_model=ItemResponse[AccountItem],
@@ -105,7 +105,7 @@ def get_account(
 
 @router.patch(
     "/{account_id}",
-    operation_id="api.accounts.update",
+    operation_id="api_accounts_update",
     summary="Update an account",
     description="Partially update a workspace (name, language, time zone). Owners and administrators only.",
     response_model=ItemResponse[AccountItem],
@@ -123,7 +123,7 @@ def update_account(
 
 @router.post(
     "/{account_id}/picture",
-    operation_id="api.accounts.setPicture",
+    operation_id="api_accounts_setPicture",
     summary="Upload the account logo",
     description=(
         "Upload the account logo (multipart, field `file`). The image is center-cropped "
@@ -150,7 +150,7 @@ def set_account_picture(
 
 @router.post(
     "/{account_id}/activate",
-    operation_id="api.accounts.activate",
+    operation_id="api_accounts_activate",
     summary="Activate an account",
     description="Set the account status back to active. Owners only.",
     response_model=ItemResponse[AccountItem],
@@ -167,7 +167,7 @@ def activate_account(
 
 @router.post(
     "/{account_id}/deactivate",
-    operation_id="api.accounts.deactivate",
+    operation_id="api_accounts_deactivate",
     summary="Deactivate an account",
     description="Disable the account (reversible). Owners only. Deletion requires deactivation first.",
     response_model=ItemResponse[AccountItem],
@@ -184,7 +184,7 @@ def deactivate_account(
 
 @router.delete(
     "/{account_id}",
-    operation_id="api.accounts.delete",
+    operation_id="api_accounts_delete",
     summary="Delete an account",
     description="Soft-delete a deactivated account. Owners only; the account must be deactivated first.",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -204,7 +204,7 @@ def delete_account(
 
 @router.post(
     "/{account_id}/leave",
-    operation_id="api.accounts.leave",
+    operation_id="api_accounts_leave",
     summary="Leave an account",
     description="Leave a workspace you are a member of. The last owner cannot leave.",
     response_model=SuccessResponse,

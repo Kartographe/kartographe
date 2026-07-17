@@ -28,7 +28,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account not found"}}
 
 @router.get(
     "",
-    operation_id="api.accounts.entitlements.get",
+    operation_id="api_accounts_entitlements_get",
     summary="Get account entitlements",
     description=(
         "Return what the account is entitled to: the edition it runs under and the "

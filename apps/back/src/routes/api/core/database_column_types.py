@@ -25,7 +25,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Column type not foun
 
 @router.get(
     "",
-    operation_id="api.core.databaseColumnTypes.list",
+    operation_id="api_core_databaseColumnTypes_list",
     summary="List database column types",
     description="List the available SQL column types, optionally filtered by database engine.",
     response_model=ListingResponse[DatabaseColumnTypeItem],
@@ -41,7 +41,7 @@ def list_database_column_types(
 
 @router.get(
     "/{database_column_type_id}",
-    operation_id="api.core.databaseColumnTypes.get",
+    operation_id="api_core_databaseColumnTypes_get",
     summary="Get a database column type",
     description="Return a single SQL column type.",
     response_model=ItemResponse[DatabaseColumnTypeItem],

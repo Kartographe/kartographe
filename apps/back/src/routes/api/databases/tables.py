@@ -48,7 +48,7 @@ _DATA = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.versions.tables.list",
+    operation_id="api_databases_versions_tables_list",
     summary="List tables",
     description=(
         "List the tables of a database version, most recent first, each with its columns. "
@@ -70,7 +70,7 @@ def list_tables(
 
 @router.post(
     "",
-    operation_id="api.databases.versions.tables.create",
+    operation_id="api_databases_versions_tables_create",
     summary="Create a table",
     description=(
         "Create a table, optionally with its columns in one call. Each column references a "
@@ -103,7 +103,7 @@ def create_table(
 
 @router.get(
     "/{database_table_id}",
-    operation_id="api.databases.versions.tables.get",
+    operation_id="api_databases_versions_tables_get",
     summary="Get a table",
     description="Return a single table of the version, including its columns. Any member may read.",
     response_model=ItemResponse[DatabaseTableItem],
@@ -119,7 +119,7 @@ def get_table(
 
 @router.patch(
     "/{database_table_id}",
-    operation_id="api.databases.versions.tables.update",
+    operation_id="api_databases_versions_tables_update",
     summary="Update a table",
     description=(
         "Partially update a table (type, schema, name, description, color, status). If `columns` is sent, "
@@ -144,7 +144,7 @@ def update_table(
 
 @router.delete(
     "/{database_table_id}",
-    operation_id="api.databases.versions.tables.delete",
+    operation_id="api_databases_versions_tables_delete",
     summary="Delete a table",
     description="Soft-delete a table; its columns are soft-deleted as well. Data roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

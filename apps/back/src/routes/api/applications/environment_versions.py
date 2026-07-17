@@ -48,7 +48,7 @@ _DEV_LEAD = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.environmentVersions.list",
+    operation_id="api_applications_environmentVersions_list",
     summary="List deployments",
     description="List the deployment records of an environment, most recent first. Any member may read.",
     response_model=ListingResponse[ApplicationEnvironmentVersionItem],
@@ -68,7 +68,7 @@ def list_deployments(
 
 @router.post(
     "",
-    operation_id="api.applications.environmentVersions.create",
+    operation_id="api_applications_environmentVersions_create",
     summary="Deploy a version",
     description=(
         "Record a deployment of a version onto the environment. It starts in the standby state, "
@@ -93,7 +93,7 @@ def create_deployment(
 
 @router.get(
     "/{environment_version_id}",
-    operation_id="api.applications.environmentVersions.get",
+    operation_id="api_applications_environmentVersions_get",
     summary="Get a deployment",
     description="Return a single deployment record of the environment. Any member may read.",
     response_model=ItemResponse[ApplicationEnvironmentVersionItem],
@@ -107,7 +107,7 @@ def get_deployment(
 
 @router.patch(
     "/{environment_version_id}",
-    operation_id="api.applications.environmentVersions.update",
+    operation_id="api_applications_environmentVersions_update",
     summary="Update a deployment",
     description=(
         "Update a deployment's state and/or its details. "
@@ -130,7 +130,7 @@ def update_deployment(
 
 @router.post(
     "/{environment_version_id}/finished",
-    operation_id="api.applications.environmentVersions.finished",
+    operation_id="api_applications_environmentVersions_finished",
     summary="Mark a deployment finished",
     description="Mark the deployment as finished. Owners, administrators and lead developers only.",
     response_model=ItemResponse[ApplicationEnvironmentVersionItem],
@@ -147,7 +147,7 @@ def finish_deployment(
 
 @router.post(
     "/{environment_version_id}/error",
-    operation_id="api.applications.environmentVersions.error",
+    operation_id="api_applications_environmentVersions_error",
     summary="Mark a deployment failed",
     description=(
         "Mark the deployment as failed, with a required explanation. "
@@ -170,7 +170,7 @@ def error_deployment(
 
 @router.post(
     "/{environment_version_id}/cancelled",
-    operation_id="api.applications.environmentVersions.cancelled",
+    operation_id="api_applications_environmentVersions_cancelled",
     summary="Cancel a deployment",
     description="Mark the deployment as cancelled. Owners, administrators and lead developers only.",
     response_model=ItemResponse[ApplicationEnvironmentVersionItem],
@@ -187,7 +187,7 @@ def cancel_deployment(
 
 @router.delete(
     "/{environment_version_id}",
-    operation_id="api.applications.environmentVersions.delete",
+    operation_id="api_applications_environmentVersions_delete",
     summary="Delete a deployment",
     description="Soft-delete a single deployment record. Owners, administrators and lead developers only.",
     status_code=status.HTTP_204_NO_CONTENT,

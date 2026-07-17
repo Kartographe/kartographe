@@ -46,7 +46,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.steps.routes.list",
+    operation_id="api_journeys_scenarios_steps_routes_list",
     summary="List step routes",
     description="List the application routes linked to a step, most recent first. Any member may read.",
     response_model=ListingResponse[JourneyScenarioStepRouteItem],
@@ -63,7 +63,7 @@ def list_step_routes(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.steps.routes.create",
+    operation_id="api_journeys_scenarios_steps_routes_create",
     summary="Link an application route",
     description=(
         "Link the step to an application route. The application must belong to the account and "
@@ -87,7 +87,7 @@ def create_step_route(
 
 @router.get(
     "/{step_route_id}",
-    operation_id="api.journeys.scenarios.steps.routes.get",
+    operation_id="api_journeys_scenarios_steps_routes_get",
     summary="Get a step route",
     description="Return a single route link of the step. Any member may read.",
     response_model=ItemResponse[JourneyScenarioStepRouteItem],
@@ -101,7 +101,7 @@ def get_step_route(
 
 @router.delete(
     "/{step_route_id}",
-    operation_id="api.journeys.scenarios.steps.routes.delete",
+    operation_id="api_journeys_scenarios_steps_routes_delete",
     summary="Unlink an application route",
     description="Soft-delete a route link. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -33,7 +33,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Journey or scenario 
 
 @router.get(
     "",
-    operation_id="api.journeys.scenarios.comments.list",
+    operation_id="api_journeys_scenarios_comments_list",
     summary="List scenario comments",
     description="List the root comments on a journey scenario, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -51,7 +51,7 @@ def list_scenario_comments(
 
 @router.post(
     "",
-    operation_id="api.journeys.scenarios.comments.create",
+    operation_id="api_journeys_scenarios_comments_create",
     summary="Comment on a scenario",
     description="Post a comment on a journey scenario. Any member may post.",
     response_model=ItemResponse[CommentItem],

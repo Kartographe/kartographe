@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post(
     "/activate",
-    operation_id="api.auth.activate",
+    operation_id="api_auth_activate",
     summary="Confirm an account from its activation link",
     description="Activate a newly registered account using the token from the activation email.",
     response_model=SuccessResponse,
@@ -28,7 +28,7 @@ def activate(form: ActivationForm, manager: AuthManagerDep) -> SuccessResponse:
 
 @router.post(
     "/resendActivation",
-    operation_id="api.auth.resendActivation",
+    operation_id="api_auth_resendActivation",
     summary="Re-send the activation email",
     description="Ask for a fresh activation email. Always succeeds, whether or not the email has a pending account.",
     response_model=SuccessResponse,

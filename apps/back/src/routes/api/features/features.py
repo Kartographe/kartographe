@@ -50,7 +50,7 @@ _CONTRIBUTOR = require_role(
 
 @router.get(
     "",
-    operation_id="api.features.list",
+    operation_id="api_features_list",
     summary="List features",
     description=(
         "List the features of the account. Filter by status and/or type (repeat the query param "
@@ -90,7 +90,7 @@ def list_features(
 
 @router.post(
     "",
-    operation_id="api.features.create",
+    operation_id="api_features_create",
     summary="Create a feature",
     description=(
         "Create a feature. It starts as a draft owned by the caller. "
@@ -115,7 +115,7 @@ def create_feature(
 
 @router.get(
     "/{feature_id}",
-    operation_id="api.features.get",
+    operation_id="api_features_get",
     summary="Get a feature",
     description="Return a single feature of the account. Any member may read.",
     response_model=ItemResponse[FeatureItem],
@@ -129,7 +129,7 @@ def get_feature(
 
 @router.patch(
     "/{feature_id}",
-    operation_id="api.features.update",
+    operation_id="api_features_update",
     summary="Update a feature",
     description=(
         "Partially update a feature (title, description, type, status). "
@@ -150,7 +150,7 @@ def update_feature(
 
 @router.delete(
     "/{feature_id}",
-    operation_id="api.features.delete",
+    operation_id="api_features_delete",
     summary="Delete a feature",
     description=(
         "Soft-delete a feature; its files and application links are soft-deleted as well. "

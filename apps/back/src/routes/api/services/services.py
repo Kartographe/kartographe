@@ -45,7 +45,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.services.list",
+    operation_id="api_services_list",
     summary="List services",
     description=(
         "List the services of the account. Filter by status and/or type (repeat the query param "
@@ -81,7 +81,7 @@ def list_services(
 
 @router.post(
     "",
-    operation_id="api.services.create",
+    operation_id="api_services_create",
     summary="Create a service",
     description="Create a service. It starts as a draft owned by the caller. Dev roles only.",
     response_model=ItemResponse[ServiceItem],
@@ -110,7 +110,7 @@ def create_service(
 
 @router.get(
     "/{service_id}",
-    operation_id="api.services.get",
+    operation_id="api_services_get",
     summary="Get a service",
     description="Return a single service of the account. Any member may read.",
     response_model=ItemResponse[ServiceItem],
@@ -122,7 +122,7 @@ def get_service(_: CurrentAccountUserDep, service: CurrentServiceDep) -> ItemRes
 
 @router.patch(
     "/{service_id}",
-    operation_id="api.services.update",
+    operation_id="api_services_update",
     summary="Update a service",
     description=(
         "Partially update a service (type, title, description, picture, url, OpenAPI url, status). "
@@ -143,7 +143,7 @@ def update_service(
 
 @router.delete(
     "/{service_id}",
-    operation_id="api.services.delete",
+    operation_id="api_services_delete",
     summary="Delete a service",
     description="Soft-delete a service; its actions are soft-deleted as well. Dev roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -45,7 +45,7 @@ _DATA = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.migrations.list",
+    operation_id="api_databases_migrations_list",
     summary="List database migrations",
     description=(
         "List the migrations leaving this database, most recent first. Any member may read."
@@ -64,7 +64,7 @@ def list_migrations(
 
 @router.post(
     "",
-    operation_id="api.databases.migrations.create",
+    operation_id="api_databases_migrations_create",
     summary="Create a database migration",
     description=(
         "Plan a migration leaving a version of this database towards a version of any database "
@@ -94,7 +94,7 @@ def create_migration(
 
 @router.get(
     "/{database_migration_id}",
-    operation_id="api.databases.migrations.get",
+    operation_id="api_databases_migrations_get",
     summary="Get a database migration",
     description="Return a single migration of the database. Any member may read.",
     response_model=ItemResponse[DatabaseMigrationItem],
@@ -108,7 +108,7 @@ def get_migration(
 
 @router.patch(
     "/{database_migration_id}",
-    operation_id="api.databases.migrations.update",
+    operation_id="api_databases_migrations_update",
     summary="Update a database migration",
     description=(
         "Partially update a migration (type, title, description, source version, destination "
@@ -130,7 +130,7 @@ def update_migration(
 
 @router.post(
     "/{database_migration_id}/draft",
-    operation_id="api.databases.migrations.draft",
+    operation_id="api_databases_migrations_draft",
     summary="Move a migration back to draft",
     description="Set the migration status back to draft. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationItem],
@@ -147,7 +147,7 @@ def draft_migration(
 
 @router.post(
     "/{database_migration_id}/validated",
-    operation_id="api.databases.migrations.validated",
+    operation_id="api_databases_migrations_validated",
     summary="Validate a migration",
     description="Set the migration status to validated. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationItem],
@@ -164,7 +164,7 @@ def validate_migration(
 
 @router.post(
     "/{database_migration_id}/completed",
-    operation_id="api.databases.migrations.completed",
+    operation_id="api_databases_migrations_completed",
     summary="Complete a migration",
     description="Set the migration status to completed. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationItem],
@@ -181,7 +181,7 @@ def complete_migration(
 
 @router.post(
     "/{database_migration_id}/cancelled",
-    operation_id="api.databases.migrations.cancelled",
+    operation_id="api_databases_migrations_cancelled",
     summary="Cancel a migration",
     description="Set the migration status to cancelled. Data roles only.",
     response_model=ItemResponse[DatabaseMigrationItem],
@@ -198,7 +198,7 @@ def cancel_migration(
 
 @router.delete(
     "/{database_migration_id}",
-    operation_id="api.databases.migrations.delete",
+    operation_id="api_databases_migrations_delete",
     summary="Delete a database migration",
     description="Soft-delete a migration; its column steps are soft-deleted as well. Data roles only.",
     status_code=status.HTTP_204_NO_CONTENT,

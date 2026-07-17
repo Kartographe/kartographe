@@ -31,7 +31,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Application not foun
 
 @router.get(
     "",
-    operation_id="api.applications.comments.list",
+    operation_id="api_applications_comments_list",
     summary="List application comments",
     description="List the root comments on an application, oldest first. Any member may read.",
     response_model=ListingResponse[CommentItem],
@@ -49,7 +49,7 @@ def list_application_comments(
 
 @router.post(
     "",
-    operation_id="api.applications.comments.create",
+    operation_id="api_applications_comments_create",
     summary="Comment on an application",
     description="Post a comment on an application. Any member may post.",
     response_model=ItemResponse[CommentItem],

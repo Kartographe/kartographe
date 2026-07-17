@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post(
     "/revoke",
-    operation_id="api.oauth.revoke",
+    operation_id="api_oauth_revoke",
     summary="Revoke a token",
     description="Revoke an access or refresh token (RFC 7009). Always returns 200, even for unknown tokens.",
     status_code=200,

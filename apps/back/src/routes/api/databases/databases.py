@@ -47,7 +47,7 @@ _DATA = require_role(
 
 @router.get(
     "",
-    operation_id="api.databases.list",
+    operation_id="api_databases_list",
     summary="List databases",
     description=(
         "List the databases of the account. Filter by status and/or type (repeat the query param "
@@ -87,7 +87,7 @@ def list_databases(
 
 @router.post(
     "",
-    operation_id="api.databases.create",
+    operation_id="api_databases_create",
     summary="Create a database",
     description=(
         "Create a database. It starts as a draft owned by the caller. "
@@ -112,7 +112,7 @@ def create_database(
 
 @router.get(
     "/{database_id}",
-    operation_id="api.databases.get",
+    operation_id="api_databases_get",
     summary="Get a database",
     description="Return a single database of the account. Any member may read.",
     response_model=ItemResponse[DatabaseItem],
@@ -126,7 +126,7 @@ def get_database(
 
 @router.patch(
     "/{database_id}",
-    operation_id="api.databases.update",
+    operation_id="api_databases_update",
     summary="Update a database",
     description="Partially update a database (type, title, description, status). Data roles only.",
     response_model=ItemResponse[DatabaseItem],
@@ -144,7 +144,7 @@ def update_database(
 
 @router.delete(
     "/{database_id}",
-    operation_id="api.databases.delete",
+    operation_id="api_databases_delete",
     summary="Delete a database",
     description=(
         "Soft-delete a database; its versions, tables and columns are soft-deleted as well. "

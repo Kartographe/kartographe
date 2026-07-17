@@ -49,7 +49,7 @@ _DEV = require_role(
 
 @router.get(
     "",
-    operation_id="api.applications.routes.list",
+    operation_id="api_applications_routes_list",
     summary="List routes",
     description=(
         "List the routes of an application, most recent first. Any member may read. "
@@ -72,7 +72,7 @@ def list_routes(
 
 @router.post(
     "",
-    operation_id="api.applications.routes.create",
+    operation_id="api_applications_routes_create",
     summary="Create a route",
     description=(
         "Create a route. It starts as a draft owned by the caller. Referenced guards, roles and "
@@ -114,7 +114,7 @@ def create_route(
 
 @router.get(
     "/{route_id}",
-    operation_id="api.applications.routes.get",
+    operation_id="api_applications_routes_get",
     summary="Get a route",
     description="Return a single route of the application. Any member may read.",
     response_model=ItemResponse[ApplicationRouteItem],
@@ -128,7 +128,7 @@ def get_route(
 
 @router.patch(
     "/{route_id}",
-    operation_id="api.applications.routes.update",
+    operation_id="api_applications_routes_update",
     summary="Update a route",
     description=(
         "Partially update a route. Referenced guards, roles and versions must belong to the "
@@ -150,7 +150,7 @@ def update_route(
 
 @router.delete(
     "/{route_id}",
-    operation_id="api.applications.routes.delete",
+    operation_id="api_applications_routes_delete",
     summary="Delete a route",
     description=(
         "Soft-delete a route; its responses, examples and table links are soft-deleted as well. "

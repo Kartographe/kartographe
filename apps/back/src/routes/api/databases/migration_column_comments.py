@@ -32,7 +32,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Migration column not
 
 @router.get(
     "",
-    operation_id="api.databases.migrations.columns.comments.list",
+    operation_id="api_databases_migrations_columns_comments_list",
     summary="List migration column comments",
     description=(
         "List the root comments on a migration column step, oldest first. Any member may read."
@@ -54,7 +54,7 @@ def list_migration_column_comments(
 
 @router.post(
     "",
-    operation_id="api.databases.migrations.columns.comments.create",
+    operation_id="api_databases_migrations_columns_comments_create",
     summary="Comment on a migration column",
     description="Post a comment on a migration column step. Any member may post.",
     response_model=ItemResponse[CommentItem],
