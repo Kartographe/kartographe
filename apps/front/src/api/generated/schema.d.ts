@@ -15,13 +15,13 @@ export interface paths {
          * List my accounts
          * @description List the workspaces the signed-in user is an active member of, with their role in each. Filter by account status and/or membership role (repeat the query param for multiple values), sort by name/createdDate/status/role, and page through results.
          */
-        get: operations["api.accounts.list"];
+        get: operations["api_accounts_list"];
         put?: never;
         /**
          * Create an account
          * @description Create a new workspace. The caller automatically becomes its owner.
          */
-        post: operations["api.accounts.create"];
+        post: operations["api_accounts_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -39,21 +39,21 @@ export interface paths {
          * Get an account
          * @description Return a workspace the caller is a member of, including the caller's role.
          */
-        get: operations["api.accounts.get"];
+        get: operations["api_accounts_get"];
         put?: never;
         post?: never;
         /**
          * Delete an account
          * @description Soft-delete a deactivated account. Owners only; the account must be deactivated first.
          */
-        delete: operations["api.accounts.delete"];
+        delete: operations["api_accounts_delete"];
         options?: never;
         head?: never;
         /**
          * Update an account
          * @description Partially update a workspace (name, language, time zone). Owners and administrators only.
          */
-        patch: operations["api.accounts.update"];
+        patch: operations["api_accounts_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/picture": {
@@ -69,7 +69,7 @@ export interface paths {
          * Upload the account logo
          * @description Upload the account logo (multipart, field `file`). The image is center-cropped to a square and resized server-side; the previous logo is replaced. Owners and administrators only.
          */
-        post: operations["api.accounts.setPicture"];
+        post: operations["api_accounts_setPicture"];
         delete?: never;
         options?: never;
         head?: never;
@@ -89,7 +89,7 @@ export interface paths {
          * Activate an account
          * @description Set the account status back to active. Owners only.
          */
-        post: operations["api.accounts.activate"];
+        post: operations["api_accounts_activate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -109,7 +109,7 @@ export interface paths {
          * Deactivate an account
          * @description Disable the account (reversible). Owners only. Deletion requires deactivation first.
          */
-        post: operations["api.accounts.deactivate"];
+        post: operations["api_accounts_deactivate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -129,7 +129,7 @@ export interface paths {
          * Leave an account
          * @description Leave a workspace you are a member of. The last owner cannot leave.
          */
-        post: operations["api.accounts.leave"];
+        post: operations["api_accounts_leave"];
         delete?: never;
         options?: never;
         head?: never;
@@ -147,7 +147,7 @@ export interface paths {
          * List account members
          * @description List every member of the account with their role, type and status. Any member may read.
          */
-        get: operations["api.accounts.users.list"];
+        get: operations["api_accounts_users_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -167,21 +167,21 @@ export interface paths {
          * Get an account member
          * @description Return a single member of the account.
          */
-        get: operations["api.accounts.users.get"];
+        get: operations["api_accounts_users_get"];
         put?: never;
         post?: never;
         /**
          * Remove a member
          * @description Remove a member from the account. Owners/administrators only. You cannot remove yourself, and the last owner cannot be removed.
          */
-        delete: operations["api.accounts.users.delete"];
+        delete: operations["api_accounts_users_delete"];
         options?: never;
         head?: never;
         /**
          * Change a member's role
          * @description Change a member's role. Owners/administrators only. You cannot change your own role, only an owner can grant the owner role, and the last owner cannot be demoted.
          */
-        patch: operations["api.accounts.users.update"];
+        patch: operations["api_accounts_users_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/users/{account_user_id}/leave": {
@@ -197,7 +197,7 @@ export interface paths {
          * Force a member out
          * @description Deactivate a member's seat, keeping the row for audit. Owners/administrators only; you cannot target yourself (use the account leave endpoint).
          */
-        post: operations["api.accounts.users.leave"];
+        post: operations["api_accounts_users_leave"];
         delete?: never;
         options?: never;
         head?: never;
@@ -215,13 +215,13 @@ export interface paths {
          * List account invitations
          * @description List all invitations of the account (pending and resolved). Owners/administrators only.
          */
-        get: operations["api.accounts.invitations.list"];
+        get: operations["api_accounts_invitations_list"];
         put?: never;
         /**
          * Invite members
          * @description Invite one or more emails to the account with a single role. Emails already pending are skipped; each new invitation is emailed. Only an owner can invite an owner. Returns the newly-created invitations.
          */
-        post: operations["api.accounts.invitations.create"];
+        post: operations["api_accounts_invitations_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -239,18 +239,18 @@ export interface paths {
          * Get an invitation
          * @description Return a single invitation of the account.
          */
-        get: operations["api.accounts.invitations.get"];
+        get: operations["api_accounts_invitations_get"];
         /**
          * Change an invitation's role
          * @description Change the role of a pending invitation. Only an owner can set the owner role.
          */
-        put: operations["api.accounts.invitations.update"];
+        put: operations["api_accounts_invitations_update"];
         post?: never;
         /**
          * Cancel an invitation
          * @description Cancel a pending invitation. Returns the cancelled invitation.
          */
-        delete: operations["api.accounts.invitations.cancel"];
+        delete: operations["api_accounts_invitations_cancel"];
         options?: never;
         head?: never;
         patch?: never;
@@ -269,7 +269,7 @@ export interface paths {
          * Resend an invitation
          * @description Re-send a standby or expired invitation with a fresh 7-day expiry (same link). The recipient is emailed again.
          */
-        post: operations["api.accounts.invitations.resend"];
+        post: operations["api_accounts_invitations_resend"];
         delete?: never;
         options?: never;
         head?: never;
@@ -287,7 +287,7 @@ export interface paths {
          * Get account usage
          * @description Return the account's usage: for every tracked entity type, the number of live records against its quota, grouped by typology (members, applications, databases, features, journeys, personas, services, content). File entities also report their cumulative storage against a storage quota. Owners and administrators only.
          */
-        get: operations["api.accounts.usage.get"];
+        get: operations["api_accounts_usage_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -307,7 +307,7 @@ export interface paths {
          * Get account entitlements
          * @description Return what the account is entitled to: the edition it runs under and the licensed features unlocked for it. A self-hosted install with no licence reports the `community` edition and no features. Quotas are not repeated here — the usage endpoint reports each one next to the count it caps. Any member of the account may read this.
          */
-        get: operations["api.accounts.entitlements.get"];
+        get: operations["api_accounts_entitlements_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -327,13 +327,13 @@ export interface paths {
          * List applications
          * @description List the applications of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.applications.list"];
+        get: operations["api_applications_list"];
         put?: never;
         /**
          * Create an application
          * @description Create an application. It starts as a draft owned by the caller. Owners/administrators only.
          */
-        post: operations["api.applications.create"];
+        post: operations["api_applications_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -351,21 +351,21 @@ export interface paths {
          * Get an application
          * @description Return a single application of the account. Any member may read.
          */
-        get: operations["api.applications.get"];
+        get: operations["api_applications_get"];
         put?: never;
         post?: never;
         /**
          * Delete an application
          * @description Soft-delete an application. Its environments, versions, deployments and feature links are soft-deleted as well. Owners/administrators only.
          */
-        delete: operations["api.applications.delete"];
+        delete: operations["api_applications_delete"];
         options?: never;
         head?: never;
         /**
          * Update an application
          * @description Partially update an application (title, description, type, status). Owners/administrators only.
          */
-        patch: operations["api.applications.update"];
+        patch: operations["api_applications_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/environments": {
@@ -379,13 +379,13 @@ export interface paths {
          * List environments
          * @description List the environments of an application, most recent first. Any member may read.
          */
-        get: operations["api.applications.environments.list"];
+        get: operations["api_applications_environments_list"];
         put?: never;
         /**
          * Create an environment
          * @description Create a deployment environment. It starts as a draft owned by the caller. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.environments.create"];
+        post: operations["api_applications_environments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -403,21 +403,21 @@ export interface paths {
          * Get an environment
          * @description Return a single environment of the application. Any member may read.
          */
-        get: operations["api.applications.environments.get"];
+        get: operations["api_applications_environments_get"];
         put?: never;
         post?: never;
         /**
          * Delete an environment
          * @description Soft-delete an environment; its deployment records are soft-deleted as well. Owners, administrators and lead developers only.
          */
-        delete: operations["api.applications.environments.delete"];
+        delete: operations["api_applications_environments_delete"];
         options?: never;
         head?: never;
         /**
          * Update an environment
          * @description Partially update an environment (type, title, description, url, status). Owners, administrators and lead developers only.
          */
-        patch: operations["api.applications.environments.update"];
+        patch: operations["api_applications_environments_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/versions": {
@@ -431,13 +431,13 @@ export interface paths {
          * List versions
          * @description List the versions of an application, most recent first. Any member may read.
          */
-        get: operations["api.applications.versions.list"];
+        get: operations["api_applications_versions_list"];
         put?: never;
         /**
          * Create a version
          * @description Create a version. It starts as a draft owned by the caller. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.versions.create"];
+        post: operations["api_applications_versions_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -455,21 +455,21 @@ export interface paths {
          * Get a version
          * @description Return a single version of the application. Any member may read.
          */
-        get: operations["api.applications.versions.get"];
+        get: operations["api_applications_versions_get"];
         put?: never;
         post?: never;
         /**
          * Delete a version
          * @description Soft-delete a version; deployment records referencing it are soft-deleted as well. Owners, administrators and lead developers only.
          */
-        delete: operations["api.applications.versions.delete"];
+        delete: operations["api_applications_versions_delete"];
         options?: never;
         head?: never;
         /**
          * Update a version
          * @description Partially update a version (type, title, version, description, status). Owners, administrators and lead developers only.
          */
-        patch: operations["api.applications.versions.update"];
+        patch: operations["api_applications_versions_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions": {
@@ -483,13 +483,13 @@ export interface paths {
          * List deployments
          * @description List the deployment records of an environment, most recent first. Any member may read.
          */
-        get: operations["api.applications.environmentVersions.list"];
+        get: operations["api_applications_environmentVersions_list"];
         put?: never;
         /**
          * Deploy a version
          * @description Record a deployment of a version onto the environment. It starts in the standby state, owned by the caller. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.environmentVersions.create"];
+        post: operations["api_applications_environmentVersions_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -507,21 +507,21 @@ export interface paths {
          * Get a deployment
          * @description Return a single deployment record of the environment. Any member may read.
          */
-        get: operations["api.applications.environmentVersions.get"];
+        get: operations["api_applications_environmentVersions_get"];
         put?: never;
         post?: never;
         /**
          * Delete a deployment
          * @description Soft-delete a single deployment record. Owners, administrators and lead developers only.
          */
-        delete: operations["api.applications.environmentVersions.delete"];
+        delete: operations["api_applications_environmentVersions_delete"];
         options?: never;
         head?: never;
         /**
          * Update a deployment
          * @description Update a deployment's state and/or its details. Owners, administrators and lead developers only.
          */
-        patch: operations["api.applications.environmentVersions.update"];
+        patch: operations["api_applications_environmentVersions_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/{environment_version_id}/finished": {
@@ -537,7 +537,7 @@ export interface paths {
          * Mark a deployment finished
          * @description Mark the deployment as finished. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.environmentVersions.finished"];
+        post: operations["api_applications_environmentVersions_finished"];
         delete?: never;
         options?: never;
         head?: never;
@@ -557,7 +557,7 @@ export interface paths {
          * Mark a deployment failed
          * @description Mark the deployment as failed, with a required explanation. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.environmentVersions.error"];
+        post: operations["api_applications_environmentVersions_error"];
         delete?: never;
         options?: never;
         head?: never;
@@ -577,7 +577,7 @@ export interface paths {
          * Cancel a deployment
          * @description Mark the deployment as cancelled. Owners, administrators and lead developers only.
          */
-        post: operations["api.applications.environmentVersions.cancelled"];
+        post: operations["api_applications_environmentVersions_cancelled"];
         delete?: never;
         options?: never;
         head?: never;
@@ -595,13 +595,13 @@ export interface paths {
          * List application features
          * @description List the features attached to an application, most recent first. Any member may read.
          */
-        get: operations["api.applications.features.list"];
+        get: operations["api_applications_features_list"];
         put?: never;
         /**
          * Attach a feature
          * @description Attach an existing account feature to the application. The feature must belong to the same account. Every contributing role may attach features.
          */
-        post: operations["api.applications.features.create"];
+        post: operations["api_applications_features_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -619,21 +619,21 @@ export interface paths {
          * Get an application feature
          * @description Return a single feature link of the application. Any member may read.
          */
-        get: operations["api.applications.features.get"];
+        get: operations["api_applications_features_get"];
         put?: never;
         post?: never;
         /**
          * Detach a feature
          * @description Soft-delete a feature link. Every contributing role may detach features.
          */
-        delete: operations["api.applications.features.delete"];
+        delete: operations["api_applications_features_delete"];
         options?: never;
         head?: never;
         /**
          * Update an application feature
          * @description Update the feature's presence window (start/end dates and versions). Any referenced version must belong to the application. Every contributing role may edit.
          */
-        patch: operations["api.applications.features.update"];
+        patch: operations["api_applications_features_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/guards": {
@@ -647,13 +647,13 @@ export interface paths {
          * List guards
          * @description List the authentication guards of an application, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.applications.guards.list"];
+        get: operations["api_applications_guards_list"];
         put?: never;
         /**
          * Create a guard
          * @description Create an authentication guard. It starts as a draft owned by the caller. Dev roles only.
          */
-        post: operations["api.applications.guards.create"];
+        post: operations["api_applications_guards_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -671,21 +671,21 @@ export interface paths {
          * Get a guard
          * @description Return a single guard of the application. Any member may read.
          */
-        get: operations["api.applications.guards.get"];
+        get: operations["api_applications_guards_get"];
         put?: never;
         post?: never;
         /**
          * Delete a guard
          * @description Soft-delete a guard and detach it from every route that referenced it. Dev roles only.
          */
-        delete: operations["api.applications.guards.delete"];
+        delete: operations["api_applications_guards_delete"];
         options?: never;
         head?: never;
         /**
          * Update a guard
          * @description Partially update a guard (type, title, field type/key/format, status). Dev roles only.
          */
-        patch: operations["api.applications.guards.update"];
+        patch: operations["api_applications_guards_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/roles": {
@@ -699,13 +699,13 @@ export interface paths {
          * List roles
          * @description List the authorization roles of an application, most recent first. Any member may read.
          */
-        get: operations["api.applications.roles.list"];
+        get: operations["api_applications_roles_list"];
         put?: never;
         /**
          * Create a role
          * @description Create an authorization role. It starts as a draft owned by the caller. Contributors only.
          */
-        post: operations["api.applications.roles.create"];
+        post: operations["api_applications_roles_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -723,21 +723,21 @@ export interface paths {
          * Get a role
          * @description Return a single role of the application. Any member may read.
          */
-        get: operations["api.applications.roles.get"];
+        get: operations["api_applications_roles_get"];
         put?: never;
         post?: never;
         /**
          * Delete a role
          * @description Soft-delete a role and detach it from every route that referenced it. Contributors only.
          */
-        delete: operations["api.applications.roles.delete"];
+        delete: operations["api_applications_roles_delete"];
         options?: never;
         head?: never;
         /**
          * Update a role
          * @description Partially update a role (title, description, status). Contributors only.
          */
-        patch: operations["api.applications.roles.update"];
+        patch: operations["api_applications_roles_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/routes": {
@@ -751,13 +751,13 @@ export interface paths {
          * List routes
          * @description List the routes of an application, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.applications.routes.list"];
+        get: operations["api_applications_routes_list"];
         put?: never;
         /**
          * Create a route
          * @description Create a route. It starts as a draft owned by the caller. Referenced guards, roles and versions must belong to the application. Dev roles only.
          */
-        post: operations["api.applications.routes.create"];
+        post: operations["api_applications_routes_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -775,21 +775,21 @@ export interface paths {
          * Get a route
          * @description Return a single route of the application. Any member may read.
          */
-        get: operations["api.applications.routes.get"];
+        get: operations["api_applications_routes_get"];
         put?: never;
         post?: never;
         /**
          * Delete a route
          * @description Soft-delete a route; its responses, examples and table links are soft-deleted as well. Dev roles only.
          */
-        delete: operations["api.applications.routes.delete"];
+        delete: operations["api_applications_routes_delete"];
         options?: never;
         head?: never;
         /**
          * Update a route
          * @description Partially update a route. Referenced guards, roles and versions must belong to the application. Dev roles only.
          */
-        patch: operations["api.applications.routes.update"];
+        patch: operations["api_applications_routes_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses": {
@@ -803,13 +803,13 @@ export interface paths {
          * List route responses
          * @description List the documented responses of a route, in insertion order. Any member may read.
          */
-        get: operations["api.applications.routes.responses.list"];
+        get: operations["api_applications_routes_responses_list"];
         put?: never;
         /**
          * Create a route response
          * @description Document a response of the route (status code, format, body schema). Dev roles only.
          */
-        post: operations["api.applications.routes.responses.create"];
+        post: operations["api_applications_routes_responses_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -827,21 +827,21 @@ export interface paths {
          * Get a route response
          * @description Return a single response of the route. Any member may read.
          */
-        get: operations["api.applications.routes.responses.get"];
+        get: operations["api_applications_routes_responses_get"];
         put?: never;
         post?: never;
         /**
          * Delete a route response
          * @description Soft-delete a response and the examples that reference it. Dev roles only.
          */
-        delete: operations["api.applications.routes.responses.delete"];
+        delete: operations["api_applications_routes_responses_delete"];
         options?: never;
         head?: never;
         /**
          * Update a route response
          * @description Partially update a response (status code, format, body schema). Dev roles only.
          */
-        patch: operations["api.applications.routes.responses.update"];
+        patch: operations["api_applications_routes_responses_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/examples": {
@@ -855,13 +855,13 @@ export interface paths {
          * List route examples
          * @description List the examples of a route, in insertion order. Any member may read.
          */
-        get: operations["api.applications.routes.examples.list"];
+        get: operations["api_applications_routes_examples_list"];
         put?: never;
         /**
          * Create a route example
          * @description Create a request/response example. The referenced response must belong to the route. Dev roles only.
          */
-        post: operations["api.applications.routes.examples.create"];
+        post: operations["api_applications_routes_examples_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -879,21 +879,21 @@ export interface paths {
          * Get a route example
          * @description Return a single example of the route. Any member may read.
          */
-        get: operations["api.applications.routes.examples.get"];
+        get: operations["api_applications_routes_examples_get"];
         put?: never;
         post?: never;
         /**
          * Delete a route example
          * @description Soft-delete an example. Dev roles only.
          */
-        delete: operations["api.applications.routes.examples.delete"];
+        delete: operations["api_applications_routes_examples_delete"];
         options?: never;
         head?: never;
         /**
          * Update a route example
          * @description Partially update an example. A changed response reference must belong to the route. Dev roles only.
          */
-        patch: operations["api.applications.routes.examples.update"];
+        patch: operations["api_applications_routes_examples_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/tables": {
@@ -907,13 +907,13 @@ export interface paths {
          * List route tables
          * @description List the database-table links of a route, in insertion order. Any member may read.
          */
-        get: operations["api.applications.routes.tables.list"];
+        get: operations["api_applications_routes_tables_list"];
         put?: never;
         /**
          * Link a database table
          * @description Link the route to a database table of the account, recording the exchange part and the action performed. Dev roles only.
          */
-        post: operations["api.applications.routes.tables.create"];
+        post: operations["api_applications_routes_tables_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -931,21 +931,21 @@ export interface paths {
          * Get a route table link
          * @description Return a single database-table link of the route. Any member may read.
          */
-        get: operations["api.applications.routes.tables.get"];
+        get: operations["api_applications_routes_tables_get"];
         put?: never;
         post?: never;
         /**
          * Delete a route table link
          * @description Soft-delete a database-table link. Dev roles only.
          */
-        delete: operations["api.applications.routes.tables.delete"];
+        delete: operations["api_applications_routes_tables_delete"];
         options?: never;
         head?: never;
         /**
          * Update a route table link
          * @description Partially update a link (database table, type, action). A changed table must belong to the account. Dev roles only.
          */
-        patch: operations["api.applications.routes.tables.update"];
+        patch: operations["api_applications_routes_tables_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/applications/{application_id}/comments": {
@@ -959,13 +959,13 @@ export interface paths {
          * List application comments
          * @description List the root comments on an application, oldest first. Any member may read.
          */
-        get: operations["api.applications.comments.list"];
+        get: operations["api_applications_comments_list"];
         put?: never;
         /**
          * Comment on an application
          * @description Post a comment on an application. Any member may post.
          */
-        post: operations["api.applications.comments.create"];
+        post: operations["api_applications_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -983,13 +983,13 @@ export interface paths {
          * List route comments
          * @description List the root comments on an application route, oldest first. Any member may read.
          */
-        get: operations["api.applications.routes.comments.list"];
+        get: operations["api_applications_routes_comments_list"];
         put?: never;
         /**
          * Comment on a route
          * @description Post a comment on an application route. Any member may post.
          */
-        post: operations["api.applications.routes.comments.create"];
+        post: operations["api_applications_routes_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1007,13 +1007,13 @@ export interface paths {
          * List features
          * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.features.list"];
+        get: operations["api_features_list"];
         put?: never;
         /**
          * Create a feature
          * @description Create a feature. It starts as a draft owned by the caller. Every contributing role may create features.
          */
-        post: operations["api.features.create"];
+        post: operations["api_features_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1031,21 +1031,21 @@ export interface paths {
          * Get a feature
          * @description Return a single feature of the account. Any member may read.
          */
-        get: operations["api.features.get"];
+        get: operations["api_features_get"];
         put?: never;
         post?: never;
         /**
          * Delete a feature
          * @description Soft-delete a feature; its files and application links are soft-deleted as well. Every contributing role may delete features.
          */
-        delete: operations["api.features.delete"];
+        delete: operations["api_features_delete"];
         options?: never;
         head?: never;
         /**
          * Update a feature
          * @description Partially update a feature (title, description, type, status). Every contributing role may edit features.
          */
-        patch: operations["api.features.update"];
+        patch: operations["api_features_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/features/{feature_id}/files": {
@@ -1059,13 +1059,13 @@ export interface paths {
          * List feature files
          * @description List the files attached to a feature, most recent first. Any member may read.
          */
-        get: operations["api.features.files.list"];
+        get: operations["api_features_files_list"];
         put?: never;
         /**
          * Upload a feature file
          * @description Upload a file (multipart, field `file`) and attach it to the feature. Every contributing role may upload files.
          */
-        post: operations["api.features.files.create"];
+        post: operations["api_features_files_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1083,21 +1083,21 @@ export interface paths {
          * Get a feature file
          * @description Return a single file of the feature, including a time-limited `downloadUrl`. Any member may read.
          */
-        get: operations["api.features.files.get"];
+        get: operations["api_features_files_get"];
         put?: never;
         post?: never;
         /**
          * Delete a feature file
          * @description Soft-delete a file. Every contributing role may delete files.
          */
-        delete: operations["api.features.files.delete"];
+        delete: operations["api_features_files_delete"];
         options?: never;
         head?: never;
         /**
          * Update a feature file
          * @description Partially update a file's metadata (type, name, description). Every contributing role may edit files.
          */
-        patch: operations["api.features.files.update"];
+        patch: operations["api_features_files_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}/activate": {
@@ -1113,7 +1113,7 @@ export interface paths {
          * Restore a feature file
          * @description Restore an archived file to the uploaded state. Every contributing role may do this.
          */
-        post: operations["api.features.files.activate"];
+        post: operations["api_features_files_activate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1133,7 +1133,7 @@ export interface paths {
          * Archive a feature file
          * @description Set the file status to archived. Every contributing role may do this.
          */
-        post: operations["api.features.files.archive"];
+        post: operations["api_features_files_archive"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1151,13 +1151,13 @@ export interface paths {
          * List feature journeys
          * @description List the journeys linked to a feature, most recent first. Any member may read.
          */
-        get: operations["api.features.journeys.list"];
+        get: operations["api_features_journeys_list"];
         put?: never;
         /**
          * Link a journey
          * @description Link an existing account journey to the feature. The journey must belong to the same account. Editing roles only.
          */
-        post: operations["api.features.journeys.create"];
+        post: operations["api_features_journeys_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1175,14 +1175,14 @@ export interface paths {
          * Get a feature journey
          * @description Return a single journey link of the feature. Any member may read.
          */
-        get: operations["api.features.journeys.get"];
+        get: operations["api_features_journeys_get"];
         put?: never;
         post?: never;
         /**
          * Unlink a journey
          * @description Soft-delete a journey link. Editing roles only.
          */
-        delete: operations["api.features.journeys.delete"];
+        delete: operations["api_features_journeys_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1199,13 +1199,13 @@ export interface paths {
          * List feature comments
          * @description List the root comments on a feature, oldest first. Any member may read.
          */
-        get: operations["api.features.comments.list"];
+        get: operations["api_features_comments_list"];
         put?: never;
         /**
          * Comment on a feature
          * @description Post a comment on a feature. Any member may post.
          */
-        post: operations["api.features.comments.create"];
+        post: operations["api_features_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1223,13 +1223,13 @@ export interface paths {
          * List personas
          * @description List the personas of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.personas.list"];
+        get: operations["api_personas_list"];
         put?: never;
         /**
          * Create a persona
          * @description Create a persona. It starts as a draft. Editing roles only.
          */
-        post: operations["api.personas.create"];
+        post: operations["api_personas_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1247,21 +1247,21 @@ export interface paths {
          * Get a persona
          * @description Return a single persona of the account. Any member may read.
          */
-        get: operations["api.personas.get"];
+        get: operations["api_personas_get"];
         put?: never;
         post?: never;
         /**
          * Delete a persona
          * @description Soft-delete a persona. Editing roles only.
          */
-        delete: operations["api.personas.delete"];
+        delete: operations["api_personas_delete"];
         options?: never;
         head?: never;
         /**
          * Update a persona
          * @description Partially update a persona (type, title, description, status). Editing roles only.
          */
-        patch: operations["api.personas.update"];
+        patch: operations["api_personas_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/personas/{persona_id}/comments": {
@@ -1275,13 +1275,13 @@ export interface paths {
          * List persona comments
          * @description List the root comments on a persona, oldest first. Any member may read.
          */
-        get: operations["api.personas.comments.list"];
+        get: operations["api_personas_comments_list"];
         put?: never;
         /**
          * Comment on a persona
          * @description Post a comment on a persona. Any member may post.
          */
-        post: operations["api.personas.comments.create"];
+        post: operations["api_personas_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1299,13 +1299,13 @@ export interface paths {
          * List journeys
          * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. Filter with `personasIds` (repeat the query param) to keep only the journeys targeting at least one of those personas.
          */
-        get: operations["api.journeys.list"];
+        get: operations["api_journeys_list"];
         put?: never;
         /**
          * Create a journey
          * @description Create a journey. It starts as a draft owned by the caller. Any referenced persona must belong to the account. Editing roles only.
          */
-        post: operations["api.journeys.create"];
+        post: operations["api_journeys_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1323,21 +1323,21 @@ export interface paths {
          * Get a journey
          * @description Return a single journey of the account. Any member may read.
          */
-        get: operations["api.journeys.get"];
+        get: operations["api_journeys_get"];
         put?: never;
         post?: never;
         /**
          * Delete a journey
          * @description Soft-delete a journey; its scenarios, steps, files, assertions and feature links are soft-deleted as well. Editing roles only.
          */
-        delete: operations["api.journeys.delete"];
+        delete: operations["api_journeys_delete"];
         options?: never;
         head?: never;
         /**
          * Update a journey
          * @description Partially update a journey (type, title, description, personas, status). Any referenced persona must belong to the account. Editing roles only.
          */
-        patch: operations["api.journeys.update"];
+        patch: operations["api_journeys_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios": {
@@ -1351,13 +1351,13 @@ export interface paths {
          * List scenarios
          * @description List the scenarios of a journey, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.journeys.scenarios.list"];
+        get: operations["api_journeys_scenarios_list"];
         put?: never;
         /**
          * Create a scenario
          * @description Create a scenario. It starts as a draft owned by the caller. Any referenced persona must belong to the account. Editing roles only.
          */
-        post: operations["api.journeys.scenarios.create"];
+        post: operations["api_journeys_scenarios_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1375,21 +1375,21 @@ export interface paths {
          * Get a scenario
          * @description Return a single scenario of the journey. Any member may read.
          */
-        get: operations["api.journeys.scenarios.get"];
+        get: operations["api_journeys_scenarios_get"];
         put?: never;
         post?: never;
         /**
          * Delete a scenario
          * @description Soft-delete a scenario; its steps, files and assertions are soft-deleted as well. Editing roles only.
          */
-        delete: operations["api.journeys.scenarios.delete"];
+        delete: operations["api_journeys_scenarios_delete"];
         options?: never;
         head?: never;
         /**
          * Update a scenario
          * @description Partially update a scenario (type, personas, title, criticity, description, status). Any referenced persona must belong to the account. Editing roles only.
          */
-        patch: operations["api.journeys.scenarios.update"];
+        patch: operations["api_journeys_scenarios_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps": {
@@ -1403,13 +1403,13 @@ export interface paths {
          * List steps
          * @description List the steps of a scenario, in insertion order. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.journeys.scenarios.steps.list"];
+        get: operations["api_journeys_scenarios_steps_list"];
         put?: never;
         /**
          * Create a step
          * @description Insert a step in the scenario. A parent step (if any) must belong to the same scenario, and `parameters` must match the action type's schema. The step is inserted rather than appended: whatever already hung under the same parent is re-parented onto the new step, so it lands right after its parent (or at the head of the scenario when no parent is given). Editing roles only.
          */
-        post: operations["api.journeys.scenarios.steps.create"];
+        post: operations["api_journeys_scenarios_steps_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1427,21 +1427,21 @@ export interface paths {
          * Get a step
          * @description Return a single step of the scenario. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.get"];
+        get: operations["api_journeys_scenarios_steps_get"];
         put?: never;
         post?: never;
         /**
          * Delete a step
          * @description Soft-delete a step and its whole subtree (descendant steps, files and assertions). Editing roles only.
          */
-        delete: operations["api.journeys.scenarios.steps.delete"];
+        delete: operations["api_journeys_scenarios_steps_delete"];
         options?: never;
         head?: never;
         /**
          * Update a step
          * @description Partially update a step (parent, title, description, action, optional, parameters). `parameters` must match the action type's schema. Editing roles only.
          */
-        patch: operations["api.journeys.scenarios.steps.update"];
+        patch: operations["api_journeys_scenarios_steps_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files": {
@@ -1455,13 +1455,13 @@ export interface paths {
          * List step files
          * @description List the files attached to a step, most recent first. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.files.list"];
+        get: operations["api_journeys_scenarios_steps_files_list"];
         put?: never;
         /**
          * Upload a step file
          * @description Upload a file (multipart, field `file`) and attach it to the step. Editing roles only.
          */
-        post: operations["api.journeys.scenarios.steps.files.create"];
+        post: operations["api_journeys_scenarios_steps_files_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1479,21 +1479,21 @@ export interface paths {
          * Get a step file
          * @description Return a single file of the step, including a time-limited `downloadUrl`. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.files.get"];
+        get: operations["api_journeys_scenarios_steps_files_get"];
         put?: never;
         post?: never;
         /**
          * Delete a step file
          * @description Soft-delete a file. Editing roles only.
          */
-        delete: operations["api.journeys.scenarios.steps.files.delete"];
+        delete: operations["api_journeys_scenarios_steps_files_delete"];
         options?: never;
         head?: never;
         /**
          * Update a step file
          * @description Partially update a file's metadata (type, name, description). Editing roles only.
          */
-        patch: operations["api.journeys.scenarios.steps.files.update"];
+        patch: operations["api_journeys_scenarios_steps_files_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files/{step_file_id}/activate": {
@@ -1509,7 +1509,7 @@ export interface paths {
          * Restore a step file
          * @description Restore an archived file to the uploaded state. Editing roles only.
          */
-        post: operations["api.journeys.scenarios.steps.files.activate"];
+        post: operations["api_journeys_scenarios_steps_files_activate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1529,7 +1529,7 @@ export interface paths {
          * Archive a step file
          * @description Set the file status to archived. Editing roles only.
          */
-        post: operations["api.journeys.scenarios.steps.files.archive"];
+        post: operations["api_journeys_scenarios_steps_files_archive"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1547,13 +1547,13 @@ export interface paths {
          * List assertions
          * @description List the assertions of a step, most recent first. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.assertions.list"];
+        get: operations["api_journeys_scenarios_steps_assertions_list"];
         put?: never;
         /**
          * Create an assertion
          * @description Attach an assertion to the step. `parameters` must match the assertion type's schema. It starts as a draft owned by the caller. Editing roles only.
          */
-        post: operations["api.journeys.scenarios.steps.assertions.create"];
+        post: operations["api_journeys_scenarios_steps_assertions_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1571,21 +1571,21 @@ export interface paths {
          * Get an assertion
          * @description Return a single assertion of the step. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.assertions.get"];
+        get: operations["api_journeys_scenarios_steps_assertions_get"];
         put?: never;
         post?: never;
         /**
          * Delete an assertion
          * @description Soft-delete an assertion. Editing roles only.
          */
-        delete: operations["api.journeys.scenarios.steps.assertions.delete"];
+        delete: operations["api_journeys_scenarios_steps_assertions_delete"];
         options?: never;
         head?: never;
         /**
          * Update an assertion
          * @description Partially update an assertion (assertion type, parameters, status). `parameters` must match the assertion type's schema. Editing roles only.
          */
-        patch: operations["api.journeys.scenarios.steps.assertions.update"];
+        patch: operations["api_journeys_scenarios_steps_assertions_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/routes": {
@@ -1599,13 +1599,13 @@ export interface paths {
          * List step routes
          * @description List the application routes linked to a step, most recent first. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.routes.list"];
+        get: operations["api_journeys_scenarios_steps_routes_list"];
         put?: never;
         /**
          * Link an application route
          * @description Link the step to an application route. The application must belong to the account and the route to that application. Dev roles only.
          */
-        post: operations["api.journeys.scenarios.steps.routes.create"];
+        post: operations["api_journeys_scenarios_steps_routes_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1623,14 +1623,14 @@ export interface paths {
          * Get a step route
          * @description Return a single route link of the step. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.routes.get"];
+        get: operations["api_journeys_scenarios_steps_routes_get"];
         put?: never;
         post?: never;
         /**
          * Unlink an application route
          * @description Soft-delete a route link. Dev roles only.
          */
-        delete: operations["api.journeys.scenarios.steps.routes.delete"];
+        delete: operations["api_journeys_scenarios_steps_routes_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1647,13 +1647,13 @@ export interface paths {
          * List journey comments
          * @description List the root comments on a journey, oldest first. Any member may read.
          */
-        get: operations["api.journeys.comments.list"];
+        get: operations["api_journeys_comments_list"];
         put?: never;
         /**
          * Comment on a journey
          * @description Post a comment on a journey. Any member may post.
          */
-        post: operations["api.journeys.comments.create"];
+        post: operations["api_journeys_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1671,13 +1671,13 @@ export interface paths {
          * List scenario comments
          * @description List the root comments on a journey scenario, oldest first. Any member may read.
          */
-        get: operations["api.journeys.scenarios.comments.list"];
+        get: operations["api_journeys_scenarios_comments_list"];
         put?: never;
         /**
          * Comment on a scenario
          * @description Post a comment on a journey scenario. Any member may post.
          */
-        post: operations["api.journeys.scenarios.comments.create"];
+        post: operations["api_journeys_scenarios_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1695,13 +1695,13 @@ export interface paths {
          * List step comments
          * @description List the root comments on a scenario step, oldest first. Any member may read.
          */
-        get: operations["api.journeys.scenarios.steps.comments.list"];
+        get: operations["api_journeys_scenarios_steps_comments_list"];
         put?: never;
         /**
          * Comment on a step
          * @description Post a comment on a scenario step. Any member may post.
          */
-        post: operations["api.journeys.scenarios.steps.comments.create"];
+        post: operations["api_journeys_scenarios_steps_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1719,13 +1719,13 @@ export interface paths {
          * List databases
          * @description List the databases of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.databases.list"];
+        get: operations["api_databases_list"];
         put?: never;
         /**
          * Create a database
          * @description Create a database. It starts as a draft owned by the caller. Owners, administrators, lead developers and data analysts only.
          */
-        post: operations["api.databases.create"];
+        post: operations["api_databases_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1743,21 +1743,21 @@ export interface paths {
          * Get a database
          * @description Return a single database of the account. Any member may read.
          */
-        get: operations["api.databases.get"];
+        get: operations["api_databases_get"];
         put?: never;
         post?: never;
         /**
          * Delete a database
          * @description Soft-delete a database; its versions, tables and columns are soft-deleted as well. Data roles only.
          */
-        delete: operations["api.databases.delete"];
+        delete: operations["api_databases_delete"];
         options?: never;
         head?: never;
         /**
          * Update a database
          * @description Partially update a database (type, title, description, status). Data roles only.
          */
-        patch: operations["api.databases.update"];
+        patch: operations["api_databases_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/versions": {
@@ -1771,13 +1771,13 @@ export interface paths {
          * List database versions
          * @description List the versions of a database, most recent first. Any member may read.
          */
-        get: operations["api.databases.versions.list"];
+        get: operations["api_databases_versions_list"];
         put?: never;
         /**
          * Create a database version
          * @description Create a version. It starts as a draft. Data roles only.
          */
-        post: operations["api.databases.versions.create"];
+        post: operations["api_databases_versions_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1795,14 +1795,14 @@ export interface paths {
          * Get a database version
          * @description Return a single version of the database. Any member may read.
          */
-        get: operations["api.databases.versions.get"];
+        get: operations["api_databases_versions_get"];
         put?: never;
         post?: never;
         /**
          * Delete a database version
          * @description Soft-delete a version; its tables and columns are soft-deleted as well. Data roles only.
          */
-        delete: operations["api.databases.versions.delete"];
+        delete: operations["api_databases_versions_delete"];
         options?: never;
         head?: never;
         /**
@@ -1811,7 +1811,7 @@ export interface paths {
          *
          *     **Setting `status` to `active` also archives the database's previously active version** and stamps both versions' activity windows, so a database has at most one active version. Setting it back to `draft` clears the window.
          */
-        patch: operations["api.databases.versions.update"];
+        patch: operations["api_databases_versions_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables": {
@@ -1825,13 +1825,13 @@ export interface paths {
          * List tables
          * @description List the tables of a database version, most recent first, each with its columns. Filter with `tagIds` (repeat the query param) to keep only the tables carrying at least one of those tags. Any member may read.
          */
-        get: operations["api.databases.versions.tables.list"];
+        get: operations["api_databases_versions_tables_list"];
         put?: never;
         /**
          * Create a table
          * @description Create a table, optionally with its columns in one call. Each column references a catalogued column type and may model a foreign key. Data roles only.
          */
-        post: operations["api.databases.versions.tables.create"];
+        post: operations["api_databases_versions_tables_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1849,21 +1849,21 @@ export interface paths {
          * Get a table
          * @description Return a single table of the version, including its columns. Any member may read.
          */
-        get: operations["api.databases.versions.tables.get"];
+        get: operations["api_databases_versions_tables_get"];
         put?: never;
         post?: never;
         /**
          * Delete a table
          * @description Soft-delete a table; its columns are soft-deleted as well. Data roles only.
          */
-        delete: operations["api.databases.versions.tables.delete"];
+        delete: operations["api_databases_versions_tables_delete"];
         options?: never;
         head?: never;
         /**
          * Update a table
          * @description Partially update a table (type, schema, name, description, color, status). If `columns` is sent, it fully replaces the table's columns. Data roles only.
          */
-        patch: operations["api.databases.versions.tables.update"];
+        patch: operations["api_databases_versions_tables_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns": {
@@ -1877,13 +1877,13 @@ export interface paths {
          * List columns
          * @description List the columns of a table, in insertion order. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
-        get: operations["api.databases.versions.tables.columns.list"];
+        get: operations["api_databases_versions_tables_columns_list"];
         put?: never;
         /**
          * Create a column
          * @description Create a column on the table. It references a catalogued column type and may model a foreign key to another table of the account. Data roles only.
          */
-        post: operations["api.databases.versions.tables.columns.create"];
+        post: operations["api_databases_versions_tables_columns_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1903,7 +1903,7 @@ export interface paths {
          * Reorder columns
          * @description Reorder the columns of a table. Send `columnIds` — every column of the table in its new order — or `ranks`, mapping a column id to its new position, which may cover only the columns that move. Returns the table's columns in their new order. Data roles and developers only.
          */
-        post: operations["api.databases.versions.tables.columns.reorder"];
+        post: operations["api_databases_versions_tables_columns_reorder"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1921,21 +1921,21 @@ export interface paths {
          * Get a column
          * @description Return a single column of the table. Any member may read.
          */
-        get: operations["api.databases.versions.tables.columns.get"];
+        get: operations["api_databases_versions_tables_columns_get"];
         put?: never;
         post?: never;
         /**
          * Delete a column
          * @description Soft-delete a column. Data roles only.
          */
-        delete: operations["api.databases.versions.tables.columns.delete"];
+        delete: operations["api_databases_versions_tables_columns_delete"];
         options?: never;
         head?: never;
         /**
          * Update a column
          * @description Partially update a column (type, foreign key, nullable, unique, default, name, description, color, tags). Data roles only.
          */
-        patch: operations["api.databases.versions.tables.columns.update"];
+        patch: operations["api_databases_versions_tables_columns_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations": {
@@ -1949,13 +1949,13 @@ export interface paths {
          * List database migrations
          * @description List the migrations leaving this database, most recent first. Any member may read.
          */
-        get: operations["api.databases.migrations.list"];
+        get: operations["api_databases_migrations_list"];
         put?: never;
         /**
          * Create a database migration
          * @description Plan a migration leaving a version of this database towards a version of any database of the account. It starts as a draft. Data roles only.
          */
-        post: operations["api.databases.migrations.create"];
+        post: operations["api_databases_migrations_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1973,21 +1973,21 @@ export interface paths {
          * Get a database migration
          * @description Return a single migration of the database. Any member may read.
          */
-        get: operations["api.databases.migrations.get"];
+        get: operations["api_databases_migrations_get"];
         put?: never;
         post?: never;
         /**
          * Delete a database migration
          * @description Soft-delete a migration; its column steps are soft-deleted as well. Data roles only.
          */
-        delete: operations["api.databases.migrations.delete"];
+        delete: operations["api_databases_migrations_delete"];
         options?: never;
         head?: never;
         /**
          * Update a database migration
          * @description Partially update a migration (type, title, description, source version, destination database and version). Data roles only.
          */
-        patch: operations["api.databases.migrations.update"];
+        patch: operations["api_databases_migrations_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/draft": {
@@ -2003,7 +2003,7 @@ export interface paths {
          * Move a migration back to draft
          * @description Set the migration status back to draft. Data roles only.
          */
-        post: operations["api.databases.migrations.draft"];
+        post: operations["api_databases_migrations_draft"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2023,7 +2023,7 @@ export interface paths {
          * Validate a migration
          * @description Set the migration status to validated. Data roles only.
          */
-        post: operations["api.databases.migrations.validated"];
+        post: operations["api_databases_migrations_validated"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2043,7 +2043,7 @@ export interface paths {
          * Complete a migration
          * @description Set the migration status to completed. Data roles only.
          */
-        post: operations["api.databases.migrations.completed"];
+        post: operations["api_databases_migrations_completed"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2063,7 +2063,7 @@ export interface paths {
          * Cancel a migration
          * @description Set the migration status to cancelled. Data roles only.
          */
-        post: operations["api.databases.migrations.cancelled"];
+        post: operations["api_databases_migrations_cancelled"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2081,13 +2081,13 @@ export interface paths {
          * List migration columns
          * @description List the column steps of a migration, in insertion order. Any member may read.
          */
-        get: operations["api.databases.migrations.columns.list"];
+        get: operations["api_databases_migrations_columns_list"];
         put?: never;
         /**
          * Create a migration column
          * @description Add a column step to the migration. Source endpoints must belong to the migration's source version, destination endpoints to its destination version. It starts as a draft. Data roles and developers only.
          */
-        post: operations["api.databases.migrations.columns.create"];
+        post: operations["api_databases_migrations_columns_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2105,21 +2105,21 @@ export interface paths {
          * Get a migration column
          * @description Return a single column step of the migration. Any member may read.
          */
-        get: operations["api.databases.migrations.columns.get"];
+        get: operations["api_databases_migrations_columns_get"];
         put?: never;
         post?: never;
         /**
          * Delete a migration column
          * @description Soft-delete a column step of the migration. Data roles and developers only.
          */
-        delete: operations["api.databases.migrations.columns.delete"];
+        delete: operations["api_databases_migrations_columns_delete"];
         options?: never;
         head?: never;
         /**
          * Update a migration column
          * @description Partially update a column step (type, source and destination endpoints, transformation method, description). Data roles and developers only.
          */
-        patch: operations["api.databases.migrations.columns.update"];
+        patch: operations["api_databases_migrations_columns_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/draft": {
@@ -2135,7 +2135,7 @@ export interface paths {
          * Move a migration column back to draft
          * @description Set the column step status back to draft. Data roles only.
          */
-        post: operations["api.databases.migrations.columns.draft"];
+        post: operations["api_databases_migrations_columns_draft"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2155,7 +2155,7 @@ export interface paths {
          * Submit a migration column for confirmation
          * @description Set the column step status to awaiting confirmation. Data roles only.
          */
-        post: operations["api.databases.migrations.columns.toBeConfirmed"];
+        post: operations["api_databases_migrations_columns_toBeConfirmed"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2175,7 +2175,7 @@ export interface paths {
          * Confirm a migration column
          * @description Set the column step status to confirmed. Data roles only.
          */
-        post: operations["api.databases.migrations.columns.confirmed"];
+        post: operations["api_databases_migrations_columns_confirmed"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2193,13 +2193,13 @@ export interface paths {
          * List database comments
          * @description List the root comments on a database, oldest first. Any member may read.
          */
-        get: operations["api.databases.comments.list"];
+        get: operations["api_databases_comments_list"];
         put?: never;
         /**
          * Comment on a database
          * @description Post a comment on a database. Any member may post.
          */
-        post: operations["api.databases.comments.create"];
+        post: operations["api_databases_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2217,13 +2217,13 @@ export interface paths {
          * List table comments
          * @description List the root comments on a database table, oldest first. Any member may read.
          */
-        get: operations["api.databases.versions.tables.comments.list"];
+        get: operations["api_databases_versions_tables_comments_list"];
         put?: never;
         /**
          * Comment on a table
          * @description Post a comment on a database table. Any member may post.
          */
-        post: operations["api.databases.versions.tables.comments.create"];
+        post: operations["api_databases_versions_tables_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2241,13 +2241,13 @@ export interface paths {
          * List column comments
          * @description List the root comments on a database column, oldest first. Any member may read.
          */
-        get: operations["api.databases.versions.tables.columns.comments.list"];
+        get: operations["api_databases_versions_tables_columns_comments_list"];
         put?: never;
         /**
          * Comment on a column
          * @description Post a comment on a database column. Any member may post.
          */
-        post: operations["api.databases.versions.tables.columns.comments.create"];
+        post: operations["api_databases_versions_tables_columns_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2265,13 +2265,13 @@ export interface paths {
          * List migration comments
          * @description List the root comments on a database migration, oldest first. Any member may read.
          */
-        get: operations["api.databases.migrations.comments.list"];
+        get: operations["api_databases_migrations_comments_list"];
         put?: never;
         /**
          * Comment on a migration
          * @description Post a comment on a database migration. Any member may post.
          */
-        post: operations["api.databases.migrations.comments.create"];
+        post: operations["api_databases_migrations_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2289,13 +2289,13 @@ export interface paths {
          * List migration column comments
          * @description List the root comments on a migration column step, oldest first. Any member may read.
          */
-        get: operations["api.databases.migrations.columns.comments.list"];
+        get: operations["api_databases_migrations_columns_comments_list"];
         put?: never;
         /**
          * Comment on a migration column
          * @description Post a comment on a migration column step. Any member may post.
          */
-        post: operations["api.databases.migrations.columns.comments.create"];
+        post: operations["api_databases_migrations_columns_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2313,13 +2313,13 @@ export interface paths {
          * List services
          * @description List the services of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
          */
-        get: operations["api.services.list"];
+        get: operations["api_services_list"];
         put?: never;
         /**
          * Create a service
          * @description Create a service. It starts as a draft owned by the caller. Dev roles only.
          */
-        post: operations["api.services.create"];
+        post: operations["api_services_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2337,21 +2337,21 @@ export interface paths {
          * Get a service
          * @description Return a single service of the account. Any member may read.
          */
-        get: operations["api.services.get"];
+        get: operations["api_services_get"];
         put?: never;
         post?: never;
         /**
          * Delete a service
          * @description Soft-delete a service; its actions are soft-deleted as well. Dev roles only.
          */
-        delete: operations["api.services.delete"];
+        delete: operations["api_services_delete"];
         options?: never;
         head?: never;
         /**
          * Update a service
          * @description Partially update a service (type, title, description, picture, url, OpenAPI url, status). Dev roles only.
          */
-        patch: operations["api.services.update"];
+        patch: operations["api_services_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/services/{service_id}/actions": {
@@ -2365,13 +2365,13 @@ export interface paths {
          * List service actions
          * @description List the actions of a service, most recent first. Any member may read.
          */
-        get: operations["api.services.actions.list"];
+        get: operations["api_services_actions_list"];
         put?: never;
         /**
          * Create a service action
          * @description Create an action. It starts as a draft owned by the caller. Dev roles only.
          */
-        post: operations["api.services.actions.create"];
+        post: operations["api_services_actions_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2389,21 +2389,21 @@ export interface paths {
          * Get a service action
          * @description Return a single action of the service. Any member may read.
          */
-        get: operations["api.services.actions.get"];
+        get: operations["api_services_actions_get"];
         put?: never;
         post?: never;
         /**
          * Delete a service action
          * @description Soft-delete a single action. Dev roles only.
          */
-        delete: operations["api.services.actions.delete"];
+        delete: operations["api_services_actions_delete"];
         options?: never;
         head?: never;
         /**
          * Update a service action
          * @description Partially update an action (type, title, description, method, path, status). Dev roles only.
          */
-        patch: operations["api.services.actions.update"];
+        patch: operations["api_services_actions_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/services/{service_id}/comments": {
@@ -2417,13 +2417,13 @@ export interface paths {
          * List service comments
          * @description List the root comments on a service, oldest first. Any member may read.
          */
-        get: operations["api.services.comments.list"];
+        get: operations["api_services_comments_list"];
         put?: never;
         /**
          * Comment on a service
          * @description Post a comment on a service. Any member may post.
          */
-        post: operations["api.services.comments.create"];
+        post: operations["api_services_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2441,13 +2441,13 @@ export interface paths {
          * List action comments
          * @description List the root comments on a service action, oldest first. Any member may read.
          */
-        get: operations["api.services.actions.comments.list"];
+        get: operations["api_services_actions_comments_list"];
         put?: never;
         /**
          * Comment on a service action
          * @description Post a comment on a service action. Any member may post.
          */
-        post: operations["api.services.actions.comments.create"];
+        post: operations["api_services_actions_comments_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2465,13 +2465,13 @@ export interface paths {
          * List tags
          * @description List the tags of the account, optionally filtered by entity type. Any member may read.
          */
-        get: operations["api.tags.list"];
+        get: operations["api_tags_list"];
         put?: never;
         /**
          * Create a tag
          * @description Create a tag for a given entity type. Any member may create.
          */
-        post: operations["api.tags.create"];
+        post: operations["api_tags_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2489,21 +2489,21 @@ export interface paths {
          * Get a tag
          * @description Return a single tag of the account. Any member may read.
          */
-        get: operations["api.tags.get"];
+        get: operations["api_tags_get"];
         put?: never;
         post?: never;
         /**
          * Delete a tag
          * @description Soft-delete a tag and detach it from every entity that carried it. Owners and administrators only.
          */
-        delete: operations["api.tags.delete"];
+        delete: operations["api_tags_delete"];
         options?: never;
         head?: never;
         /**
          * Update a tag
          * @description Partially update a tag (label, colors). Owners and administrators only.
          */
-        patch: operations["api.tags.update"];
+        patch: operations["api_tags_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/comments": {
@@ -2517,7 +2517,7 @@ export interface paths {
          * List comments
          * @description List the comments of the account, most recent first. Filter by entity type, entity id, owner and/or status (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the comment's date, ISO-8601), and sort by date/status/statusDate. Each comment carries its resolved `entity` — the commented entity's type, id and label, with its containing entities in `parent` (null when the entity has since been deleted). Any member may read.
          */
-        get: operations["api.comments.list"];
+        get: operations["api_comments_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2537,21 +2537,21 @@ export interface paths {
          * Get a comment
          * @description Return a single comment of the account. Any member may read.
          */
-        get: operations["api.comments.get"];
+        get: operations["api_comments_get"];
         put?: never;
         post?: never;
         /**
          * Delete a comment
          * @description Soft-delete a comment and its direct replies. The author or an owner/administrator only.
          */
-        delete: operations["api.comments.delete"];
+        delete: operations["api_comments_delete"];
         options?: never;
         head?: never;
         /**
          * Edit a comment
          * @description Edit a comment's content. The author or an owner/administrator only.
          */
-        patch: operations["api.comments.update"];
+        patch: operations["api_comments_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/comments/{comment_id}/remove": {
@@ -2567,7 +2567,7 @@ export interface paths {
          * Remove a comment
          * @description Mark a comment as removed and drop its content, keeping the thread. The author or an owner/administrator only.
          */
-        post: operations["api.comments.remove"];
+        post: operations["api_comments_remove"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2585,13 +2585,13 @@ export interface paths {
          * List replies
          * @description List the direct replies to a comment, oldest first. Any member may read.
          */
-        get: operations["api.comments.replies.list"];
+        get: operations["api_comments_replies_list"];
         put?: never;
         /**
          * Reply to a comment
          * @description Post a reply to a comment. Any member may reply.
          */
-        post: operations["api.comments.replies.create"];
+        post: operations["api_comments_replies_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2609,7 +2609,7 @@ export interface paths {
          * List action types
          * @description List every available step action and the shape of its parameters.
          */
-        get: operations["api.core.actionTypes.list"];
+        get: operations["api_core_actionTypes_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2629,7 +2629,7 @@ export interface paths {
          * Get an action type
          * @description Return a single action type and the shape of its parameters.
          */
-        get: operations["api.core.actionTypes.get"];
+        get: operations["api_core_actionTypes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2649,7 +2649,7 @@ export interface paths {
          * List assertion types
          * @description List every available step assertion and the shape of its parameters.
          */
-        get: operations["api.core.assertionTypes.list"];
+        get: operations["api_core_assertionTypes_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2669,7 +2669,7 @@ export interface paths {
          * Get an assertion type
          * @description Return a single assertion type and the shape of its parameters.
          */
-        get: operations["api.core.assertionTypes.get"];
+        get: operations["api_core_assertionTypes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2689,7 +2689,7 @@ export interface paths {
          * List database column types
          * @description List the available SQL column types, optionally filtered by database engine.
          */
-        get: operations["api.core.databaseColumnTypes.list"];
+        get: operations["api_core_databaseColumnTypes_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2709,7 +2709,7 @@ export interface paths {
          * Get a database column type
          * @description Return a single SQL column type.
          */
-        get: operations["api.core.databaseColumnTypes.get"];
+        get: operations["api_core_databaseColumnTypes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2729,7 +2729,7 @@ export interface paths {
          * Liveness probe
          * @description Lightweight liveness probe for monitoring tooling (load balancers, uptime checks, deploy pipelines). Always returns `200 OK` when the process is alive.
          */
-        get: operations["api.health.check"];
+        get: operations["api_health_check"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2751,7 +2751,7 @@ export interface paths {
          * Create a new account
          * @description Register a new email/password account. Always succeeds (a taken email is not revealed) and sends an activation email the user must confirm before signing in.
          */
-        post: operations["api.auth.register"];
+        post: operations["api_auth_register"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2771,7 +2771,7 @@ export interface paths {
          * Confirm an account from its activation link
          * @description Activate a newly registered account using the token from the activation email.
          */
-        post: operations["api.auth.activate"];
+        post: operations["api_auth_activate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2791,7 +2791,7 @@ export interface paths {
          * Re-send the activation email
          * @description Ask for a fresh activation email. Always succeeds, whether or not the email has a pending account.
          */
-        post: operations["api.auth.resendActivation"];
+        post: operations["api_auth_resendActivation"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2811,7 +2811,7 @@ export interface paths {
          * Sign in with email and password
          * @description Authenticate with email and password. On success returns an access + refresh token pair. When the account has a second factor, returns a short-lived intermediate token and the list of factors to complete (`twoFactorEnabled: true`).
          */
-        post: operations["api.auth.login"];
+        post: operations["api_auth_login"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2831,7 +2831,7 @@ export interface paths {
          * Request a password-reset email
          * @description Send a password-reset link to the given email. Always succeeds so registered emails aren't revealed.
          */
-        post: operations["api.auth.password.forgot"];
+        post: operations["api_auth_password_forgot"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2851,7 +2851,7 @@ export interface paths {
          * Set a new password from a reset link
          * @description Set a new password using the token from the reset email. Invalidates all existing sessions.
          */
-        post: operations["api.auth.password.reset"];
+        post: operations["api_auth_password_reset"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2871,7 +2871,7 @@ export interface paths {
          * Sign in with Google
          * @description Authenticate with a Google ID token obtained in the browser. Creates the account on first sign-in. Returns the same shape as email login (may require a second factor).
          */
-        post: operations["api.auth.sso.google"];
+        post: operations["api_auth_sso_google"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2891,7 +2891,7 @@ export interface paths {
          * Complete login with an authenticator code
          * @description Second-factor step: exchange the intermediate token and a 6-digit authenticator code for a full session.
          */
-        post: operations["api.auth.twoFactor.otp"];
+        post: operations["api_auth_twoFactor_otp"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2911,7 +2911,7 @@ export interface paths {
          * Complete login with a recovery code
          * @description Second-factor fallback: exchange the intermediate token and a one-time recovery code for a full session.
          */
-        post: operations["api.auth.twoFactor.recoveryCode"];
+        post: operations["api_auth_twoFactor_recoveryCode"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2931,7 +2931,7 @@ export interface paths {
          * Get security-key assertion options
          * @description Start a security-key login: returns the WebAuthn options for `navigator.credentials.get` plus a token binding them to this login.
          */
-        post: operations["api.auth.twoFactor.u2f.options"];
+        post: operations["api_auth_twoFactor_u2f_options"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2951,7 +2951,7 @@ export interface paths {
          * Complete login with a security key
          * @description Second-factor step: verify the browser's WebAuthn assertion and return a full session.
          */
-        post: operations["api.auth.twoFactor.u2f"];
+        post: operations["api_auth_twoFactor_u2f"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2971,7 +2971,7 @@ export interface paths {
          * Exchange a refresh token for a new token pair
          * @description Trade a valid refresh token for a fresh access + refresh pair. Call it when the access token has expired.
          */
-        post: operations["api.auth.refresh"];
+        post: operations["api_auth_refresh"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2989,7 +2989,7 @@ export interface paths {
          * Get the signed-in user's profile
          * @description Return the profile of the currently authenticated user.
          */
-        get: operations["api.me.get"];
+        get: operations["api_me_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2999,7 +2999,7 @@ export interface paths {
          * Update the signed-in user's profile
          * @description Partially update the current user's profile — only the fields sent are changed.
          */
-        patch: operations["api.me.update"];
+        patch: operations["api_me_update"];
         trace?: never;
     };
     "/me/picture": {
@@ -3015,7 +3015,7 @@ export interface paths {
          * Upload the signed-in user's profile picture
          * @description Upload a profile picture (multipart, field `file`). The image is center-cropped to a square and resized server-side; the previous picture is replaced.
          */
-        post: operations["api.me.setPicture"];
+        post: operations["api_me_setPicture"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3033,7 +3033,7 @@ export interface paths {
          * Get the account's security overview
          * @description Return whether a password, Google link, authenticator, recovery codes and security keys are set.
          */
-        get: operations["api.me.security.overview"];
+        get: operations["api_me_security_overview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3055,7 +3055,7 @@ export interface paths {
          * Set a password on the account
          * @description Set a password on an account that doesn't have one yet (e.g. created via Google).
          */
-        post: operations["api.me.security.password.create"];
+        post: operations["api_me_security_password_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3063,7 +3063,7 @@ export interface paths {
          * Change the account password
          * @description Change the password. Requires the current password and signs out other sessions.
          */
-        patch: operations["api.me.security.password.update"];
+        patch: operations["api_me_security_password_update"];
         trace?: never;
     };
     "/me/security/otp": {
@@ -3077,13 +3077,13 @@ export interface paths {
          * List active authenticators
          * @description List the authenticators (TOTP) currently active on the account.
          */
-        get: operations["api.me.security.otp.list"];
+        get: operations["api_me_security_otp_list"];
         put?: never;
         /**
          * Start authenticator (TOTP) setup
          * @description Generate a new authenticator secret and its provisioning URI (render as a QR code). Confirm it with a code to activate.
          */
-        post: operations["api.me.security.otp.generate"];
+        post: operations["api_me_security_otp_generate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3103,7 +3103,7 @@ export interface paths {
          * Confirm and activate an authenticator
          * @description Confirm the pending authenticator with a live 6-digit code. Returns a fresh set of one-time recovery codes.
          */
-        post: operations["api.me.security.otp.activate"];
+        post: operations["api_me_security_otp_activate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3124,7 +3124,7 @@ export interface paths {
          * Remove an authenticator
          * @description Disable a registered authenticator.
          */
-        delete: operations["api.me.security.otp.disable"];
+        delete: operations["api_me_security_otp_disable"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3143,7 +3143,7 @@ export interface paths {
          * Regenerate recovery codes
          * @description Replace all recovery codes with a fresh set. The old codes stop working immediately.
          */
-        post: operations["api.me.security.recoveryCodes.regenerate"];
+        post: operations["api_me_security_recoveryCodes_regenerate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3161,13 +3161,13 @@ export interface paths {
          * List registered security keys
          * @description List the WebAuthn security keys registered on the account.
          */
-        get: operations["api.me.security.u2f.list"];
+        get: operations["api_me_security_u2f_list"];
         put?: never;
         /**
          * Register a security key
          * @description Finish registering a security key with the browser's attestation and an optional label.
          */
-        post: operations["api.me.security.u2f.register"];
+        post: operations["api_me_security_u2f_register"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3187,7 +3187,7 @@ export interface paths {
          * Get security-key registration options
          * @description Start registering a security key: returns WebAuthn options for `navigator.credentials.create` plus a binding token.
          */
-        post: operations["api.me.security.u2f.options"];
+        post: operations["api_me_security_u2f_options"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3208,14 +3208,14 @@ export interface paths {
          * Remove a security key
          * @description Unregister a security key.
          */
-        delete: operations["api.me.security.u2f.disable"];
+        delete: operations["api_me_security_u2f_disable"];
         options?: never;
         head?: never;
         /**
          * Rename a security key
          * @description Change the label of a registered security key.
          */
-        patch: operations["api.me.security.u2f.rename"];
+        patch: operations["api_me_security_u2f_rename"];
         trace?: never;
     };
     "/me/security/logs": {
@@ -3229,7 +3229,7 @@ export interface paths {
          * List recent authentication activity
          * @description Return the most recent authentication-log entries for the account (newest first).
          */
-        get: operations["api.me.security.logs.list"];
+        get: operations["api_me_security_logs_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3249,7 +3249,7 @@ export interface paths {
          * Look up a pending device-flow request by its user code
          * @description Resolve the pending authorization behind a device-flow user code, for the consent screen.
          */
-        get: operations["api.me.integrations.authorize.byUserCode"];
+        get: operations["api_me_integrations_authorize_byUserCode"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3269,7 +3269,7 @@ export interface paths {
          * Get a pending authorization request
          * @description Fetch the details shown on the consent screen for an authorization-code request.
          */
-        get: operations["api.me.integrations.authorize.get"];
+        get: operations["api_me_integrations_authorize_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3291,7 +3291,7 @@ export interface paths {
          * Approve an authorization request
          * @description Grant the client the chosen scope. Returns a redirect URL for the auth-code flow, or null for device.
          */
-        post: operations["api.me.integrations.authorize.approve"];
+        post: operations["api_me_integrations_authorize_approve"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3311,7 +3311,7 @@ export interface paths {
          * Deny an authorization request
          * @description Refuse the client. Returns a redirect URL (with `error=access_denied`) for the auth-code flow, else null.
          */
-        post: operations["api.me.integrations.authorize.deny"];
+        post: operations["api_me_integrations_authorize_deny"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3329,7 +3329,7 @@ export interface paths {
          * List connected integrations
          * @description List the integrations with an active grant on the account.
          */
-        get: operations["api.me.integrations.grants.list"];
+        get: operations["api_me_integrations_grants_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3352,7 +3352,7 @@ export interface paths {
          * Revoke a connected integration
          * @description Revoke the grant, immediately invalidating the integration's tokens.
          */
-        delete: operations["api.me.integrations.grants.revoke"];
+        delete: operations["api_me_integrations_grants_revoke"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3369,7 +3369,7 @@ export interface paths {
          * List my invitations
          * @description List invitations addressed to the signed-in user's email, optionally filtered by status.
          */
-        get: operations["api.me.invitations.list"];
+        get: operations["api_me_invitations_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3389,7 +3389,7 @@ export interface paths {
          * Get one of my invitations
          * @description Return a single invitation addressed to the signed-in user.
          */
-        get: operations["api.me.invitations.get"];
+        get: operations["api_me_invitations_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3411,7 +3411,7 @@ export interface paths {
          * Accept an invitation
          * @description Accept a pending invitation and join the account as a guest member.
          */
-        post: operations["api.me.invitations.accept"];
+        post: operations["api_me_invitations_accept"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3431,7 +3431,7 @@ export interface paths {
          * Refuse an invitation
          * @description Decline a pending invitation.
          */
-        post: operations["api.me.invitations.refuse"];
+        post: operations["api_me_invitations_refuse"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3449,7 +3449,7 @@ export interface paths {
          * OAuth authorization server metadata
          * @description RFC 8414 discovery document describing the OAuth endpoints and capabilities.
          */
-        get: operations["api.oauth.metadata.authorizationServer"];
+        get: operations["api_oauth_metadata_authorizationServer"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3466,7 +3466,7 @@ export interface paths {
             cookie?: never;
         };
         /** OAuth protected resource metadata */
-        get: operations["api.oauth.metadata.protectedResource"];
+        get: operations["api_oauth_metadata_protectedResource"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3488,7 +3488,7 @@ export interface paths {
          * Register an OAuth client
          * @description Dynamic client registration (RFC 7591). Returns the client id (and secret for confidential clients).
          */
-        post: operations["api.oauth.register"];
+        post: operations["api_oauth_register"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3506,7 +3506,7 @@ export interface paths {
          * Authorization endpoint (redirects to the consent screen)
          * @description Start the authorization-code + PKCE flow, then redirect the browser to the SPA consent page.
          */
-        get: operations["api.oauth.authorize"];
+        get: operations["api_oauth_authorize"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3528,7 +3528,7 @@ export interface paths {
          * Token endpoint
          * @description Exchange an authorization code, device code or refresh token for an access + refresh token pair.
          */
-        post: operations["api.oauth.token"];
+        post: operations["api_oauth_token"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3548,7 +3548,7 @@ export interface paths {
          * Device authorization endpoint
          * @description Start the device flow (RFC 8628). Returns a device code and a user code to enter at the verification URI.
          */
-        post: operations["api.oauth.device.authorize"];
+        post: operations["api_oauth_device_authorize"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3568,7 +3568,7 @@ export interface paths {
          * Revoke a token
          * @description Revoke an access or refresh token (RFC 7009). Always returns 200, even for unknown tokens.
          */
-        post: operations["api.oauth.revoke"];
+        post: operations["api_oauth_revoke"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4771,6 +4771,63 @@ export interface components {
              * @default false
              */
             twoFactorEnabled: boolean;
+        };
+        /** Body_api_accounts_setPicture */
+        Body_api_accounts_setPicture: {
+            /** File */
+            file: string;
+        };
+        /** Body_api_features_files_create */
+        Body_api_features_files_create: {
+            /** File */
+            file: string;
+        };
+        /** Body_api_journeys_scenarios_steps_files_create */
+        Body_api_journeys_scenarios_steps_files_create: {
+            /** File */
+            file: string;
+        };
+        /** Body_api_me_setPicture */
+        Body_api_me_setPicture: {
+            /** File */
+            file: string;
+        };
+        /** Body_api_oauth_device_authorize */
+        Body_api_oauth_device_authorize: {
+            /** Client Id */
+            client_id: string;
+            /** Scope */
+            scope?: string | null;
+        };
+        /** Body_api_oauth_revoke */
+        Body_api_oauth_revoke: {
+            /** Token */
+            token: string;
+            /** Client Id */
+            client_id: string;
+            /** Token Type Hint */
+            token_type_hint?: string | null;
+            /** Client Secret */
+            client_secret?: string | null;
+        };
+        /** Body_api_oauth_token */
+        Body_api_oauth_token: {
+            /** Grant Type */
+            grant_type: string;
+            /** Client Id */
+            client_id: string;
+            /** Client Secret */
+            client_secret?: string | null;
+            /** Code */
+            code?: string | null;
+            /** Code Verifier */
+            code_verifier?: string | null;
+            /** Redirect Uri */
+            redirect_uri?: string | null;
+            /** Device Code */
+            device_code?: string | null;
+            /** Refresh Token */
+            refresh_token?: string | null;
         };
         /**
          * CommentCreateForm
@@ -8028,63 +8085,6 @@ export interface components {
             /** Errors */
             errors: components["schemas"]["FieldError"][];
         };
-        /** Body_api.oauth.device.authorize */
-        authorize: {
-            /** Client Id */
-            client_id: string;
-            /** Scope */
-            scope?: string | null;
-        };
-        /** Body_api.accounts.setPicture */
-        fastapi___compat__v2__Body_api__accounts__setPicture: {
-            /** File */
-            file: string;
-        };
-        /** Body_api.features.files.create */
-        fastapi___compat__v2__Body_api__features__files__create: {
-            /** File */
-            file: string;
-        };
-        /** Body_api.journeys.scenarios.steps.files.create */
-        fastapi___compat__v2__Body_api__journeys__scenarios__steps__files__create: {
-            /** File */
-            file: string;
-        };
-        /** Body_api.me.setPicture */
-        fastapi___compat__v2__Body_api__me__setPicture: {
-            /** File */
-            file: string;
-        };
-        /** Body_api.oauth.revoke */
-        revoke: {
-            /** Token */
-            token: string;
-            /** Client Id */
-            client_id: string;
-            /** Token Type Hint */
-            token_type_hint?: string | null;
-            /** Client Secret */
-            client_secret?: string | null;
-        };
-        /** Body_api.oauth.token */
-        token: {
-            /** Grant Type */
-            grant_type: string;
-            /** Client Id */
-            client_id: string;
-            /** Client Secret */
-            client_secret?: string | null;
-            /** Code */
-            code?: string | null;
-            /** Code Verifier */
-            code_verifier?: string | null;
-            /** Redirect Uri */
-            redirect_uri?: string | null;
-            /** Device Code */
-            device_code?: string | null;
-            /** Refresh Token */
-            refresh_token?: string | null;
-        };
     };
     responses: never;
     parameters: never;
@@ -8094,7 +8094,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    "api.accounts.list": {
+    api_accounts_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["AccountStatus"][] | null;
@@ -8130,7 +8130,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.create": {
+    api_accounts_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -8163,7 +8163,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.get": {
+    api_accounts_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -8212,7 +8212,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.delete": {
+    api_accounts_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -8268,7 +8268,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.update": {
+    api_accounts_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -8321,7 +8321,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.setPicture": {
+    api_accounts_setPicture: {
         parameters: {
             query?: never;
             header?: never;
@@ -8332,7 +8332,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__accounts__setPicture"];
+                "multipart/form-data": components["schemas"]["Body_api_accounts_setPicture"];
             };
         };
         responses: {
@@ -8392,7 +8392,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.activate": {
+    api_accounts_activate: {
         parameters: {
             query?: never;
             header?: never;
@@ -8441,7 +8441,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.deactivate": {
+    api_accounts_deactivate: {
         parameters: {
             query?: never;
             header?: never;
@@ -8490,7 +8490,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.leave": {
+    api_accounts_leave: {
         parameters: {
             query?: never;
             header?: never;
@@ -8539,7 +8539,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.users.list": {
+    api_accounts_users_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -8588,7 +8588,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.users.get": {
+    api_accounts_users_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -8638,7 +8638,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.users.delete": {
+    api_accounts_users_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -8695,7 +8695,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.users.update": {
+    api_accounts_users_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -8758,7 +8758,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.users.leave": {
+    api_accounts_users_leave: {
         parameters: {
             query?: never;
             header?: never;
@@ -8817,7 +8817,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.list": {
+    api_accounts_invitations_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -8866,7 +8866,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.create": {
+    api_accounts_invitations_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -8919,7 +8919,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.get": {
+    api_accounts_invitations_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -8969,7 +8969,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.update": {
+    api_accounts_invitations_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -9032,7 +9032,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.cancel": {
+    api_accounts_invitations_cancel: {
         parameters: {
             query?: never;
             header?: never;
@@ -9091,7 +9091,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.invitations.resend": {
+    api_accounts_invitations_resend: {
         parameters: {
             query?: never;
             header?: never;
@@ -9150,7 +9150,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.usage.get": {
+    api_accounts_usage_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -9199,7 +9199,7 @@ export interface operations {
             };
         };
     };
-    "api.accounts.entitlements.get": {
+    api_accounts_entitlements_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -9248,7 +9248,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.list": {
+    api_applications_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["ApplicationStatus"][] | null;
@@ -9305,7 +9305,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.create": {
+    api_applications_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -9358,7 +9358,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.get": {
+    api_applications_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -9408,7 +9408,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.delete": {
+    api_applications_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -9456,7 +9456,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.update": {
+    api_applications_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -9510,7 +9510,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environments.list": {
+    api_applications_environments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -9560,7 +9560,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environments.create": {
+    api_applications_environments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -9614,7 +9614,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environments.get": {
+    api_applications_environments_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -9665,7 +9665,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environments.delete": {
+    api_applications_environments_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -9714,7 +9714,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environments.update": {
+    api_applications_environments_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -9769,7 +9769,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.versions.list": {
+    api_applications_versions_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -9819,7 +9819,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.versions.create": {
+    api_applications_versions_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -9873,7 +9873,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.versions.get": {
+    api_applications_versions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -9924,7 +9924,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.versions.delete": {
+    api_applications_versions_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -9973,7 +9973,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.versions.update": {
+    api_applications_versions_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -10028,7 +10028,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.list": {
+    api_applications_environmentVersions_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -10079,7 +10079,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.create": {
+    api_applications_environmentVersions_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -10134,7 +10134,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.get": {
+    api_applications_environmentVersions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -10186,7 +10186,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.delete": {
+    api_applications_environmentVersions_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -10236,7 +10236,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.update": {
+    api_applications_environmentVersions_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -10292,7 +10292,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.finished": {
+    api_applications_environmentVersions_finished: {
         parameters: {
             query?: never;
             header?: never;
@@ -10344,7 +10344,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.error": {
+    api_applications_environmentVersions_error: {
         parameters: {
             query?: never;
             header?: never;
@@ -10400,7 +10400,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.environmentVersions.cancelled": {
+    api_applications_environmentVersions_cancelled: {
         parameters: {
             query?: never;
             header?: never;
@@ -10452,7 +10452,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.features.list": {
+    api_applications_features_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -10502,7 +10502,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.features.create": {
+    api_applications_features_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -10556,7 +10556,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.features.get": {
+    api_applications_features_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -10607,7 +10607,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.features.delete": {
+    api_applications_features_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -10656,7 +10656,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.features.update": {
+    api_applications_features_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -10711,7 +10711,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.guards.list": {
+    api_applications_guards_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -10763,7 +10763,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.guards.create": {
+    api_applications_guards_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -10817,7 +10817,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.guards.get": {
+    api_applications_guards_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -10868,7 +10868,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.guards.delete": {
+    api_applications_guards_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -10917,7 +10917,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.guards.update": {
+    api_applications_guards_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -10972,7 +10972,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.roles.list": {
+    api_applications_roles_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -11022,7 +11022,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.roles.create": {
+    api_applications_roles_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -11076,7 +11076,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.roles.get": {
+    api_applications_roles_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -11127,7 +11127,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.roles.delete": {
+    api_applications_roles_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -11176,7 +11176,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.roles.update": {
+    api_applications_roles_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -11231,7 +11231,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.list": {
+    api_applications_routes_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -11283,7 +11283,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.create": {
+    api_applications_routes_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -11337,7 +11337,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.get": {
+    api_applications_routes_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -11388,7 +11388,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.delete": {
+    api_applications_routes_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -11437,7 +11437,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.update": {
+    api_applications_routes_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -11492,7 +11492,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.responses.list": {
+    api_applications_routes_responses_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -11543,7 +11543,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.responses.create": {
+    api_applications_routes_responses_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -11598,7 +11598,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.responses.get": {
+    api_applications_routes_responses_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -11650,7 +11650,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.responses.delete": {
+    api_applications_routes_responses_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -11700,7 +11700,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.responses.update": {
+    api_applications_routes_responses_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -11756,7 +11756,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.examples.list": {
+    api_applications_routes_examples_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -11807,7 +11807,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.examples.create": {
+    api_applications_routes_examples_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -11862,7 +11862,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.examples.get": {
+    api_applications_routes_examples_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -11914,7 +11914,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.examples.delete": {
+    api_applications_routes_examples_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -11964,7 +11964,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.examples.update": {
+    api_applications_routes_examples_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -12020,7 +12020,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.tables.list": {
+    api_applications_routes_tables_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -12071,7 +12071,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.tables.create": {
+    api_applications_routes_tables_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -12126,7 +12126,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.tables.get": {
+    api_applications_routes_tables_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -12178,7 +12178,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.tables.delete": {
+    api_applications_routes_tables_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -12228,7 +12228,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.tables.update": {
+    api_applications_routes_tables_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -12284,7 +12284,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.comments.list": {
+    api_applications_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -12325,7 +12325,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.comments.create": {
+    api_applications_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -12370,7 +12370,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.comments.list": {
+    api_applications_routes_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -12412,7 +12412,7 @@ export interface operations {
             };
         };
     };
-    "api.applications.routes.comments.create": {
+    api_applications_routes_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -12458,7 +12458,7 @@ export interface operations {
             };
         };
     };
-    "api.features.list": {
+    api_features_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["FeatureStatus"][] | null;
@@ -12515,7 +12515,7 @@ export interface operations {
             };
         };
     };
-    "api.features.create": {
+    api_features_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -12568,7 +12568,7 @@ export interface operations {
             };
         };
     };
-    "api.features.get": {
+    api_features_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -12618,7 +12618,7 @@ export interface operations {
             };
         };
     };
-    "api.features.delete": {
+    api_features_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -12666,7 +12666,7 @@ export interface operations {
             };
         };
     };
-    "api.features.update": {
+    api_features_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -12720,7 +12720,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.list": {
+    api_features_files_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -12770,7 +12770,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.create": {
+    api_features_files_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -12782,7 +12782,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__features__files__create"];
+                "multipart/form-data": components["schemas"]["Body_api_features_files_create"];
             };
         };
         responses: {
@@ -12842,7 +12842,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.get": {
+    api_features_files_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -12893,7 +12893,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.delete": {
+    api_features_files_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -12942,7 +12942,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.update": {
+    api_features_files_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -12997,7 +12997,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.activate": {
+    api_features_files_activate: {
         parameters: {
             query?: never;
             header?: never;
@@ -13048,7 +13048,7 @@ export interface operations {
             };
         };
     };
-    "api.features.files.archive": {
+    api_features_files_archive: {
         parameters: {
             query?: never;
             header?: never;
@@ -13099,7 +13099,7 @@ export interface operations {
             };
         };
     };
-    "api.features.journeys.list": {
+    api_features_journeys_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -13149,7 +13149,7 @@ export interface operations {
             };
         };
     };
-    "api.features.journeys.create": {
+    api_features_journeys_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -13203,7 +13203,7 @@ export interface operations {
             };
         };
     };
-    "api.features.journeys.get": {
+    api_features_journeys_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -13254,7 +13254,7 @@ export interface operations {
             };
         };
     };
-    "api.features.journeys.delete": {
+    api_features_journeys_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -13303,7 +13303,7 @@ export interface operations {
             };
         };
     };
-    "api.features.comments.list": {
+    api_features_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -13344,7 +13344,7 @@ export interface operations {
             };
         };
     };
-    "api.features.comments.create": {
+    api_features_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -13389,7 +13389,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.list": {
+    api_personas_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["PersonaStatus"][] | null;
@@ -13446,7 +13446,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.create": {
+    api_personas_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -13499,7 +13499,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.get": {
+    api_personas_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -13549,7 +13549,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.delete": {
+    api_personas_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -13597,7 +13597,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.update": {
+    api_personas_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -13651,7 +13651,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.comments.list": {
+    api_personas_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -13692,7 +13692,7 @@ export interface operations {
             };
         };
     };
-    "api.personas.comments.create": {
+    api_personas_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -13737,7 +13737,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.list": {
+    api_journeys_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["JourneyStatus"][] | null;
@@ -13795,7 +13795,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.create": {
+    api_journeys_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -13848,7 +13848,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.get": {
+    api_journeys_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -13898,7 +13898,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.delete": {
+    api_journeys_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -13946,7 +13946,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.update": {
+    api_journeys_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -14000,7 +14000,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.list": {
+    api_journeys_scenarios_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -14052,7 +14052,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.create": {
+    api_journeys_scenarios_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -14106,7 +14106,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.get": {
+    api_journeys_scenarios_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -14157,7 +14157,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.delete": {
+    api_journeys_scenarios_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -14206,7 +14206,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.update": {
+    api_journeys_scenarios_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -14261,7 +14261,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.list": {
+    api_journeys_scenarios_steps_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -14314,7 +14314,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.create": {
+    api_journeys_scenarios_steps_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -14369,7 +14369,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.get": {
+    api_journeys_scenarios_steps_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -14421,7 +14421,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.delete": {
+    api_journeys_scenarios_steps_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -14471,7 +14471,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.update": {
+    api_journeys_scenarios_steps_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -14527,7 +14527,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.list": {
+    api_journeys_scenarios_steps_files_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -14579,7 +14579,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.create": {
+    api_journeys_scenarios_steps_files_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -14593,7 +14593,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__journeys__scenarios__steps__files__create"];
+                "multipart/form-data": components["schemas"]["Body_api_journeys_scenarios_steps_files_create"];
             };
         };
         responses: {
@@ -14653,7 +14653,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.get": {
+    api_journeys_scenarios_steps_files_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -14706,7 +14706,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.delete": {
+    api_journeys_scenarios_steps_files_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -14757,7 +14757,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.update": {
+    api_journeys_scenarios_steps_files_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -14814,7 +14814,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.activate": {
+    api_journeys_scenarios_steps_files_activate: {
         parameters: {
             query?: never;
             header?: never;
@@ -14867,7 +14867,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.files.archive": {
+    api_journeys_scenarios_steps_files_archive: {
         parameters: {
             query?: never;
             header?: never;
@@ -14920,7 +14920,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.assertions.list": {
+    api_journeys_scenarios_steps_assertions_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -14972,7 +14972,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.assertions.create": {
+    api_journeys_scenarios_steps_assertions_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15028,7 +15028,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.assertions.get": {
+    api_journeys_scenarios_steps_assertions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -15081,7 +15081,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.assertions.delete": {
+    api_journeys_scenarios_steps_assertions_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -15132,7 +15132,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.assertions.update": {
+    api_journeys_scenarios_steps_assertions_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -15189,7 +15189,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.routes.list": {
+    api_journeys_scenarios_steps_routes_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -15241,7 +15241,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.routes.create": {
+    api_journeys_scenarios_steps_routes_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15297,7 +15297,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.routes.get": {
+    api_journeys_scenarios_steps_routes_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -15350,7 +15350,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.routes.delete": {
+    api_journeys_scenarios_steps_routes_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -15401,7 +15401,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.comments.list": {
+    api_journeys_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -15442,7 +15442,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.comments.create": {
+    api_journeys_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15487,7 +15487,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.comments.list": {
+    api_journeys_scenarios_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -15529,7 +15529,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.comments.create": {
+    api_journeys_scenarios_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15575,7 +15575,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.comments.list": {
+    api_journeys_scenarios_steps_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -15618,7 +15618,7 @@ export interface operations {
             };
         };
     };
-    "api.journeys.scenarios.steps.comments.create": {
+    api_journeys_scenarios_steps_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15665,7 +15665,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.list": {
+    api_databases_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["DatabaseStatus"][] | null;
@@ -15722,7 +15722,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.create": {
+    api_databases_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -15775,7 +15775,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.get": {
+    api_databases_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -15825,7 +15825,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.delete": {
+    api_databases_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -15873,7 +15873,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.update": {
+    api_databases_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -15927,7 +15927,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.list": {
+    api_databases_versions_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -15977,7 +15977,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.create": {
+    api_databases_versions_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -16031,7 +16031,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.get": {
+    api_databases_versions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -16082,7 +16082,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.delete": {
+    api_databases_versions_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -16131,7 +16131,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.update": {
+    api_databases_versions_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -16186,7 +16186,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.list": {
+    api_databases_versions_tables_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -16239,7 +16239,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.create": {
+    api_databases_versions_tables_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -16294,7 +16294,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.get": {
+    api_databases_versions_tables_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -16346,7 +16346,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.delete": {
+    api_databases_versions_tables_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -16396,7 +16396,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.update": {
+    api_databases_versions_tables_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -16452,7 +16452,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.list": {
+    api_databases_versions_tables_columns_list: {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
@@ -16506,7 +16506,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.create": {
+    api_databases_versions_tables_columns_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -16562,7 +16562,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.reorder": {
+    api_databases_versions_tables_columns_reorder: {
         parameters: {
             query?: never;
             header?: never;
@@ -16618,7 +16618,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.get": {
+    api_databases_versions_tables_columns_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -16671,7 +16671,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.delete": {
+    api_databases_versions_tables_columns_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -16722,7 +16722,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.update": {
+    api_databases_versions_tables_columns_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -16779,7 +16779,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.list": {
+    api_databases_migrations_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -16829,7 +16829,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.create": {
+    api_databases_migrations_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -16883,7 +16883,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.get": {
+    api_databases_migrations_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -16934,7 +16934,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.delete": {
+    api_databases_migrations_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -16983,7 +16983,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.update": {
+    api_databases_migrations_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -17038,7 +17038,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.draft": {
+    api_databases_migrations_draft: {
         parameters: {
             query?: never;
             header?: never;
@@ -17089,7 +17089,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.validated": {
+    api_databases_migrations_validated: {
         parameters: {
             query?: never;
             header?: never;
@@ -17140,7 +17140,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.completed": {
+    api_databases_migrations_completed: {
         parameters: {
             query?: never;
             header?: never;
@@ -17191,7 +17191,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.cancelled": {
+    api_databases_migrations_cancelled: {
         parameters: {
             query?: never;
             header?: never;
@@ -17242,7 +17242,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.list": {
+    api_databases_migrations_columns_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -17293,7 +17293,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.create": {
+    api_databases_migrations_columns_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -17348,7 +17348,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.get": {
+    api_databases_migrations_columns_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -17400,7 +17400,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.delete": {
+    api_databases_migrations_columns_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -17450,7 +17450,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.update": {
+    api_databases_migrations_columns_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -17506,7 +17506,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.draft": {
+    api_databases_migrations_columns_draft: {
         parameters: {
             query?: never;
             header?: never;
@@ -17558,7 +17558,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.toBeConfirmed": {
+    api_databases_migrations_columns_toBeConfirmed: {
         parameters: {
             query?: never;
             header?: never;
@@ -17610,7 +17610,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.confirmed": {
+    api_databases_migrations_columns_confirmed: {
         parameters: {
             query?: never;
             header?: never;
@@ -17662,7 +17662,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.comments.list": {
+    api_databases_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -17703,7 +17703,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.comments.create": {
+    api_databases_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -17748,7 +17748,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.comments.list": {
+    api_databases_versions_tables_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -17791,7 +17791,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.comments.create": {
+    api_databases_versions_tables_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -17838,7 +17838,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.comments.list": {
+    api_databases_versions_tables_columns_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -17882,7 +17882,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.versions.tables.columns.comments.create": {
+    api_databases_versions_tables_columns_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -17930,7 +17930,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.comments.list": {
+    api_databases_migrations_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -17972,7 +17972,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.comments.create": {
+    api_databases_migrations_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18018,7 +18018,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.comments.list": {
+    api_databases_migrations_columns_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -18061,7 +18061,7 @@ export interface operations {
             };
         };
     };
-    "api.databases.migrations.columns.comments.create": {
+    api_databases_migrations_columns_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18108,7 +18108,7 @@ export interface operations {
             };
         };
     };
-    "api.services.list": {
+    api_services_list: {
         parameters: {
             query?: {
                 status?: components["schemas"]["ServiceStatus"][] | null;
@@ -18164,7 +18164,7 @@ export interface operations {
             };
         };
     };
-    "api.services.create": {
+    api_services_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18217,7 +18217,7 @@ export interface operations {
             };
         };
     };
-    "api.services.get": {
+    api_services_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -18267,7 +18267,7 @@ export interface operations {
             };
         };
     };
-    "api.services.delete": {
+    api_services_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -18315,7 +18315,7 @@ export interface operations {
             };
         };
     };
-    "api.services.update": {
+    api_services_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -18369,7 +18369,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.list": {
+    api_services_actions_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -18419,7 +18419,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.create": {
+    api_services_actions_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18473,7 +18473,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.get": {
+    api_services_actions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -18524,7 +18524,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.delete": {
+    api_services_actions_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -18573,7 +18573,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.update": {
+    api_services_actions_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -18628,7 +18628,7 @@ export interface operations {
             };
         };
     };
-    "api.services.comments.list": {
+    api_services_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -18669,7 +18669,7 @@ export interface operations {
             };
         };
     };
-    "api.services.comments.create": {
+    api_services_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18714,7 +18714,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.comments.list": {
+    api_services_actions_comments_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -18756,7 +18756,7 @@ export interface operations {
             };
         };
     };
-    "api.services.actions.comments.create": {
+    api_services_actions_comments_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18802,7 +18802,7 @@ export interface operations {
             };
         };
     };
-    "api.tags.list": {
+    api_tags_list: {
         parameters: {
             query?: {
                 type?: components["schemas"]["TagEntityType"] | null;
@@ -18853,7 +18853,7 @@ export interface operations {
             };
         };
     };
-    "api.tags.create": {
+    api_tags_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -18906,7 +18906,7 @@ export interface operations {
             };
         };
     };
-    "api.tags.get": {
+    api_tags_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -18956,7 +18956,7 @@ export interface operations {
             };
         };
     };
-    "api.tags.delete": {
+    api_tags_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -19004,7 +19004,7 @@ export interface operations {
             };
         };
     };
-    "api.tags.update": {
+    api_tags_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -19058,7 +19058,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.list": {
+    api_comments_list: {
         parameters: {
             query?: {
                 entityType?: components["schemas"]["CommentEntityType"][] | null;
@@ -19107,7 +19107,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.get": {
+    api_comments_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -19148,7 +19148,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.delete": {
+    api_comments_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -19196,7 +19196,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.update": {
+    api_comments_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -19250,7 +19250,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.remove": {
+    api_comments_remove: {
         parameters: {
             query?: never;
             header?: never;
@@ -19300,7 +19300,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.replies.list": {
+    api_comments_replies_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -19341,7 +19341,7 @@ export interface operations {
             };
         };
     };
-    "api.comments.replies.create": {
+    api_comments_replies_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -19386,7 +19386,7 @@ export interface operations {
             };
         };
     };
-    "api.core.actionTypes.list": {
+    api_core_actionTypes_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -19406,7 +19406,7 @@ export interface operations {
             };
         };
     };
-    "api.core.actionTypes.get": {
+    api_core_actionTypes_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -19446,7 +19446,7 @@ export interface operations {
             };
         };
     };
-    "api.core.assertionTypes.list": {
+    api_core_assertionTypes_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -19466,7 +19466,7 @@ export interface operations {
             };
         };
     };
-    "api.core.assertionTypes.get": {
+    api_core_assertionTypes_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -19506,7 +19506,7 @@ export interface operations {
             };
         };
     };
-    "api.core.databaseColumnTypes.list": {
+    api_core_databaseColumnTypes_list: {
         parameters: {
             query?: {
                 databaseType?: components["schemas"]["DatabaseType"] | null;
@@ -19537,7 +19537,7 @@ export interface operations {
             };
         };
     };
-    "api.core.databaseColumnTypes.get": {
+    api_core_databaseColumnTypes_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -19577,7 +19577,7 @@ export interface operations {
             };
         };
     };
-    "api.health.check": {
+    api_health_check: {
         parameters: {
             query?: never;
             header?: never;
@@ -19597,7 +19597,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.register": {
+    api_auth_register: {
         parameters: {
             query?: never;
             header?: never;
@@ -19630,7 +19630,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.activate": {
+    api_auth_activate: {
         parameters: {
             query?: never;
             header?: never;
@@ -19672,7 +19672,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.resendActivation": {
+    api_auth_resendActivation: {
         parameters: {
             query?: never;
             header?: never;
@@ -19705,7 +19705,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.login": {
+    api_auth_login: {
         parameters: {
             query?: never;
             header?: never;
@@ -19756,7 +19756,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.password.forgot": {
+    api_auth_password_forgot: {
         parameters: {
             query?: never;
             header?: never;
@@ -19789,7 +19789,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.password.reset": {
+    api_auth_password_reset: {
         parameters: {
             query?: never;
             header?: never;
@@ -19831,7 +19831,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.sso.google": {
+    api_auth_sso_google: {
         parameters: {
             query?: never;
             header?: never;
@@ -19882,7 +19882,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.twoFactor.otp": {
+    api_auth_twoFactor_otp: {
         parameters: {
             query?: never;
             header?: never;
@@ -19933,7 +19933,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.twoFactor.recoveryCode": {
+    api_auth_twoFactor_recoveryCode: {
         parameters: {
             query?: never;
             header?: never;
@@ -19984,7 +19984,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.twoFactor.u2f.options": {
+    api_auth_twoFactor_u2f_options: {
         parameters: {
             query?: never;
             header?: never;
@@ -20026,7 +20026,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.twoFactor.u2f": {
+    api_auth_twoFactor_u2f: {
         parameters: {
             query?: never;
             header?: never;
@@ -20077,7 +20077,7 @@ export interface operations {
             };
         };
     };
-    "api.auth.refresh": {
+    api_auth_refresh: {
         parameters: {
             query?: never;
             header?: never;
@@ -20119,7 +20119,7 @@ export interface operations {
             };
         };
     };
-    "api.me.get": {
+    api_me_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -20157,7 +20157,7 @@ export interface operations {
             };
         };
     };
-    "api.me.update": {
+    api_me_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -20199,7 +20199,7 @@ export interface operations {
             };
         };
     };
-    "api.me.setPicture": {
+    api_me_setPicture: {
         parameters: {
             query?: never;
             header?: never;
@@ -20208,7 +20208,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["fastapi___compat__v2__Body_api__me__setPicture"];
+                "multipart/form-data": components["schemas"]["Body_api_me_setPicture"];
             };
         };
         responses: {
@@ -20259,7 +20259,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.overview": {
+    api_me_security_overview: {
         parameters: {
             query?: never;
             header?: never;
@@ -20297,7 +20297,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.password.create": {
+    api_me_security_password_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -20348,7 +20348,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.password.update": {
+    api_me_security_password_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -20399,7 +20399,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.otp.list": {
+    api_me_security_otp_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -20437,7 +20437,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.otp.generate": {
+    api_me_security_otp_generate: {
         parameters: {
             query?: never;
             header?: never;
@@ -20475,7 +20475,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.otp.activate": {
+    api_me_security_otp_activate: {
         parameters: {
             query?: never;
             header?: never;
@@ -20528,7 +20528,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.otp.disable": {
+    api_me_security_otp_disable: {
         parameters: {
             query?: never;
             header?: never;
@@ -20575,7 +20575,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.recoveryCodes.regenerate": {
+    api_me_security_recoveryCodes_regenerate: {
         parameters: {
             query?: never;
             header?: never;
@@ -20613,7 +20613,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.u2f.list": {
+    api_me_security_u2f_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -20651,7 +20651,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.u2f.register": {
+    api_me_security_u2f_register: {
         parameters: {
             query?: never;
             header?: never;
@@ -20702,7 +20702,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.u2f.options": {
+    api_me_security_u2f_options: {
         parameters: {
             query?: never;
             header?: never;
@@ -20740,7 +20740,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.u2f.disable": {
+    api_me_security_u2f_disable: {
         parameters: {
             query?: never;
             header?: never;
@@ -20787,7 +20787,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.u2f.rename": {
+    api_me_security_u2f_rename: {
         parameters: {
             query?: never;
             header?: never;
@@ -20840,7 +20840,7 @@ export interface operations {
             };
         };
     };
-    "api.me.security.logs.list": {
+    api_me_security_logs_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -20878,7 +20878,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.authorize.byUserCode": {
+    api_me_integrations_authorize_byUserCode: {
         parameters: {
             query?: never;
             header?: never;
@@ -20918,7 +20918,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.authorize.get": {
+    api_me_integrations_authorize_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -20958,7 +20958,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.authorize.approve": {
+    api_me_integrations_authorize_approve: {
         parameters: {
             query?: never;
             header?: never;
@@ -21002,7 +21002,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.authorize.deny": {
+    api_me_integrations_authorize_deny: {
         parameters: {
             query?: never;
             header?: never;
@@ -21042,7 +21042,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.grants.list": {
+    api_me_integrations_grants_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -21071,7 +21071,7 @@ export interface operations {
             };
         };
     };
-    "api.me.integrations.grants.revoke": {
+    api_me_integrations_grants_revoke: {
         parameters: {
             query?: never;
             header?: never;
@@ -21109,7 +21109,7 @@ export interface operations {
             };
         };
     };
-    "api.me.invitations.list": {
+    api_me_invitations_list: {
         parameters: {
             query?: {
                 invitation_status?: components["schemas"]["AccountUserInvitationStatus"] | null;
@@ -21140,7 +21140,7 @@ export interface operations {
             };
         };
     };
-    "api.me.invitations.get": {
+    api_me_invitations_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -21180,7 +21180,7 @@ export interface operations {
             };
         };
     };
-    "api.me.invitations.accept": {
+    api_me_invitations_accept: {
         parameters: {
             query?: never;
             header?: never;
@@ -21229,7 +21229,7 @@ export interface operations {
             };
         };
     };
-    "api.me.invitations.refuse": {
+    api_me_invitations_refuse: {
         parameters: {
             query?: never;
             header?: never;
@@ -21278,7 +21278,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.metadata.authorizationServer": {
+    api_oauth_metadata_authorizationServer: {
         parameters: {
             query?: never;
             header?: never;
@@ -21300,7 +21300,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.metadata.protectedResource": {
+    api_oauth_metadata_protectedResource: {
         parameters: {
             query?: never;
             header?: never;
@@ -21322,7 +21322,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.register": {
+    api_oauth_register: {
         parameters: {
             query?: never;
             header?: never;
@@ -21355,7 +21355,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.authorize": {
+    api_oauth_authorize: {
         parameters: {
             query: {
                 client_id: string;
@@ -21392,7 +21392,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.token": {
+    api_oauth_token: {
         parameters: {
             query?: never;
             header?: never;
@@ -21401,7 +21401,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/x-www-form-urlencoded": components["schemas"]["token"];
+                "application/x-www-form-urlencoded": components["schemas"]["Body_api_oauth_token"];
             };
         };
         responses: {
@@ -21425,7 +21425,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.device.authorize": {
+    api_oauth_device_authorize: {
         parameters: {
             query?: never;
             header?: never;
@@ -21434,7 +21434,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/x-www-form-urlencoded": components["schemas"]["authorize"];
+                "application/x-www-form-urlencoded": components["schemas"]["Body_api_oauth_device_authorize"];
             };
         };
         responses: {
@@ -21458,7 +21458,7 @@ export interface operations {
             };
         };
     };
-    "api.oauth.revoke": {
+    api_oauth_revoke: {
         parameters: {
             query?: never;
             header?: never;
@@ -21467,7 +21467,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/x-www-form-urlencoded": components["schemas"]["revoke"];
+                "application/x-www-form-urlencoded": components["schemas"]["Body_api_oauth_revoke"];
             };
         };
         responses: {
