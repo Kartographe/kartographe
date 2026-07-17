@@ -79,6 +79,7 @@ export const dtoEnums = {
   UserAuthenticationTwoFactorType: ["otp", "recovery_code", "u2f"] as const satisfies readonly S["UserAuthenticationTwoFactorType"][],
   UserGender: ["unknown", "male", "female"] as const satisfies readonly S["UserGender"][],
   UserTheme: ["system", "light", "dark"] as const satisfies readonly S["UserTheme"][],
+  UserType: ["physical", "application"] as const satisfies readonly S["UserType"][],
 } as const;
 
 export type DTOEnumName = keyof typeof dtoEnums;

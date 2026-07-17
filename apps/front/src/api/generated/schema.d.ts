@@ -3880,6 +3880,7 @@ export interface components {
             id: string;
             /** Openapiurl */
             openapiUrl?: string | null;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -3960,6 +3961,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4025,6 +4027,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4093,6 +4096,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4158,6 +4162,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4225,6 +4230,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4438,6 +4444,7 @@ export interface components {
              */
             id: string;
             method: components["schemas"]["ApplicationRouteMethod"];
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4686,6 +4693,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4910,6 +4918,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -4952,6 +4961,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5064,6 +5074,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5140,6 +5151,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5414,6 +5426,7 @@ export interface components {
             name: string;
             /** Nullable */
             nullable: boolean;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5536,6 +5549,7 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5726,6 +5740,7 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5783,6 +5798,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -5837,6 +5853,7 @@ export interface components {
              * Format: uuid
              */
             journeyId: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -6183,6 +6200,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -6268,6 +6286,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -6351,6 +6370,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -6444,6 +6464,7 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -6579,6 +6600,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -7347,6 +7369,29 @@ export interface components {
             secret: string;
         };
         /**
+         * OwnerItem
+         * @description Denormalised identity of an entity's owner.
+         *
+         *     Embedded on every resource that carries an `owner_id`, so the front does not
+         *     have to resolve the owner against `/accounts/{id}/users`. Deliberately email-
+         *     free — this shape is broadcast on many list payloads.
+         */
+        OwnerItem: {
+            /** Firstname */
+            firstName?: string | null;
+            gender: components["schemas"]["UserGender"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastname */
+            lastName?: string | null;
+            /** Pictureprofile */
+            pictureProfile?: string | null;
+            type: components["schemas"]["UserType"];
+        };
+        /**
          * PageLimit
          * @description Allowed page sizes — the front offers exactly these.
          * @enum {integer}
@@ -7635,6 +7680,7 @@ export interface components {
              */
             id: string;
             method?: components["schemas"]["ServiceActionMethod"] | null;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -7726,6 +7772,7 @@ export interface components {
             id: string;
             /** Openapiurl */
             openapiUrl?: string | null;
+            owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
              * Format: uuid
@@ -8062,6 +8109,12 @@ export interface components {
          * @enum {string}
          */
         UserTheme: "system" | "light" | "dark";
+        /**
+         * UserType
+         * @description Whether the account is operated by a human or by a machine/integration.
+         * @enum {string}
+         */
+        UserType: "physical" | "application";
         /** ValidationError */
         ValidationError: {
             /** Location */
