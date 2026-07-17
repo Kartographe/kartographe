@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { FeatureFormModal } from "@/features/features/feature-form-modal";
 import {
   FeatureStatusTag,
@@ -30,7 +30,6 @@ export function FeatureOverview({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
-  const users = useAccountUserMap(accountId);
 
   const statusMutation = $api.useMutation(
     "patch",
@@ -102,7 +101,7 @@ export function FeatureOverview({
           <RichTextView value={feature.description} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Propriétaire`}>
-          {users.name(feature.ownerId)}
+          <OwnerCell owner={feature.owner} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Créée le`}>
           {dayjs(feature.date).format("DD/MM/YYYY HH:mm")}

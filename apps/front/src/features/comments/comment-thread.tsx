@@ -8,7 +8,7 @@ import { App, Button, Flex, Space, Tag, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import type { AccountUserLookup } from "@/features/accounts/use-account-user-map";
+import { ownerName } from "@/features/accounts/owner-cell";
 import { CommentAvatar } from "@/features/comments/comment-avatar";
 import { CommentDate } from "@/features/comments/comment-date";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
@@ -25,7 +25,6 @@ type Comment = components["schemas"]["CommentItem"];
 interface CommentThreadProps {
   accountId: string;
   comment: Comment;
-  users: AccountUserLookup;
   onChanged: () => void;
   /** Replies cannot themselves be replied to. */
   isReply?: boolean;
@@ -34,7 +33,6 @@ interface CommentThreadProps {
 export function CommentThread({
   accountId,
   comment,
-  users,
   onChanged,
   isReply = false,
 }: CommentThreadProps) {
@@ -80,7 +78,7 @@ export function CommentThread({
 
   const replies = repliesQuery.data?.items ?? [];
   const isRemoved = comment.status === "removed";
-  const author = users.user(comment.ownerId);
+  const author = comment.owner;
 
   function invalidateReplies() {
     queryClient.invalidateQueries({
@@ -144,7 +142,7 @@ export function CommentThread({
       <Flex gap={8} style={{ flex: 1, minWidth: 0 }} vertical>
         <Flex align="baseline" gap={8} wrap>
           <Typography.Text strong>
-            {users.name(comment.ownerId)}
+            {ownerName(comment.owner, t`Utilisateur`)}
           </Typography.Text>
           <CommentDate date={comment.date} />
           {isRemoved ? <Tag>{t`Retiré`}</Tag> : null}
@@ -251,7 +249,6 @@ export function CommentThread({
                 isReply
                 key={reply.id}
                 onChanged={invalidateReplies}
-                users={users}
               />
             ))}
           </Flex>

@@ -21,7 +21,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { LinkJourneyModal } from "@/features/features/journeys/link-journey-modal";
 import {
   JourneyStatusTag,
@@ -48,7 +48,6 @@ export function FeatureJourneysScreen({
   const { t } = useLingui();
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
-  const users = useAccountUserMap(accountId);
   const [linkOpen, setLinkOpen] = useState(false);
 
   const path = { account_id: accountId, feature_id: featureId };
@@ -163,11 +162,10 @@ export function FeatureJourneysScreen({
     },
     {
       title: t`Lié par`,
-      key: "ownerId",
-      dataIndex: "ownerId",
+      key: "owner",
+      dataIndex: "owner",
       width: COL.text,
-      ellipsis: true,
-      render: (ownerId: string) => users.name(ownerId),
+      render: (_owner, row) => <OwnerCell owner={row.owner} />,
     },
     {
       title: t`Lié le`,

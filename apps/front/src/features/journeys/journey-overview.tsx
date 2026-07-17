@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
   JourneyStatusTag,
@@ -31,7 +31,6 @@ export function JourneyOverview({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
-  const users = useAccountUserMap(accountId);
   const personas = usePersonas(accountId);
 
   const statusMutation = $api.useMutation(
@@ -117,7 +116,7 @@ export function JourneyOverview({
           <RichTextView value={journey.description} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Propriétaire`}>
-          {users.name(journey.ownerId)}
+          <OwnerCell owner={journey.owner} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Créé le`}>
           {dayjs(journey.date).format("DD/MM/YYYY HH:mm")}

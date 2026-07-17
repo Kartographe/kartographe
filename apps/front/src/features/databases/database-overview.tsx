@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { DatabaseFormModal } from "@/features/databases/database-form-modal";
 import {
   DatabaseStatusTag,
@@ -30,7 +30,6 @@ export function DatabaseOverview({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
-  const users = useAccountUserMap(accountId);
 
   const statusMutation = $api.useMutation(
     "patch",
@@ -106,7 +105,7 @@ export function DatabaseOverview({
           <RichTextView value={database.description} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Propriétaire`}>
-          {users.name(database.ownerId)}
+          <OwnerCell owner={database.owner} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Créée le`}>
           {dayjs(database.date).format("DD/MM/YYYY HH:mm")}

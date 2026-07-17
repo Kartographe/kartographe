@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { ApplicationFormModal } from "@/features/applications/application-form-modal";
 import {
   ApplicationStatusTag,
@@ -29,7 +29,6 @@ export function ApplicationOverview({
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
-  const users = useAccountUserMap(accountId);
 
   const statusMutation = $api.useMutation(
     "patch",
@@ -113,7 +112,7 @@ export function ApplicationOverview({
           {application.description || "—"}
         </Descriptions.Item>
         <Descriptions.Item label={t`Propriétaire`}>
-          {users.name(application.ownerId)}
+          <OwnerCell owner={application.owner} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Créée le`}>
           {dayjs(application.date).format("DD/MM/YYYY HH:mm")}

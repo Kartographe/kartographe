@@ -7,7 +7,6 @@ import { Button, Divider, Empty, Flex, Spin } from "antd";
 import { useState } from "react";
 import type { components } from "@/api/generated/schema";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
 import { CommentAvatar } from "@/features/comments/comment-avatar";
 import { CommentThread } from "@/features/comments/comment-thread";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
@@ -59,7 +58,6 @@ export function CommentsFeed({
   fillHeight = false,
 }: CommentsFeedProps) {
   const { t } = useLingui();
-  const users = useAccountUserMap(accountId);
   const me = useCurrentUser().data?.item;
   const [isComposing, setIsComposing] = useState(false);
   const [draft, setDraft] = useState<RichTextDocument>(EMPTY_RICH_TEXT);
@@ -97,7 +95,6 @@ export function CommentsFeed({
               comment={comment}
               key={comment.id}
               onChanged={onChanged}
-              users={users}
             />
           ))}
         </Flex>

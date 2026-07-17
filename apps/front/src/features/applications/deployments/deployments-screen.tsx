@@ -31,7 +31,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
-import { useAccountUserMap } from "@/features/accounts/use-account-user-map";
+import { OwnerCell } from "@/features/accounts/owner-cell";
 import { DeploymentStatusTag } from "@/features/applications/application-tags";
 import { formatVersion } from "@/features/applications/version";
 
@@ -52,7 +52,6 @@ export function DeploymentsScreen({
   const { t } = useLingui();
   const { modal } = App.useApp();
   const queryClient = useQueryClient();
-  const users = useAccountUserMap(accountId);
 
   const [environmentId, setEnvironmentId] = useState<string | undefined>();
   const [deployOpen, setDeployOpen] = useState(false);
@@ -214,10 +213,9 @@ export function DeploymentsScreen({
     },
     {
       title: t`Déployé par`,
-      dataIndex: "ownerId",
+      dataIndex: "owner",
       width: COL.text,
-      ellipsis: true,
-      render: (ownerId: string) => users.name(ownerId),
+      render: (_owner, row) => <OwnerCell owner={row.owner} />,
     },
     {
       title: t`Démarré le`,
