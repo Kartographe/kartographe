@@ -5,6 +5,7 @@ CLAUDE.md
 .env
 .env.local
 .env.mcp
+.env.production
 .mcp.json
 
 # Python
