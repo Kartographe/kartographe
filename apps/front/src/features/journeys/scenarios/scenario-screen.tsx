@@ -68,6 +68,11 @@ export function ScenarioScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}",
     { meta: { successMessage: t`Étape supprimée` } }
   );
+  const criticityMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+    { meta: { successMessage: t`Criticité mise à jour` } }
+  );
 
   const steps = stepsQuery.data?.items ?? [];
   const stepById = new Map(steps.map((step) => [step.id, step]));
@@ -75,6 +80,19 @@ export function ScenarioScreen({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: STEPS_KEY });
+  }
+
+  async function changeCriticity(criticity: JourneyScenario["criticity"]) {
+    await criticityMutation.mutateAsync({
+      params: { path },
+      body: { criticity },
+    });
+    queryClient.invalidateQueries({
+      queryKey: [
+        "get",
+        "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+      ],
+    });
   }
 
   function confirmDeleteStep(step: Step) {
@@ -139,7 +157,11 @@ export function ScenarioScreen({
 
       <Flex align="center" gap={8} wrap>
         <ScenarioTypeTag type={scenario.type} />
-        <ScenarioCriticityTag criticity={scenario.criticity} />
+        <ScenarioCriticityTag
+          criticity={scenario.criticity}
+          loading={criticityMutation.isPending}
+          onChange={changeCriticity}
+        />
         <ScenarioStatusTag status={scenario.status} />
         {scenario.personasIds.map((id) => (
           <Tag key={id} style={{ marginInlineEnd: 0 }}>

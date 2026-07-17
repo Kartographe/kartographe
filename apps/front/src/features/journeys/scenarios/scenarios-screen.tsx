@@ -71,6 +71,11 @@ export function ScenariosScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const criticityMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+    { meta: { successMessage: t`Criticité mise à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
@@ -101,6 +106,17 @@ export function ScenariosScreen({
     await typeMutation.mutateAsync({
       params: { path: { ...path, scenario_id: scenario.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeCriticity(
+    scenario: JourneyScenario,
+    criticity: JourneyScenario["criticity"]
+  ) {
+    await criticityMutation.mutateAsync({
+      params: { path: { ...path, scenario_id: scenario.id } },
+      body: { criticity },
     });
     invalidate();
   }
@@ -161,8 +177,12 @@ export function ScenariosScreen({
       key: "criticity",
       dataIndex: "criticity",
       width: COL.status,
-      render: (criticity: JourneyScenario["criticity"]) => (
-        <ScenarioCriticityTag criticity={criticity} />
+      render: (criticity: JourneyScenario["criticity"], scenario) => (
+        <ScenarioCriticityTag
+          criticity={criticity}
+          loading={criticityMutation.isPending}
+          onChange={(next) => changeCriticity(scenario, next)}
+        />
       ),
     },
     {

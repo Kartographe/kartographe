@@ -119,14 +119,20 @@ export function ScenarioTypeTag({
 
 export function ScenarioCriticityTag({
   criticity,
+  onChange,
+  loading,
 }: {
   criticity: S["JourneyScenarioCriticity"];
+  onChange?: (criticity: S["JourneyScenarioCriticity"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={SCENARIO_CRITICITY_COLORS}
       descriptions={SCENARIO_CRITICITY_DESCRIPTIONS}
       labels={SCENARIO_CRITICITY_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={criticity}
     />
   );
