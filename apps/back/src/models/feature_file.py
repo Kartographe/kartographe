@@ -39,4 +39,4 @@ class FeatureFile(BaseModel, table=True):
     file_extension: str
     file_path: str
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

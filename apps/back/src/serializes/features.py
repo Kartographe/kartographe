@@ -10,6 +10,7 @@ from datetime import datetime
 from src.models.enum import FeatureFileStatus, FeatureFileType, FeatureStatus, FeatureType
 from src.serializes._base import CamelBase
 from src.serializes.tags import TagItem
+from src.serializes.users import OwnerItem
 
 
 class FeatureItem(CamelBase):
@@ -18,6 +19,7 @@ class FeatureItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: FeatureStatus
     status_date: datetime
@@ -43,6 +45,7 @@ class FeatureFileItem(CamelBase):
     file_size: int
     id: uuid.UUID
     name: str
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: FeatureFileStatus
     status_date: datetime

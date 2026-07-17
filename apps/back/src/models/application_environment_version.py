@@ -34,4 +34,4 @@ class ApplicationEnvironmentVersion(BaseModel, table=True):
     status_date: datetime
     status_details: str | None = Field(default=None)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

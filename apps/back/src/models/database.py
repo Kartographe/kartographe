@@ -33,4 +33,4 @@ class Database(BaseModel, table=True):
     description: dict | None = Field(default=None, sa_type=JSON)
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

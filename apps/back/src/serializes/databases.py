@@ -22,6 +22,7 @@ from src.models.enum import (
 )
 from src.serializes._base import CamelBase
 from src.serializes.tags import TagItem
+from src.serializes.users import OwnerItem
 
 
 class DatabaseItem(CamelBase):
@@ -30,6 +31,7 @@ class DatabaseItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: DatabaseStatus
     status_date: datetime
@@ -63,6 +65,7 @@ class DatabaseTableColumnItem(CamelBase):
     id: uuid.UUID
     name: str
     nullable: bool
+    owner: OwnerItem
     owner_id: uuid.UUID
     rank: int
     system_field: bool
@@ -84,6 +87,7 @@ class DatabaseTableItem(CamelBase):
     description: dict | None = None
     id: uuid.UUID
     name: str
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: DatabaseTableStatus
     status_date: datetime
@@ -121,6 +125,7 @@ class DatabaseMigrationColumnItem(CamelBase):
     destination_database_table_column_id: uuid.UUID | None = None
     destination_database_table_id: uuid.UUID | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     source_database_table_column_id: uuid.UUID | None = None
     source_database_table_id: uuid.UUID | None = None

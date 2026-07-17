@@ -19,6 +19,7 @@ from src.models.enum import (
 )
 from src.serializes._base import CamelBase
 from src.serializes.tags import TagItem
+from src.serializes.users import OwnerItem
 
 
 class JourneyItem(CamelBase):
@@ -27,6 +28,7 @@ class JourneyItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     personas_ids: list[uuid.UUID]
     status: JourneyStatus
@@ -44,6 +46,7 @@ class JourneyScenarioItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     personas_ids: list[uuid.UUID]
     status: JourneyScenarioStatus
@@ -83,6 +86,7 @@ class JourneyScenarioStepFileItem(CamelBase):
     file_size: int
     id: uuid.UUID
     name: str
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: JourneyScenarioStepFileStatus
     status_date: datetime
@@ -95,6 +99,7 @@ class JourneyScenarioStepAssertionItem(CamelBase):
     assertion_type_id: uuid.UUID
     date: datetime
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     parameters: dict
     status: JourneyScenarioStepAssertionStatus
@@ -107,6 +112,7 @@ class FeatureJourneyItem(CamelBase):
     date: datetime
     id: uuid.UUID
     journey_id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
 
 
@@ -117,4 +123,5 @@ class JourneyScenarioStepRouteItem(CamelBase):
     application_route_id: uuid.UUID
     date: datetime
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID

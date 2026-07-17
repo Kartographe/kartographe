@@ -9,6 +9,7 @@ from datetime import datetime
 
 from src.models.enum import CommentEntityType, CommentStatus
 from src.serializes._base import CamelBase
+from src.serializes.users import OwnerItem
 
 
 class CommentItem(CamelBase):
@@ -18,6 +19,7 @@ class CommentItem(CamelBase):
     entity_id: uuid.UUID
     entity_type: CommentEntityType
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     parent_comment_id: uuid.UUID | None = None
     status: CommentStatus

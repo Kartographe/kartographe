@@ -29,4 +29,4 @@ class FeatureJourney(BaseModel, table=True):
 
     date: datetime
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

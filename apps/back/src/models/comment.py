@@ -40,4 +40,4 @@ class Comment(BaseModel, table=True):
     # Rich-text (Tiptap JSON document); cleared when the comment is removed.
     value: dict | None = Field(default=None, sa_type=JSON)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

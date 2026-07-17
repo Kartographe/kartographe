@@ -53,4 +53,4 @@ class DatabaseTableColumn(BaseModel, table=True):
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     column_type: "DatabaseColumnType" = Relationship()
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

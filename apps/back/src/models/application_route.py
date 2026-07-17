@@ -57,4 +57,4 @@ class ApplicationRoute(BaseModel, table=True):
     body_schema: dict = Field(default_factory=dict, sa_type=JSON)
     raw_schema: dict = Field(default_factory=dict, sa_type=JSON)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

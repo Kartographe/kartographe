@@ -35,4 +35,4 @@ class ApplicationRole(BaseModel, table=True):
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

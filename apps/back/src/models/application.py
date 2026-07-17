@@ -32,4 +32,4 @@ class Application(BaseModel, table=True):
     status_date: datetime
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

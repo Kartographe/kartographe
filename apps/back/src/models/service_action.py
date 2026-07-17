@@ -39,4 +39,4 @@ class ServiceAction(BaseModel, table=True):
     method: ServiceActionMethod | None = Field(default=None, index=True)
     path: str | None = Field(default=None, index=True)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

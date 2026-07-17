@@ -15,6 +15,7 @@ from src.models.enum import (
     ServiceType,
 )
 from src.serializes._base import CamelBase
+from src.serializes.users import OwnerItem
 
 
 class ServiceItem(CamelBase):
@@ -24,6 +25,7 @@ class ServiceItem(CamelBase):
     description: dict | None = None
     id: uuid.UUID
     openapi_url: str | None = None
+    owner: OwnerItem
     owner_id: uuid.UUID
     picture_path: str | None = None
     status: ServiceStatus
@@ -40,6 +42,7 @@ class ServiceActionItem(CamelBase):
     description: dict | None = None
     id: uuid.UUID
     method: ServiceActionMethod | None = None
+    owner: OwnerItem
     owner_id: uuid.UUID
     path: str | None = None
     status: ServiceActionStatus

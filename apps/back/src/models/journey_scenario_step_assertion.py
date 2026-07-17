@@ -36,3 +36,4 @@ class JourneyScenarioStepAssertion(BaseModel, table=True):
     parameters: dict = Field(default_factory=dict, sa_type=JSON)
 
     assertion_type: "AssertionType" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

@@ -17,6 +17,7 @@ from src.models.enum import (
 )
 from src.serializes._base import CamelBase
 from src.serializes.tags import TagItem
+from src.serializes.users import OwnerItem
 
 
 class ApplicationItem(CamelBase):
@@ -25,6 +26,7 @@ class ApplicationItem(CamelBase):
     date: datetime
     description: str | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationStatus
     status_date: datetime
@@ -41,6 +43,7 @@ class ApplicationEnvironmentItem(CamelBase):
     description: dict
     id: uuid.UUID
     openapi_url: str | None = None
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationStatus
     status_date: datetime
@@ -55,6 +58,7 @@ class ApplicationVersionItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationStatus
     status_date: datetime
@@ -69,6 +73,7 @@ class ApplicationEnvironmentVersionItem(CamelBase):
     application_version_id: uuid.UUID
     date: datetime
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationEnvironmentVersionStatus
     status_date: datetime
@@ -83,6 +88,7 @@ class ApplicationFeatureItem(CamelBase):
     end_date: datetime | None = None
     feature_id: uuid.UUID
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     start_application_version_id: uuid.UUID | None = None
     start_date: datetime | None = None

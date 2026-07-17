@@ -40,4 +40,4 @@ class ApplicationFeature(BaseModel, table=True):
         default=None, foreign_key="application_version.id", index=True
     )
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

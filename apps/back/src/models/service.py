@@ -35,4 +35,4 @@ class Service(BaseModel, table=True):
     url: str | None = Field(default=None)
     openapi_url: str | None = Field(default=None)
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

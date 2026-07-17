@@ -44,4 +44,4 @@ class ApplicationGuard(BaseModel, table=True):
     field_format: ApplicationGuardFieldFormat | None = Field(default=None)
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
-    owner: "User" = Relationship()
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

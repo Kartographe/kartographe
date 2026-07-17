@@ -22,6 +22,7 @@ from src.models.enum import (
 )
 from src.serializes._base import CamelBase
 from src.serializes.tags import TagItem
+from src.serializes.users import OwnerItem
 
 
 class ApplicationGuardItem(CamelBase):
@@ -32,6 +33,7 @@ class ApplicationGuardItem(CamelBase):
     field_key: str
     field_type: ApplicationGuardFieldType
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationGuardStatus
     status_date: datetime
@@ -47,6 +49,7 @@ class ApplicationRoleItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationRoleStatus
     status_date: datetime
@@ -67,6 +70,7 @@ class ApplicationRouteItem(CamelBase):
     header_schema: dict
     id: uuid.UUID
     method: ApplicationRouteMethod
+    owner: OwnerItem
     owner_id: uuid.UUID
     path: str
     query_params_schema: dict
