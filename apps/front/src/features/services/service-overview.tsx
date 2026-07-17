@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { EditOutlined, InboxOutlined, RocketOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Descriptions, Flex, Space, Typography } from "antd";
@@ -40,33 +40,17 @@ export function ServiceOverview({
   const [editOpen, setEditOpen] = useState(false);
   const users = useAccountUserMap(accountId);
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/services/{service_id}",
-    { meta: { successMessage: t`Service activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/services/{service_id}",
-    { meta: { successMessage: t`Service archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
 
-  // Only an active entity can be archived; a draft or archived one is activated.
-  const isActive = service.status === "active";
-
-  async function toggleStatus() {
-    const params = { path: { account_id: accountId, service_id: service.id } };
-    if (isActive) {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(status: Service["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { status },
+    });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],
     });
@@ -85,13 +69,6 @@ export function ServiceOverview({
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-          <Button
-            icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
-            loading={activateMutation.isPending || archiveMutation.isPending}
-            onClick={toggleStatus}
-          >
-            {isActive ? t`Archiver` : t`Activer`}
-          </Button>
         </Space>
       </Flex>
 
@@ -101,7 +78,11 @@ export function ServiceOverview({
           <ServiceTypeTag type={service.type} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
-          <ServiceStatusTag status={service.status} />
+          <ServiceStatusTag
+            loading={statusMutation.isPending}
+            onChange={changeStatus}
+            status={service.status}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`URL`}>
           {service.url ? <ExternalLink url={service.url} /> : "—"}

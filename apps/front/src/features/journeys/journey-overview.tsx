@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { EditOutlined, InboxOutlined, RocketOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Descriptions, Flex, Space, Tag, Typography } from "antd";
@@ -34,33 +34,17 @@ export function JourneyOverview({
   const users = useAccountUserMap(accountId);
   const personas = usePersonas(accountId);
 
-  const activateMutation = $api.useMutation(
+  const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
-    { meta: { successMessage: t`Parcours activé` } }
-  );
-  const archiveMutation = $api.useMutation(
-    "patch",
-    "/v1/accounts/{account_id}/journeys/{journey_id}",
-    { meta: { successMessage: t`Parcours archivé` } }
+    { meta: { successMessage: t`Statut mis à jour` } }
   );
 
-  // Only an active entity can be archived; a draft or archived one is activated.
-  const isActive = journey.status === "active";
-
-  async function toggleStatus() {
-    const params = { path: { account_id: accountId, journey_id: journey.id } };
-    if (isActive) {
-      await archiveMutation.mutateAsync({
-        params,
-        body: { status: "archived" },
-      });
-    } else {
-      await activateMutation.mutateAsync({
-        params,
-        body: { status: "active" },
-      });
-    }
+  async function changeStatus(status: Journey["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { status },
+    });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"],
     });
@@ -79,13 +63,6 @@ export function JourneyOverview({
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-          <Button
-            icon={isActive ? <InboxOutlined /> : <RocketOutlined />}
-            loading={activateMutation.isPending || archiveMutation.isPending}
-            onClick={toggleStatus}
-          >
-            {isActive ? t`Archiver` : t`Activer`}
-          </Button>
         </Space>
       </Flex>
 
@@ -95,7 +72,11 @@ export function JourneyOverview({
           <JourneyTypeTag type={journey.type} />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
-          <JourneyStatusTag status={journey.status} />
+          <JourneyStatusTag
+            loading={statusMutation.isPending}
+            onChange={changeStatus}
+            status={journey.status}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Personas`}>
           {journey.personasIds.length ? (
