@@ -37,7 +37,7 @@ import {
   FEATURE_STATUS_LABELS,
   FEATURE_TYPE_LABELS,
 } from "@/features/features/labels";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Feature = components["schemas"]["FeatureItem"];
@@ -101,6 +101,11 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/features/{feature_id}",
@@ -138,6 +143,14 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(feature: Feature, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -249,7 +262,16 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Feature["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Feature["tags"], feature) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="feature"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(feature, next)}
+          tags={tags}
+          value={feature.tagIds}
+        />
+      ),
     },
     {
       title: t`Créée le`,

@@ -18,7 +18,7 @@ import {
 import { GuardFormModal } from "@/features/applications/guards/guard-form-modal";
 import { GUARD_FIELD_TYPE_LABELS } from "@/features/applications/labels";
 import { RowActions } from "@/features/applications/row-actions";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Guard = components["schemas"]["ApplicationGuardItem"];
@@ -60,6 +60,11 @@ export function GuardsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
@@ -88,6 +93,14 @@ export function GuardsScreen({
     await typeMutation.mutateAsync({
       params: { path: { ...path, guard_id: guard.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(guard: Guard, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: { path: { ...path, guard_id: guard.id } },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -170,7 +183,16 @@ export function GuardsScreen({
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Guard["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Guard["tags"], guard) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="application_guard"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(guard, next)}
+          tags={tags}
+          value={guard.tagIds}
+        />
+      ),
     },
     {
       title: "",

@@ -39,7 +39,7 @@ import {
   JOURNEY_TYPE_LABELS,
 } from "@/features/journeys/labels";
 import { usePersonas } from "@/features/journeys/use-personas";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Journey = components["schemas"]["JourneyItem"];
@@ -106,6 +106,11 @@ export function JourneysList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
@@ -146,6 +151,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, journey_id: journey.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(journey: Journey, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -279,7 +292,16 @@ export function JourneysList({ accountId }: { accountId: string }) {
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Journey["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Journey["tags"], journey) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="journey"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(journey, next)}
+          tags={tags}
+          value={journey.tagIds}
+        />
+      ),
     },
     {
       title: t`Créé le`,

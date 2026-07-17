@@ -37,7 +37,7 @@ import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_TYPE_LABELS,
 } from "@/features/applications/labels";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Application = components["schemas"]["ApplicationItem"];
@@ -99,6 +99,11 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}",
@@ -142,6 +147,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
         path: { account_id: accountId, application_id: application.id },
       },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(application: Application, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, application_id: application.id },
+      },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -264,7 +279,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Application["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Application["tags"], application) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="application"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(application, next)}
+          tags={tags}
+          value={application.tagIds}
+        />
+      ),
     },
     {
       title: t`Créée le`,

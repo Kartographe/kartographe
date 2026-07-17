@@ -42,7 +42,7 @@ import {
   PersonaStatusTag,
   PersonaTypeTag,
 } from "@/features/personas/persona-tags";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
@@ -109,6 +109,11 @@ export function PersonasList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/personas/{persona_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/personas/{persona_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/personas/{persona_id}",
@@ -146,6 +151,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, persona_id: persona.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(persona: Persona, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: { path: { account_id: accountId, persona_id: persona.id } },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -257,7 +270,16 @@ export function PersonasList({ accountId }: { accountId: string }) {
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Persona["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Persona["tags"], persona) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="persona"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(persona, next)}
+          tags={tags}
+          value={persona.tagIds}
+        />
+      ),
     },
     {
       title: t`Créé le`,

@@ -37,7 +37,7 @@ import {
   DATABASE_STATUS_LABELS,
   DATABASE_TYPE_LABELS,
 } from "@/features/databases/labels";
-import { TagsCell } from "@/features/tags/tags-cell";
+import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
 type Database = components["schemas"]["DatabaseItem"];
@@ -99,6 +99,11 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const tagsMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}",
+    { meta: { successMessage: t`Tags mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/databases/{database_id}",
@@ -138,6 +143,14 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, database_id: database.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeTags(database: Database, tagIds: string[]) {
+    await tagsMutation.mutateAsync({
+      params: { path: { account_id: accountId, database_id: database.id } },
+      body: { tagIds },
     });
     invalidate();
   }
@@ -249,7 +262,16 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       width: COL.tags,
       filters: tagFilters,
       filteredValue: tagIds.length ? tagIds : null,
-      render: (tags: Database["tags"]) => <TagsCell tags={tags} />,
+      render: (tags: Database["tags"], database) => (
+        <EditableTagsCell
+          accountId={accountId}
+          entityType="database"
+          loading={tagsMutation.isPending}
+          onChange={(next) => changeTags(database, next)}
+          tags={tags}
+          value={database.tagIds}
+        />
+      ),
     },
     {
       title: t`Créée le`,
