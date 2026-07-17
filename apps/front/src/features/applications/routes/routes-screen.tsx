@@ -81,13 +81,13 @@ export function RoutesScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}",
     { meta: { successMessage: t`Route activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}",
     { meta: { successMessage: t`Route archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -111,9 +111,15 @@ export function RoutesScreen({
   async function toggleStatus(route: ApplicationRoute) {
     const params = { path: { ...path, route_id: route.id } };
     if (route.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

@@ -48,13 +48,13 @@ export function VersionsScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
     { meta: { successMessage: t`Version activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
     { meta: { successMessage: t`Version archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -72,9 +72,15 @@ export function VersionsScreen({
   async function toggleStatus(version: Version) {
     const params = { path: { ...path, version_id: version.id } };
     if (version.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

@@ -92,13 +92,13 @@ export function DatabasesList({ accountId }: { accountId: string }) {
   );
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/databases/{database_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Base de données activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/databases/{database_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Base de données archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -133,9 +133,15 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       path: { account_id: accountId, database_id: database.id },
     };
     if (database.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

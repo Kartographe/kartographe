@@ -99,13 +99,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
   );
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Parcours activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Parcours archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -139,9 +139,15 @@ export function JourneysList({ accountId }: { accountId: string }) {
   async function toggleStatus(journey: Journey) {
     const params = { path: { account_id: accountId, journey_id: journey.id } };
     if (journey.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

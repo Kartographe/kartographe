@@ -86,13 +86,13 @@ export function ActionsScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
     { meta: { successMessage: t`Action activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
     { meta: { successMessage: t`Action archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -110,9 +110,15 @@ export function ActionsScreen({
   async function toggleStatus(action: ServiceAction) {
     const params = { path: { ...path, action_id: action.id } };
     if (action.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

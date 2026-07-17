@@ -86,13 +86,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
   );
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Service activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Service archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -124,9 +124,15 @@ export function ServicesList({ accountId }: { accountId: string }) {
   async function toggleStatus(service: Service) {
     const params = { path: { account_id: accountId, service_id: service.id } };
     if (service.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

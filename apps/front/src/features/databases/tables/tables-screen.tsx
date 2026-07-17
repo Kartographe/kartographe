@@ -103,13 +103,13 @@ export function TablesScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
     { meta: { successMessage: t`Table activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
     { meta: { successMessage: t`Table archivée` } }
   );
   const deleteTableMutation = $api.useMutation(
@@ -134,9 +134,15 @@ export function TablesScreen({
   async function toggleStatus(table: DatabaseTable) {
     const params = { path: { ...path, database_table_id: table.id } };
     if (table.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

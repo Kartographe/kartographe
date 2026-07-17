@@ -92,13 +92,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
   );
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Application activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Application archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -133,9 +133,15 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       path: { account_id: accountId, application_id: application.id },
     };
     if (application.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

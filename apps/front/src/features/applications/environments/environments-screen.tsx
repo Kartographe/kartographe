@@ -47,13 +47,13 @@ export function EnvironmentsScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
     { meta: { successMessage: t`Environnement activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
     { meta: { successMessage: t`Environnement archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -76,9 +76,15 @@ export function EnvironmentsScreen({
   async function toggleStatus(environment: Environment) {
     const params = { path: { ...path, environment_id: environment.id } };
     if (environment.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

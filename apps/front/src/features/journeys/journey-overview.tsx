@@ -35,13 +35,13 @@ export function JourneyOverview({
   const personas = usePersonas(accountId);
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Parcours activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Parcours archivé` } }
   );
 
@@ -51,9 +51,15 @@ export function JourneyOverview({
   async function toggleStatus() {
     const params = { path: { account_id: accountId, journey_id: journey.id } };
     if (isActive) {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"],

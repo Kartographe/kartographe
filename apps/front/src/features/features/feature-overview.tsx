@@ -33,13 +33,13 @@ export function FeatureOverview({
   const users = useAccountUserMap(accountId);
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/features/{feature_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Fonctionnalité activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/features/{feature_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Fonctionnalité archivée` } }
   );
 
@@ -49,9 +49,15 @@ export function FeatureOverview({
   async function toggleStatus() {
     const params = { path: { account_id: accountId, feature_id: feature.id } };
     if (isActive) {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],

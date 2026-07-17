@@ -41,13 +41,13 @@ export function ServiceOverview({
   const users = useAccountUserMap(accountId);
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Service activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/services/{service_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Service archivé` } }
   );
 
@@ -57,9 +57,15 @@ export function ServiceOverview({
   async function toggleStatus() {
     const params = { path: { account_id: accountId, service_id: service.id } };
     if (isActive) {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],

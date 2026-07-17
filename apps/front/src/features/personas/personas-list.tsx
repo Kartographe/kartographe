@@ -102,13 +102,13 @@ export function PersonasList({ accountId }: { accountId: string }) {
   );
 
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/personas/{persona_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/personas/{persona_id}",
     { meta: { successMessage: t`Persona activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/personas/{persona_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/personas/{persona_id}",
     { meta: { successMessage: t`Persona archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -139,9 +139,15 @@ export function PersonasList({ accountId }: { accountId: string }) {
   async function toggleStatus(persona: Persona) {
     const params = { path: { account_id: accountId, persona_id: persona.id } };
     if (persona.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

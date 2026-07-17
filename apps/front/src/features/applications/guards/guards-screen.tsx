@@ -51,13 +51,13 @@ export function GuardsScreen({
     { params: { path, query: tagIds.length ? { tagIds } : {} } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
     { meta: { successMessage: t`Guard activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
     { meta: { successMessage: t`Guard archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -79,9 +79,15 @@ export function GuardsScreen({
   async function toggleStatus(guard: Guard) {
     const params = { path: { ...path, guard_id: guard.id } };
     if (guard.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

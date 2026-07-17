@@ -64,13 +64,13 @@ export function ScenariosScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Scénario activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Scénario archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -88,9 +88,15 @@ export function ScenariosScreen({
   async function toggleStatus(scenario: JourneyScenario) {
     const params = { path: { ...path, scenario_id: scenario.id } };
     if (scenario.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

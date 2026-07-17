@@ -45,13 +45,13 @@ export function RolesScreen({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}",
     { meta: { successMessage: t`Rôle activé` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}",
     { meta: { successMessage: t`Rôle archivé` } }
   );
   const deleteMutation = $api.useMutation(
@@ -69,9 +69,15 @@ export function RolesScreen({
   async function toggleStatus(role: Role) {
     const params = { path: { ...path, role_id: role.id } };
     if (role.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }

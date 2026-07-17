@@ -66,13 +66,13 @@ export function StepAssertions({
     { params: { path } }
   );
   const activateMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}/activate",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}",
     { meta: { successMessage: t`Assertion activée` } }
   );
   const archiveMutation = $api.useMutation(
-    "post",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}/archive",
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}",
     { meta: { successMessage: t`Assertion archivée` } }
   );
   const deleteMutation = $api.useMutation(
@@ -90,9 +90,15 @@ export function StepAssertions({
   async function toggleStatus(assertion: Assertion) {
     const params = { path: { ...path, assertion_id: assertion.id } };
     if (assertion.status === "active") {
-      await archiveMutation.mutateAsync({ params });
+      await archiveMutation.mutateAsync({
+        params,
+        body: { status: "archived" },
+      });
     } else {
-      await activateMutation.mutateAsync({ params });
+      await activateMutation.mutateAsync({
+        params,
+        body: { status: "active" },
+      });
     }
     invalidate();
   }
