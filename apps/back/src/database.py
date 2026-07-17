@@ -10,7 +10,14 @@ from src.settings import get_settings
 
 _settings = get_settings()
 
-engine = create_engine(_settings.database_url, echo=_settings.app_debug, pool_pre_ping=True)
+# SQL statement logging is driven entirely by the `sql` typology level
+# (`LOG_LEVEL_SQL`, see logging_config.py) — deliberately NOT by `echo`.
+# `echo=True` installs an `InstanceLogger` that emits every statement
+# unconditionally (via `logger._log()`), bypassing the level set by
+# `configure_logging()` — so it would silently defeat `LOG_LEVEL_SQL=WARNING`.
+# Leave echo at its default and set `LOG_LEVEL_SQL=INFO` (statements) or
+# `DEBUG` (statements + rows) to turn SQL logging on.
+engine = create_engine(_settings.database_url, pool_pre_ping=True)
 
 
 def get_session() -> Generator[Session, None, None]:
