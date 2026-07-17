@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.forms.applications import ApplicationVersionCreateForm, ApplicationVersionPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationVersionItem
 from src.serializes.errors import ErrorResponse
@@ -107,7 +107,7 @@ def get_version(
     operation_id="api.applications.versions.update",
     summary="Update a version",
     description=(
-        "Partially update a version (type, title, version, description). "
+        "Partially update a version (type, title, version, description, status). "
         "Owners, administrators and lead developers only."
     ),
     response_model=ItemResponse[ApplicationVersionItem],
@@ -120,40 +120,6 @@ def update_version(
     _: Annotated[AccountUser, Depends(_DEV_LEAD)],
 ) -> ItemResponse[ApplicationVersionItem]:
     updated = manager.apply_update(version, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationVersionItem.model_validate(updated))
-
-
-@router.post(
-    "/{version_id}/activate",
-    operation_id="api.applications.versions.activate",
-    summary="Activate a version",
-    description="Set the version status to active. Owners, administrators and lead developers only.",
-    response_model=ItemResponse[ApplicationVersionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_version(
-    version: CurrentApplicationVersionDep,
-    manager: ApplicationVersionManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
-) -> ItemResponse[ApplicationVersionItem]:
-    updated = manager.set_status(version, ApplicationStatus.ACTIVE)
-    return ItemResponse(item=ApplicationVersionItem.model_validate(updated))
-
-
-@router.post(
-    "/{version_id}/archive",
-    operation_id="api.applications.versions.archive",
-    summary="Archive a version",
-    description="Set the version status to archived. Owners, administrators and lead developers only.",
-    response_model=ItemResponse[ApplicationVersionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_version(
-    version: CurrentApplicationVersionDep,
-    manager: ApplicationVersionManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
-) -> ItemResponse[ApplicationVersionItem]:
-    updated = manager.set_status(version, ApplicationStatus.ARCHIVED)
     return ItemResponse(item=ApplicationVersionItem.model_validate(updated))
 
 

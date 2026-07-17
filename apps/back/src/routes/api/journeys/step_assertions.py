@@ -18,7 +18,7 @@ from src.forms.journeys import (
     JourneyScenarioStepAssertionPatchForm,
 )
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, JourneyScenarioStepAssertionStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.journeys import JourneyScenarioStepAssertionItem
 from src.serializes.errors import ErrorResponse
@@ -113,7 +113,7 @@ def get_assertion(
     operation_id="api.journeys.scenarios.steps.assertions.update",
     summary="Update an assertion",
     description=(
-        "Partially update an assertion (assertion type, parameters). `parameters` must match the "
+        "Partially update an assertion (assertion type, parameters, status). `parameters` must match the "
         "assertion type's schema. Editing roles only."
     ),
     response_model=ItemResponse[JourneyScenarioStepAssertionItem],
@@ -126,40 +126,6 @@ def update_assertion(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> ItemResponse[JourneyScenarioStepAssertionItem]:
     updated = manager.update(assertion, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=JourneyScenarioStepAssertionItem.model_validate(updated))
-
-
-@router.post(
-    "/{assertion_id}/activate",
-    operation_id="api.journeys.scenarios.steps.assertions.activate",
-    summary="Activate an assertion",
-    description="Set the assertion status to active. Editing roles only.",
-    response_model=ItemResponse[JourneyScenarioStepAssertionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_assertion(
-    assertion: CurrentJourneyScenarioStepAssertionDep,
-    manager: JourneyScenarioStepAssertionManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyScenarioStepAssertionItem]:
-    updated = manager.set_status(assertion, JourneyScenarioStepAssertionStatus.ACTIVE)
-    return ItemResponse(item=JourneyScenarioStepAssertionItem.model_validate(updated))
-
-
-@router.post(
-    "/{assertion_id}/archive",
-    operation_id="api.journeys.scenarios.steps.assertions.archive",
-    summary="Archive an assertion",
-    description="Set the assertion status to archived. Editing roles only.",
-    response_model=ItemResponse[JourneyScenarioStepAssertionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_assertion(
-    assertion: CurrentJourneyScenarioStepAssertionDep,
-    manager: JourneyScenarioStepAssertionManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyScenarioStepAssertionItem]:
-    updated = manager.set_status(assertion, JourneyScenarioStepAssertionStatus.ARCHIVED)
     return ItemResponse(item=JourneyScenarioStepAssertionItem.model_validate(updated))
 
 

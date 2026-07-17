@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.databases import DatabaseTableCreateForm, DatabaseTablePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, DatabaseTableStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseTableItem
 from src.serializes.errors import ErrorResponse
@@ -122,7 +122,7 @@ def get_table(
     operation_id="api.databases.versions.tables.update",
     summary="Update a table",
     description=(
-        "Partially update a table (type, schema, name, description, color). If `columns` is sent, "
+        "Partially update a table (type, schema, name, description, color, status). If `columns` is sent, "
         "it fully replaces the table's columns. Data roles only."
     ),
     response_model=ItemResponse[DatabaseTableItem],
@@ -139,40 +139,6 @@ def update_table(
     scalar_fields = {key: value for key, value in sent.items() if key != "columns"}
     column_forms = form.columns if "columns" in sent else None
     updated = manager.update(table, user, fields=scalar_fields, column_forms=column_forms)
-    return ItemResponse(item=manager.to_item(updated, with_columns=True))
-
-
-@router.post(
-    "/{database_table_id}/activate",
-    operation_id="api.databases.versions.tables.activate",
-    summary="Activate a table",
-    description="Set the table status to active. Data roles only.",
-    response_model=ItemResponse[DatabaseTableItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_table(
-    table: CurrentDatabaseTableDep,
-    manager: DatabaseTableManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseTableItem]:
-    updated = manager.set_status(table, DatabaseTableStatus.ACTIVE)
-    return ItemResponse(item=manager.to_item(updated, with_columns=True))
-
-
-@router.post(
-    "/{database_table_id}/archive",
-    operation_id="api.databases.versions.tables.archive",
-    summary="Archive a table",
-    description="Set the table status to archived. Data roles only.",
-    response_model=ItemResponse[DatabaseTableItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_table(
-    table: CurrentDatabaseTableDep,
-    manager: DatabaseTableManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseTableItem]:
-    updated = manager.set_status(table, DatabaseTableStatus.ARCHIVED)
     return ItemResponse(item=manager.to_item(updated, with_columns=True))
 
 

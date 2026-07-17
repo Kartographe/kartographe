@@ -128,7 +128,7 @@ def get_database(
     "/{database_id}",
     operation_id="api.databases.update",
     summary="Update a database",
-    description="Partially update a database (type, title, description). Data roles only.",
+    description="Partially update a database (type, title, description, status). Data roles only.",
     response_model=ItemResponse[DatabaseItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -139,40 +139,6 @@ def update_database(
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> ItemResponse[DatabaseItem]:
     updated = manager.apply_update(database, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=DatabaseItem.model_validate(updated))
-
-
-@router.post(
-    "/{database_id}/activate",
-    operation_id="api.databases.activate",
-    summary="Activate a database",
-    description="Set the database status to active. Data roles only.",
-    response_model=ItemResponse[DatabaseItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_database(
-    database: CurrentDatabaseDep,
-    manager: DatabaseManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseItem]:
-    updated = manager.set_status(database, DatabaseStatus.ACTIVE)
-    return ItemResponse(item=DatabaseItem.model_validate(updated))
-
-
-@router.post(
-    "/{database_id}/archive",
-    operation_id="api.databases.archive",
-    summary="Archive a database",
-    description="Set the database status to archived. Data roles only.",
-    response_model=ItemResponse[DatabaseItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_database(
-    database: CurrentDatabaseDep,
-    manager: DatabaseManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseItem]:
-    updated = manager.set_status(database, DatabaseStatus.ARCHIVED)
     return ItemResponse(item=DatabaseItem.model_validate(updated))
 
 

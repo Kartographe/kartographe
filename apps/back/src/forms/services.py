@@ -7,7 +7,13 @@
 from pydantic import Field
 
 from src.forms._base import CamelBase
-from src.models.enum import ServiceActionMethod, ServiceActionType, ServiceType
+from src.models.enum import (
+    ServiceActionMethod,
+    ServiceActionStatus,
+    ServiceActionType,
+    ServiceStatus,
+    ServiceType,
+)
 
 # --- Service -------------------------------------------------------------
 
@@ -26,6 +32,7 @@ class ServiceCreateForm(CamelBase):
 class ServicePatchForm(CamelBase):
     """Partial update of a service — only the keys sent are applied."""
 
+    status: ServiceStatus | None = Field(default=None)
     type: ServiceType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
@@ -50,6 +57,7 @@ class ServiceActionCreateForm(CamelBase):
 class ServiceActionPatchForm(CamelBase):
     """Partial update of an action — only the keys sent are applied."""
 
+    status: ServiceActionStatus | None = Field(default=None)
     type: ServiceActionType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)

@@ -132,7 +132,7 @@ def get_feature(
     operation_id="api.features.update",
     summary="Update a feature",
     description=(
-        "Partially update a feature (title, description, type). "
+        "Partially update a feature (title, description, type, status). "
         "Every contributing role may edit features."
     ),
     response_model=ItemResponse[FeatureItem],
@@ -145,40 +145,6 @@ def update_feature(
     _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
 ) -> ItemResponse[FeatureItem]:
     updated = manager.apply_update(feature, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=FeatureItem.model_validate(updated))
-
-
-@router.post(
-    "/{feature_id}/activate",
-    operation_id="api.features.activate",
-    summary="Activate a feature",
-    description="Set the feature status to active. Every contributing role may do this.",
-    response_model=ItemResponse[FeatureItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_feature(
-    feature: CurrentFeatureDep,
-    manager: FeatureManagerDep,
-    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
-) -> ItemResponse[FeatureItem]:
-    updated = manager.set_status(feature, FeatureStatus.ACTIVE)
-    return ItemResponse(item=FeatureItem.model_validate(updated))
-
-
-@router.post(
-    "/{feature_id}/archive",
-    operation_id="api.features.archive",
-    summary="Archive a feature",
-    description="Set the feature status to archived. Every contributing role may do this.",
-    response_model=ItemResponse[FeatureItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_feature(
-    feature: CurrentFeatureDep,
-    manager: FeatureManagerDep,
-    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
-) -> ItemResponse[FeatureItem]:
-    updated = manager.set_status(feature, FeatureStatus.ARCHIVED)
     return ItemResponse(item=FeatureItem.model_validate(updated))
 
 

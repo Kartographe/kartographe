@@ -121,7 +121,7 @@ def get_application(
     "/{application_id}",
     operation_id="api.applications.update",
     summary="Update an application",
-    description="Partially update an application (title, description, type). Owners/administrators only.",
+    description="Partially update an application (title, description, type, status). Owners/administrators only.",
     response_model=ItemResponse[ApplicationItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -132,40 +132,6 @@ def update_application(
     _: Annotated[AccountUser, Depends(_ADMIN)],
 ) -> ItemResponse[ApplicationItem]:
     updated = manager.apply_update(application, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationItem.model_validate(updated))
-
-
-@router.post(
-    "/{application_id}/activate",
-    operation_id="api.applications.activate",
-    summary="Activate an application",
-    description="Set the application status to active. Owners/administrators only.",
-    response_model=ItemResponse[ApplicationItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_application(
-    application: CurrentApplicationDep,
-    manager: ApplicationManagerDep,
-    _: Annotated[AccountUser, Depends(_ADMIN)],
-) -> ItemResponse[ApplicationItem]:
-    updated = manager.set_status(application, ApplicationStatus.ACTIVE)
-    return ItemResponse(item=ApplicationItem.model_validate(updated))
-
-
-@router.post(
-    "/{application_id}/archive",
-    operation_id="api.applications.archive",
-    summary="Archive an application",
-    description="Set the application status to archived. Owners/administrators only.",
-    response_model=ItemResponse[ApplicationItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_application(
-    application: CurrentApplicationDep,
-    manager: ApplicationManagerDep,
-    _: Annotated[AccountUser, Depends(_ADMIN)],
-) -> ItemResponse[ApplicationItem]:
-    updated = manager.set_status(application, ApplicationStatus.ARCHIVED)
     return ItemResponse(item=ApplicationItem.model_validate(updated))
 
 

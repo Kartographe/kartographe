@@ -97,7 +97,12 @@ def get_version(
     "/{database_version_id}",
     operation_id="api.databases.versions.update",
     summary="Update a database version",
-    description="Partially update a version (version tuple). Data roles only.",
+    description=(
+        "Partially update a version (version tuple, status). Data roles only.\n\n"
+        "**Setting `status` to `active` also archives the database's previously active "
+        "version** and stamps both versions' activity windows, so a database has at most "
+        "one active version. Setting it back to `draft` clears the window."
+    ),
     response_model=ItemResponse[DatabaseVersionItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -107,44 +112,7 @@ def update_version(
     manager: DatabaseVersionManagerDep,
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> ItemResponse[DatabaseVersionItem]:
-    updated = manager.apply_update(version, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=DatabaseVersionItem.model_validate(updated))
-
-
-@router.post(
-    "/{database_version_id}/activate",
-    operation_id="api.databases.versions.activate",
-    summary="Activate a database version",
-    description=(
-        "Make this the active version. The previously active version is archived and its "
-        "`endDate` stamped; this version's `startDate` is stamped. Data roles only."
-    ),
-    response_model=ItemResponse[DatabaseVersionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_version(
-    version: CurrentDatabaseVersionDep,
-    manager: DatabaseVersionManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseVersionItem]:
-    updated = manager.activate(version)
-    return ItemResponse(item=DatabaseVersionItem.model_validate(updated))
-
-
-@router.post(
-    "/{database_version_id}/archive",
-    operation_id="api.databases.versions.archive",
-    summary="Archive a database version",
-    description="Archive the version, stamping its `endDate`. Data roles only.",
-    response_model=ItemResponse[DatabaseVersionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_version(
-    version: CurrentDatabaseVersionDep,
-    manager: DatabaseVersionManagerDep,
-    _: Annotated[AccountUser, Depends(_DATA)],
-) -> ItemResponse[DatabaseVersionItem]:
-    updated = manager.archive(version)
+    updated = manager.update(version, form.model_dump(exclude_unset=True))
     return ItemResponse(item=DatabaseVersionItem.model_validate(updated))
 
 

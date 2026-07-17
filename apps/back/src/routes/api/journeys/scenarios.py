@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, JourneyScenarioStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.journeys import JourneyScenarioItem
 from src.serializes.errors import ErrorResponse
@@ -126,7 +126,7 @@ def get_scenario(
     operation_id="api.journeys.scenarios.update",
     summary="Update a scenario",
     description=(
-        "Partially update a scenario (type, personas, title, criticity, description). Any "
+        "Partially update a scenario (type, personas, title, criticity, description, status). Any "
         "referenced persona must belong to the account. Editing roles only."
     ),
     response_model=ItemResponse[JourneyScenarioItem],
@@ -140,40 +140,6 @@ def update_scenario(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> ItemResponse[JourneyScenarioItem]:
     updated = manager.update(account, scenario, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
-
-
-@router.post(
-    "/{scenario_id}/activate",
-    operation_id="api.journeys.scenarios.activate",
-    summary="Activate a scenario",
-    description="Set the scenario status to active. Editing roles only.",
-    response_model=ItemResponse[JourneyScenarioItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_scenario(
-    scenario: CurrentJourneyScenarioDep,
-    manager: JourneyScenarioManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyScenarioItem]:
-    updated = manager.set_status(scenario, JourneyScenarioStatus.ACTIVE)
-    return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
-
-
-@router.post(
-    "/{scenario_id}/archive",
-    operation_id="api.journeys.scenarios.archive",
-    summary="Archive a scenario",
-    description="Set the scenario status to archived. Editing roles only.",
-    response_model=ItemResponse[JourneyScenarioItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_scenario(
-    scenario: CurrentJourneyScenarioDep,
-    manager: JourneyScenarioManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyScenarioItem]:
-    updated = manager.set_status(scenario, JourneyScenarioStatus.ARCHIVED)
     return ItemResponse(item=JourneyScenarioItem.model_validate(updated))
 
 

@@ -124,7 +124,7 @@ def get_persona(
     "/{persona_id}",
     operation_id="api.personas.update",
     summary="Update a persona",
-    description="Partially update a persona (type, title, description). Editing roles only.",
+    description="Partially update a persona (type, title, description, status). Editing roles only.",
     response_model=ItemResponse[PersonaItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -135,40 +135,6 @@ def update_persona(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> ItemResponse[PersonaItem]:
     updated = manager.apply_update(persona, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=PersonaItem.model_validate(updated))
-
-
-@router.post(
-    "/{persona_id}/activate",
-    operation_id="api.personas.activate",
-    summary="Activate a persona",
-    description="Set the persona status to active. Editing roles only.",
-    response_model=ItemResponse[PersonaItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_persona(
-    persona: CurrentPersonaDep,
-    manager: PersonaManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[PersonaItem]:
-    updated = manager.set_status(persona, PersonaStatus.ACTIVE)
-    return ItemResponse(item=PersonaItem.model_validate(updated))
-
-
-@router.post(
-    "/{persona_id}/archive",
-    operation_id="api.personas.archive",
-    summary="Archive a persona",
-    description="Set the persona status to archived. Editing roles only.",
-    response_model=ItemResponse[PersonaItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_persona(
-    persona: CurrentPersonaDep,
-    manager: PersonaManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[PersonaItem]:
-    updated = manager.set_status(persona, PersonaStatus.ARCHIVED)
     return ItemResponse(item=PersonaItem.model_validate(updated))
 
 

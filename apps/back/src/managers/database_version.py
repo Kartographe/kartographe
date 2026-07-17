@@ -77,6 +77,41 @@ class DatabaseVersionManager(BaseEntityManager):
         database_version.updated_at = now
         return self._persist(database_version)
 
+    def draft(self, database_version: DatabaseVersion) -> DatabaseVersion:
+        """Send the version back to draft, clearing its activity window.
+
+        Only reachable since status became patchable: `draft` used to be the
+        creation state and nothing else. A draft that kept the `start_date` of
+        a past activation would claim to have been live while saying it never
+        was, so the window is cleared rather than left behind.
+        """
+        database_version.status = DatabaseVersionStatus.DRAFT
+        database_version.start_date = None
+        database_version.end_date = None
+        database_version.updated_at = utc_now()
+        return self._persist(database_version)
+
+    def update(self, database_version: DatabaseVersion, fields: dict) -> DatabaseVersion:
+        """Apply a partial update, dispatching a status change to the lifecycle.
+
+        `status` is not an ordinary field on this entity. Activating maintains
+        "at most one active version per database" and stamps `start_date` /
+        `end_date`; assigning the column directly would leave two active
+        versions and no dates, and nothing would complain. So it is dispatched
+        to the method that owns each transition rather than set.
+        """
+        target = fields.pop("status", None)
+        if fields:
+            database_version = self.apply_update(database_version, fields)
+        if target is None or target == database_version.status:
+            return database_version
+        transition = {
+            DatabaseVersionStatus.ACTIVE: self.activate,
+            DatabaseVersionStatus.ARCHIVED: self.archive,
+            DatabaseVersionStatus.DRAFT: self.draft,
+        }[target]
+        return transition(database_version)
+
     def soft_delete(self, database_version: DatabaseVersion) -> None:
         """Soft-delete the version with its tables and their columns."""
         now = utc_now()

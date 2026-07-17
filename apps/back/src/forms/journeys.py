@@ -11,8 +11,11 @@ from pydantic import Field
 from src.forms._base import CamelBase
 from src.models.enum import (
     JourneyScenarioCriticity,
+    JourneyScenarioStatus,
+    JourneyScenarioStepAssertionStatus,
     JourneyScenarioStepFileType,
     JourneyScenarioType,
+    JourneyStatus,
     JourneyType,
 )
 
@@ -32,6 +35,7 @@ class JourneyCreateForm(CamelBase):
 class JourneyPatchForm(CamelBase):
     """Partial update of a journey — only the keys sent are applied."""
 
+    status: JourneyStatus | None = Field(default=None)
     type: JourneyType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
@@ -56,6 +60,7 @@ class JourneyScenarioCreateForm(CamelBase):
 class JourneyScenarioPatchForm(CamelBase):
     """Partial update of a scenario — only the keys sent are applied."""
 
+    status: JourneyScenarioStatus | None = Field(default=None)
     type: JourneyScenarioType | None = Field(default=None)
     personas_ids: list[uuid.UUID] | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
@@ -115,6 +120,7 @@ class JourneyScenarioStepAssertionCreateForm(CamelBase):
 class JourneyScenarioStepAssertionPatchForm(CamelBase):
     """Partial update of an assertion — only the keys sent are applied."""
 
+    status: JourneyScenarioStepAssertionStatus | None = Field(default=None)
     assertion_type_id: uuid.UUID | None = Field(default=None)
     parameters: dict | None = Field(default=None)
 

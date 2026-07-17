@@ -141,7 +141,7 @@ def get_journey(
     operation_id="api.journeys.update",
     summary="Update a journey",
     description=(
-        "Partially update a journey (type, title, description, personas). Any referenced persona "
+        "Partially update a journey (type, title, description, personas, status). Any referenced persona "
         "must belong to the account. Editing roles only."
     ),
     response_model=ItemResponse[JourneyItem],
@@ -155,40 +155,6 @@ def update_journey(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> ItemResponse[JourneyItem]:
     updated = manager.update(account, journey, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=JourneyItem.model_validate(updated))
-
-
-@router.post(
-    "/{journey_id}/activate",
-    operation_id="api.journeys.activate",
-    summary="Activate a journey",
-    description="Set the journey status to active. Editing roles only.",
-    response_model=ItemResponse[JourneyItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_journey(
-    journey: CurrentJourneyDep,
-    manager: JourneyManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyItem]:
-    updated = manager.set_status(journey, JourneyStatus.ACTIVE)
-    return ItemResponse(item=JourneyItem.model_validate(updated))
-
-
-@router.post(
-    "/{journey_id}/archive",
-    operation_id="api.journeys.archive",
-    summary="Archive a journey",
-    description="Set the journey status to archived. Editing roles only.",
-    response_model=ItemResponse[JourneyItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_journey(
-    journey: CurrentJourneyDep,
-    manager: JourneyManagerDep,
-    _: Annotated[AccountUser, Depends(_EDITOR)],
-) -> ItemResponse[JourneyItem]:
-    updated = manager.set_status(journey, JourneyStatus.ARCHIVED)
     return ItemResponse(item=JourneyItem.model_validate(updated))
 
 

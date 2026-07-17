@@ -14,9 +14,12 @@ from src.forms._base import CamelBase
 from src.models.enum import (
     ApplicationGuardFieldFormat,
     ApplicationGuardFieldType,
+    ApplicationGuardStatus,
     ApplicationGuardType,
+    ApplicationRoleStatus,
     ApplicationRouteMethod,
     ApplicationRouteResponseFormat,
+    ApplicationRouteStatus,
     ApplicationRouteTableAction,
     ApplicationRouteTableType,
 )
@@ -38,6 +41,7 @@ class ApplicationGuardCreateForm(CamelBase):
 class ApplicationGuardPatchForm(CamelBase):
     """Partial update of a guard — only the keys sent are applied."""
 
+    status: ApplicationGuardStatus | None = Field(default=None)
     type: ApplicationGuardType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     field_type: ApplicationGuardFieldType | None = Field(default=None)
@@ -59,6 +63,7 @@ class ApplicationRoleCreateForm(CamelBase):
 class ApplicationRolePatchForm(CamelBase):
     """Partial update of a role — only the keys sent are applied."""
 
+    status: ApplicationRoleStatus | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
 
@@ -91,6 +96,7 @@ class ApplicationRouteCreateForm(CamelBase):
 class ApplicationRoutePatchForm(CamelBase):
     """Partial update of a route — only the keys sent are applied."""
 
+    status: ApplicationRouteStatus | None = Field(default=None)
     method: ApplicationRouteMethod | None = Field(default=None)
     path: str | None = Field(default=None, min_length=1, max_length=2048)
     title: str | None = Field(default=None, max_length=255)

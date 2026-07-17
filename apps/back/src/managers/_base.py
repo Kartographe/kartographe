@@ -58,7 +58,25 @@ class BaseEntityManager:
         return obj
 
     def apply_update(self, obj, fields: dict):
-        """Apply a partial update (already-validated, snake_case keys)."""
+        """Apply a partial update (already-validated, snake_case keys).
+
+        A `status` in `fields` stamps `status_date`, so a status reached through
+        PATCH is dated exactly as one reached through `set_status` used to be.
+        Without this the field would silently keep the date of a status the row
+        no longer holds — which is worse than having no date at all.
+
+        Guarded on the field existing: `Persona` has a `status` and no
+        `status_date`, and `DatabaseVersion` dates its lifecycle with
+        `start_date`/`end_date` instead. Assigning to a field a table model does
+        not declare is not an error in SQLModel — it silently sets a plain Python
+        attribute that is never persisted.
+        """
+        if (
+            "status" in fields
+            and fields["status"] != obj.status
+            and "status_date" in type(obj).model_fields
+        ):
+            obj.status_date = utc_now()
         for key, value in fields.items():
             setattr(obj, key, value)
         obj.updated_at = utc_now()

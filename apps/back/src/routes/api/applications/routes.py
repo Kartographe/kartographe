@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationRouteStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRouteItem
 from src.serializes.errors import ErrorResponse
@@ -145,40 +145,6 @@ def update_route(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ApplicationRouteItem]:
     updated = manager.update(application, route, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationRouteItem.model_validate(updated))
-
-
-@router.post(
-    "/{route_id}/activate",
-    operation_id="api.applications.routes.activate",
-    summary="Activate a route",
-    description="Set the route status to active. Dev roles only.",
-    response_model=ItemResponse[ApplicationRouteItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_route(
-    route: CurrentApplicationRouteDep,
-    manager: ApplicationRouteManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ApplicationRouteItem]:
-    updated = manager.set_status(route, ApplicationRouteStatus.ACTIVE)
-    return ItemResponse(item=ApplicationRouteItem.model_validate(updated))
-
-
-@router.post(
-    "/{route_id}/archive",
-    operation_id="api.applications.routes.archive",
-    summary="Archive a route",
-    description="Set the route status to archived. Dev roles only.",
-    response_model=ItemResponse[ApplicationRouteItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_route(
-    route: CurrentApplicationRouteDep,
-    manager: ApplicationRouteManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ApplicationRouteItem]:
-    updated = manager.set_status(route, ApplicationRouteStatus.ARCHIVED)
     return ItemResponse(item=ApplicationRouteItem.model_validate(updated))
 
 

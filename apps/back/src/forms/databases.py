@@ -13,8 +13,11 @@ from src.forms._base import CamelBase
 from src.models.enum import (
     DatabaseMigrationColumnType,
     DatabaseMigrationType,
+    DatabaseStatus,
+    DatabaseTableStatus,
     DatabaseTableType,
     DatabaseType,
+    DatabaseVersionStatus,
 )
 
 # A `#rgb` or `#rrggbb` color. `None` clears the color; the field is optional.
@@ -35,6 +38,7 @@ class DatabaseCreateForm(CamelBase):
 class DatabasePatchForm(CamelBase):
     """Partial update of a database — only the keys sent are applied."""
 
+    status: DatabaseStatus | None = Field(default=None)
     type: DatabaseType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
@@ -53,6 +57,7 @@ class DatabaseVersionCreateForm(CamelBase):
 class DatabaseVersionPatchForm(CamelBase):
     """Partial update of a version — only the keys sent are applied."""
 
+    status: DatabaseVersionStatus | None = Field(default=None)
     version: list[int] | None = Field(default=None, min_length=1, max_length=4)
 
 
@@ -134,6 +139,7 @@ class DatabaseTablePatchForm(CamelBase):
     """Partial update of a table. If `columns` is sent, it fully replaces the
     table's current columns."""
 
+    status: DatabaseTableStatus | None = Field(default=None)
     type: DatabaseTableType | None = Field(default=None)
     table_schema: str | None = Field(default=None, alias="schema", min_length=1, max_length=255)
     name: str | None = Field(default=None, min_length=1, max_length=255)

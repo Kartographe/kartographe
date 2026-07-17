@@ -125,7 +125,7 @@ def get_service(_: CurrentAccountUserDep, service: CurrentServiceDep) -> ItemRes
     operation_id="api.services.update",
     summary="Update a service",
     description=(
-        "Partially update a service (type, title, description, picture, url, OpenAPI url). "
+        "Partially update a service (type, title, description, picture, url, OpenAPI url, status). "
         "Dev roles only."
     ),
     response_model=ItemResponse[ServiceItem],
@@ -138,40 +138,6 @@ def update_service(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ServiceItem]:
     updated = manager.apply_update(service, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ServiceItem.model_validate(updated))
-
-
-@router.post(
-    "/{service_id}/activate",
-    operation_id="api.services.activate",
-    summary="Activate a service",
-    description="Set the service status to active. Dev roles only.",
-    response_model=ItemResponse[ServiceItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_service(
-    service: CurrentServiceDep,
-    manager: ServiceManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ServiceItem]:
-    updated = manager.set_status(service, ServiceStatus.ACTIVE)
-    return ItemResponse(item=ServiceItem.model_validate(updated))
-
-
-@router.post(
-    "/{service_id}/archive",
-    operation_id="api.services.archive",
-    summary="Archive a service",
-    description="Set the service status to archived. Dev roles only.",
-    response_model=ItemResponse[ServiceItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_service(
-    service: CurrentServiceDep,
-    manager: ServiceManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ServiceItem]:
-    updated = manager.set_status(service, ServiceStatus.ARCHIVED)
     return ItemResponse(item=ServiceItem.model_validate(updated))
 
 

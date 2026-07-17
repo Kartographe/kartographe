@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.forms.application_routes import ApplicationRoleCreateForm, ApplicationRolePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationRoleStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRoleItem
 from src.serializes.errors import ErrorResponse
@@ -102,7 +102,7 @@ def get_role(
     "/{role_id}",
     operation_id="api.applications.roles.update",
     summary="Update a role",
-    description="Partially update a role (title, description). Contributors only.",
+    description="Partially update a role (title, description, status). Contributors only.",
     response_model=ItemResponse[ApplicationRoleItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -113,40 +113,6 @@ def update_role(
     _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
 ) -> ItemResponse[ApplicationRoleItem]:
     updated = manager.apply_update(role, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationRoleItem.model_validate(updated))
-
-
-@router.post(
-    "/{role_id}/activate",
-    operation_id="api.applications.roles.activate",
-    summary="Activate a role",
-    description="Set the role status to active. Contributors only.",
-    response_model=ItemResponse[ApplicationRoleItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_role(
-    role: CurrentApplicationRoleDep,
-    manager: ApplicationRoleManagerDep,
-    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
-) -> ItemResponse[ApplicationRoleItem]:
-    updated = manager.set_status(role, ApplicationRoleStatus.ACTIVE)
-    return ItemResponse(item=ApplicationRoleItem.model_validate(updated))
-
-
-@router.post(
-    "/{role_id}/archive",
-    operation_id="api.applications.roles.archive",
-    summary="Archive a role",
-    description="Set the role status to archived. Contributors only.",
-    response_model=ItemResponse[ApplicationRoleItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_role(
-    role: CurrentApplicationRoleDep,
-    manager: ApplicationRoleManagerDep,
-    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
-) -> ItemResponse[ApplicationRoleItem]:
-    updated = manager.set_status(role, ApplicationRoleStatus.ARCHIVED)
     return ItemResponse(item=ApplicationRoleItem.model_validate(updated))
 
 

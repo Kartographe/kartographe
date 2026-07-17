@@ -18,7 +18,7 @@ from src.forms.applications import (
     ApplicationEnvironmentPatchForm,
 )
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationEnvironmentItem
 from src.serializes.errors import ErrorResponse
@@ -111,7 +111,7 @@ def get_environment(
     operation_id="api.applications.environments.update",
     summary="Update an environment",
     description=(
-        "Partially update an environment (type, title, description, url). "
+        "Partially update an environment (type, title, description, url, status). "
         "Owners, administrators and lead developers only."
     ),
     response_model=ItemResponse[ApplicationEnvironmentItem],
@@ -124,40 +124,6 @@ def update_environment(
     _: Annotated[AccountUser, Depends(_DEV_LEAD)],
 ) -> ItemResponse[ApplicationEnvironmentItem]:
     updated = manager.apply_update(environment, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationEnvironmentItem.model_validate(updated))
-
-
-@router.post(
-    "/{environment_id}/activate",
-    operation_id="api.applications.environments.activate",
-    summary="Activate an environment",
-    description="Set the environment status to active. Owners, administrators and lead developers only.",
-    response_model=ItemResponse[ApplicationEnvironmentItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_environment(
-    environment: CurrentApplicationEnvironmentDep,
-    manager: ApplicationEnvironmentManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
-) -> ItemResponse[ApplicationEnvironmentItem]:
-    updated = manager.set_status(environment, ApplicationStatus.ACTIVE)
-    return ItemResponse(item=ApplicationEnvironmentItem.model_validate(updated))
-
-
-@router.post(
-    "/{environment_id}/archive",
-    operation_id="api.applications.environments.archive",
-    summary="Archive an environment",
-    description="Set the environment status to archived. Owners, administrators and lead developers only.",
-    response_model=ItemResponse[ApplicationEnvironmentItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_environment(
-    environment: CurrentApplicationEnvironmentDep,
-    manager: ApplicationEnvironmentManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
-) -> ItemResponse[ApplicationEnvironmentItem]:
-    updated = manager.set_status(environment, ApplicationStatus.ARCHIVED)
     return ItemResponse(item=ApplicationEnvironmentItem.model_validate(updated))
 
 

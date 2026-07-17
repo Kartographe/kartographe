@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.forms.services import ServiceActionCreateForm, ServiceActionPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ServiceActionStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.services import ServiceActionItem
@@ -106,7 +106,7 @@ def get_action(
     "/{action_id}",
     operation_id="api.services.actions.update",
     summary="Update a service action",
-    description="Partially update an action (type, title, description, method, path). Dev roles only.",
+    description="Partially update an action (type, title, description, method, path, status). Dev roles only.",
     response_model=ItemResponse[ServiceActionItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -117,40 +117,6 @@ def update_action(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ServiceActionItem]:
     updated = manager.apply_update(action, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ServiceActionItem.model_validate(updated))
-
-
-@router.post(
-    "/{action_id}/activate",
-    operation_id="api.services.actions.activate",
-    summary="Activate a service action",
-    description="Set the action status to active. Dev roles only.",
-    response_model=ItemResponse[ServiceActionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_action(
-    action: CurrentServiceActionDep,
-    manager: ServiceActionManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ServiceActionItem]:
-    updated = manager.set_status(action, ServiceActionStatus.ACTIVE)
-    return ItemResponse(item=ServiceActionItem.model_validate(updated))
-
-
-@router.post(
-    "/{action_id}/archive",
-    operation_id="api.services.actions.archive",
-    summary="Archive a service action",
-    description="Set the action status to archived. Dev roles only.",
-    response_model=ItemResponse[ServiceActionItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_action(
-    action: CurrentServiceActionDep,
-    manager: ServiceActionManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ServiceActionItem]:
-    updated = manager.set_status(action, ServiceActionStatus.ARCHIVED)
     return ItemResponse(item=ServiceActionItem.model_validate(updated))
 
 

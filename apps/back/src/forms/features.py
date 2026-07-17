@@ -9,7 +9,11 @@ import uuid
 from pydantic import Field
 
 from src.forms._base import CamelBase
-from src.models.enum import FeatureFileType, FeatureType
+from src.models.enum import (
+    FeatureFileType,
+    FeatureStatus,
+    FeatureType,
+)
 
 # --- Feature -------------------------------------------------------------
 
@@ -26,6 +30,7 @@ class FeatureCreateForm(CamelBase):
 class FeaturePatchForm(CamelBase):
     """Partial update of a feature — only the keys sent are applied."""
 
+    status: FeatureStatus | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
     type: FeatureType | None = Field(default=None)

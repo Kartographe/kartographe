@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.application_routes import ApplicationGuardCreateForm, ApplicationGuardPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationGuardStatus
+from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationGuardItem
 from src.serializes.errors import ErrorResponse
@@ -116,7 +116,7 @@ def get_guard(
     "/{guard_id}",
     operation_id="api.applications.guards.update",
     summary="Update a guard",
-    description="Partially update a guard (type, title, field type/key/format). Dev roles only.",
+    description="Partially update a guard (type, title, field type/key/format, status). Dev roles only.",
     response_model=ItemResponse[ApplicationGuardItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
@@ -127,40 +127,6 @@ def update_guard(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ApplicationGuardItem]:
     updated = manager.apply_update(guard, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationGuardItem.model_validate(updated))
-
-
-@router.post(
-    "/{guard_id}/activate",
-    operation_id="api.applications.guards.activate",
-    summary="Activate a guard",
-    description="Set the guard status to active. Dev roles only.",
-    response_model=ItemResponse[ApplicationGuardItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def activate_guard(
-    guard: CurrentApplicationGuardDep,
-    manager: ApplicationGuardManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ApplicationGuardItem]:
-    updated = manager.set_status(guard, ApplicationGuardStatus.ACTIVE)
-    return ItemResponse(item=ApplicationGuardItem.model_validate(updated))
-
-
-@router.post(
-    "/{guard_id}/archive",
-    operation_id="api.applications.guards.archive",
-    summary="Archive a guard",
-    description="Set the guard status to archived. Dev roles only.",
-    response_model=ItemResponse[ApplicationGuardItem],
-    responses={**_FORBIDDEN, **_NOT_FOUND},
-)
-def archive_guard(
-    guard: CurrentApplicationGuardDep,
-    manager: ApplicationGuardManagerDep,
-    _: Annotated[AccountUser, Depends(_DEV)],
-) -> ItemResponse[ApplicationGuardItem]:
-    updated = manager.set_status(guard, ApplicationGuardStatus.ARCHIVED)
     return ItemResponse(item=ApplicationGuardItem.model_validate(updated))
 
 

@@ -13,6 +13,7 @@ from src.forms._base import CamelBase
 from src.models.enum import (
     ApplicationEnvironmentType,
     ApplicationEnvironmentVersionStatus,
+    ApplicationStatus,
     ApplicationType,
     ApplicationVersionType,
 )
@@ -32,6 +33,7 @@ class ApplicationCreateForm(CamelBase):
 class ApplicationPatchForm(CamelBase):
     """Partial update of an application — only the keys sent are applied."""
 
+    status: ApplicationStatus | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=5000)
     type: ApplicationType | None = Field(default=None)
@@ -54,6 +56,7 @@ class ApplicationEnvironmentCreateForm(CamelBase):
 class ApplicationEnvironmentPatchForm(CamelBase):
     """Partial update of an environment — only the keys sent are applied."""
 
+    status: ApplicationStatus | None = Field(default=None)
     type: ApplicationEnvironmentType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
@@ -76,6 +79,7 @@ class ApplicationVersionCreateForm(CamelBase):
 class ApplicationVersionPatchForm(CamelBase):
     """Partial update of a version — only the keys sent are applied."""
 
+    status: ApplicationStatus | None = Field(default=None)
     type: ApplicationVersionType | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     version: list[int] | None = Field(default=None, min_length=1, max_length=4)
