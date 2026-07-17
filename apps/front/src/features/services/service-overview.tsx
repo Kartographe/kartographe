@@ -45,11 +45,29 @@ export function ServiceOverview({
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   async function changeStatus(status: Service["status"]) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, service_id: service.id } },
       body: { status },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services"],
+    });
+  }
+
+  async function changeType(type: Service["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { type },
     });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],
@@ -75,7 +93,11 @@ export function ServiceOverview({
       <Descriptions bordered column={1} size="small">
         <Descriptions.Item label={t`Titre`}>{service.title}</Descriptions.Item>
         <Descriptions.Item label={t`Type`}>
-          <ServiceTypeTag type={service.type} />
+          <ServiceTypeTag
+            loading={typeMutation.isPending}
+            onChange={changeType}
+            type={service.type}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
           <ServiceStatusTag

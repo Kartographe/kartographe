@@ -37,11 +37,29 @@ export function FeatureOverview({
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   async function changeStatus(status: Feature["status"]) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { status },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/features"],
+    });
+  }
+
+  async function changeType(type: Feature["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
+      body: { type },
     });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
@@ -67,7 +85,11 @@ export function FeatureOverview({
       <Descriptions bordered column={1} size="small">
         <Descriptions.Item label={t`Titre`}>{feature.title}</Descriptions.Item>
         <Descriptions.Item label={t`Type`}>
-          <FeatureTypeTag type={feature.type} />
+          <FeatureTypeTag
+            loading={typeMutation.isPending}
+            onChange={changeType}
+            type={feature.type}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
           <FeatureStatusTag

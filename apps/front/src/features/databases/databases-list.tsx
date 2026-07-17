@@ -94,6 +94,11 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/databases/{database_id}",
@@ -125,6 +130,14 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, database_id: database.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(database: Database, type: Type) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, database_id: database.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -201,7 +214,13 @@ export function DatabasesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <DatabaseTypeTag type={type} />,
+      render: (type: Type, database) => (
+        <DatabaseTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(database, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

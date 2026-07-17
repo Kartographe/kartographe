@@ -88,6 +88,11 @@ export function ServicesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/services/{service_id}",
@@ -118,6 +123,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, service_id: service.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(service: Service, type: Type) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -202,7 +215,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <ServiceTypeTag type={type} />,
+      render: (type: Type, service) => (
+        <ServiceTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(service, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

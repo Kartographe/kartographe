@@ -89,6 +89,11 @@ export function ActionsScreen({
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
@@ -105,6 +110,17 @@ export function ActionsScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, action_id: action.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(
+    action: ServiceAction,
+    type: ServiceAction["type"]
+  ) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, action_id: action.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -136,7 +152,11 @@ export function ActionsScreen({
           <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
             {action.title}
           </Typography.Text>
-          <ActionTypeTag type={action.type} />
+          <ActionTypeTag
+            loading={typeMutation.isPending}
+            onChange={(next) => changeType(action, next)}
+            type={action.type}
+          />
           <ActionStatusTag
             loading={statusMutation.isPending}
             onChange={(next) => changeStatus(action, next)}

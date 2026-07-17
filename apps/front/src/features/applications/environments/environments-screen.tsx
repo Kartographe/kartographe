@@ -51,6 +51,11 @@ export function EnvironmentsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}",
@@ -75,6 +80,17 @@ export function EnvironmentsScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, environment_id: environment.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(
+    environment: Environment,
+    type: Environment["type"]
+  ) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, environment_id: environment.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -120,7 +136,13 @@ export function EnvironmentsScreen({
       title: t`Type`,
       dataIndex: "type",
       width: COL.type,
-      render: (type: Environment["type"]) => <EnvironmentTypeTag type={type} />,
+      render: (type: Environment["type"], environment) => (
+        <EnvironmentTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(environment, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`URL`,

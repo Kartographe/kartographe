@@ -57,12 +57,22 @@ export function DatabaseStatusTag({
   );
 }
 
-export function DatabaseTypeTag({ type }: { type: S["DatabaseType"] }) {
+export function DatabaseTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["DatabaseType"];
+  onChange?: (type: S["DatabaseType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={DATABASE_TYPE_COLORS}
       descriptions={DATABASE_TYPE_DESCRIPTIONS}
       labels={DATABASE_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
@@ -89,12 +99,22 @@ export function TableStatusTag({
   );
 }
 
-export function TableTypeTag({ type }: { type: S["DatabaseTableType"] }) {
+export function TableTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["DatabaseTableType"];
+  onChange?: (type: S["DatabaseTableType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={TABLE_TYPE_COLORS}
       descriptions={TABLE_TYPE_DESCRIPTIONS}
       labels={TABLE_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

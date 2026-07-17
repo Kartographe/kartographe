@@ -36,12 +36,22 @@ export function PersonaStatusTag({
   );
 }
 
-export function PersonaTypeTag({ type }: { type: S["PersonaType"] }) {
+export function PersonaTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["PersonaType"];
+  onChange?: (type: S["PersonaType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={PERSONA_TYPE_COLORS}
       descriptions={PERSONA_TYPE_DESCRIPTIONS}
       labels={PERSONA_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

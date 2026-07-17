@@ -48,12 +48,22 @@ export function ApplicationStatusTag({
   );
 }
 
-export function ApplicationTypeTag({ type }: { type: S["ApplicationType"] }) {
+export function ApplicationTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["ApplicationType"];
+  onChange?: (type: S["ApplicationType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={APPLICATION_TYPE_COLORS}
       descriptions={APPLICATION_TYPE_DESCRIPTIONS}
       labels={APPLICATION_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
@@ -61,14 +71,20 @@ export function ApplicationTypeTag({ type }: { type: S["ApplicationType"] }) {
 
 export function EnvironmentTypeTag({
   type,
+  onChange,
+  loading,
 }: {
   type: S["ApplicationEnvironmentType"];
+  onChange?: (type: S["ApplicationEnvironmentType"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={ENVIRONMENT_TYPE_COLORS}
       descriptions={ENVIRONMENT_TYPE_DESCRIPTIONS}
       labels={ENVIRONMENT_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
@@ -91,25 +107,41 @@ export function DeploymentStatusTag({
 
 export function VersionTypeTag({
   type,
+  onChange,
+  loading,
 }: {
   type: S["ApplicationVersionType"];
+  onChange?: (type: S["ApplicationVersionType"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={VERSION_TYPE_COLORS}
       descriptions={VERSION_TYPE_DESCRIPTIONS}
       labels={VERSION_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
 }
 
-export function GuardTypeTag({ type }: { type: S["ApplicationGuardType"] }) {
+export function GuardTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["ApplicationGuardType"];
+  onChange?: (type: S["ApplicationGuardType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={GUARD_TYPE_COLORS}
       descriptions={GUARD_TYPE_DESCRIPTIONS}
       labels={GUARD_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

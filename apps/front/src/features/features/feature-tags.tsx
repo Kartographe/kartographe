@@ -42,12 +42,22 @@ export function FeatureStatusTag({
   );
 }
 
-export function FeatureTypeTag({ type }: { type: S["FeatureType"] }) {
+export function FeatureTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["FeatureType"];
+  onChange?: (type: S["FeatureType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={FEATURE_TYPE_COLORS}
       descriptions={FEATURE_TYPE_DESCRIPTIONS}
       labels={FEATURE_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

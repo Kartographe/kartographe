@@ -55,6 +55,11 @@ export function GuardsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}/guards/{guard_id}",
@@ -75,6 +80,14 @@ export function GuardsScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, guard_id: guard.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(guard: Guard, type: Guard["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, guard_id: guard.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -109,7 +122,13 @@ export function GuardsScreen({
       title: t`Type`,
       dataIndex: "type",
       width: COL.type,
-      render: (type: Guard["type"]) => <GuardTypeTag type={type} />,
+      render: (type: Guard["type"], guard) => (
+        <GuardTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(guard, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Emplacement`,

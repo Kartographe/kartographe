@@ -52,6 +52,11 @@ export function VersionsScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}",
@@ -68,6 +73,14 @@ export function VersionsScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, version_id: version.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(version: Version, type: Version["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, version_id: version.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -108,7 +121,13 @@ export function VersionsScreen({
       title: t`Type`,
       dataIndex: "type",
       width: COL.type,
-      render: (type: Version["type"]) => <VersionTypeTag type={type} />,
+      render: (type: Version["type"], version) => (
+        <VersionTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(version, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

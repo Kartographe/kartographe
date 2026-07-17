@@ -54,12 +54,22 @@ export function JourneyStatusTag({
   );
 }
 
-export function JourneyTypeTag({ type }: { type: S["JourneyType"] }) {
+export function JourneyTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["JourneyType"];
+  onChange?: (type: S["JourneyType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={JOURNEY_TYPE_COLORS}
       descriptions={JOURNEY_TYPE_DESCRIPTIONS}
       labels={JOURNEY_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
@@ -86,12 +96,22 @@ export function ScenarioStatusTag({
   );
 }
 
-export function ScenarioTypeTag({ type }: { type: S["JourneyScenarioType"] }) {
+export function ScenarioTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["JourneyScenarioType"];
+  onChange?: (type: S["JourneyScenarioType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={SCENARIO_TYPE_COLORS}
       descriptions={SCENARIO_TYPE_DESCRIPTIONS}
       labels={SCENARIO_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

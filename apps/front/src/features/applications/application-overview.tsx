@@ -36,6 +36,11 @@ export function ApplicationOverview({
     "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   async function changeStatus(status: Application["status"]) {
     await statusMutation.mutateAsync({
@@ -43,6 +48,24 @@ export function ApplicationOverview({
         path: { account_id: accountId, application_id: application.id },
       },
       body: { status },
+    });
+    queryClient.invalidateQueries({
+      queryKey: [
+        "get",
+        "/v1/accounts/{account_id}/applications/{application_id}",
+      ],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/applications"],
+    });
+  }
+
+  async function changeType(type: Application["type"]) {
+    await typeMutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, application_id: application.id },
+      },
+      body: { type },
     });
     queryClient.invalidateQueries({
       queryKey: [
@@ -73,7 +96,11 @@ export function ApplicationOverview({
           {application.title}
         </Descriptions.Item>
         <Descriptions.Item label={t`Type`}>
-          <ApplicationTypeTag type={application.type} />
+          <ApplicationTypeTag
+            loading={typeMutation.isPending}
+            onChange={changeType}
+            type={application.type}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
           <ApplicationStatusTag

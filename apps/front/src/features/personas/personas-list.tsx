@@ -104,6 +104,11 @@ export function PersonasList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/personas/{persona_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/personas/{persona_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/personas/{persona_id}",
@@ -133,6 +138,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, persona_id: persona.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(persona: Persona, type: Type) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, persona_id: persona.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -209,7 +222,13 @@ export function PersonasList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <PersonaTypeTag type={type} />,
+      render: (type: Type, persona) => (
+        <PersonaTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(persona, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

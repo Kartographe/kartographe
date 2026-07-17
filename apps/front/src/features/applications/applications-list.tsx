@@ -94,6 +94,11 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/applications/{application_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/applications/{application_id}",
@@ -127,6 +132,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
         path: { account_id: accountId, application_id: application.id },
       },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(application: Application, type: Type) {
+    await typeMutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, application_id: application.id },
+      },
+      body: { type },
     });
     invalidate();
   }
@@ -214,7 +229,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <ApplicationTypeTag type={type} />,
+      render: (type: Type, application) => (
+        <ApplicationTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(application, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

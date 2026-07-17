@@ -37,6 +37,11 @@ export function DatabaseOverview({
     "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   async function changeStatus(status: Database["status"]) {
     await statusMutation.mutateAsync({
@@ -44,6 +49,21 @@ export function DatabaseOverview({
         path: { account_id: accountId, database_id: database.id },
       },
       body: { status },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/databases/{database_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/databases"],
+    });
+  }
+
+  async function changeType(type: Database["type"]) {
+    await typeMutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, database_id: database.id },
+      },
+      body: { type },
     });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/databases/{database_id}"],
@@ -69,7 +89,11 @@ export function DatabaseOverview({
       <Descriptions bordered column={1} size="small">
         <Descriptions.Item label={t`Titre`}>{database.title}</Descriptions.Item>
         <Descriptions.Item label={t`Moteur`}>
-          <DatabaseTypeTag type={database.type} />
+          <DatabaseTypeTag
+            loading={typeMutation.isPending}
+            onChange={changeType}
+            type={database.type}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
           <DatabaseStatusTag

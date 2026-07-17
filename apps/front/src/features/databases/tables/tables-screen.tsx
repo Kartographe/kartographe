@@ -105,6 +105,11 @@ export function TablesScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteTableMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}",
@@ -131,6 +136,14 @@ export function TablesScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, database_table_id: table.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(table: DatabaseTable, type: DatabaseTable["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, database_table_id: table.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -191,7 +204,11 @@ export function TablesScreen({
         <Typography.Text style={{ flex: 1 }} type="secondary">
           {(table.columns ?? []).length}
         </Typography.Text>
-        <TableTypeTag type={table.type} />
+        <TableTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(table, next)}
+          type={table.type}
+        />
         <TableStatusTag
           loading={statusMutation.isPending}
           onChange={(next) => changeStatus(table, next)}

@@ -101,6 +101,11 @@ export function JourneysList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
@@ -133,6 +138,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, journey_id: journey.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(journey: Journey, type: Type) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -231,7 +244,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <JourneyTypeTag type={type} />,
+      render: (type: Type, journey) => (
+        <JourneyTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(journey, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,

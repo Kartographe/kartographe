@@ -42,12 +42,22 @@ export function ServiceStatusTag({
   );
 }
 
-export function ServiceTypeTag({ type }: { type: S["ServiceType"] }) {
+export function ServiceTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["ServiceType"];
+  onChange?: (type: S["ServiceType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={SERVICE_TYPE_COLORS}
       descriptions={SERVICE_TYPE_DESCRIPTIONS}
       labels={SERVICE_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
@@ -74,12 +84,22 @@ export function ActionStatusTag({
   );
 }
 
-export function ActionTypeTag({ type }: { type: S["ServiceActionType"] }) {
+export function ActionTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["ServiceActionType"];
+  onChange?: (type: S["ServiceActionType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={ACTION_TYPE_COLORS}
       descriptions={ACTION_TYPE_DESCRIPTIONS}
       labels={ACTION_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );

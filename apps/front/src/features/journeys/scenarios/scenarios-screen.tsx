@@ -66,6 +66,11 @@ export function ScenariosScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
@@ -85,6 +90,17 @@ export function ScenariosScreen({
     await statusMutation.mutateAsync({
       params: { path: { ...path, scenario_id: scenario.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(
+    scenario: JourneyScenario,
+    type: JourneyScenario["type"]
+  ) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, scenario_id: scenario.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -132,8 +148,12 @@ export function ScenariosScreen({
       key: "type",
       dataIndex: "type",
       width: COL.type,
-      render: (type: JourneyScenario["type"]) => (
-        <ScenarioTypeTag type={type} />
+      render: (type: JourneyScenario["type"], scenario) => (
+        <ScenarioTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(scenario, next)}
+          type={type}
+        />
       ),
     },
     {

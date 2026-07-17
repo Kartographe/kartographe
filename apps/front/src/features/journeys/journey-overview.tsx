@@ -39,11 +39,29 @@ export function JourneyOverview({
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   async function changeStatus(status: Journey["status"]) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, journey_id: journey.id } },
       body: { status },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/journeys"],
+    });
+  }
+
+  async function changeType(type: Journey["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { type },
     });
     queryClient.invalidateQueries({
       queryKey: ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"],
@@ -69,7 +87,11 @@ export function JourneyOverview({
       <Descriptions bordered column={1} size="small">
         <Descriptions.Item label={t`Titre`}>{journey.title}</Descriptions.Item>
         <Descriptions.Item label={t`Type`}>
-          <JourneyTypeTag type={journey.type} />
+          <JourneyTypeTag
+            loading={typeMutation.isPending}
+            onChange={changeType}
+            type={journey.type}
+          />
         </Descriptions.Item>
         <Descriptions.Item label={t`Statut`}>
           <JourneyStatusTag

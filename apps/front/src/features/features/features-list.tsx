@@ -96,6 +96,11 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/features/{feature_id}",
@@ -125,6 +130,14 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     await statusMutation.mutateAsync({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { status },
+    });
+    invalidate();
+  }
+
+  async function changeType(feature: Feature, type: Type) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
+      body: { type },
     });
     invalidate();
   }
@@ -201,7 +214,13 @@ export function FeaturesList({ accountId }: { accountId: string }) {
         value,
       })),
       filteredValue: types.length ? types : null,
-      render: (type: Type) => <FeatureTypeTag type={type} />,
+      render: (type: Type, feature) => (
+        <FeatureTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(feature, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,
