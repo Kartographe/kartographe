@@ -20,12 +20,12 @@ from src.models.enum import (
     ApplicationRouteTableAction,
     ApplicationRouteTableType,
 )
-from src.serializes._base import CamelBase
+from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class ApplicationGuardItem(CamelBase):
+class ApplicationGuardItem(TaggableItem):
     """An authentication guard of an application."""
 
     date: datetime
@@ -56,7 +56,7 @@ class ApplicationRoleItem(CamelBase):
     title: str
 
 
-class ApplicationRouteItem(CamelBase):
+class ApplicationRouteItem(TaggableItem):
     """An HTTP route exposed by an application."""
 
     accepted_format: list[str]

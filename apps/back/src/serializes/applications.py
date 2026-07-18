@@ -15,12 +15,12 @@ from src.models.enum import (
     ApplicationType,
     ApplicationVersionType,
 )
-from src.serializes._base import CamelBase
+from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class ApplicationItem(CamelBase):
+class ApplicationItem(TaggableItem):
     """An application tracked inside an account."""
 
     comment_count: int = 0

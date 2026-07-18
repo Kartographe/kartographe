@@ -12,9 +12,10 @@ metadata later without breaking the contract.
 """
 
 import math
+import uuid
 from typing import Generic, TypeVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, computed_field
 from pydantic.alias_generators import to_camel
 
 T = TypeVar("T")
@@ -28,6 +29,22 @@ class CamelBase(BaseModel):
         populate_by_name=True,
         from_attributes=True,
     )
+
+
+class TaggableItem(CamelBase):
+    """Base for items carrying tags — adds a derived `tagCount`.
+
+    Tagged entities keep their tags as a `tag_ids` UUID array, so the count is
+    just its length: a computed field, no query. Subclasses redeclare `tag_ids`
+    (required) and add their resolved `tags` list.
+    """
+
+    tag_ids: list[uuid.UUID] = []
+
+    @computed_field
+    @property
+    def tag_count(self) -> int:
+        return len(self.tag_ids)
 
 
 class ItemResponse(CamelBase, Generic[T]):

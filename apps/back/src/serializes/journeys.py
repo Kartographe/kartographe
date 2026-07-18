@@ -17,12 +17,12 @@ from src.models.enum import (
     JourneyStatus,
     JourneyType,
 )
-from src.serializes._base import CamelBase
+from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class JourneyItem(CamelBase):
+class JourneyItem(TaggableItem):
     """A user journey tracked inside an account."""
 
     comment_count: int = 0
@@ -44,7 +44,7 @@ class JourneyItem(CamelBase):
     type: JourneyType
 
 
-class JourneyScenarioItem(CamelBase):
+class JourneyScenarioItem(TaggableItem):
     """A scenario inside a journey."""
 
     comment_count: int = 0
@@ -77,7 +77,7 @@ class JourneyScenarioListItem(JourneyScenarioItem):
     journey_title: str | None = None
 
 
-class JourneyScenarioStepItem(CamelBase):
+class JourneyScenarioStepItem(TaggableItem):
     """A step inside a scenario (nodes form a tree via `parentId`)."""
 
     action_type_id: uuid.UUID | None = None

@@ -20,12 +20,12 @@ from src.models.enum import (
     DatabaseType,
     DatabaseVersionStatus,
 )
-from src.serializes._base import CamelBase
+from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class DatabaseItem(CamelBase):
+class DatabaseItem(TaggableItem):
     """A database tracked inside an account."""
 
     comment_count: int = 0
@@ -57,7 +57,7 @@ class DatabaseVersionItem(CamelBase):
     version: list[int]
 
 
-class DatabaseTableColumnItem(CamelBase):
+class DatabaseTableColumnItem(TaggableItem):
     """A column of a database table."""
 
     color: str | None = None
@@ -84,7 +84,7 @@ class DatabaseTableColumnItem(CamelBase):
     unique: bool
 
 
-class DatabaseTableItem(CamelBase):
+class DatabaseTableItem(TaggableItem):
     """A table within a database version.
 
     `columns` is resolved by the manager on every table read (listing included)

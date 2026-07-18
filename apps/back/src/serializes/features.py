@@ -8,12 +8,12 @@ import uuid
 from datetime import datetime
 
 from src.models.enum import FeatureFileStatus, FeatureFileType, FeatureStatus, FeatureType
-from src.serializes._base import CamelBase
+from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class FeatureItem(CamelBase):
+class FeatureItem(TaggableItem):
     """A feature tracked at the account level."""
 
     comment_count: int = 0
