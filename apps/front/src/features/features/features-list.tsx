@@ -14,6 +14,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { FeatureFormModal } from "@/features/features/feature-form-modal";
 import {
   FeatureStatusTag,
@@ -28,6 +29,7 @@ import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type Feature = components["schemas"]["FeatureItem"];
 type Status = components["schemas"]["FeatureStatus"];
@@ -56,6 +58,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const tagFilters = useTagFilters(accountId, "feature");
 
@@ -73,6 +76,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
+          ...(myVote ? { myVote } : {}),
         },
       },
     }
@@ -169,6 +173,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
     setTagIds((filters.tags as string[] | null) ?? []);
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -279,12 +284,13 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: canManageLock ? 1 : 0, labelled: 1 }),
+      width: actionsWidth({ icons: (canManageLock ? 1 : 0) + 1, labelled: 1 }),
       render: (_, feature) => (
         <Flex align="center" gap={4} justify="flex-end">
           {canManageLock ? (
@@ -294,6 +300,12 @@ export function FeaturesList({ accountId }: { accountId: string }) {
               pending={lockPending}
             />
           ) : null}
+          <Link
+            params={{ accountId, featureId: feature.id }}
+            to="/accounts/$accountId/features/$featureId/comments"
+          >
+            <CommentCountButton count={feature.commentCount} />
+          </Link>
           <Link
             params={{ accountId, featureId: feature.id }}
             to="/accounts/$accountId/features/$featureId"
