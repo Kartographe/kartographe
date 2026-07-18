@@ -5,10 +5,15 @@
 """Input schemas for account member management."""
 
 from src.forms._base import CamelBase
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, VoteRole
 
 
 class AccountUserPatchForm(CamelBase):
-    """Change a member's role."""
+    """Update a member's account role and/or their voting role.
 
-    role: AccountUserRole
+    Both fields are optional so either can be changed on its own; omitted fields
+    are left untouched.
+    """
+
+    role: AccountUserRole | None = None
+    vote_role: VoteRole | None = None

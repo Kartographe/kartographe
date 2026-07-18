@@ -13,6 +13,7 @@ import uuid
 from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
+from src.managers.account_users import vote_role_for_account_role
 from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
 from src.models.enum import (
@@ -96,6 +97,7 @@ class MeInvitationsManager:
             type=AccountUserType.GUEST,
             status=AccountUserStatus.ACTIVE,
             role=invitation.role,
+            vote_role=vote_role_for_account_role(invitation.role),
             date=now,
             start_date=now,
             end_date=FAR_FUTURE,

@@ -17,7 +17,7 @@ from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
-from src.models.enum import CommentEntityType, CommentStatus
+from src.models.enum import EntityType, CommentStatus
 
 if TYPE_CHECKING:
     from src.models.user import User
@@ -35,7 +35,7 @@ class Comment(BaseModel, table=True):
     date: datetime
     status: CommentStatus = Field(index=True)
     status_date: datetime
-    entity_type: CommentEntityType = Field(index=True)
+    entity_type: EntityType = Field(index=True)
     entity_id: uuid.UUID = Field(index=True)
     # Rich-text (Tiptap JSON document); cleared when the comment is removed.
     value: dict | None = Field(default=None, sa_type=JSON)

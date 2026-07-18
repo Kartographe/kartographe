@@ -24,8 +24,10 @@ from src.routes.api.applications.route_comments import router as route_comments_
 from src.routes.api.applications.route_examples import router as route_examples_router
 from src.routes.api.applications.route_responses import router as route_responses_router
 from src.routes.api.applications.route_tables import router as route_tables_router
+from src.routes.api.applications.route_votes import router as route_votes_router
 from src.routes.api.applications.routes import router as routes_router
 from src.routes.api.applications.versions import router as versions_router
+from src.routes.api.applications.votes import router as votes_router
 
 router = APIRouter()
 router.include_router(applications_router)
@@ -41,3 +43,5 @@ router.include_router(route_examples_router)
 router.include_router(route_tables_router)
 router.include_router(comments_router)
 router.include_router(route_comments_router)
+router.include_router(votes_router)
+router.include_router(route_votes_router)

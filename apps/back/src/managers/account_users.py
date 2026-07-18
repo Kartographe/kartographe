@@ -14,9 +14,25 @@ from sqlmodel import Session, select
 
 from src.models.account import Account
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, AccountUserStatus
+from src.models.enum import AccountUserRole, AccountUserStatus, VoteRole
 from src.models.user import User
 from src.utils.datetime import utc_now
+
+# How an account role maps onto a default voting role. Privileged/read-only
+# roles (owner, administrator, commentator) carry no domain standpoint, so they
+# fall back to `other`; the rest map onto their matching voting hat.
+_VOTE_ROLE_FOR_ACCOUNT_ROLE: dict[AccountUserRole, VoteRole] = {
+    AccountUserRole.PRODUCT_OWNER: VoteRole.PRODUCT_OWNER,
+    AccountUserRole.QA_MANAGER: VoteRole.QA,
+    AccountUserRole.LEAD_DEVELOPER: VoteRole.DEVELOPER,
+    AccountUserRole.DEVELOPER: VoteRole.DEVELOPER,
+    AccountUserRole.DATA_ANALYST: VoteRole.DATA_ANALYST,
+}
+
+
+def vote_role_for_account_role(role: AccountUserRole) -> VoteRole:
+    """The voting role a member gets by default from their account role."""
+    return _VOTE_ROLE_FOR_ACCOUNT_ROLE.get(role, VoteRole.OTHER)
 
 
 class AccountUsersManager:
@@ -72,6 +88,18 @@ class AccountUsersManager:
         if target.role == AccountUserRole.OWNER:
             self._assert_other_active_owner_exists(target)
         target.role = new_role
+        target.updated_at = utc_now()
+        self.session.add(target)
+        self.session.commit()
+        self.session.refresh(target)
+        return target
+
+    def update_vote_role(self, target: AccountUser, new_vote_role: VoteRole) -> AccountUser:
+        """Change a member's voting role. Owners/administrators only (enforced at
+        the route). Carries no account-role invariants, so self-editing is fine."""
+        if target.vote_role == new_vote_role:
+            return target
+        target.vote_role = new_vote_role
         target.updated_at = utc_now()
         self.session.add(target)
         self.session.commit()

@@ -10,7 +10,7 @@ List and post comments on a database migration. Any account member may read and 
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -44,7 +44,7 @@ def list_migration_comments(
     migration: CurrentDatabaseMigrationDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.DATABASE_MIGRATION, migration.id)
+    rows = manager.list_for_entity(account, EntityType.DATABASE_MIGRATION, migration.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -68,7 +68,7 @@ def create_migration_comment(
     comment = manager.create(
         account,
         user,
-        entity_type=CommentEntityType.DATABASE_MIGRATION,
+        entity_type=EntityType.DATABASE_MIGRATION,
         entity_id=migration.id,
         value=form.value,
     )

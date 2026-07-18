@@ -20,8 +20,11 @@ from src.routes.api.journeys.scenarios import router as scenarios_router
 from src.routes.api.journeys.step_assertions import router as step_assertions_router
 from src.routes.api.journeys.step_comments import router as step_comments_router
 from src.routes.api.journeys.step_files import router as step_files_router
+from src.routes.api.journeys.scenario_votes import router as scenario_votes_router
 from src.routes.api.journeys.step_routes import router as step_routes_router
+from src.routes.api.journeys.step_votes import router as step_votes_router
 from src.routes.api.journeys.steps import router as steps_router
+from src.routes.api.journeys.votes import router as votes_router
 
 router = APIRouter()
 router.include_router(journeys_router)
@@ -33,3 +36,6 @@ router.include_router(step_routes_router)
 router.include_router(comments_router)
 router.include_router(scenario_comments_router)
 router.include_router(step_comments_router)
+router.include_router(votes_router)
+router.include_router(scenario_votes_router)
+router.include_router(step_votes_router)

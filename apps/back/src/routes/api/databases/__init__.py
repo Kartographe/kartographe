@@ -23,9 +23,16 @@ from src.routes.api.databases.migration_column_comments import (
 from src.routes.api.databases.migration_columns import router as migration_columns_router
 from src.routes.api.databases.migration_comments import router as migration_comments_router
 from src.routes.api.databases.migrations import router as migrations_router
+from src.routes.api.databases.column_votes import router as column_votes_router
+from src.routes.api.databases.migration_column_votes import (
+    router as migration_column_votes_router,
+)
+from src.routes.api.databases.migration_votes import router as migration_votes_router
 from src.routes.api.databases.table_comments import router as table_comments_router
+from src.routes.api.databases.table_votes import router as table_votes_router
 from src.routes.api.databases.tables import router as tables_router
 from src.routes.api.databases.versions import router as versions_router
+from src.routes.api.databases.votes import router as votes_router
 
 router = APIRouter()
 router.include_router(databases_router)
@@ -39,3 +46,8 @@ router.include_router(table_comments_router)
 router.include_router(column_comments_router)
 router.include_router(migration_comments_router)
 router.include_router(migration_column_comments_router)
+router.include_router(votes_router)
+router.include_router(table_votes_router)
+router.include_router(column_votes_router)
+router.include_router(migration_votes_router)
+router.include_router(migration_column_votes_router)

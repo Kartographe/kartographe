@@ -57,6 +57,7 @@ from src.managers.service import ServiceManager
 from src.managers.service_action import ServiceActionManager
 from src.managers.tag import TagManager
 from src.managers.usage import UsageManager
+from src.managers.vote import VoteManager
 from src.managers.me import MeManager
 from src.managers.me_integrations import MeIntegrationsManager
 from src.managers.me_invitations import MeInvitationsManager
@@ -1124,3 +1125,12 @@ def get_modifiable_comment(
 
 
 ModifiableCommentDep = Annotated[Comment, Depends(get_modifiable_comment)]
+
+
+# --- Votes --------------------------------------------------------------
+
+def get_vote_manager(session: SessionDep) -> VoteManager:
+    return VoteManager(session)
+
+
+VoteManagerDep = Annotated[VoteManager, Depends(get_vote_manager)]

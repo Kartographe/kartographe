@@ -2,32 +2,31 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
-"""Resolve the entity a comment points at, batched by entity type.
+"""Resolve the entity a comment or a vote points at, batched by entity type.
 
-Comments are polymorphic — they carry an (`entity_type`, `entity_id`) pair
-rather than a foreign key, so the target has to be fetched from one of twelve
-tables. Resolving per comment would mean a query per row; instead the targets
-are grouped by type and each type is loaded in a single `IN (…)` query, then the
-containing entities are resolved the same way, level by level.
+Comments and votes are polymorphic — they carry an (`entity_type`, `entity_id`)
+pair rather than a foreign key, so the target has to be fetched from one of
+fourteen tables. Resolving per row would mean a query per item; instead the
+targets are grouped by type and each type is loaded in a single `IN (…)` query,
+then the containing entities are resolved the same way, level by level.
 """
 
 import uuid
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Protocol
 
 from sqlmodel import Session, select
 
 from src.models.application import Application
 from src.models.application_route import ApplicationRoute
-from src.models.comment import Comment
 from src.models.database import Database
 from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
-from src.models.enum import CommentEntityType, DatabaseMigrationColumnType
+from src.models.enum import DatabaseMigrationColumnType, EntityType
 from src.models.feature import Feature
 from src.models.journey import Journey
 from src.models.journey_scenario import JourneyScenario
@@ -35,10 +34,17 @@ from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.persona import Persona
 from src.models.service import Service
 from src.models.service_action import ServiceAction
-from src.serializes.comments import CommentEntityNode, CommentEntityRef
+from src.serializes.entities import EntityNode, EntityRef
 
 # A resolved target, keyed by the pair that identifies it.
-_Key = tuple[CommentEntityType, uuid.UUID]
+_Key = tuple[EntityType, uuid.UUID]
+
+
+class _EntityTarget(Protocol):
+    """Anything attached to an entity: a comment, a vote, …"""
+
+    entity_type: EntityType
+    entity_id: uuid.UUID
 
 
 @dataclass(frozen=True)
@@ -47,7 +53,7 @@ class _EntitySpec:
 
     model: type
     label: Callable[[Any, dict], str]
-    parent_type: CommentEntityType | None = None
+    parent_type: EntityType | None = None
     parent_attr: str | None = None
 
 
@@ -79,45 +85,45 @@ def _migration_column_label(row: DatabaseMigrationColumn, ctx: dict) -> str:
     return f"{row.type.value} → {column_name}" if column_name else row.type.value
 
 
-_SPECS: dict[CommentEntityType, _EntitySpec] = {
-    CommentEntityType.FEATURE: _EntitySpec(Feature, _title),
-    CommentEntityType.APPLICATION: _EntitySpec(Application, _title),
-    CommentEntityType.APPLICATION_ROUTE: _EntitySpec(
-        ApplicationRoute, _route_label, CommentEntityType.APPLICATION, "application_id"
+_SPECS: dict[EntityType, _EntitySpec] = {
+    EntityType.FEATURE: _EntitySpec(Feature, _title),
+    EntityType.APPLICATION: _EntitySpec(Application, _title),
+    EntityType.APPLICATION_ROUTE: _EntitySpec(
+        ApplicationRoute, _route_label, EntityType.APPLICATION, "application_id"
     ),
-    CommentEntityType.JOURNEY: _EntitySpec(Journey, _title),
-    CommentEntityType.JOURNEY_SCENARIO: _EntitySpec(
-        JourneyScenario, _title, CommentEntityType.JOURNEY, "journey_id"
+    EntityType.JOURNEY: _EntitySpec(Journey, _title),
+    EntityType.JOURNEY_SCENARIO: _EntitySpec(
+        JourneyScenario, _title, EntityType.JOURNEY, "journey_id"
     ),
-    CommentEntityType.JOURNEY_SCENARIO_STEP: _EntitySpec(
-        JourneyScenarioStep, _title, CommentEntityType.JOURNEY_SCENARIO, "journey_scenario_id"
+    EntityType.JOURNEY_SCENARIO_STEP: _EntitySpec(
+        JourneyScenarioStep, _title, EntityType.JOURNEY_SCENARIO, "journey_scenario_id"
     ),
-    CommentEntityType.PERSONA: _EntitySpec(Persona, _title),
-    CommentEntityType.DATABASE: _EntitySpec(Database, _title),
-    CommentEntityType.DATABASE_TABLE: _EntitySpec(
-        DatabaseTable, _name, CommentEntityType.DATABASE, "database_id"
+    EntityType.PERSONA: _EntitySpec(Persona, _title),
+    EntityType.DATABASE: _EntitySpec(Database, _title),
+    EntityType.DATABASE_TABLE: _EntitySpec(
+        DatabaseTable, _name, EntityType.DATABASE, "database_id"
     ),
-    CommentEntityType.DATABASE_TABLE_COLUMN: _EntitySpec(
-        DatabaseTableColumn, _name, CommentEntityType.DATABASE_TABLE, "database_table_id"
+    EntityType.DATABASE_TABLE_COLUMN: _EntitySpec(
+        DatabaseTableColumn, _name, EntityType.DATABASE_TABLE, "database_table_id"
     ),
     # A migration spans two databases (source and destination), so it has no
     # single containing entity to point at.
-    CommentEntityType.DATABASE_MIGRATION: _EntitySpec(DatabaseMigration, _title),
-    CommentEntityType.DATABASE_MIGRATION_COLUMN: _EntitySpec(
+    EntityType.DATABASE_MIGRATION: _EntitySpec(DatabaseMigration, _title),
+    EntityType.DATABASE_MIGRATION_COLUMN: _EntitySpec(
         DatabaseMigrationColumn,
         _migration_column_label,
-        CommentEntityType.DATABASE_MIGRATION,
+        EntityType.DATABASE_MIGRATION,
         "database_migration_id",
     ),
-    CommentEntityType.SERVICE: _EntitySpec(Service, _title),
-    CommentEntityType.SERVICE_ACTION: _EntitySpec(
-        ServiceAction, _title, CommentEntityType.SERVICE, "service_id"
+    EntityType.SERVICE: _EntitySpec(Service, _title),
+    EntityType.SERVICE_ACTION: _EntitySpec(
+        ServiceAction, _title, EntityType.SERVICE, "service_id"
     ),
 }
 
-# A missing spec would only surface as a KeyError once someone comments on that
+# A missing spec would only surface as a KeyError once someone attaches to that
 # kind of entity — fail at import instead.
-assert set(_SPECS) == set(CommentEntityType), "every CommentEntityType needs an entity spec"
+assert set(_SPECS) == set(EntityType), "every EntityType needs an entity spec"
 
 
 def _load_column_names(
@@ -127,7 +133,7 @@ def _load_column_names(
     column_ids = {
         column_id
         for (entity_type, _), row in rows.items()
-        if entity_type == CommentEntityType.DATABASE_MIGRATION_COLUMN
+        if entity_type == EntityType.DATABASE_MIGRATION_COLUMN
         for column_id in (
             row.source_database_table_column_id,
             row.destination_database_table_column_id,
@@ -147,21 +153,21 @@ def _load_column_names(
 
 
 def resolve_entity_refs(
-    session: Session, account_id: uuid.UUID, comments: list[Comment]
-) -> dict[_Key, CommentEntityRef]:
-    """Map each comment's (`entity_type`, `entity_id`) to a display-ready ref.
+    session: Session, account_id: uuid.UUID, items: Sequence[_EntityTarget]
+) -> dict[_Key, EntityRef]:
+    """Map each item's (`entity_type`, `entity_id`) to a display-ready ref.
 
     Targets that are soft-deleted (or belong to another account) are simply
     absent from the result — the caller renders them as a null `entity`.
     """
-    pending: dict[CommentEntityType, set[uuid.UUID]] = defaultdict(set)
-    for comment in comments:
-        pending[comment.entity_type].add(comment.entity_id)
+    pending: dict[EntityType, set[uuid.UUID]] = defaultdict(set)
+    for item in items:
+        pending[item.entity_type].add(item.entity_id)
 
     # Walk down one level at a time: load this level's rows, queue their parents.
     rows: dict[_Key, Any] = {}
     while pending:
-        next_pending: dict[CommentEntityType, set[uuid.UUID]] = defaultdict(set)
+        next_pending: dict[EntityType, set[uuid.UUID]] = defaultdict(set)
         for entity_type, entity_ids in pending.items():
             spec = _SPECS[entity_type]
             found = session.exec(
@@ -182,16 +188,14 @@ def resolve_entity_refs(
 
     ctx = {"column_names": _load_column_names(session, account_id, rows)}
 
-    def node(key: _Key) -> CommentEntityNode:
+    def node(key: _Key) -> EntityNode:
         entity_type, _ = key
         row = rows[key]
-        return CommentEntityNode(
-            id=row.id, type=entity_type, label=_SPECS[entity_type].label(row, ctx)
-        )
+        return EntityNode(id=row.id, type=entity_type, label=_SPECS[entity_type].label(row, ctx))
 
-    def ancestors(key: _Key) -> list[CommentEntityNode]:
+    def ancestors(key: _Key) -> list[EntityNode]:
         """The containing entities, outermost first. Stops at a missing parent."""
-        chain: list[CommentEntityNode] = []
+        chain: list[EntityNode] = []
         current = key
         while (spec := _SPECS[current[0]]).parent_type is not None:
             parent_id = getattr(rows[current], spec.parent_attr)
@@ -204,6 +208,6 @@ def resolve_entity_refs(
         return chain
 
     return {
-        key: CommentEntityRef(**node(key).model_dump(), parents=ancestors(key))
+        key: EntityRef(**node(key).model_dump(), parents=ancestors(key))
         for key in rows
     }

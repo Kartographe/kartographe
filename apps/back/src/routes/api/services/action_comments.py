@@ -10,7 +10,7 @@ List and post comments on a service action. Any account member may read and post
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -44,7 +44,7 @@ def list_action_comments(
     action: CurrentServiceActionDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.SERVICE_ACTION, action.id)
+    rows = manager.list_for_entity(account, EntityType.SERVICE_ACTION, action.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -68,7 +68,7 @@ def create_action_comment(
     comment = manager.create(
         account,
         user,
-        entity_type=CommentEntityType.SERVICE_ACTION,
+        entity_type=EntityType.SERVICE_ACTION,
         entity_id=action.id,
         value=form.value,
     )

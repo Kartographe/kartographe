@@ -18,12 +18,12 @@ from sqlmodel import select
 from src.filters._base import SortOrder
 from src.filters.comments import CommentSortField
 from src.managers._base import BaseEntityManager
-from src.managers.comment_entity import resolve_entity_refs
+from src.managers.entity_ref import resolve_entity_refs
 from src.models.account import Account
 from src.models.comment import Comment
-from src.models.enum import CommentEntityType, CommentStatus
+from src.models.enum import EntityType, CommentStatus
 from src.models.user import User
-from src.serializes.comments import CommentEntityRef
+from src.serializes.entities import EntityRef
 from src.utils.datetime import to_naive_utc, utc_now
 
 _SORT_COLUMNS = {
@@ -38,7 +38,7 @@ class CommentManager(BaseEntityManager):
         self,
         account: Account,
         *,
-        entity_types: list[CommentEntityType] | None = None,
+        entity_types: list[EntityType] | None = None,
         entity_ids: list[uuid.UUID] | None = None,
         owner_ids: list[uuid.UUID] | None = None,
         statuses: list[CommentStatus] | None = None,
@@ -72,7 +72,7 @@ class CommentManager(BaseEntityManager):
         )
 
     def list_for_entity(
-        self, account: Account, entity_type: CommentEntityType, entity_id: uuid.UUID
+        self, account: Account, entity_type: EntityType, entity_id: uuid.UUID
     ) -> list[Comment]:
         """The entity's root comments (no parent), oldest first."""
         return list(
@@ -91,7 +91,7 @@ class CommentManager(BaseEntityManager):
 
     def resolve_entities(
         self, account: Account, comments: list[Comment]
-    ) -> dict[tuple[CommentEntityType, uuid.UUID], CommentEntityRef]:
+    ) -> dict[tuple[EntityType, uuid.UUID], EntityRef]:
         """Display-ready refs for the entities the comments point at, keyed by target."""
         return resolve_entity_refs(self.session, account.id, comments)
 
@@ -113,7 +113,7 @@ class CommentManager(BaseEntityManager):
         account: Account,
         user: User,
         *,
-        entity_type: CommentEntityType,
+        entity_type: EntityType,
         entity_id: uuid.UUID,
         value: dict,
         parent_comment_id: uuid.UUID | None = None,

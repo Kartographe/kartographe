@@ -454,8 +454,14 @@ class ApplicationRouteTableAction(str, Enum):
     DELETE = "delete"
 
 
-class CommentEntityType(str, Enum):
-    """The kind of entity a comment can be attached to."""
+class EntityType(str, Enum):
+    """The kind of account entity a comment or a vote can be attached to.
+
+    Shared, centralized list so comments and votes point at the same set of
+    targets by (`entity_type`, `entity_id`) — the polymorphic pair both tables
+    carry instead of a foreign key. Backed by a single Postgres enum type
+    (`entity_type`).
+    """
 
     FEATURE = "feature"
     APPLICATION = "application"
@@ -518,6 +524,35 @@ class ServiceActionMethod(str, Enum):
 class CommentStatus(str, Enum):
     PUBLISHED = "published"
     REMOVED = "removed"
+
+
+class VoteRole(str, Enum):
+    """The hat a member wears when voting on an entity.
+
+    Snapshotted onto each vote from the member's `vote_role` (see
+    `AccountUser.vote_role`), so a vote records the standpoint it was cast from
+    even if the member's role later changes. `other` is the default for members
+    with no domain-specific voting role.
+    """
+
+    PRODUCT_OWNER = "product_owner"
+    DEVELOPER = "developer"
+    QA = "qa"
+    DATA_ANALYST = "data_analyst"
+    OTHER = "other"
+
+
+class VoteValue(str, Enum):
+    """A member's stance on an entity.
+
+    `pending_question` flags an open question ("?") rather than an opinion;
+    `dont_know` is an explicit abstention.
+    """
+
+    UPVOTE = "upvote"
+    DOWNVOTE = "downvote"
+    PENDING_QUESTION = "pending_question"
+    DONT_KNOW = "dont_know"
 
 
 class TagEntityType(str, Enum):

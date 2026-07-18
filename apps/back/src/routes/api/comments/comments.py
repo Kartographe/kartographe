@@ -17,7 +17,7 @@ from fastapi import APIRouter, Query, status
 from src.filters._base import SortOrder
 from src.filters.comments import CommentSortField
 from src.forms.comments import CommentCreateForm, CommentPatchForm
-from src.models.enum import CommentEntityType, CommentStatus
+from src.models.enum import EntityType, CommentStatus
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem, CommentListItem
 from src.serializes.errors import ErrorResponse
@@ -55,7 +55,7 @@ def list_comments(
     account: CurrentAccountDep,
     _: CurrentAccountUserDep,
     manager: CommentManagerDep,
-    entity_type: Annotated[list[CommentEntityType] | None, Query(alias="entityType")] = None,
+    entity_type: Annotated[list[EntityType] | None, Query(alias="entityType")] = None,
     entity_id: Annotated[list[uuid.UUID] | None, Query(alias="entityId")] = None,
     owner_id: Annotated[list[uuid.UUID] | None, Query(alias="ownerId")] = None,
     comment_status: Annotated[list[CommentStatus] | None, Query(alias="status")] = None,

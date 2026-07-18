@@ -10,7 +10,7 @@ List and post comments on a feature. Any account member may read and post.
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -43,7 +43,7 @@ def list_feature_comments(
     feature: CurrentFeatureDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.FEATURE, feature.id)
+    rows = manager.list_for_entity(account, EntityType.FEATURE, feature.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -65,6 +65,6 @@ def create_feature_comment(
     manager: CommentManagerDep,
 ) -> ItemResponse[CommentItem]:
     comment = manager.create(
-        account, user, entity_type=CommentEntityType.FEATURE, entity_id=feature.id, value=form.value
+        account, user, entity_type=EntityType.FEATURE, entity_id=feature.id, value=form.value
     )
     return ItemResponse(item=CommentItem.model_validate(comment))

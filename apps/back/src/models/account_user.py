@@ -17,7 +17,7 @@ from sqlalchemy import Index, text
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
-from src.models.enum import AccountUserRole, AccountUserStatus, AccountUserType
+from src.models.enum import AccountUserRole, AccountUserStatus, AccountUserType, VoteRole
 
 if TYPE_CHECKING:
     from src.models.account import Account
@@ -44,6 +44,10 @@ class AccountUser(BaseModel, table=True):
     type: AccountUserType = Field(index=True)
     status: AccountUserStatus = Field(index=True)
     role: AccountUserRole = Field(index=True)
+    # The standpoint this member votes from, snapshotted onto each vote they
+    # cast. Independent of `role`; defaults to `other` and is editable by
+    # owners/administrators.
+    vote_role: VoteRole = Field(default=VoteRole.OTHER)
 
     date: datetime | None = Field(default=None)
     # Validity window of the seat; `end_date` is far in the future while active,

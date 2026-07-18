@@ -41,6 +41,7 @@ def _member_item(account_user: AccountUser, user: User) -> AccountUserItem:
     return AccountUserItem(
         id=account_user.id,
         role=account_user.role,
+        vote_role=account_user.vote_role,
         type=account_user.type,
         status=account_user.status,
         start_date=account_user.start_date,
@@ -83,10 +84,12 @@ def get_member(
 @router.patch(
     "/{account_user_id}",
     operation_id="api_accounts_users_update",
-    summary="Change a member's role",
+    summary="Change a member's role and/or voting role",
     description=(
-        "Change a member's role. Owners/administrators only. You cannot change your "
-        "own role, only an owner can grant the owner role, and the last owner cannot be demoted."
+        "Change a member's account role and/or their voting role. Owners/administrators "
+        "only. For the account role: you cannot change your own, only an owner can grant "
+        "the owner role, and the last owner cannot be demoted. The voting role has no such "
+        "restrictions. Omitted fields are left untouched."
     ),
     response_model=ItemResponse[AccountUserItem],
     responses={**_FORBIDDEN, **_NOT_FOUND, **_CONFLICT},
@@ -97,7 +100,11 @@ def update_member_role(
     manager: AccountUsersManagerDep,
     caller: Annotated[AccountUser, Depends(_ADMIN)],
 ) -> ItemResponse[AccountUserItem]:
-    updated = manager.update_role(target, form.role, caller=caller)
+    updated = target
+    if form.role is not None:
+        updated = manager.update_role(updated, form.role, caller=caller)
+    if form.vote_role is not None:
+        updated = manager.update_vote_role(updated, form.vote_role)
     return ItemResponse(item=_member_item(updated, updated.user))
 
 

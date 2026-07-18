@@ -10,7 +10,7 @@ List and post comments on a persona. Any account member may read and post.
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -43,7 +43,7 @@ def list_persona_comments(
     persona: CurrentPersonaDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.PERSONA, persona.id)
+    rows = manager.list_for_entity(account, EntityType.PERSONA, persona.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -65,6 +65,6 @@ def create_persona_comment(
     manager: CommentManagerDep,
 ) -> ItemResponse[CommentItem]:
     comment = manager.create(
-        account, user, entity_type=CommentEntityType.PERSONA, entity_id=persona.id, value=form.value
+        account, user, entity_type=EntityType.PERSONA, entity_id=persona.id, value=form.value
     )
     return ItemResponse(item=CommentItem.model_validate(comment))

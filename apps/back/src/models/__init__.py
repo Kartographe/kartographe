@@ -54,6 +54,7 @@ from src.models.user import User
 from src.models.user_authentication import UserAuthentication
 from src.models.user_authentication_log import UserAuthenticationLog
 from src.models.user_authentication_two_factor import UserAuthenticationTwoFactor
+from src.models.vote import Vote
 
 __all__ = [
     "Account",
@@ -101,4 +102,5 @@ __all__ = [
     "UserAuthentication",
     "UserAuthenticationLog",
     "UserAuthenticationTwoFactor",
+    "Vote",
 ]

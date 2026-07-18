@@ -11,7 +11,7 @@ and post.
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -45,7 +45,7 @@ def list_step_comments(
     step: CurrentJourneyScenarioStepDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.JOURNEY_SCENARIO_STEP, step.id)
+    rows = manager.list_for_entity(account, EntityType.JOURNEY_SCENARIO_STEP, step.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -69,7 +69,7 @@ def create_step_comment(
     comment = manager.create(
         account,
         user,
-        entity_type=CommentEntityType.JOURNEY_SCENARIO_STEP,
+        entity_type=EntityType.JOURNEY_SCENARIO_STEP,
         entity_id=step.id,
         value=form.value,
     )

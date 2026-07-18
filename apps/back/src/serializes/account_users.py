@@ -7,7 +7,7 @@
 import uuid
 from datetime import datetime
 
-from src.models.enum import AccountUserRole, AccountUserStatus, AccountUserType
+from src.models.enum import AccountUserRole, AccountUserStatus, AccountUserType, VoteRole
 from src.serializes._base import CamelBase
 
 
@@ -31,3 +31,4 @@ class AccountUserItem(CamelBase):
     status: AccountUserStatus
     type: AccountUserType
     user: AccountUserUserRefItem
+    vote_role: VoteRole

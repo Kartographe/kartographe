@@ -10,7 +10,7 @@ List and post comments on a database column. Any account member may read and pos
 from fastapi import APIRouter, status
 
 from src.forms.comments import CommentCreateForm
-from src.models.enum import CommentEntityType
+from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
@@ -44,7 +44,7 @@ def list_column_comments(
     column: CurrentDatabaseTableColumnDep,
     manager: CommentManagerDep,
 ) -> ListingResponse[CommentItem]:
-    rows = manager.list_for_entity(account, CommentEntityType.DATABASE_TABLE_COLUMN, column.id)
+    rows = manager.list_for_entity(account, EntityType.DATABASE_TABLE_COLUMN, column.id)
     return ListingResponse.single_page([CommentItem.model_validate(row) for row in rows])
 
 
@@ -68,7 +68,7 @@ def create_column_comment(
     comment = manager.create(
         account,
         user,
-        entity_type=CommentEntityType.DATABASE_TABLE_COLUMN,
+        entity_type=EntityType.DATABASE_TABLE_COLUMN,
         entity_id=column.id,
         value=form.value,
     )

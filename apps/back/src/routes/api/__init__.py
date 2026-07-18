@@ -27,6 +27,7 @@ from src.routes.api.oauth import router as oauth_router
 from src.routes.api.personas import router as personas_router
 from src.routes.api.services import router as services_router
 from src.routes.api.tags import router as tags_router
+from src.routes.api.votes import router as votes_router
 
 router = APIRouter()
 
@@ -41,6 +42,7 @@ v1_router.include_router(databases_router)  # databases, versions, tables, colum
 v1_router.include_router(services_router)  # services & their actions
 v1_router.include_router(tags_router)  # account tags
 v1_router.include_router(comments_router)  # account-level comment management
+v1_router.include_router(votes_router)  # account-level vote listing
 v1_router.include_router(core_router)  # global action, assertion & column type catalogues
 router.include_router(v1_router)
 

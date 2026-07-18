@@ -12,7 +12,9 @@ from fastapi import APIRouter
 
 from src.routes.api.personas.comments import router as comments_router
 from src.routes.api.personas.personas import router as personas_router
+from src.routes.api.personas.votes import router as votes_router
 
 router = APIRouter()
 router.include_router(personas_router)
 router.include_router(comments_router)
+router.include_router(votes_router)

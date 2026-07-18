@@ -2,19 +2,19 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
-"""Output schema for comments."""
+"""Output schema for votes."""
 
 import uuid
 from datetime import datetime
 
-from src.models.enum import CommentStatus, EntityType
+from src.models.enum import EntityType, VoteRole, VoteValue
 from src.serializes._base import CamelBase
 from src.serializes.entities import EntityRef
 from src.serializes.users import OwnerItem
 
 
-class CommentItem(CamelBase):
-    """A threaded comment on an account entity."""
+class VoteItem(CamelBase):
+    """A member's vote on an account entity."""
 
     date: datetime
     entity_id: uuid.UUID
@@ -22,16 +22,14 @@ class CommentItem(CamelBase):
     id: uuid.UUID
     owner: OwnerItem
     owner_id: uuid.UUID
-    parent_comment_id: uuid.UUID | None = None
-    status: CommentStatus
-    status_date: datetime
-    value: dict | None = None
+    role: VoteRole
+    value: VoteValue
 
 
-class CommentListItem(CommentItem):
-    """A comment enriched with its resolved entity.
+class VoteListItem(VoteItem):
+    """A vote enriched with its resolved entity.
 
-    `entity` is null when the target has been soft-deleted — the comment still
+    `entity` is null when the target has been soft-deleted — the vote still
     exists, its entity no longer does.
     """
 
