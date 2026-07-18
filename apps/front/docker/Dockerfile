@@ -1,3 +1,8 @@
+# check=skip=SecretsUsedInArgOrEnv
+# The VITE_* below are public client config (e.g. the Turnstile *site* key) baked
+# as `##…##` placeholders, not secrets — the ENV secret-leak check is a false
+# positive here. Parser directives must precede any other comment.
+
 # SPDX-FileCopyrightText: 2026 ChallengeMyProject
 #
 # SPDX-License-Identifier: AGPL-3.0-only
