@@ -5,9 +5,13 @@
 name: Publish Docker images
 
 # Build the two application images and push them to the public Docker Hub
-# repositories on every git tag:
+# repositories on every git tag, then publish a GitHub release:
 #   - kartographe/kartographe-back   (apps/back)
 #   - kartographe/kartographe-front  (apps/front)
+#
+# The release notes are generated from the `Changelog:` commit trailers between
+# the previous tag and this one, grouped by category (like GitLab's changelog),
+# plus the Docker image pull commands.
 #
 # Requires two repository secrets: DOCKERHUB_USERNAME and DOCKERHUB_TOKEN.
 
@@ -78,3 +82,68 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+  release:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for the previous-tag..tag commit range
+
+      - name: Build release notes
+        id: notes
+        env:
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          PREV="$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)"
+          RANGE="${TAG}"; [ -n "$PREV" ] && RANGE="${PREV}..${TAG}"
+
+          declare -A HEAD=(
+            [added]="### ✨ Ajouts"          [fixed]="### 🐛 Corrections"
+            [changed]="### ♻️ Changements"    [performance]="### ⚡ Performances"
+            [security]="### 🔒 Sécurité"       [deprecated]="### ⚠️ Dépréciations"
+            [removed]="### 🗑️ Suppressions"    [doc]="### 📝 Documentation"
+            [other]="### 🔧 Divers" )
+          ORDER="added fixed changed performance security deprecated removed doc other"
+
+          US=$'\x1f'; RS=$'\x1e'; declare -A BUCKET
+          while IFS= read -r -d "$RS" rec; do
+            [ -z "$rec" ] && continue
+            hash="${rec%%$US*}"; rest="${rec#*$US}"; subject="${rest%%$US*}"; cat="${rest#*$US}"
+            cat="$(printf '%s' "${cat%%,*}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+            case " $ORDER " in *" $cat "*) ;; *) cat="other";; esac
+            BUCKET[$cat]+="- ${subject} ([\`${hash:0:7}\`](https://github.com/${REPO}/commit/${hash}))"$'\n'
+          done < <(git log --no-merges --reverse \
+                     --format="%H${US}%s${US}%(trailers:key=Changelog,valueonly,separator=%x2c)${RS}" "$RANGE")
+
+          {
+            echo "## 🐳 Images Docker"; echo
+            echo '```sh'
+            echo "docker pull kartographe/kartographe-back:${VERSION}"
+            echo "docker pull kartographe/kartographe-front:${VERSION}"
+            echo '```'; echo
+            echo "[kartographe-back](https://hub.docker.com/r/kartographe/kartographe-back/tags) · [kartographe-front](https://hub.docker.com/r/kartographe/kartographe-front/tags)"; echo
+            echo "## 📋 Nouveautés"
+            for c in $ORDER; do
+              [ -n "${BUCKET[$c]:-}" ] && { echo; echo "${HEAD[$c]}"; echo; printf '%s' "${BUCKET[$c]}"; }
+            done
+            [ -n "$PREV" ] && { echo; echo "**Changelog complet** : [\`${PREV}...${TAG}\`](https://github.com/${REPO}/compare/${PREV}...${TAG})"; }
+          } > notes.md
+
+          if [[ "$TAG" == *-* ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --notes-file notes.md --verify-tag \
+            ${{ steps.notes.outputs.prerelease == 'true' && '--prerelease' || '' }}
