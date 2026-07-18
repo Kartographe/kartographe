@@ -2,26 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  ArrowRightOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { ArrowRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { TableProps } from "antd";
-import {
-  App,
-  Button,
-  Empty,
-  Flex,
-  Space,
-  Table,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
@@ -57,11 +43,9 @@ const SORT_FIELD: Record<string, SortField> = {
 
 export function FeaturesList({ accountId }: { accountId: string }) {
   const { t } = useLingui();
-  const { modal } = App.useApp();
   const queryClient = useQueryClient();
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Feature | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
   const [sortBy, setSortBy] = useState<SortField>("date");
@@ -106,11 +90,6 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Tags mis à jour` } }
   );
-  const deleteMutation = $api.useMutation(
-    "delete",
-    "/v1/accounts/{account_id}/features/{feature_id}",
-    { meta: { successMessage: t`Fonctionnalité supprimée` } }
-  );
 
   const features = featuresQuery.data?.items ?? [];
   const total = featuresQuery.data?.count ?? 0;
@@ -122,12 +101,6 @@ export function FeaturesList({ accountId }: { accountId: string }) {
   }
 
   function openCreate() {
-    setEditing(undefined);
-    setFormOpen(true);
-  }
-
-  function openEdit(feature: Feature) {
-    setEditing(feature);
     setFormOpen(true);
   }
 
@@ -153,22 +126,6 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       body: { tagIds },
     });
     invalidate();
-  }
-
-  function confirmDelete(feature: Feature) {
-    modal.confirm({
-      title: t`Supprimer ${feature.title} ?`,
-      content: t`Ses fichiers et ses liens vers les parcours seront supprimés également. Cette action est irréversible.`,
-      okText: t`Supprimer`,
-      okButtonProps: { danger: true },
-      cancelText: t`Annuler`,
-      onOk: async () => {
-        await deleteMutation.mutateAsync({
-          params: { path: { account_id: accountId, feature_id: feature.id } },
-        });
-        invalidate();
-      },
-    });
   }
 
   const antdOrder = (field: SortField): "ascend" | "descend" | null => {
@@ -198,8 +155,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
   const formModal = (
     <FeatureFormModal
       accountId={accountId}
-      feature={editing}
-      key={editing?.id ?? "create"}
+      key={formOpen ? "open" : "closed"}
       onClose={() => setFormOpen(false)}
       open={formOpen}
     />
@@ -289,37 +245,16 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ labelled: 1 }),
       render: (_, feature) => (
-        <Space>
-          <Link
-            params={{ accountId, featureId: feature.id }}
-            to="/accounts/$accountId/features/$featureId"
-          >
-            <Button
-              icon={<ArrowRightOutlined />}
-              iconPosition="end"
-              size="small"
-            >
-              {t`Accéder`}
-            </Button>
-          </Link>
-          <Tooltip title={t`Modifier`}>
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => openEdit(feature)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title={t`Supprimer`}>
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => confirmDelete(feature)}
-              size="small"
-            />
-          </Tooltip>
-        </Space>
+        <Link
+          params={{ accountId, featureId: feature.id }}
+          to="/accounts/$accountId/features/$featureId"
+        >
+          <Button icon={<ArrowRightOutlined />} iconPosition="end" size="small">
+            {t`Accéder`}
+          </Button>
+        </Link>
       ),
     },
   ];
