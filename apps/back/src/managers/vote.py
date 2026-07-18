@@ -11,6 +11,7 @@ rather than adding another.
 """
 
 import uuid
+from dataclasses import dataclass
 from datetime import datetime
 
 from sqlmodel import select
@@ -31,6 +32,14 @@ _SORT_COLUMNS = {
     VoteSortField.VALUE: Vote.value,
     VoteSortField.ROLE: Vote.role,
 }
+
+
+@dataclass(frozen=True)
+class _VoteTarget:
+    """Minimal (`entity_type`, `entity_id`) pair `resolve_entity_refs` accepts."""
+
+    entity_type: EntityType
+    entity_id: uuid.UUID
 
 
 class VoteManager(BaseEntityManager):
@@ -96,6 +105,18 @@ class VoteManager(BaseEntityManager):
     ) -> dict[tuple[EntityType, uuid.UUID], EntityRef]:
         """Display-ready refs for the entities the votes point at, keyed by target."""
         return resolve_entity_refs(self.session, account.id, votes)
+
+    def entity_exists(
+        self, account: Account, entity_type: EntityType, entity_id: uuid.UUID
+    ) -> bool:
+        """Whether the entity exists, is live and belongs to the account.
+
+        Reuses the polymorphic resolver so the account-wide vote endpoint can
+        validate any target without a per-type lookup: a resolved ref means the
+        entity is real and in-account, a missing one means 404.
+        """
+        target = _VoteTarget(entity_type=entity_type, entity_id=entity_id)
+        return bool(resolve_entity_refs(self.session, account.id, [target]))
 
     def _live_vote(
         self, account: Account, owner_id: uuid.UUID, entity_type: EntityType, entity_id: uuid.UUID

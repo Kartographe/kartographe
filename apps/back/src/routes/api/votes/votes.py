@@ -2,24 +2,26 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
-"""`/v1/accounts/{account_id}/votes` — account-wide vote listing.
+"""`/v1/accounts/{account_id}/votes` — account-wide vote listing & casting.
 
-Any member may read the account's votes. Casting a vote happens on the entity's
-own endpoint (`.../{entity}/votes`).
+Any member may read the account's votes and cast one on any entity through the
+mutualized `POST` (the target is a `(entityType, entityId)` pair, validated
+against the account); the per-entity endpoints (`.../{entity}/votes`) remain.
 """
 
 import uuid
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query, status
 
 from src.filters._base import SortOrder
 from src.filters.votes import VoteSortField
+from src.forms.votes import VoteCastForm
 from src.models.enum import EntityType, VoteRole, VoteValue
-from src.serializes._base import ListingResponse
+from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.errors import ErrorResponse
-from src.serializes.votes import VoteListItem
+from src.serializes.votes import VoteItem, VoteListItem
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -28,7 +30,7 @@ from src.utils.dependencies import (
 
 router = APIRouter(prefix="/accounts/{account_id}/votes", tags=["api.votes"])
 
-_NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account not found"}}
+_NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account or entity not found"}}
 
 
 @router.get(
@@ -80,3 +82,30 @@ def list_votes(
         for row in rows
     ]
     return ListingResponse.single_page(items)
+
+
+@router.post(
+    "",
+    operation_id="api_votes_create",
+    summary="Cast a vote",
+    description=(
+        "Cast or update your vote on any entity of the account, given its `entityType` and "
+        "`entityId`. A member holds at most one vote per entity, so voting again replaces it; "
+        "the vote's role is taken from your voting role. Any member may vote. The mutualized "
+        "counterpart of the per-entity `.../{entity}/votes` endpoints."
+    ),
+    response_model=ItemResponse[VoteItem],
+    responses={**_NOT_FOUND},
+)
+def cast_vote(
+    form: VoteCastForm,
+    account: CurrentAccountDep,
+    member: CurrentAccountUserDep,
+    manager: VoteManagerDep,
+) -> ItemResponse[VoteItem]:
+    if not manager.entity_exists(account, form.entity_type, form.entity_id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Entity not found.")
+    vote = manager.upsert(
+        account, member, entity_type=form.entity_type, entity_id=form.entity_id, value=form.value
+    )
+    return ItemResponse(item=VoteItem.model_validate(vote))
