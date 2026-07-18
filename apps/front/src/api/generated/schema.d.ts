@@ -5083,6 +5083,8 @@ export interface components {
          * @description An authentication guard of an application.
          */
         ApplicationGuardItem: {
+            /** Tagids */
+            tagIds: string[];
             /**
              * Date
              * Format: date-time
@@ -5109,8 +5111,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -5119,6 +5119,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationGuardType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * ApplicationGuardPatchForm
@@ -5151,6 +5153,29 @@ export interface components {
          * @description An application tracked inside an account.
          */
         ApplicationItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -5182,8 +5207,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -5192,6 +5215,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["ApplicationType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * ApplicationPatchForm
@@ -5419,8 +5444,31 @@ export interface components {
          * @description An HTTP route exposed by an application.
          */
         ApplicationRouteItem: {
+            /** Tagids */
+            tagIds: string[];
             /** Acceptedformat */
             acceptedFormat: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /** Applicationguardids */
             applicationGuardIds: string[];
             /** Applicationroleids */
@@ -5485,8 +5533,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -5494,6 +5540,8 @@ export interface components {
             tags: components["schemas"]["TagItem"][];
             /** Title */
             title?: string | null;
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * ApplicationRouteMethod
@@ -6028,6 +6076,29 @@ export interface components {
          * @description A database tracked inside an account.
          */
         DatabaseItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -6061,8 +6132,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -6071,6 +6140,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["DatabaseType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * DatabaseMigrationColumnCreateForm
@@ -6108,6 +6179,27 @@ export interface components {
          *     and a migration carries both.
          */
         DatabaseMigrationColumnItem: {
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -6221,6 +6313,27 @@ export interface components {
          * @description A planned move from a version of one database to a version of another.
          */
         DatabaseMigrationItem: {
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -6384,8 +6497,31 @@ export interface components {
          * @description A column of a database table.
          */
         DatabaseTableColumnItem: {
+            /** Tagids */
+            tagIds: string[];
             /** Color */
             color?: string | null;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Databasecolumntypeid
              * Format: uuid
@@ -6432,8 +6568,6 @@ export interface components {
             rank: number;
             /** Systemfield */
             systemField: boolean;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -6441,6 +6575,8 @@ export interface components {
             tags: components["schemas"]["TagItem"][];
             /** Unique */
             unique: boolean;
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * DatabaseTableColumnPatchForm
@@ -6525,10 +6661,33 @@ export interface components {
          *     and on create/update.
          */
         DatabaseTableItem: {
+            /** Tagids */
+            tagIds: string[];
             /** Color */
             color?: string | null;
             /** Columns */
             columns?: components["schemas"]["DatabaseTableColumnItem"][] | null;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -6566,14 +6725,14 @@ export interface components {
             statusDate: string;
             /** Schema */
             schema: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
              */
             tags: components["schemas"]["TagItem"][];
             type: components["schemas"]["DatabaseTableType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * DatabaseTablePatchForm
@@ -6839,6 +6998,29 @@ export interface components {
          * @description A feature tracked at the account level.
          */
         FeatureItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -6872,8 +7054,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -6882,6 +7062,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["FeatureType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * FeatureJourneyCreateForm
@@ -7260,6 +7442,29 @@ export interface components {
          * @description A user journey tracked inside an account.
          */
         JourneyItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -7295,8 +7500,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -7305,6 +7508,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["JourneyType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * JourneyPatchForm
@@ -7352,6 +7557,29 @@ export interface components {
          * @description A scenario inside a journey.
          */
         JourneyScenarioItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             criticity: components["schemas"]["JourneyScenarioCriticity"];
             /**
              * Date
@@ -7388,8 +7616,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -7398,6 +7624,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["JourneyScenarioType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * JourneyScenarioListItem
@@ -7406,6 +7634,29 @@ export interface components {
          *     `journeyTitle` is null when the parent journey has since been removed.
          */
         JourneyScenarioListItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             criticity: components["schemas"]["JourneyScenarioCriticity"];
             /**
              * Date
@@ -7442,8 +7693,6 @@ export interface components {
              * Format: date-time
              */
             statusDate: string;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -7459,6 +7708,8 @@ export interface components {
             journeyId: string;
             /** Journeytitle */
             journeyTitle?: string | null;
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * JourneyScenarioPatchForm
@@ -7661,8 +7912,31 @@ export interface components {
          * @description A step inside a scenario (nodes form a tree via `parentId`).
          */
         JourneyScenarioStepItem: {
+            /** Tagids */
+            tagIds: string[];
             /** Actiontypeid */
             actionTypeId?: string | null;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /** Description */
             description?: {
                 [key: string]: unknown;
@@ -7687,8 +7961,6 @@ export interface components {
             };
             /** Parentjourneyscenariostepid */
             parentJourneyScenarioStepId?: string | null;
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -7696,6 +7968,8 @@ export interface components {
             tags: components["schemas"]["TagItem"][];
             /** Title */
             title: string;
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * JourneyScenarioStepPatchForm
@@ -8634,6 +8908,29 @@ export interface components {
          * @description A persona tracked inside an account.
          */
         PersonaItem: {
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
@@ -8656,8 +8953,6 @@ export interface components {
             /** Lockeddate */
             lockedDate?: string | null;
             status: components["schemas"]["PersonaStatus"];
-            /** Tagids */
-            tagIds: string[];
             /**
              * Tags
              * @default []
@@ -8666,6 +8961,8 @@ export interface components {
             /** Title */
             title: string;
             type: components["schemas"]["PersonaType"];
+            /** Tagcount */
+            readonly tagCount: number;
         };
         /**
          * PersonaPatchForm
@@ -8925,6 +9222,27 @@ export interface components {
          */
         ServiceActionItem: {
             /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
              * Date
              * Format: date-time
              */
@@ -9022,6 +9340,27 @@ export interface components {
          * @description A service tracked inside an account.
          */
         ServiceItem: {
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
             /**
              * Date
              * Format: date-time
