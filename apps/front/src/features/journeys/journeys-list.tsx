@@ -2,33 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  ArrowRightOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { ArrowRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { TableProps } from "antd";
-import {
-  App,
-  Button,
-  Empty,
-  Flex,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { EditablePersonasCell } from "@/features/journeys/editable-personas-cell";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
   JourneyStatusTag,
@@ -59,12 +45,10 @@ const SORT_FIELD: Record<string, SortField> = {
 
 export function JourneysList({ accountId }: { accountId: string }) {
   const { t } = useLingui();
-  const { modal } = App.useApp();
   const queryClient = useQueryClient();
   const personas = usePersonas(accountId);
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Journey | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
   const [sortBy, setSortBy] = useState<SortField>("date");
@@ -111,10 +95,10 @@ export function JourneysList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Tags mis à jour` } }
   );
-  const deleteMutation = $api.useMutation(
-    "delete",
+  const personasMutation = $api.useMutation(
+    "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
-    { meta: { successMessage: t`Parcours supprimé` } }
+    { meta: { successMessage: t`Personas mis à jour` } }
   );
 
   const journeys = journeysQuery.data?.items ?? [];
@@ -130,12 +114,6 @@ export function JourneysList({ accountId }: { accountId: string }) {
   }
 
   function openCreate() {
-    setEditing(undefined);
-    setFormOpen(true);
-  }
-
-  function openEdit(journey: Journey) {
-    setEditing(journey);
     setFormOpen(true);
   }
 
@@ -163,20 +141,12 @@ export function JourneysList({ accountId }: { accountId: string }) {
     invalidate();
   }
 
-  function confirmDelete(journey: Journey) {
-    modal.confirm({
-      title: t`Supprimer ${journey.title} ?`,
-      content: t`Ses scénarios et leurs étapes seront supprimés également. Cette action est irréversible.`,
-      okText: t`Supprimer`,
-      okButtonProps: { danger: true },
-      cancelText: t`Annuler`,
-      onOk: async () => {
-        await deleteMutation.mutateAsync({
-          params: { path: { account_id: accountId, journey_id: journey.id } },
-        });
-        invalidate();
-      },
+  async function changePersonas(journey: Journey, personasIds: string[]) {
+    await personasMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { personasIds },
     });
+    invalidate();
   }
 
   const antdOrder = (field: SortField): "ascend" | "descend" | null => {
@@ -207,8 +177,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const formModal = (
     <JourneyFormModal
       accountId={accountId}
-      journey={editing}
-      key={editing?.id ?? "create"}
+      key={formOpen ? "open" : "closed"}
       onClose={() => setFormOpen(false)}
       open={formOpen}
     />
@@ -223,27 +192,6 @@ export function JourneysList({ accountId }: { accountId: string }) {
       sortOrder: antdOrder("title"),
       width: COL.title,
       ellipsis: true,
-    },
-    {
-      title: t`Personas`,
-      key: "personasIds",
-      dataIndex: "personasIds",
-      width: COL.tags,
-      filters: personas.filters,
-      filteredValue: personasIds.length ? personasIds : null,
-      render: (ids: string[]) =>
-        ids.length ? (
-          <Flex gap={4} wrap>
-            {ids.map((id) => (
-              <Tag key={id} style={{ marginInlineEnd: 0 }}>
-                {/* Beyond the personas page, the id itself says nothing. */}
-                {personas.title(id) ?? t`Persona inconnu`}
-              </Tag>
-            ))}
-          </Flex>
-        ) : (
-          "—"
-        ),
     },
     {
       title: t`Type`,
@@ -286,6 +234,23 @@ export function JourneysList({ accountId }: { accountId: string }) {
       ),
     },
     {
+      title: t`Personas`,
+      key: "personasIds",
+      dataIndex: "personasIds",
+      width: COL.tags,
+      filters: personas.filters,
+      filteredValue: personasIds.length ? personasIds : null,
+      render: (_ids: string[], journey) => (
+        <EditablePersonasCell
+          accountId={accountId}
+          loading={personasMutation.isPending}
+          onChange={(next) => changePersonas(journey, next)}
+          value={journey.personasIds}
+          wrap={false}
+        />
+      ),
+    },
+    {
       title: t`Tags`,
       key: "tags",
       dataIndex: "tags",
@@ -319,37 +284,16 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ labelled: 1 }),
       render: (_, journey) => (
-        <Space>
-          <Link
-            params={{ accountId, journeyId: journey.id }}
-            to="/accounts/$accountId/journeys/$journeyId"
-          >
-            <Button
-              icon={<ArrowRightOutlined />}
-              iconPosition="end"
-              size="small"
-            >
-              {t`Accéder`}
-            </Button>
-          </Link>
-          <Tooltip title={t`Modifier`}>
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => openEdit(journey)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title={t`Supprimer`}>
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => confirmDelete(journey)}
-              size="small"
-            />
-          </Tooltip>
-        </Space>
+        <Link
+          params={{ accountId, journeyId: journey.id }}
+          to="/accounts/$accountId/journeys/$journeyId"
+        >
+          <Button icon={<ArrowRightOutlined />} iconPosition="end" size="small">
+            {t`Accéder`}
+          </Button>
+        </Link>
       ),
     },
   ];
