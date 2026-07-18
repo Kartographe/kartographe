@@ -2,9 +2,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { DisconnectOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  DisconnectOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import type { TableProps } from "antd";
 import {
   App,
@@ -29,11 +34,14 @@ import {
 } from "@/features/journeys/journey-tags";
 
 type FeatureJourney = components["schemas"]["FeatureJourneyItem"];
+type Journey = components["schemas"]["JourneyItem"];
 
 const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/features/{feature_id}/journeys",
 ];
+/** The type/status shown here belong to the journey, read from this listing. */
+const JOURNEYS_KEY = ["get", "/v1/accounts/{account_id}/journeys"];
 
 /** Matches the link modal's picker: an account with more journeys pages beyond it. */
 const JOURNEYS_LIMIT = 100;
@@ -74,6 +82,16 @@ export function FeatureJourneysScreen({
     "/v1/accounts/{account_id}/features/{feature_id}/journeys/{feature_journey_id}",
     { meta: { successMessage: t`Parcours détaché` } }
   );
+  const statusMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Statut mis à jour` } }
+  );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
 
   const links = linksQuery.data?.items ?? [];
   const journeys = journeysQuery.data?.items ?? [];
@@ -83,6 +101,22 @@ export function FeatureJourneysScreen({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  async function changeStatus(journey: Journey, status: Journey["status"]) {
+    await statusMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { status },
+    });
+    queryClient.invalidateQueries({ queryKey: JOURNEYS_KEY });
+  }
+
+  async function changeType(journey: Journey, type: Journey["type"]) {
+    await typeMutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+      body: { type },
+    });
+    queryClient.invalidateQueries({ queryKey: JOURNEYS_KEY });
   }
 
   function confirmUnlink(link: FeatureJourney) {
@@ -148,7 +182,15 @@ export function FeatureJourneysScreen({
       width: COL.type,
       render: (_, link) => {
         const journey = journeyById.get(link.journeyId);
-        return journey ? <JourneyTypeTag type={journey.type} /> : "—";
+        return journey ? (
+          <JourneyTypeTag
+            loading={typeMutation.isPending}
+            onChange={(next) => changeType(journey, next)}
+            type={journey.type}
+          />
+        ) : (
+          "—"
+        );
       },
     },
     {
@@ -157,42 +199,66 @@ export function FeatureJourneysScreen({
       width: COL.status,
       render: (_, link) => {
         const journey = journeyById.get(link.journeyId);
-        return journey ? <JourneyStatusTag status={journey.status} /> : "—";
+        return journey ? (
+          <JourneyStatusTag
+            loading={statusMutation.isPending}
+            onChange={(next) => changeStatus(journey, next)}
+            status={journey.status}
+          />
+        ) : (
+          "—"
+        );
       },
     },
     {
-      title: t`Lié par`,
+      title: t`Lien`,
       key: "owner",
       dataIndex: "owner",
       width: COL.text,
-      render: (_owner, row) => <OwnerCell owner={row.owner} />,
-    },
-    {
-      title: t`Lié le`,
-      key: "date",
-      dataIndex: "date",
-      width: COL.date,
-      render: (value: string | null) =>
-        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+      render: (_owner, link) => (
+        <Flex style={{ minWidth: 0 }} vertical>
+          <OwnerCell owner={link.owner} size={20} />
+          <Typography.Text style={{ fontSize: 12 }} type="secondary">
+            {link.date ? t`le ${dayjs(link.date).format("DD/MM/YYYY")}` : "—"}
+          </Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 1 }),
-      render: (_, link) => (
-        <Space>
-          <Tooltip title={t`Détacher`}>
-            <Button
-              danger
-              icon={<DisconnectOutlined />}
-              onClick={() => confirmUnlink(link)}
-              size="small"
-            />
-          </Tooltip>
-        </Space>
-      ),
+      width: actionsWidth({ icons: 1, labelled: 1 }),
+      render: (_, link) => {
+        const journey = journeyById.get(link.journeyId);
+        return (
+          <Space>
+            {journey ? (
+              <Link
+                params={{ accountId, journeyId: journey.id }}
+                to="/accounts/$accountId/journeys/$journeyId"
+              >
+                <Button
+                  icon={<ArrowRightOutlined />}
+                  iconPosition="end"
+                  size="small"
+                >
+                  {t`Accéder`}
+                </Button>
+              </Link>
+            ) : null}
+            <Tooltip title={t`Détacher`}>
+              <Button
+                danger
+                icon={<DisconnectOutlined />}
+                onClick={() => confirmUnlink(link)}
+                size="small"
+              />
+            </Tooltip>
+          </Space>
+        );
+      },
     },
   ];
 
