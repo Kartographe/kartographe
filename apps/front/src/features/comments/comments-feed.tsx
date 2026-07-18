@@ -152,7 +152,6 @@ export function CommentsFeed({
           fillHeight
             ? { flexShrink: 0 }
             : {
-                background: "var(--ant-color-bg-layout)",
                 position: "sticky",
                 top: 0,
                 zIndex: 1,
