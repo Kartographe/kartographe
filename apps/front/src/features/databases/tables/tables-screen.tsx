@@ -38,6 +38,9 @@ import { TableColumns } from "@/features/databases/tables/table-columns";
 import { TableCommentsDrawer } from "@/features/databases/tables/table-comments-drawer";
 import { TableFormModal } from "@/features/databases/tables/table-form-modal";
 import { useColumnTypes } from "@/features/databases/use-column-types";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Database = components["schemas"]["DatabaseItem"];
@@ -120,6 +123,20 @@ export function TablesScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}",
     { meta: { successMessage: t`Colonne supprimée` } }
   );
+  const lockTableMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/lock",
+    { meta: { successMessage: t`Table verrouillée` } }
+  );
+  const unlockTableMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/unlock",
+    { meta: { successMessage: t`Table déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const tableLockPending =
+    lockTableMutation.isPending || unlockTableMutation.isPending;
 
   const tables = [...(tablesQuery.data?.items ?? [])].sort(
     (a, b) => a.schema.localeCompare(b.schema) || a.name.localeCompare(b.name)
@@ -144,6 +161,14 @@ export function TablesScreen({
     await typeMutation.mutateAsync({
       params: { path: { ...path, database_table_id: table.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function toggleTableLock(table: DatabaseTable) {
+    const mutation = table.locked ? unlockTableMutation : lockTableMutation;
+    await mutation.mutateAsync({
+      params: { path: { ...path, database_table_id: table.id } },
     });
     invalidate();
   }
@@ -198,6 +223,11 @@ export function TablesScreen({
     label: (
       <Flex align="center" gap={12} style={{ minWidth: 0 }}>
         <ColorSwatch color={table.color} />
+        <LockIndicator
+          locked={table.locked}
+          lockedBy={table.lockedBy}
+          lockedDate={table.lockedDate}
+        />
         <Typography.Text
           code
         >{`${table.schema}.${table.name}`}</Typography.Text>
@@ -206,18 +236,29 @@ export function TablesScreen({
         </Typography.Text>
         <TableTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(table, next)}
+          onChange={
+            table.locked ? undefined : (next) => changeType(table, next)
+          }
           type={table.type}
         />
         <TableStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(table, next)}
+          onChange={
+            table.locked ? undefined : (next) => changeStatus(table, next)
+          }
           status={table.status}
         />
       </Flex>
     ),
     extra: (
       <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+        {canManageLock ? (
+          <LockToggleButton
+            locked={table.locked}
+            onToggle={() => toggleTableLock(table)}
+            pending={tableLockPending}
+          />
+        ) : null}
         <Tooltip title={t`Commentaires`}>
           <Button
             icon={<CommentOutlined />}
@@ -225,16 +266,18 @@ export function TablesScreen({
             size="small"
           />
         </Tooltip>
-        <Tooltip title={t`Modifier`}>
+        <Tooltip title={table.locked ? t`Table verrouillée` : t`Modifier`}>
           <Button
+            disabled={table.locked}
             icon={<EditOutlined />}
             onClick={() => setTableForm(table)}
             size="small"
           />
         </Tooltip>
-        <Tooltip title={t`Supprimer`}>
+        <Tooltip title={table.locked ? t`Table verrouillée` : t`Supprimer`}>
           <Button
             danger
+            disabled={table.locked}
             icon={<DeleteOutlined />}
             onClick={() => confirmDeleteTable(table)}
             size="small"
