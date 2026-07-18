@@ -20,6 +20,8 @@ import {
   FeatureStatusTag,
   FeatureTypeTag,
 } from "@/features/features/feature-tags";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -58,6 +60,32 @@ export function FeatureOverview({
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Fonctionnalité supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/features/{feature_id}/lock",
+    { meta: { successMessage: t`Fonctionnalité verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/features/{feature_id}/unlock",
+    { meta: { successMessage: t`Fonctionnalité déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
+
+  async function toggleLock() {
+    const mutation = feature.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/features"],
+    });
+  }
 
   function confirmDelete() {
     modal.confirm({
@@ -125,12 +153,33 @@ export function FeatureOverview({
       <OverviewHeader
         actions={
           <Flex gap={8}>
-            <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
-              {t`Modifier`}
-            </Button>
-            <Tooltip title={t`Supprimer`}>
+            {canManageLock ? (
+              <LockToggleButton
+                locked={feature.locked}
+                onToggle={toggleLock}
+                pending={lockPending}
+                size="middle"
+              />
+            ) : null}
+            <Tooltip
+              title={feature.locked ? t`Fonctionnalité verrouillée` : ""}
+            >
+              <Button
+                disabled={feature.locked}
+                icon={<EditOutlined />}
+                onClick={() => setEditOpen(true)}
+              >
+                {t`Modifier`}
+              </Button>
+            </Tooltip>
+            <Tooltip
+              title={
+                feature.locked ? t`Fonctionnalité verrouillée` : t`Supprimer`
+              }
+            >
               <Button
                 danger
+                disabled={feature.locked}
                 icon={<DeleteOutlined />}
                 onClick={confirmDelete}
               />
@@ -148,14 +197,14 @@ export function FeatureOverview({
         <OverviewField label={t`Type`}>
           <FeatureTypeTag
             loading={typeMutation.isPending}
-            onChange={changeType}
+            onChange={feature.locked ? undefined : changeType}
             type={feature.type}
           />
         </OverviewField>
         <OverviewField label={t`Statut`}>
           <FeatureStatusTag
             loading={statusMutation.isPending}
-            onChange={changeStatus}
+            onChange={feature.locked ? undefined : changeStatus}
             status={feature.status}
           />
         </OverviewField>
@@ -165,6 +214,7 @@ export function FeatureOverview({
             entityType="feature"
             loading={tagsMutation.isPending}
             onChange={changeTags}
+            readOnly={feature.locked}
             tags={feature.tags}
             value={feature.tagIds}
           />

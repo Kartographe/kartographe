@@ -23,6 +23,9 @@ import {
   FEATURE_STATUS_LABELS,
   FEATURE_TYPE_LABELS,
 } from "@/features/features/labels";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
@@ -90,6 +93,19 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/features/{feature_id}",
     { meta: { successMessage: t`Tags mis à jour` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/features/{feature_id}/lock",
+    { meta: { successMessage: t`Fonctionnalité verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/features/{feature_id}/unlock",
+    { meta: { successMessage: t`Fonctionnalité déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const features = featuresQuery.data?.items ?? [];
   const total = featuresQuery.data?.count ?? 0;
@@ -124,6 +140,14 @@ export function FeaturesList({ accountId }: { accountId: string }) {
     await tagsMutation.mutateAsync({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { tagIds },
+    });
+    invalidate();
+  }
+
+  async function toggleLock(feature: Feature) {
+    const mutation = feature.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, feature_id: feature.id } },
     });
     invalidate();
   }
@@ -170,6 +194,16 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       sortOrder: antdOrder("title"),
       width: COL.title,
       ellipsis: true,
+      render: (title: string, feature) => (
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={feature.locked}
+            lockedBy={feature.lockedBy}
+            lockedDate={feature.lockedDate}
+          />
+          <Typography.Text ellipsis>{title}</Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: t`Type`,
@@ -186,7 +220,9 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       render: (type: Type, feature) => (
         <FeatureTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(feature, next)}
+          onChange={
+            feature.locked ? undefined : (next) => changeType(feature, next)
+          }
           type={type}
         />
       ),
@@ -206,7 +242,9 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       render: (status: Status, feature) => (
         <FeatureStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(feature, next)}
+          onChange={
+            feature.locked ? undefined : (next) => changeStatus(feature, next)
+          }
           status={status}
         />
       ),
@@ -224,6 +262,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
           entityType="feature"
           loading={tagsMutation.isPending}
           onChange={(next) => changeTags(feature, next)}
+          readOnly={feature.locked}
           tags={tags}
           value={feature.tagIds}
         />
@@ -245,16 +284,29 @@ export function FeaturesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 1 : 0, labelled: 1 }),
       render: (_, feature) => (
-        <Link
-          params={{ accountId, featureId: feature.id }}
-          to="/accounts/$accountId/features/$featureId"
-        >
-          <Button icon={<ArrowRightOutlined />} iconPosition="end" size="small">
-            {t`Accéder`}
-          </Button>
-        </Link>
+        <Flex align="center" gap={4} justify="flex-end">
+          {canManageLock ? (
+            <LockToggleButton
+              locked={feature.locked}
+              onToggle={() => toggleLock(feature)}
+              pending={lockPending}
+            />
+          ) : null}
+          <Link
+            params={{ accountId, featureId: feature.id }}
+            to="/accounts/$accountId/features/$featureId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+        </Flex>
       ),
     },
   ];

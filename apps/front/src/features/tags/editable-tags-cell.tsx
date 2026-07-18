@@ -29,6 +29,8 @@ interface EditableTagsCellProps {
   onChange: (tagIds: string[]) => void;
   /** A change is being persisted — interactions are frozen until it lands. */
   loading?: boolean;
+  /** Display-only: show the chips without detach/attach affordances (locked). */
+  readOnly?: boolean;
 }
 
 /**
@@ -43,6 +45,7 @@ export function EditableTagsCell({
   tags,
   onChange,
   loading = false,
+  readOnly = false,
 }: EditableTagsCellProps) {
   const { t } = useLingui();
   const queryClient = useQueryClient();
@@ -150,7 +153,7 @@ export function EditableTagsCell({
     <Flex align="center" gap={4} wrap>
       {(tags ?? []).map((tag) => (
         <Tag
-          closable={!loading}
+          closable={!(loading || readOnly)}
           key={tag.id}
           onClose={(event) => {
             event.preventDefault();
@@ -166,29 +169,31 @@ export function EditableTagsCell({
           {tag.label}
         </Tag>
       ))}
-      <Popover
-        content={picker}
-        onOpenChange={(next) => {
-          setOpen(next);
-          if (!next) {
-            setSearch("");
-          }
-        }}
-        open={open}
-        placement="bottomLeft"
-        trigger="click"
-      >
-        <Tag
-          style={{
-            borderStyle: "dashed",
-            cursor: loading ? "not-allowed" : "pointer",
-            marginInlineEnd: 0,
-            opacity: loading ? 0.5 : 1,
+      {readOnly ? null : (
+        <Popover
+          content={picker}
+          onOpenChange={(next) => {
+            setOpen(next);
+            if (!next) {
+              setSearch("");
+            }
           }}
+          open={open}
+          placement="bottomLeft"
+          trigger="click"
         >
-          <PlusOutlined />
-        </Tag>
-      </Popover>
+          <Tag
+            style={{
+              borderStyle: "dashed",
+              cursor: loading ? "not-allowed" : "pointer",
+              marginInlineEnd: 0,
+              opacity: loading ? 0.5 : 1,
+            }}
+          >
+            <PlusOutlined />
+          </Tag>
+        </Popover>
+      )}
     </Flex>
   );
 }
