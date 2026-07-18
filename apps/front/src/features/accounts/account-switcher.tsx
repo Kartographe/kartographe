@@ -181,7 +181,11 @@ export function AccountSwitcher({ collapsed }: { collapsed: boolean }) {
         onClose={() => setCreateOpen(false)}
         open={createOpen}
       />
-      <SearchModal onClose={() => setSearchOpen(false)} open={searchOpen} />
+      <SearchModal
+        accountId={activeId}
+        onClose={() => setSearchOpen(false)}
+        open={searchOpen}
+      />
     </Flex>
   );
 }

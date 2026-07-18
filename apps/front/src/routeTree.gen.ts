@@ -34,6 +34,7 @@ import { Route as AppMeIntegrationsRouteImport } from './routes/_app/me/integrat
 import { Route as AppAccountsAccountIdRouteRouteImport } from './routes/_app/accounts/$accountId/route'
 import { Route as AppMeAccountsIndexRouteImport } from './routes/_app/me/accounts/index'
 import { Route as AppAccountsAccountIdIndexRouteImport } from './routes/_app/accounts/$accountId/index'
+import { Route as AppAccountsAccountIdSearchRouteImport } from './routes/_app/accounts/$accountId/search'
 import { Route as AppAccountsAccountIdPersonasRouteImport } from './routes/_app/accounts/$accountId/personas'
 import { Route as AppAccountsAccountIdAdministrationRouteRouteImport } from './routes/_app/accounts/$accountId/administration/route'
 import { Route as AppAccountsAccountIdServicesIndexRouteImport } from './routes/_app/accounts/$accountId/services/index'
@@ -203,6 +204,12 @@ const AppAccountsAccountIdIndexRoute =
   AppAccountsAccountIdIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
+  } as any)
+const AppAccountsAccountIdSearchRoute =
+  AppAccountsAccountIdSearchRouteImport.update({
+    id: '/search',
+    path: '/search',
     getParentRoute: () => AppAccountsAccountIdRouteRoute,
   } as any)
 const AppAccountsAccountIdPersonasRoute =
@@ -505,6 +512,7 @@ export interface FileRoutesByFullPath {
   '/me/': typeof AppMeIndexRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   '/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
+  '/accounts/$accountId/search': typeof AppAccountsAccountIdSearchRoute
   '/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts/': typeof AppMeAccountsIndexRoute
   '/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
@@ -572,6 +580,7 @@ export interface FileRoutesByTo {
   '/oauth/consent/$requestId': typeof OauthConsentRequestIdRoute
   '/me': typeof AppMeIndexRoute
   '/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
+  '/accounts/$accountId/search': typeof AppAccountsAccountIdSearchRoute
   '/accounts/$accountId': typeof AppAccountsAccountIdIndexRoute
   '/me/accounts': typeof AppMeAccountsIndexRoute
   '/accounts/$accountId/administration/advanced': typeof AppAccountsAccountIdAdministrationAdvancedRoute
@@ -639,6 +648,7 @@ export interface FileRoutesById {
   '/_app/me/': typeof AppMeIndexRoute
   '/_app/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   '/_app/accounts/$accountId/personas': typeof AppAccountsAccountIdPersonasRoute
+  '/_app/accounts/$accountId/search': typeof AppAccountsAccountIdSearchRoute
   '/_app/accounts/$accountId/': typeof AppAccountsAccountIdIndexRoute
   '/_app/me/accounts/': typeof AppMeAccountsIndexRoute
   '/_app/accounts/$accountId/applications/$applicationId': typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
@@ -711,6 +721,7 @@ export interface FileRouteTypes {
     | '/me/'
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/personas'
+    | '/accounts/$accountId/search'
     | '/accounts/$accountId/'
     | '/me/accounts/'
     | '/accounts/$accountId/applications/$applicationId'
@@ -778,6 +789,7 @@ export interface FileRouteTypes {
     | '/oauth/consent/$requestId'
     | '/me'
     | '/accounts/$accountId/personas'
+    | '/accounts/$accountId/search'
     | '/accounts/$accountId'
     | '/me/accounts'
     | '/accounts/$accountId/administration/advanced'
@@ -844,6 +856,7 @@ export interface FileRouteTypes {
     | '/_app/me/'
     | '/_app/accounts/$accountId/administration'
     | '/_app/accounts/$accountId/personas'
+    | '/_app/accounts/$accountId/search'
     | '/_app/accounts/$accountId/'
     | '/_app/me/accounts/'
     | '/_app/accounts/$accountId/applications/$applicationId'
@@ -1073,6 +1086,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/accounts/$accountId/'
       preLoaderRoute: typeof AppAccountsAccountIdIndexRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
+    }
+    '/_app/accounts/$accountId/search': {
+      id: '/_app/accounts/$accountId/search'
+      path: '/search'
+      fullPath: '/accounts/$accountId/search'
+      preLoaderRoute: typeof AppAccountsAccountIdSearchRouteImport
       parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
     '/_app/accounts/$accountId/personas': {
@@ -1609,6 +1629,7 @@ const AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren =
 interface AppAccountsAccountIdRouteRouteChildren {
   AppAccountsAccountIdAdministrationRouteRoute: typeof AppAccountsAccountIdAdministrationRouteRouteWithChildren
   AppAccountsAccountIdPersonasRoute: typeof AppAccountsAccountIdPersonasRoute
+  AppAccountsAccountIdSearchRoute: typeof AppAccountsAccountIdSearchRoute
   AppAccountsAccountIdIndexRoute: typeof AppAccountsAccountIdIndexRoute
   AppAccountsAccountIdApplicationsApplicationIdRouteRoute: typeof AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren
   AppAccountsAccountIdDatabasesDatabaseIdRouteRoute: typeof AppAccountsAccountIdDatabasesDatabaseIdRouteRouteWithChildren
@@ -1627,6 +1648,7 @@ const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChil
     AppAccountsAccountIdAdministrationRouteRoute:
       AppAccountsAccountIdAdministrationRouteRouteWithChildren,
     AppAccountsAccountIdPersonasRoute: AppAccountsAccountIdPersonasRoute,
+    AppAccountsAccountIdSearchRoute: AppAccountsAccountIdSearchRoute,
     AppAccountsAccountIdIndexRoute: AppAccountsAccountIdIndexRoute,
     AppAccountsAccountIdApplicationsApplicationIdRouteRoute:
       AppAccountsAccountIdApplicationsApplicationIdRouteRouteWithChildren,

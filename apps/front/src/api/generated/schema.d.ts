@@ -336,6 +336,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search an account
+         * @description Full-text search across the account's entities and comments, most relevant first. Pass the query as `q`; optionally restrict to one or more `entityType` (repeat the query param). Each hit carries its kind (`entityType`/`entityId`), a relevance `score`, a `label`, an `excerpt` (comment hits only), and a `resource` — the navigable target entity with its containing entities in `resource.parents` (for a comment, the commented entity). Any member may search.
+         */
+        get: operations["api_accounts_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/search/counts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search result counts by type
+         * @description Return the number of matches per entity type for a query `q` (plus the `total`), so the front can render result facets. Any member may search.
+         */
+        get: operations["api_accounts_search_counts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications": {
         parameters: {
             query?: never;
@@ -7150,6 +7190,10 @@ export interface components {
         ItemResponse_RecoveryCodesItem_: {
             item: components["schemas"]["RecoveryCodesItem"];
         };
+        /** ItemResponse[SearchCountsItem] */
+        ItemResponse_SearchCountsItem_: {
+            item: components["schemas"]["SearchCountsItem"];
+        };
         /** ItemResponse[SecurityKeyItem] */
         ItemResponse_SecurityKeyItem_: {
             item: components["schemas"]["SecurityKeyItem"];
@@ -8142,6 +8186,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["PersonaItem"][];
         };
+        /** ListingResponse[SearchResultItem] */
+        ListingResponse_SearchResultItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["SearchResultItem"][];
+        };
         /** ListingResponse[SecurityKeyItem] */
         ListingResponse_SecurityKeyItem_: {
             /** Count */
@@ -8746,6 +8800,56 @@ export interface components {
              * @description The new password, at least 8 characters.
              */
             password: string;
+        };
+        /**
+         * SearchCountsItem
+         * @description Match counts per entity type for a query — powers the result facets.
+         */
+        SearchCountsItem: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Total */
+            total: number;
+        };
+        /**
+         * SearchEntityType
+         * @description The kind of entity a full-text `search` index row points at.
+         *
+         *     A superset of `EntityType`: every entity a comment/vote can target is also
+         *     searchable, plus `comment` itself (a comment's rich-text is indexed and its
+         *     result links back to the commented entity). Kept separate from `EntityType`
+         *     so the search surface can grow on its own — `EntityType` is locked in
+         *     lock-step with `entity_ref._SPECS` (a hard `assert`), whereas search may index
+         *     kinds that have no polymorphic entity_ref. Backed by its own Postgres enum
+         *     type (`search_entity_type`).
+         * @enum {string}
+         */
+        SearchEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "comment";
+        /**
+         * SearchResultItem
+         * @description One ranked search hit.
+         */
+        SearchResultItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            entityType: components["schemas"]["SearchEntityType"];
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            /** Score */
+            score: number;
+            /** Label */
+            label: string;
+            /** Excerpt */
+            excerpt?: string | null;
+            resource?: components["schemas"]["EntityRef"] | null;
         };
         /**
          * SecurityKeyItem
@@ -10675,6 +10779,99 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_accounts_search: {
+        parameters: {
+            query: {
+                /** @description The text to search for. */
+                q: string;
+                entityType?: components["schemas"]["SearchEntityType"][] | null;
+                page?: number;
+                limit?: number;
+                /** @description `simple` treats each word as a prefix (as-you-type); `expert` passes raw tsquery syntax. */
+                mode?: string;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_SearchResultItem_"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_accounts_search_counts: {
+        parameters: {
+            query: {
+                /** @description The text to search for. */
+                q: string;
+                /** @description `simple` treats each word as a prefix (as-you-type); `expert` passes raw tsquery syntax. */
+                mode?: string;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_SearchCountsItem_"];
                 };
             };
             /** @description Account not found */

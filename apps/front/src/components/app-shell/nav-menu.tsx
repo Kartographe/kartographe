@@ -10,6 +10,7 @@ import {
   DatabaseOutlined,
   HomeOutlined,
   NodeIndexOutlined,
+  SearchOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -119,6 +120,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
           label: t`Tableau de bord`,
           icon: <HomeOutlined />,
           exact: true,
+        },
+        {
+          to: "/accounts/$accountId/search",
+          params,
+          label: t`Recherche`,
+          icon: <SearchOutlined />,
         },
       ],
     },

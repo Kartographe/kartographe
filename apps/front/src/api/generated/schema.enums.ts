@@ -67,6 +67,7 @@ export const dtoEnums = {
   PersonaSortField: ["date", "title", "status", "type"] as const satisfies readonly S["PersonaSortField"][],
   PersonaStatus: ["draft", "active", "archived"] as const satisfies readonly S["PersonaStatus"][],
   PersonaType: ["customer", "business", "internal", "other"] as const satisfies readonly S["PersonaType"][],
+  SearchEntityType: ["feature", "application", "application_route", "journey", "persona", "database", "database_table", "database_table_column", "database_migration", "database_migration_column", "service", "service_action", "journey_scenario", "journey_scenario_step", "comment"] as const satisfies readonly S["SearchEntityType"][],
   ServiceActionMethod: ["POST", "GET", "PATCH", "PUT", "DELETE", "QUERY"] as const satisfies readonly S["ServiceActionMethod"][],
   ServiceActionStatus: ["draft", "active", "archived"] as const satisfies readonly S["ServiceActionStatus"][],
   ServiceActionType: ["endpoint", "webhook", "event", "job", "other"] as const satisfies readonly S["ServiceActionType"][],
