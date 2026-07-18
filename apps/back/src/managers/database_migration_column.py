@@ -160,6 +160,7 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         return self.apply_update(column, fields)
 
     def soft_delete(self, column: DatabaseMigrationColumn) -> None:
+        self._guard_unlocked(column)
         now = utc_now()
         self._disable(column, now)
         self.session.commit()

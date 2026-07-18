@@ -193,3 +193,42 @@ def delete_column(
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> None:
     manager.soft_delete(column)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{database_table_column_id}/lock",
+    operation_id="api_databases_versions_tables_columns_lock",
+    summary="Lock a column",
+    description=(
+        "Freeze the column against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[DatabaseTableColumnItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_column(
+    entity: CurrentDatabaseTableColumnDep,
+    user: CurrentUserDep,
+    manager: DatabaseTableColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseTableColumnItem]:
+    return ItemResponse(item=DatabaseTableColumnItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{database_table_column_id}/unlock",
+    operation_id="api_databases_versions_tables_columns_unlock",
+    summary="Unlock a column",
+    description="Lift the freeze on the column. Owners and administrators only.",
+    response_model=ItemResponse[DatabaseTableColumnItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_column(
+    entity: CurrentDatabaseTableColumnDep,
+    manager: DatabaseTableColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseTableColumnItem]:
+    return ItemResponse(item=DatabaseTableColumnItem.model_validate(manager.unlock(entity)))

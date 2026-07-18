@@ -58,6 +58,7 @@ class ServiceActionManager(BaseEntityManager):
 
     def soft_delete(self, action: ServiceAction) -> None:
         """Soft-delete a single action."""
+        self._guard_unlocked(action)
         now = utc_now()
         self._disable(action, now)
         self.session.commit()

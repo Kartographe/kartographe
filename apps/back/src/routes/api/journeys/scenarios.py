@@ -160,3 +160,42 @@ def delete_scenario(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> None:
     manager.soft_delete(scenario)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{scenario_id}/lock",
+    operation_id="api_journeys_scenarios_lock",
+    summary="Lock a scenario",
+    description=(
+        "Freeze the scenario against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_scenario(
+    entity: CurrentJourneyScenarioDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyScenarioItem]:
+    return ItemResponse(item=JourneyScenarioItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{scenario_id}/unlock",
+    operation_id="api_journeys_scenarios_unlock",
+    summary="Unlock a scenario",
+    description="Lift the freeze on the scenario. Owners and administrators only.",
+    response_model=ItemResponse[JourneyScenarioItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_scenario(
+    entity: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyScenarioItem]:
+    return ItemResponse(item=JourneyScenarioItem.model_validate(manager.unlock(entity)))

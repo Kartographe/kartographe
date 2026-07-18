@@ -223,6 +223,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
         return self.list_for_table(table)
 
     def soft_delete(self, column: DatabaseTableColumn) -> None:
+        self._guard_unlocked(column)
         now = utc_now()
         self._disable(column, now)
         self.session.commit()

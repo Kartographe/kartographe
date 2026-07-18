@@ -31,6 +31,10 @@ class DatabaseItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
     status: DatabaseStatus
@@ -63,6 +67,10 @@ class DatabaseTableColumnItem(CamelBase):
     foreign_key_database_table_column_id: uuid.UUID | None = None
     foreign_key_database_table_id: uuid.UUID | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     name: str
     nullable: bool
     owner: OwnerItem
@@ -86,6 +94,10 @@ class DatabaseTableItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     name: str
     owner: OwnerItem
     owner_id: uuid.UUID
@@ -105,6 +117,10 @@ class DatabaseMigrationItem(CamelBase):
     destination_database_id: uuid.UUID
     destination_database_version_id: uuid.UUID
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     source_database_id: uuid.UUID
     source_database_version_id: uuid.UUID
     status: DatabaseMigrationStatus
@@ -125,6 +141,10 @@ class DatabaseMigrationColumnItem(CamelBase):
     destination_database_table_column_id: uuid.UUID | None = None
     destination_database_table_id: uuid.UUID | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
     source_database_table_column_id: uuid.UUID | None = None

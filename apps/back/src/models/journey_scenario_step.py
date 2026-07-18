@@ -16,12 +16,14 @@ from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 
 if TYPE_CHECKING:
     from src.models.action_type import ActionType
+    from src.models.user import User
 
 
-class JourneyScenarioStep(BaseModel, table=True):
+class JourneyScenarioStep(LockableMixin, BaseModel, table=True):
     __tablename__ = "journey_scenario_step"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -43,3 +45,4 @@ class JourneyScenarioStep(BaseModel, table=True):
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
     action_type: "ActionType" = Relationship()
+    locked_by: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

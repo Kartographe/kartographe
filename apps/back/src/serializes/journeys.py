@@ -28,6 +28,10 @@ class JourneyItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
     personas_ids: list[uuid.UUID]
@@ -46,6 +50,10 @@ class JourneyScenarioItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
     personas_ids: list[uuid.UUID]
@@ -73,6 +81,10 @@ class JourneyScenarioStepItem(CamelBase):
     action_type_id: uuid.UUID | None = None
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     optional: bool
     parameters: dict
     parent_journey_scenario_step_id: uuid.UUID | None = None

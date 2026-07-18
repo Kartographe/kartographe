@@ -152,3 +152,42 @@ def delete_application(
     _: Annotated[AccountUser, Depends(_ADMIN)],
 ) -> None:
     manager.soft_delete(application)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{application_id}/lock",
+    operation_id="api_applications_lock",
+    summary="Lock an application",
+    description=(
+        "Freeze the application against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[ApplicationItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_application(
+    entity: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ApplicationItem]:
+    return ItemResponse(item=ApplicationItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{application_id}/unlock",
+    operation_id="api_applications_unlock",
+    summary="Unlock an application",
+    description="Lift the freeze on the application. Owners and administrators only.",
+    response_model=ItemResponse[ApplicationItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_application(
+    entity: CurrentApplicationDep,
+    manager: ApplicationManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ApplicationItem]:
+    return ItemResponse(item=ApplicationItem.model_validate(manager.unlock(entity)))

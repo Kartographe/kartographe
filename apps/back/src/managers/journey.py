@@ -110,6 +110,7 @@ class JourneyManager(BaseEntityManager):
 
     def soft_delete(self, journey: Journey) -> None:
         """Soft-delete the journey and every child entity that hangs off it."""
+        self._guard_unlocked(journey)
         now = utc_now()
         self._disable(journey, now)
         for model in (

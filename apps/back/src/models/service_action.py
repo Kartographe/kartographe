@@ -16,13 +16,14 @@ from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 from src.models.enum import ServiceActionMethod, ServiceActionStatus, ServiceActionType
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class ServiceAction(BaseModel, table=True):
+class ServiceAction(LockableMixin, BaseModel, table=True):
     __tablename__ = "service_action"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -39,4 +40,11 @@ class ServiceAction(BaseModel, table=True):
     method: ServiceActionMethod | None = Field(default=None, index=True)
     path: str | None = Field(default=None, index=True)
 
-    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Two FKs point at `user.id` (owner + locker), so each relationship must name
+    # its own — SQLAlchemy can't infer which column feeds which.
+    owner: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[ServiceAction.owner_id]"}
+    )
+    locked_by: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[ServiceAction.locked_by_id]"}
+    )

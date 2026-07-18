@@ -134,3 +134,42 @@ def delete_action(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> None:
     manager.soft_delete(action)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{action_id}/lock",
+    operation_id="api_services_actions_lock",
+    summary="Lock an action",
+    description=(
+        "Freeze the action against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[ServiceActionItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_action(
+    entity: CurrentServiceActionDep,
+    user: CurrentUserDep,
+    manager: ServiceActionManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ServiceActionItem]:
+    return ItemResponse(item=ServiceActionItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{action_id}/unlock",
+    operation_id="api_services_actions_unlock",
+    summary="Unlock an action",
+    description="Lift the freeze on the action. Owners and administrators only.",
+    response_model=ItemResponse[ServiceActionItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_action(
+    entity: CurrentServiceActionDep,
+    manager: ServiceActionManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ServiceActionItem]:
+    return ItemResponse(item=ServiceActionItem.model_validate(manager.unlock(entity)))

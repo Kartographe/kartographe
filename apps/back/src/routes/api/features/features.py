@@ -165,3 +165,42 @@ def delete_feature(
     _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
 ) -> None:
     manager.soft_delete(feature)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{feature_id}/lock",
+    operation_id="api_features_lock",
+    summary="Lock a feature",
+    description=(
+        "Freeze the feature against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[FeatureItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_feature(
+    entity: CurrentFeatureDep,
+    user: CurrentUserDep,
+    manager: FeatureManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[FeatureItem]:
+    return ItemResponse(item=FeatureItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{feature_id}/unlock",
+    operation_id="api_features_unlock",
+    summary="Unlock a feature",
+    description="Lift the freeze on the feature. Owners and administrators only.",
+    response_model=ItemResponse[FeatureItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_feature(
+    entity: CurrentFeatureDep,
+    manager: FeatureManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[FeatureItem]:
+    return ItemResponse(item=FeatureItem.model_validate(manager.unlock(entity)))

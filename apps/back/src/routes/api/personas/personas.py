@@ -25,6 +25,7 @@ from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
     CurrentPersonaDep,
+    CurrentUserDep,
     PersonaManagerDep,
     TagManagerDep,
 )
@@ -152,3 +153,42 @@ def delete_persona(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> None:
     manager.soft_delete(persona)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{persona_id}/lock",
+    operation_id="api_personas_lock",
+    summary="Lock a persona",
+    description=(
+        "Freeze the persona against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[PersonaItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_persona(
+    entity: CurrentPersonaDep,
+    user: CurrentUserDep,
+    manager: PersonaManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[PersonaItem]:
+    return ItemResponse(item=PersonaItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{persona_id}/unlock",
+    operation_id="api_personas_unlock",
+    summary="Unlock a persona",
+    description="Lift the freeze on the persona. Owners and administrators only.",
+    response_model=ItemResponse[PersonaItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_persona(
+    entity: CurrentPersonaDep,
+    manager: PersonaManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[PersonaItem]:
+    return ItemResponse(item=PersonaItem.model_validate(manager.unlock(entity)))

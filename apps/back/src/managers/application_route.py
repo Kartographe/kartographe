@@ -156,6 +156,7 @@ class ApplicationRouteManager(BaseEntityManager):
     def soft_delete(self, route: ApplicationRoute) -> None:
         """Soft-delete the route with its responses, examples and table links, and
         detach it from any scenario step that referenced it."""
+        self._guard_unlocked(route)
         now = utc_now()
         self._disable(route, now)
         for model in (ApplicationRouteResponse, ApplicationRouteExample, ApplicationRouteTable):

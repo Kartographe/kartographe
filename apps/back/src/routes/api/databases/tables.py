@@ -156,3 +156,42 @@ def delete_table(
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> None:
     manager.soft_delete(table)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{database_table_id}/lock",
+    operation_id="api_databases_versions_tables_lock",
+    summary="Lock a table",
+    description=(
+        "Freeze the table against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[DatabaseTableItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_table(
+    entity: CurrentDatabaseTableDep,
+    user: CurrentUserDep,
+    manager: DatabaseTableManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseTableItem]:
+    return ItemResponse(item=DatabaseTableItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{database_table_id}/unlock",
+    operation_id="api_databases_versions_tables_unlock",
+    summary="Unlock a table",
+    description="Lift the freeze on the table. Owners and administrators only.",
+    response_model=ItemResponse[DatabaseTableItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_table(
+    entity: CurrentDatabaseTableDep,
+    manager: DatabaseTableManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseTableItem]:
+    return ItemResponse(item=DatabaseTableItem.model_validate(manager.unlock(entity)))

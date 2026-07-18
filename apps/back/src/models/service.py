@@ -12,13 +12,14 @@ from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 from src.models.enum import ServiceStatus, ServiceType
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class Service(BaseModel, table=True):
+class Service(LockableMixin, BaseModel, table=True):
     __tablename__ = "service"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -35,4 +36,11 @@ class Service(BaseModel, table=True):
     url: str | None = Field(default=None)
     openapi_url: str | None = Field(default=None)
 
-    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Two FKs point at `user.id` (owner + locker), so each relationship must name
+    # its own — SQLAlchemy can't infer which column feeds which.
+    owner: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[Service.owner_id]"}
+    )
+    locked_by: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[Service.locked_by_id]"}
+    )

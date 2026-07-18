@@ -175,3 +175,42 @@ def delete_journey(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> None:
     manager.soft_delete(journey)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{journey_id}/lock",
+    operation_id="api_journeys_lock",
+    summary="Lock a journey",
+    description=(
+        "Freeze the journey against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[JourneyItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_journey(
+    entity: CurrentJourneyDep,
+    user: CurrentUserDep,
+    manager: JourneyManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyItem]:
+    return ItemResponse(item=JourneyItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{journey_id}/unlock",
+    operation_id="api_journeys_unlock",
+    summary="Unlock a journey",
+    description="Lift the freeze on the journey. Owners and administrators only.",
+    response_model=ItemResponse[JourneyItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_journey(
+    entity: CurrentJourneyDep,
+    manager: JourneyManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyItem]:
+    return ItemResponse(item=JourneyItem.model_validate(manager.unlock(entity)))

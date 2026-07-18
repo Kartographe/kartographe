@@ -25,6 +25,7 @@ from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentJourneyScenarioDep,
     CurrentJourneyScenarioStepDep,
+    CurrentUserDep,
     JourneyScenarioStepManagerDep,
     TagManagerDep,
 )
@@ -159,3 +160,42 @@ def delete_step(
     _: Annotated[AccountUser, Depends(_EDITOR)],
 ) -> None:
     manager.soft_delete(step)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{step_id}/lock",
+    operation_id="api_journeys_scenarios_steps_lock",
+    summary="Lock a step",
+    description=(
+        "Freeze the step against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[JourneyScenarioStepItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_step(
+    entity: CurrentJourneyScenarioStepDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioStepManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyScenarioStepItem]:
+    return ItemResponse(item=JourneyScenarioStepItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{step_id}/unlock",
+    operation_id="api_journeys_scenarios_steps_unlock",
+    summary="Unlock a step",
+    description="Lift the freeze on the step. Owners and administrators only.",
+    response_model=ItemResponse[JourneyScenarioStepItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_step(
+    entity: CurrentJourneyScenarioStepDep,
+    manager: JourneyScenarioStepManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[JourneyScenarioStepItem]:
+    return ItemResponse(item=JourneyScenarioStepItem.model_validate(manager.unlock(entity)))

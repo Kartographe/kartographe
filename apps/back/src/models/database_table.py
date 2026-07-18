@@ -12,13 +12,14 @@ from sqlalchemy import ARRAY, JSON, Column, Uuid
 from sqlmodel import AutoString, Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 from src.models.enum import DatabaseTableStatus, DatabaseTableType
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class DatabaseTable(BaseModel, table=True):
+class DatabaseTable(LockableMixin, BaseModel, table=True):
     __tablename__ = "database_table"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -40,4 +41,11 @@ class DatabaseTable(BaseModel, table=True):
     color: str | None = Field(default=None)
     tag_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
 
-    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Two FKs point at `user.id` (owner + locker), so each relationship must name
+    # its own — SQLAlchemy can't infer which column feeds which.
+    owner: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[DatabaseTable.owner_id]"}
+    )
+    locked_by: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[DatabaseTable.locked_by_id]"}
+    )

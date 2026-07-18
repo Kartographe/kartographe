@@ -165,3 +165,42 @@ def delete_route(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> None:
     manager.soft_delete(route)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{route_id}/lock",
+    operation_id="api_applications_routes_lock",
+    summary="Lock a route",
+    description=(
+        "Freeze the route against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[ApplicationRouteItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_route(
+    entity: CurrentApplicationRouteDep,
+    user: CurrentUserDep,
+    manager: ApplicationRouteManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ApplicationRouteItem]:
+    return ItemResponse(item=ApplicationRouteItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{route_id}/unlock",
+    operation_id="api_applications_routes_unlock",
+    summary="Unlock a route",
+    description="Lift the freeze on the route. Owners and administrators only.",
+    response_model=ItemResponse[ApplicationRouteItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_route(
+    entity: CurrentApplicationRouteDep,
+    manager: ApplicationRouteManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[ApplicationRouteItem]:
+    return ItemResponse(item=ApplicationRouteItem.model_validate(manager.unlock(entity)))

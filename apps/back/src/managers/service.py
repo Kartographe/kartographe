@@ -84,6 +84,7 @@ class ServiceManager(BaseEntityManager):
 
     def soft_delete(self, service: Service) -> None:
         """Soft-delete the service and its actions."""
+        self._guard_unlocked(service)
         now = utc_now()
         self._disable(service, now)
         self._bulk_disable(ServiceAction, ServiceAction.service_id == service.id, now=now)

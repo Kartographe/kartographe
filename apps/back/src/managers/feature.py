@@ -87,6 +87,7 @@ class FeatureManager(BaseEntityManager):
 
     def soft_delete(self, feature: Feature) -> None:
         """Soft-delete the feature, its files and its application links."""
+        self._guard_unlocked(feature)
         now = utc_now()
         self._disable(feature, now)
         self._bulk_disable(ApplicationFeature, ApplicationFeature.feature_id == feature.id, now=now)

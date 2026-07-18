@@ -212,3 +212,42 @@ def delete_migration_column(
     _: Annotated[AccountUser, Depends(_DATA_DEV)],
 ) -> None:
     manager.soft_delete(column)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{database_migration_column_id}/lock",
+    operation_id="api_databases_migrations_columns_lock",
+    summary="Lock a migration column",
+    description=(
+        "Freeze the migration column against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[DatabaseMigrationColumnItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_migration_column(
+    entity: CurrentDatabaseMigrationColumnDep,
+    user: CurrentUserDep,
+    manager: DatabaseMigrationColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseMigrationColumnItem]:
+    return ItemResponse(item=DatabaseMigrationColumnItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{database_migration_column_id}/unlock",
+    operation_id="api_databases_migrations_columns_unlock",
+    summary="Unlock a migration column",
+    description="Lift the freeze on the migration column. Owners and administrators only.",
+    response_model=ItemResponse[DatabaseMigrationColumnItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_migration_column(
+    entity: CurrentDatabaseMigrationColumnDep,
+    manager: DatabaseMigrationColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseMigrationColumnItem]:
+    return ItemResponse(item=DatabaseMigrationColumnItem.model_validate(manager.unlock(entity)))

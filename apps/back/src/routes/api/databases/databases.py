@@ -159,3 +159,42 @@ def delete_database(
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> None:
     manager.soft_delete(database)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{database_id}/lock",
+    operation_id="api_databases_lock",
+    summary="Lock a database",
+    description=(
+        "Freeze the database against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[DatabaseItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_database(
+    entity: CurrentDatabaseDep,
+    user: CurrentUserDep,
+    manager: DatabaseManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseItem]:
+    return ItemResponse(item=DatabaseItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{database_id}/unlock",
+    operation_id="api_databases_unlock",
+    summary="Unlock a database",
+    description="Lift the freeze on the database. Owners and administrators only.",
+    response_model=ItemResponse[DatabaseItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_database(
+    entity: CurrentDatabaseDep,
+    manager: DatabaseManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseItem]:
+    return ItemResponse(item=DatabaseItem.model_validate(manager.unlock(entity)))

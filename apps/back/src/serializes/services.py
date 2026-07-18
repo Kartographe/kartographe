@@ -24,6 +24,10 @@ class ServiceItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     openapi_url: str | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
@@ -41,6 +45,10 @@ class ServiceActionItem(CamelBase):
     date: datetime
     description: dict | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     method: ServiceActionMethod | None = None
     owner: OwnerItem
     owner_id: uuid.UUID

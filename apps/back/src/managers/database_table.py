@@ -148,6 +148,7 @@ class DatabaseTableManager(BaseEntityManager):
 
     def soft_delete(self, table: DatabaseTable) -> None:
         """Soft-delete the table and its columns."""
+        self._guard_unlocked(table)
         now = utc_now()
         self._disable(table, now)
         self._bulk_disable(

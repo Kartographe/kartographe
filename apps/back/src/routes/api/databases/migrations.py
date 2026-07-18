@@ -23,6 +23,7 @@ from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseDep,
     CurrentDatabaseMigrationDep,
+    CurrentUserDep,
     DatabaseMigrationManagerDep,
 )
 from src.utils.middlewares import require_role
@@ -210,3 +211,42 @@ def delete_migration(
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> None:
     manager.soft_delete(migration)
+
+
+_LOCK_ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
+
+
+@router.post(
+    "/{database_migration_id}/lock",
+    operation_id="api_databases_migrations_lock",
+    summary="Lock a migration",
+    description=(
+        "Freeze the migration against edits and deletion; comments, votes and child "
+        "entities stay available. Owners and administrators only."
+    ),
+    response_model=ItemResponse[DatabaseMigrationItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def lock_migration(
+    entity: CurrentDatabaseMigrationDep,
+    user: CurrentUserDep,
+    manager: DatabaseMigrationManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseMigrationItem]:
+    return ItemResponse(item=DatabaseMigrationItem.model_validate(manager.lock(entity, user)))
+
+
+@router.post(
+    "/{database_migration_id}/unlock",
+    operation_id="api_databases_migrations_unlock",
+    summary="Unlock a migration",
+    description="Lift the freeze on the migration. Owners and administrators only.",
+    response_model=ItemResponse[DatabaseMigrationItem],
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def unlock_migration(
+    entity: CurrentDatabaseMigrationDep,
+    manager: DatabaseMigrationManagerDep,
+    _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
+) -> ItemResponse[DatabaseMigrationItem]:
+    return ItemResponse(item=DatabaseMigrationItem.model_validate(manager.unlock(entity)))

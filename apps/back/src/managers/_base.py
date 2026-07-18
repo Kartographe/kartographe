@@ -57,6 +57,41 @@ class BaseEntityManager:
         self.session.refresh(obj)
         return obj
 
+    # --- lock ------------------------------------------------------------
+
+    @staticmethod
+    def _guard_unlocked(obj) -> None:
+        """Refuse an edit or delete on a locked entity.
+
+        Lockable entities carry a `locked` flag; entities that never lock don't,
+        so a plain `getattr` keeps this a no-op for them. Locking, commenting,
+        voting and child entities stay allowed — only the entity's own `PATCH`
+        and `DELETE` are frozen.
+        """
+        if getattr(obj, "locked", False):
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "This entity is locked. Unlock it before editing or deleting it.",
+            )
+
+    def lock(self, obj, user):
+        """Freeze the entity against edits/deletes, stamping who and when."""
+        now = utc_now()
+        obj.locked = True
+        obj.locked_by_id = user.id
+        obj.locked_date = now
+        obj.updated_at = now
+        return self._persist(obj)
+
+    def unlock(self, obj):
+        """Lift the freeze, clearing who/when."""
+        now = utc_now()
+        obj.locked = False
+        obj.locked_by_id = None
+        obj.locked_date = None
+        obj.updated_at = now
+        return self._persist(obj)
+
     def apply_update(self, obj, fields: dict):
         """Apply a partial update (already-validated, snake_case keys).
 
@@ -71,6 +106,7 @@ class BaseEntityManager:
         not declare is not an error in SQLModel — it silently sets a plain Python
         attribute that is never persisted.
         """
+        self._guard_unlocked(obj)
         if (
             "status" in fields
             and fields["status"] != obj.status
@@ -84,6 +120,7 @@ class BaseEntityManager:
 
     def set_status(self, obj, new_status, *, status_details: str | None = None):
         """Flip `status` (and stamp `status_date`), optionally with details."""
+        self._guard_unlocked(obj)
         touched = False
         if obj.status != new_status:
             obj.status = new_status

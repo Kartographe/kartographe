@@ -17,13 +17,14 @@ from sqlalchemy import ARRAY, JSON, String, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 from src.models.enum import ApplicationRouteMethod, ApplicationRouteStatus
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class ApplicationRoute(BaseModel, table=True):
+class ApplicationRoute(LockableMixin, BaseModel, table=True):
     __tablename__ = "application_route"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -57,4 +58,11 @@ class ApplicationRoute(BaseModel, table=True):
     body_schema: dict = Field(default_factory=dict, sa_type=JSON)
     raw_schema: dict = Field(default_factory=dict, sa_type=JSON)
 
-    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Two FKs point at `user.id` (owner + locker), so each relationship must name
+    # its own — SQLAlchemy can't infer which column feeds which.
+    owner: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[ApplicationRoute.owner_id]"}
+    )
+    locked_by: "User" = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[ApplicationRoute.locked_by_id]"}
+    )

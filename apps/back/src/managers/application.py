@@ -89,6 +89,7 @@ class ApplicationManager(BaseEntityManager):
 
     def soft_delete(self, application: Application) -> None:
         """Soft-delete the application and every child entity that hangs off it."""
+        self._guard_unlocked(application)
         now = utc_now()
         self._disable(application, now)
         self._bulk_disable(

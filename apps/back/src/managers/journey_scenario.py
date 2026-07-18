@@ -151,6 +151,7 @@ class JourneyScenarioManager(BaseEntityManager):
 
     def soft_delete(self, scenario: JourneyScenario) -> None:
         """Soft-delete the scenario and its steps, files and assertions."""
+        self._guard_unlocked(scenario)
         now = utc_now()
         self._disable(scenario, now)
         for model in (

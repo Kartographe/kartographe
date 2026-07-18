@@ -88,6 +88,7 @@ class DatabaseManager(BaseEntityManager):
 
     def soft_delete(self, database: Database) -> None:
         """Soft-delete the database with its versions, tables and columns."""
+        self._guard_unlocked(database)
         now = utc_now()
         table_ids = self.session.exec(
             select(DatabaseTable.id).where(

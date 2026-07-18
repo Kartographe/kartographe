@@ -11,15 +11,20 @@ column-level plan lives in `database_migration_column`.
 
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
+from src.models._lockable import LockableMixin
 from src.models.enum import DatabaseMigrationStatus, DatabaseMigrationType
 
+if TYPE_CHECKING:
+    from src.models.user import User
 
-class DatabaseMigration(BaseModel, table=True):
+
+class DatabaseMigration(LockableMixin, BaseModel, table=True):
     __tablename__ = "database_migration"
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
@@ -37,3 +42,5 @@ class DatabaseMigration(BaseModel, table=True):
     title: str = Field(index=True)
     # Rich-text (Tiptap JSON document), optional.
     description: dict | None = Field(default=None, sa_type=JSON)
+
+    locked_by: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

@@ -102,6 +102,7 @@ class PersonaManager(BaseEntityManager):
         return self._persist(persona)
 
     def soft_delete(self, persona: Persona) -> None:
+        self._guard_unlocked(persona)
         now = utc_now()
         self._disable(persona, now)
         self.session.commit()

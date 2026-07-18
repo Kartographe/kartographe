@@ -127,6 +127,7 @@ class DatabaseMigrationManager(BaseEntityManager):
 
     def soft_delete(self, migration: DatabaseMigration) -> None:
         """Soft-delete the migration and its column steps."""
+        self._guard_unlocked(migration)
         now = utc_now()
         self._disable(migration, now)
         self._bulk_disable(

@@ -166,6 +166,7 @@ class JourneyScenarioStepManager(BaseEntityManager):
 
     def soft_delete(self, step: JourneyScenarioStep) -> None:
         """Soft-delete the step's subtree and every file/assertion beneath it."""
+        self._guard_unlocked(step)
         now = utc_now()
         ids = self._descendant_step_ids(step.id)
         self._bulk_disable(JourneyScenarioStep, JourneyScenarioStep.id.in_(ids), now=now)

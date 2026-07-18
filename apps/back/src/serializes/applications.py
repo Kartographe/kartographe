@@ -26,6 +26,10 @@ class ApplicationItem(CamelBase):
     date: datetime
     description: str | None = None
     id: uuid.UUID
+    locked: bool
+    locked_by: OwnerItem | None = None
+    locked_by_id: uuid.UUID | None = None
+    locked_date: datetime | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
     status: ApplicationStatus
