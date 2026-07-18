@@ -57,6 +57,16 @@ class JourneyScenarioItem(CamelBase):
     type: JourneyScenarioType
 
 
+class JourneyScenarioListItem(JourneyScenarioItem):
+    """A scenario in the account-wide listing, carrying its parent journey.
+
+    `journeyTitle` is null when the parent journey has since been removed.
+    """
+
+    journey_id: uuid.UUID
+    journey_title: str | None = None
+
+
 class JourneyScenarioStepItem(CamelBase):
     """A step inside a scenario (nodes form a tree via `parentId`)."""
 

@@ -25,6 +25,7 @@ from src.routes.api.journeys import router as journeys_router
 from src.routes.api.me import router as me_router
 from src.routes.api.oauth import router as oauth_router
 from src.routes.api.personas import router as personas_router
+from src.routes.api.scenarios import router as scenarios_router
 from src.routes.api.services import router as services_router
 from src.routes.api.tags import router as tags_router
 from src.routes.api.votes import router as votes_router
@@ -38,6 +39,7 @@ v1_router.include_router(applications_router)  # applications, environments, ver
 v1_router.include_router(features_router)  # account features, their files & journey links
 v1_router.include_router(personas_router)  # account personas
 v1_router.include_router(journeys_router)  # journeys, scenarios, steps, files, assertions
+v1_router.include_router(scenarios_router)  # account-wide scenario listing (across journeys)
 v1_router.include_router(databases_router)  # databases, versions, tables, columns
 v1_router.include_router(services_router)  # services & their actions
 v1_router.include_router(tags_router)  # account tags

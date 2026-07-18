@@ -7,8 +7,11 @@ cascading delete."""
 
 import uuid
 
-from sqlmodel import select
+from sqlmodel import func, select
 
+from src.filters._base import SortOrder
+from src.filters.journey_scenarios import JourneyScenarioSortField
+from src.managers._arrays import uuid_array_overlap
 from src.managers._base import BaseEntityManager
 from src.managers.tagging import tag_overlap
 from src.managers.persona import assert_personas_in_account
@@ -23,8 +26,75 @@ from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.user import User
 from src.utils.datetime import utc_now
 
+_SORT_COLUMNS = {
+    JourneyScenarioSortField.DATE: JourneyScenario.date,
+    JourneyScenarioSortField.TITLE: JourneyScenario.title,
+    JourneyScenarioSortField.STATUS: JourneyScenario.status,
+    JourneyScenarioSortField.TYPE: JourneyScenario.type,
+    JourneyScenarioSortField.CRITICITY: JourneyScenario.criticity,
+}
+
 
 class JourneyScenarioManager(BaseEntityManager):
+    def list_for_account(
+        self,
+        account: Account,
+        *,
+        statuses: list[JourneyScenarioStatus] | None = None,
+        types: list[JourneyScenarioType] | None = None,
+        criticities: list[JourneyScenarioCriticity] | None = None,
+        tag_ids: list[uuid.UUID] | None = None,
+        persona_ids: list[uuid.UUID] | None = None,
+        sort_by: JourneyScenarioSortField = JourneyScenarioSortField.DATE,
+        sort_order: SortOrder = SortOrder.DESC,
+        page: int = 1,
+        limit: int = 25,
+    ) -> tuple[list[JourneyScenario], int, dict[uuid.UUID, str]]:
+        """One page of the account's scenarios, across every journey.
+
+        Returns `(rows, total, journey_titles)` where `journey_titles` maps each
+        row's `journey_id` to its journey title (for display without a join per
+        row).
+        """
+        conditions = [JourneyScenario.account_id == account.id, JourneyScenario.enabled.is_(True)]
+        if statuses:
+            conditions.append(JourneyScenario.status.in_(statuses))
+        if types:
+            conditions.append(JourneyScenario.type.in_(types))
+        if criticities:
+            conditions.append(JourneyScenario.criticity.in_(criticities))
+        if tag_ids:
+            conditions.append(tag_overlap(JourneyScenario, tag_ids))
+        if persona_ids:
+            # "Targets at least one of these personas", same overlap semantics as
+            # the journeys listing. Unvalidated on purpose: an id from another
+            # account simply matches nothing.
+            conditions.append(uuid_array_overlap(JourneyScenario.personas_ids, persona_ids))
+
+        base = select(JourneyScenario).where(*conditions)
+        total = self.session.exec(select(func.count()).select_from(base.subquery())).one()
+
+        column = _SORT_COLUMNS[sort_by]
+        ordering = column.asc() if sort_order == SortOrder.ASC else column.desc()
+        rows = list(
+            self.session.exec(
+                base.order_by(ordering).offset((page - 1) * limit).limit(limit)
+            ).all()
+        )
+        return rows, total, self._journey_titles(rows)
+
+    def _journey_titles(self, rows: list[JourneyScenario]) -> dict[uuid.UUID, str]:
+        """Titles of the journeys the rows belong to, keyed by journey id."""
+        journey_ids = {row.journey_id for row in rows}
+        if not journey_ids:
+            return {}
+        found = self.session.exec(
+            select(Journey.id, Journey.title).where(
+                Journey.id.in_(journey_ids), Journey.enabled.is_(True)
+            )
+        ).all()
+        return {journey_id: title for journey_id, title in found}
+
     def list_for_journey(
         self, journey: Journey, *, tag_ids: list[uuid.UUID] | None = None
     ) -> list[JourneyScenario]:

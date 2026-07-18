@@ -161,6 +161,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Scenarios inside a journey.",
     },
     {
+        "name": "api.scenarios",
+        "x-displayName": "Scenarios",
+        "description": "Account-wide scenario listing across every journey.",
+    },
+    {
         "name": "api.journeys.scenarios.steps",
         "x-displayName": "Journeys › Steps",
         "description": "Steps inside a scenario (a tree of actions).",
