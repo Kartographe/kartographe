@@ -234,10 +234,12 @@ export function JourneysList({ accountId }: { accountId: string }) {
       ),
     },
     {
+      // No `width`: `table-layout: fixed` hands the leftover space to the sole
+      // width-less column, so Personas stretches to fill the table. `scrollX`
+      // below reserves it a floor so it never collapses at the breakpoint.
       title: t`Personas`,
       key: "personasIds",
       dataIndex: "personasIds",
-      width: COL.tags,
       filters: personas.filters,
       filteredValue: personasIds.length ? personasIds : null,
       render: (_ids: string[], journey) => (
@@ -340,7 +342,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           pageSizeOptions: [10, 25, 50, 100],
         }}
         rowKey="id"
-        scroll={scrollX(columns)}
+        scroll={scrollX(columns, COL.tags)}
         size="small"
       />
 
