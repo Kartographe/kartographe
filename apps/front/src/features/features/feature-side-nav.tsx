@@ -6,6 +6,7 @@ import {
   CommentOutlined,
   FileOutlined,
   InfoCircleOutlined,
+  LikeOutlined,
   NodeIndexOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -89,6 +90,7 @@ export function FeatureSideNav({
       label: t`Commentaires`,
       icon: <CommentOutlined />,
     },
+    { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
   ];
 
   return (

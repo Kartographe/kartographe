@@ -8,6 +8,7 @@ import {
   CloudServerOutlined,
   CommentOutlined,
   InfoCircleOutlined,
+  LikeOutlined,
   RocketOutlined,
   SafetyOutlined,
   TeamOutlined,
@@ -101,6 +102,7 @@ export function ApplicationSideNav({
       label: t`Commentaires`,
       icon: <CommentOutlined />,
     },
+    { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
   ];
 
   return (
