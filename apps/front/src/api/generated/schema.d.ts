@@ -388,6 +388,46 @@ export interface paths {
         patch: operations["api_applications_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock an application
+         * @description Freeze the application against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_applications_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock an application
+         * @description Lift the freeze on the application. Owners and administrators only.
+         */
+        post: operations["api_applications_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/environments": {
         parameters: {
             query?: never;
@@ -812,6 +852,46 @@ export interface paths {
         patch: operations["api_applications_routes_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a route
+         * @description Freeze the route against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_applications_routes_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a route
+         * @description Lift the freeze on the route. Owners and administrators only.
+         */
+        post: operations["api_applications_routes_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses": {
         parameters: {
             query?: never;
@@ -1116,6 +1196,46 @@ export interface paths {
         patch: operations["api_features_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a feature
+         * @description Freeze the feature against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_features_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a feature
+         * @description Lift the freeze on the feature. Owners and administrators only.
+         */
+        post: operations["api_features_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features/{feature_id}/files": {
         parameters: {
             query?: never;
@@ -1356,6 +1476,46 @@ export interface paths {
         patch: operations["api_personas_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/personas/{persona_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a persona
+         * @description Freeze the persona against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_personas_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a persona
+         * @description Lift the freeze on the persona. Owners and administrators only.
+         */
+        post: operations["api_personas_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/personas/{persona_id}/comments": {
         parameters: {
             query?: never;
@@ -1456,6 +1616,46 @@ export interface paths {
         patch: operations["api_journeys_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a journey
+         * @description Freeze the journey against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_journeys_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a journey
+         * @description Lift the freeze on the journey. Owners and administrators only.
+         */
+        post: operations["api_journeys_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios": {
         parameters: {
             query?: never;
@@ -1508,6 +1708,46 @@ export interface paths {
         patch: operations["api_journeys_scenarios_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a scenario
+         * @description Freeze the scenario against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_journeys_scenarios_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a scenario
+         * @description Lift the freeze on the scenario. Owners and administrators only.
+         */
+        post: operations["api_journeys_scenarios_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps": {
         parameters: {
             query?: never;
@@ -1558,6 +1798,46 @@ export interface paths {
          * @description Partially update a step (parent, title, description, action, optional, parameters). `parameters` must match the action type's schema. Editing roles only.
          */
         patch: operations["api_journeys_scenarios_steps_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a step
+         * @description Freeze the step against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_journeys_scenarios_steps_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a step
+         * @description Lift the freeze on the step. Owners and administrators only.
+         */
+        post: operations["api_journeys_scenarios_steps_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/files": {
@@ -1968,6 +2248,46 @@ export interface paths {
         patch: operations["api_databases_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a database
+         * @description Freeze the database against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_databases_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a database
+         * @description Lift the freeze on the database. Owners and administrators only.
+         */
+        post: operations["api_databases_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions": {
         parameters: {
             query?: never;
@@ -2074,6 +2394,46 @@ export interface paths {
         patch: operations["api_databases_versions_tables_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a table
+         * @description Freeze the table against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_databases_versions_tables_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a table
+         * @description Lift the freeze on the table. Owners and administrators only.
+         */
+        post: operations["api_databases_versions_tables_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns": {
         parameters: {
             query?: never;
@@ -2144,6 +2504,46 @@ export interface paths {
          * @description Partially update a column (type, foreign key, nullable, unique, default, name, description, color, tags). Data roles only.
          */
         patch: operations["api_databases_versions_tables_columns_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a column
+         * @description Freeze the column against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_databases_versions_tables_columns_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a column
+         * @description Lift the freeze on the column. Owners and administrators only.
+         */
+        post: operations["api_databases_versions_tables_columns_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations": {
@@ -2278,6 +2678,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a migration
+         * @description Freeze the migration against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_databases_migrations_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a migration
+         * @description Lift the freeze on the migration. Owners and administrators only.
+         */
+        post: operations["api_databases_migrations_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns": {
         parameters: {
             query?: never;
@@ -2384,6 +2824,46 @@ export interface paths {
          * @description Set the column step status to confirmed. Data roles only.
          */
         post: operations["api_databases_migrations_columns_confirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a migration column
+         * @description Freeze the migration column against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_databases_migrations_columns_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a migration column
+         * @description Lift the freeze on the migration column. Owners and administrators only.
+         */
+        post: operations["api_databases_migrations_columns_unlock"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2682,6 +3162,46 @@ export interface paths {
         patch: operations["api_services_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/{service_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a service
+         * @description Freeze the service against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_services_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a service
+         * @description Lift the freeze on the service. Owners and administrators only.
+         */
+        post: operations["api_services_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services/{service_id}/actions": {
         parameters: {
             query?: never;
@@ -2732,6 +3252,46 @@ export interface paths {
          * @description Partially update an action (type, title, description, method, path, status). Dev roles only.
          */
         patch: operations["api_services_actions_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock an action
+         * @description Freeze the action against edits and deletion; comments, votes and child entities stay available. Owners and administrators only.
+         */
+        post: operations["api_services_actions_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock an action
+         * @description Lift the freeze on the action. Owners and administrators only.
+         */
+        post: operations["api_services_actions_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/services/{service_id}/comments": {
@@ -4563,6 +5123,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -4844,6 +5411,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             method: components["schemas"]["ApplicationRouteMethod"];
             owner: components["schemas"]["OwnerItem"];
             /**
@@ -5428,6 +6002,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -5505,6 +6086,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -5617,6 +6205,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             /**
              * Sourcedatabaseid
              * Format: uuid
@@ -5776,6 +6371,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             /** Name */
             name: string;
             /** Nullable */
@@ -5901,6 +6503,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             /** Name */
             name: string;
             owner: components["schemas"]["OwnerItem"];
@@ -6204,6 +6813,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -6614,6 +7230,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -6700,6 +7323,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -6747,6 +7377,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             owner: components["schemas"]["OwnerItem"];
             /**
              * Ownerid
@@ -6991,6 +7628,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             /** Optional */
             optional: boolean;
             /** Parameters */
@@ -7950,6 +8594,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             status: components["schemas"]["PersonaStatus"];
             /** Tagids */
             tagIds: string[];
@@ -8183,6 +8834,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             method?: components["schemas"]["ServiceActionMethod"] | null;
             owner: components["schemas"]["OwnerItem"];
             /**
@@ -8274,6 +8932,13 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
             /** Openapiurl */
             openapiUrl?: string | null;
             owner: components["schemas"]["OwnerItem"];
@@ -10255,6 +10920,106 @@ export interface operations {
                 "application/json": components["schemas"]["ApplicationPatchForm"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -12276,6 +13041,108 @@ export interface operations {
             };
         };
     };
+    api_applications_routes_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_responses_list: {
         parameters: {
             query?: never;
@@ -13678,6 +14545,106 @@ export interface operations {
             };
         };
     };
+    api_features_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_features_files_list: {
         parameters: {
             query?: never;
@@ -14695,6 +15662,106 @@ export interface operations {
             };
         };
     };
+    api_personas_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                persona_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_personas_comments_list: {
         parameters: {
             query?: never;
@@ -15130,6 +16197,106 @@ export interface operations {
             };
         };
     };
+    api_journeys_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_list: {
         parameters: {
             query?: {
@@ -15352,6 +16519,108 @@ export interface operations {
                 "application/json": components["schemas"]["JourneyScenarioPatchForm"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -15653,6 +16922,110 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -17380,6 +18753,106 @@ export interface operations {
             };
         };
     };
+    api_databases_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_list: {
         parameters: {
             query?: never;
@@ -17905,6 +19378,110 @@ export interface operations {
             };
         };
     };
+    api_databases_versions_tables_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_tables_columns_list: {
         parameters: {
             query?: {
@@ -18193,6 +19770,112 @@ export interface operations {
                 "application/json": components["schemas"]["DatabaseTableColumnPatchForm"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -18695,6 +20378,108 @@ export interface operations {
             };
         };
     };
+    api_databases_migrations_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_migrations_columns_list: {
         parameters: {
             query?: never;
@@ -19064,6 +20849,110 @@ export interface operations {
         };
     };
     api_databases_migrations_columns_confirmed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_unlock: {
         parameters: {
             query?: never;
             header?: never;
@@ -20268,6 +22157,106 @@ export interface operations {
             };
         };
     };
+    api_services_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ServiceItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ServiceItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_actions_list: {
         parameters: {
             query?: never;
@@ -20488,6 +22477,108 @@ export interface operations {
                 "application/json": components["schemas"]["ServiceActionPatchForm"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ServiceActionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                action_id: string;
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ServiceActionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                action_id: string;
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
