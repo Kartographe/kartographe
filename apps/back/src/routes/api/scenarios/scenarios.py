@@ -13,7 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Query
 
-from src.filters._base import PageLimit, SortOrder
+from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.journey_scenarios import JourneyScenarioSortField
 from src.models.enum import (
     EntityType,
@@ -54,7 +54,7 @@ _NOT_FOUND = {404: {"model": ErrorResponse, "description": "Account not found"}}
 )
 def list_scenarios(
     account: CurrentAccountDep,
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     manager: JourneyScenarioManagerDep,
     tags: TagManagerDep,
     scenario_status: Annotated[list[JourneyScenarioStatus] | None, Query(alias="status")] = None,
@@ -62,6 +62,7 @@ def list_scenarios(
     criticity: Annotated[list[JourneyScenarioCriticity] | None, Query(alias="criticity")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     persona_ids: Annotated[list[uuid.UUID] | None, Query(alias="personasIds")] = None,
+    my_vote: MyVoteFilter = None,
     sort_by: Annotated[JourneyScenarioSortField, Query(alias="sortBy")] = JourneyScenarioSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -74,6 +75,8 @@ def list_scenarios(
         criticities=criticity,
         tag_ids=tag_ids,
         persona_ids=persona_ids,
+        my_vote=my_vote,
+        user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
@@ -83,5 +86,5 @@ def list_scenarios(
         item.model_copy(update={"journey_title": titles.get(item.journey_id)})
         for item in tags.attach(rows, JourneyScenarioListItem)
     ]
-    manager.enrich(EntityType.JOURNEY_SCENARIO, items)
+    manager.enrich(EntityType.JOURNEY_SCENARIO, items, user_id=member.user_id)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)

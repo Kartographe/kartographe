@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.databases import DatabaseMigrationCreateForm, DatabaseMigrationPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, DatabaseMigrationStatus, EntityType
@@ -55,13 +56,18 @@ _DATA = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_migrations(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     database: CurrentDatabaseDep,
     manager: DatabaseMigrationManagerDep,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[DatabaseMigrationItem]:
     items = manager.enrich(
         EntityType.DATABASE_MIGRATION,
-        [DatabaseMigrationItem.model_validate(row) for row in manager.list_for_database(database)],
+        [
+            DatabaseMigrationItem.model_validate(row)
+            for row in manager.list_for_database(database, my_vote=my_vote, user_id=member.user_id)
+        ],
+        user_id=member.user_id,
     )
     return ListingResponse.single_page(items)
 

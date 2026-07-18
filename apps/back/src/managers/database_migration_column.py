@@ -16,27 +16,37 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
-from src.models.enum import DatabaseMigrationColumnStatus, DatabaseMigrationColumnType
+from src.models.enum import DatabaseMigrationColumnStatus, DatabaseMigrationColumnType, EntityType
 from src.models.user import User
 from src.utils.datetime import utc_now
 
 
 class DatabaseMigrationColumnManager(BaseEntityManager):
-    def list_for_migration(self, migration: DatabaseMigration) -> list[DatabaseMigrationColumn]:
+    def list_for_migration(
+        self,
+        migration: DatabaseMigration,
+        *,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
+    ) -> list[DatabaseMigrationColumn]:
         """Every enabled column step of the migration, in insertion order."""
-        return list(
-            self.session.exec(
-                select(DatabaseMigrationColumn)
-                .where(
-                    DatabaseMigrationColumn.database_migration_id == migration.id,
-                    DatabaseMigrationColumn.enabled.is_(True),
+        query = select(DatabaseMigrationColumn).where(
+            DatabaseMigrationColumn.database_migration_id == migration.id,
+            DatabaseMigrationColumn.enabled.is_(True),
+        )
+        if my_vote and user_id:
+            query = query.where(
+                my_vote_filter(
+                    DatabaseMigrationColumn, EntityType.DATABASE_MIGRATION_COLUMN, user_id, my_vote
                 )
-                .order_by(DatabaseMigrationColumn.created_at.asc())
-            ).all()
+            )
+        return list(
+            self.session.exec(query.order_by(DatabaseMigrationColumn.created_at.asc())).all()
         )
 
     def _validate_side(

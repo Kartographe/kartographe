@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import PageLimit, SortOrder
+from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.applications import ApplicationSortField
 from src.forms.applications import ApplicationCreateForm, ApplicationPatchForm
 from src.models.account_user import AccountUser
@@ -56,12 +56,13 @@ _ADMIN = require_role(AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR)
 )
 def list_applications(
     account: CurrentAccountDep,
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     manager: ApplicationManagerDep,
     tags: TagManagerDep,
     application_status: Annotated[list[ApplicationStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[ApplicationType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    my_vote: MyVoteFilter = None,
     sort_by: Annotated[ApplicationSortField, Query(alias="sortBy")] = ApplicationSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -72,12 +73,14 @@ def list_applications(
         statuses=application_status,
         types=type,
         tag_ids=tag_ids,
+        my_vote=my_vote,
+        user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = tags.enrich(EntityType.APPLICATION, tags.attach(rows, ApplicationItem))
+    items = tags.enrich(EntityType.APPLICATION, tags.attach(rows, ApplicationItem), user_id=member.user_id)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 

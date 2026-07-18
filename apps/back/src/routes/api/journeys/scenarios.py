@@ -15,6 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
@@ -62,14 +63,15 @@ _EDITOR = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_scenarios(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     journey: CurrentJourneyDep,
     manager: JourneyScenarioManagerDep,
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[JourneyScenarioItem]:
-    rows = manager.list_for_journey(journey, tag_ids=tag_ids)
-    items = tags.enrich(EntityType.JOURNEY_SCENARIO, tags.attach(rows, JourneyScenarioItem))
+    rows = manager.list_for_journey(journey, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+    items = tags.enrich(EntityType.JOURNEY_SCENARIO, tags.attach(rows, JourneyScenarioItem), user_id=member.user_id)
     return ListingResponse.single_page(items)
 
 

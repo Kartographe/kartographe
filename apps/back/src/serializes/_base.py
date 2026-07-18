@@ -18,6 +18,8 @@ from typing import Generic, TypeVar
 from pydantic import BaseModel, ConfigDict, computed_field
 from pydantic.alias_generators import to_camel
 
+from src.models.enum import VoteValue
+
 T = TypeVar("T")
 
 
@@ -45,6 +47,18 @@ class TaggableItem(CamelBase):
     @property
     def tag_count(self) -> int:
         return len(self.tag_ids)
+
+
+class VotableItem(CamelBase):
+    """Base for votable items — carries the caller's own vote when resolved.
+
+    `my_vote` is the signed-in member's current stance on the entity: null when
+    they haven't voted, or when it isn't resolved (single-entity reads don't fill
+    it — the entity's Votes tab shows it there). The vote *tallies*
+    (`votesCountsByValue` / `votesCountsByRoleValue`) stay per-serializer.
+    """
+
+    my_vote: VoteValue | None = None
 
 
 class ItemResponse(CamelBase, Generic[T]):

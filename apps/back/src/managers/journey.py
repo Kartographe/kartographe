@@ -13,10 +13,11 @@ from src.filters._base import SortOrder
 from src.filters.journeys import JourneySortField
 from src.managers._arrays import uuid_array_overlap
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.persona import assert_personas_in_account
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
-from src.models.enum import JourneyStatus, JourneyType
+from src.models.enum import EntityType, JourneyStatus, JourneyType
 from src.models.feature_journey import FeatureJourney
 from src.models.journey import Journey
 from src.models.journey_scenario import JourneyScenario
@@ -44,6 +45,8 @@ class JourneyManager(BaseEntityManager):
         types: list[JourneyType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         persona_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
         sort_by: JourneySortField = JourneySortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -63,6 +66,8 @@ class JourneyManager(BaseEntityManager):
             # matches nothing, and 404-ing here would let a caller probe which
             # persona ids exist elsewhere. Writes do validate.
             conditions.append(uuid_array_overlap(Journey.personas_ids, persona_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(Journey, EntityType.JOURNEY, user_id, my_vote))
 
         base = select(Journey).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

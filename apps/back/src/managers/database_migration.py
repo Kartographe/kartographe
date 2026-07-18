@@ -17,26 +17,34 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.models.database import Database
 from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_version import DatabaseVersion
-from src.models.enum import DatabaseMigrationStatus, DatabaseMigrationType
+from src.models.enum import DatabaseMigrationStatus, DatabaseMigrationType, EntityType
 from src.utils.datetime import utc_now
 
 
 class DatabaseMigrationManager(BaseEntityManager):
-    def list_for_database(self, database: Database) -> list[DatabaseMigration]:
+    def list_for_database(
+        self,
+        database: Database,
+        *,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
+    ) -> list[DatabaseMigration]:
         """Every enabled migration leaving this database, most recent first."""
+        query = select(DatabaseMigration).where(
+            DatabaseMigration.source_database_id == database.id,
+            DatabaseMigration.enabled.is_(True),
+        )
+        if my_vote and user_id:
+            query = query.where(
+                my_vote_filter(DatabaseMigration, EntityType.DATABASE_MIGRATION, user_id, my_vote)
+            )
         return list(
-            self.session.exec(
-                select(DatabaseMigration)
-                .where(
-                    DatabaseMigration.source_database_id == database.id,
-                    DatabaseMigration.enabled.is_(True),
-                )
-                .order_by(DatabaseMigration.date.desc())
-            ).all()
+            self.session.exec(query.order_by(DatabaseMigration.date.desc())).all()
         )
 
     def _load_version(self, version_id: uuid.UUID, database_id: uuid.UUID, label: str) -> None:

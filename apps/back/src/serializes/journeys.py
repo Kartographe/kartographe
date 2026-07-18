@@ -19,12 +19,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem
+from src.serializes._base import CamelBase, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class JourneyItem(TaggableItem):
+class JourneyItem(TaggableItem, VotableItem):
     """A user journey tracked inside an account."""
 
     comment_count: int = 0
@@ -48,7 +48,7 @@ class JourneyItem(TaggableItem):
     type: JourneyType
 
 
-class JourneyScenarioItem(TaggableItem):
+class JourneyScenarioItem(TaggableItem, VotableItem):
     """A scenario inside a journey."""
 
     comment_count: int = 0
@@ -83,7 +83,7 @@ class JourneyScenarioListItem(JourneyScenarioItem):
     journey_title: str | None = None
 
 
-class JourneyScenarioStepItem(TaggableItem):
+class JourneyScenarioStepItem(TaggableItem, VotableItem):
     """A step inside a scenario (nodes form a tree via `parentId`)."""
 
     action_type_id: uuid.UUID | None = None

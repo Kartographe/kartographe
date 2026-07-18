@@ -13,10 +13,16 @@ from src.filters._base import SortOrder
 from src.filters.journey_scenarios import JourneyScenarioSortField
 from src.managers._arrays import uuid_array_overlap
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.managers.persona import assert_personas_in_account
 from src.models.account import Account
-from src.models.enum import JourneyScenarioCriticity, JourneyScenarioStatus, JourneyScenarioType
+from src.models.enum import (
+    EntityType,
+    JourneyScenarioCriticity,
+    JourneyScenarioStatus,
+    JourneyScenarioType,
+)
 from src.models.journey import Journey
 from src.models.journey_scenario import JourneyScenario
 from src.models.journey_scenario_step import JourneyScenarioStep
@@ -45,6 +51,8 @@ class JourneyScenarioManager(BaseEntityManager):
         criticities: list[JourneyScenarioCriticity] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         persona_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
         sort_by: JourneyScenarioSortField = JourneyScenarioSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -70,6 +78,8 @@ class JourneyScenarioManager(BaseEntityManager):
             # the journeys listing. Unvalidated on purpose: an id from another
             # account simply matches nothing.
             conditions.append(uuid_array_overlap(JourneyScenario.personas_ids, persona_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_vote))
 
         base = select(JourneyScenario).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()
@@ -96,7 +106,12 @@ class JourneyScenarioManager(BaseEntityManager):
         return {journey_id: title for journey_id, title in found}
 
     def list_for_journey(
-        self, journey: Journey, *, tag_ids: list[uuid.UUID] | None = None
+        self,
+        journey: Journey,
+        *,
+        tag_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
     ) -> list[JourneyScenario]:
         """Every enabled scenario of the journey, most recent first.
 
@@ -105,6 +120,8 @@ class JourneyScenarioManager(BaseEntityManager):
         conditions = [JourneyScenario.journey_id == journey.id, JourneyScenario.enabled.is_(True)]
         if tag_ids:
             conditions.append(tag_overlap(JourneyScenario, tag_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_vote))
         return list(
             self.session.exec(
                 select(JourneyScenario).where(*conditions).order_by(JourneyScenario.date.desc())

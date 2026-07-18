@@ -13,7 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import PageLimit, SortOrder
+from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.services import ServiceSortField
 from src.forms.services import ServiceCreateForm, ServicePatchForm
 from src.models.account_user import AccountUser
@@ -57,10 +57,11 @@ _DEV = require_role(
 )
 def list_services(
     account: CurrentAccountDep,
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     manager: ServiceManagerDep,
     service_status: Annotated[list[ServiceStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[ServiceType] | None, Query(alias="type")] = None,
+    my_vote: MyVoteFilter = None,
     sort_by: Annotated[ServiceSortField, Query(alias="sortBy")] = ServiceSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -70,12 +71,16 @@ def list_services(
         account,
         statuses=service_status,
         types=type,
+        my_vote=my_vote,
+        user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = manager.enrich(EntityType.SERVICE, [ServiceItem.model_validate(row) for row in rows])
+    items = manager.enrich(
+        EntityType.SERVICE, [ServiceItem.model_validate(row) for row in rows], user_id=member.user_id
+    )
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 

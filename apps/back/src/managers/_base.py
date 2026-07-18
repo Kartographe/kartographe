@@ -51,20 +51,21 @@ class BaseEntityManager:
 
     # --- serialization enrichment ---------------------------------------
 
-    def enrich(self, entity_type, items: list) -> list:
+    def enrich(self, entity_type, items: list, *, user_id=None) -> list:
         """Fill the items' polymorphic aggregate counts (comments, votes, tags).
 
         Call after serializing a listing (e.g. on the result of `tags.attach`):
         one grouped query per aggregate for the whole page, written onto each
-        item in place. See `src/managers/entity_counts.py`.
+        item in place. Pass `user_id` (the signed-in member) on listings to also
+        fill each item's `my_vote`. See `src/managers/entity_counts.py`.
         """
         from src.managers.entity_counts import enrich_items
 
-        return enrich_items(self.session, entity_type, items)
+        return enrich_items(self.session, entity_type, items, user_id=user_id)
 
-    def enrich_one(self, entity_type, item):
+    def enrich_one(self, entity_type, item, *, user_id=None):
         """Fill a single serialized item's aggregate counts."""
-        self.enrich(entity_type, [item])
+        self.enrich(entity_type, [item], user_id=user_id)
         return item
 
     # --- persistence -----------------------------------------------------

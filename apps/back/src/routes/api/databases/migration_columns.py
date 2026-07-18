@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.databases import (
     DatabaseMigrationColumnCreateForm,
     DatabaseMigrationColumnPatchForm,
@@ -66,13 +67,18 @@ _DATA_DEV = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_migration_columns(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     migration: CurrentDatabaseMigrationDep,
     manager: DatabaseMigrationColumnManagerDep,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[DatabaseMigrationColumnItem]:
     items = manager.enrich(
         EntityType.DATABASE_MIGRATION_COLUMN,
-        [DatabaseMigrationColumnItem.model_validate(row) for row in manager.list_for_migration(migration)],
+        [
+            DatabaseMigrationColumnItem.model_validate(row)
+            for row in manager.list_for_migration(migration, my_vote=my_vote, user_id=member.user_id)
+        ],
+        user_id=member.user_id,
     )
     return ListingResponse.single_page(items)
 

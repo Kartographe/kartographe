@@ -15,12 +15,13 @@ from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
 from src.managers.database_table_column import DatabaseTableColumnManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.tag import TagManager
 from src.managers.tagging import tag_overlap
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_version import DatabaseVersion
-from src.models.enum import DatabaseTableStatus, DatabaseTableType
+from src.models.enum import DatabaseTableStatus, DatabaseTableType, EntityType
 from src.models.user import User
 from src.serializes.databases import DatabaseTableColumnItem, DatabaseTableItem
 from src.utils.datetime import utc_now
@@ -55,7 +56,12 @@ class DatabaseTableManager(BaseEntityManager):
         return items
 
     def list_for_version(
-        self, version: DatabaseVersion, *, tag_ids: list[uuid.UUID] | None = None
+        self,
+        version: DatabaseVersion,
+        *,
+        tag_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
     ) -> list[DatabaseTable]:
         """Every enabled table of the version, most recent first.
 
@@ -64,6 +70,8 @@ class DatabaseTableManager(BaseEntityManager):
         conditions = [DatabaseTable.database_version_id == version.id, DatabaseTable.enabled.is_(True)]
         if tag_ids:
             conditions.append(tag_overlap(DatabaseTable, tag_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(DatabaseTable, EntityType.DATABASE_TABLE, user_id, my_vote))
         return list(
             self.session.exec(
                 select(DatabaseTable).where(*conditions).order_by(DatabaseTable.date.desc())

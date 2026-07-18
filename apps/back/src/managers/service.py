@@ -4,13 +4,16 @@
 
 """Service lifecycle: listing, creation, status flips and cascading delete."""
 
+import uuid
+
 from sqlmodel import func, select
 
 from src.filters._base import SortOrder
 from src.filters.services import ServiceSortField
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.models.account import Account
-from src.models.enum import ServiceStatus, ServiceType
+from src.models.enum import EntityType, ServiceStatus, ServiceType
 from src.models.service import Service
 from src.models.service_action import ServiceAction
 from src.models.user import User
@@ -31,6 +34,8 @@ class ServiceManager(BaseEntityManager):
         *,
         statuses: list[ServiceStatus] | None = None,
         types: list[ServiceType] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
         sort_by: ServiceSortField = ServiceSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -42,6 +47,8 @@ class ServiceManager(BaseEntityManager):
             conditions.append(Service.status.in_(statuses))
         if types:
             conditions.append(Service.type.in_(types))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(Service, EntityType.SERVICE, user_id, my_vote))
 
         base = select(Service).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

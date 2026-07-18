@@ -14,6 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.databases import (
     DatabaseTableColumnCreateForm,
     DatabaseTableColumnPatchForm,
@@ -70,14 +71,15 @@ _DATA_DEV = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_columns(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     table: CurrentDatabaseTableDep,
     manager: DatabaseTableColumnManagerDep,
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[DatabaseTableColumnItem]:
-    rows = manager.list_for_table(table, tag_ids=tag_ids)
-    items = tags.enrich(EntityType.DATABASE_TABLE_COLUMN, tags.attach(rows, DatabaseTableColumnItem))
+    rows = manager.list_for_table(table, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+    items = tags.enrich(EntityType.DATABASE_TABLE_COLUMN, tags.attach(rows, DatabaseTableColumnItem), user_id=member.user_id)
     return ListingResponse.single_page(items)
 
 

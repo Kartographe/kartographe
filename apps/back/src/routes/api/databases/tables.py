@@ -15,6 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.databases import DatabaseTableCreateForm, DatabaseTablePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
@@ -59,13 +60,18 @@ _DATA = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_tables(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     version: CurrentDatabaseVersionDep,
     manager: DatabaseTableManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[DatabaseTableItem]:
     items = manager.enrich(
-        EntityType.DATABASE_TABLE, manager.to_items(manager.list_for_version(version, tag_ids=tag_ids))
+        EntityType.DATABASE_TABLE,
+        manager.to_items(
+            manager.list_for_version(version, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+        ),
+        user_id=member.user_id,
     )
     return ListingResponse.single_page(items)
 

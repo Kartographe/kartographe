@@ -77,12 +77,39 @@ def vote_counts(
     return by_value, by_role_value
 
 
-def enrich_items(session: Session, entity_type: EntityType, items: list) -> list:
+def my_votes(
+    session: Session,
+    entity_type: EntityType,
+    entity_ids: Sequence[uuid.UUID],
+    user_id: uuid.UUID,
+) -> dict[uuid.UUID, VoteValue]:
+    """The caller's own live vote value per entity (absent when they didn't vote)."""
+    if not entity_ids:
+        return {}
+    rows = session.exec(
+        select(Vote.entity_id, Vote.value).where(
+            Vote.entity_type == entity_type,
+            Vote.entity_id.in_(entity_ids),
+            Vote.owner_id == user_id,
+            Vote.enabled.is_(True),
+        )
+    ).all()
+    return {entity_id: value for entity_id, value in rows}
+
+
+def enrich_items(
+    session: Session,
+    entity_type: EntityType,
+    items: list,
+    *,
+    user_id: uuid.UUID | None = None,
+) -> list:
     """Fill each item's aggregate-count fields in place, then return `items`.
 
     `items` are already-serialized schema objects carrying an `id`. Fields are
     set only when the item declares them, so the helper is safe across entity
-    kinds with different field sets.
+    kinds with different field sets. `user_id` (the signed-in member) additionally
+    fills `my_vote` — pass it on listings, omit it on single reads.
     """
     if not items:
         return items
@@ -90,6 +117,7 @@ def enrich_items(session: Session, entity_type: EntityType, items: list) -> list
     entity_ids = [item.id for item in items]
     comments = comment_counts(session, entity_type, entity_ids)
     votes_by_value, votes_by_role_value = vote_counts(session, entity_type, entity_ids)
+    mine = my_votes(session, entity_type, entity_ids, user_id) if user_id else {}
 
     for item in items:
         fields = type(item).model_fields
@@ -99,5 +127,28 @@ def enrich_items(session: Session, entity_type: EntityType, items: list) -> list
             item.votes_counts_by_value = votes_by_value.get(item.id, {})
         if "votes_counts_by_role_value" in fields:
             item.votes_counts_by_role_value = votes_by_role_value.get(item.id, {})
+        if "my_vote" in fields:
+            item.my_vote = mine.get(item.id)
 
     return items
+
+
+# Sentinel for the "not voted by me" filter value.
+NOT_VOTED = "none"
+
+
+def my_vote_filter(model: type, entity_type: EntityType, user_id: uuid.UUID, my_vote: str):
+    """A listing condition on the caller's own vote.
+
+    `my_vote` is a `VoteValue` (entities the caller voted that way) or `NOT_VOTED`
+    (entities the caller has not voted on). Applied by every entity's listing so
+    the front can filter "where I voted X" / "not yet voted".
+    """
+    voted = select(Vote.entity_id).where(
+        Vote.entity_type == entity_type,
+        Vote.owner_id == user_id,
+        Vote.enabled.is_(True),
+    )
+    if my_vote == NOT_VOTED:
+        return model.id.not_in(voted)
+    return model.id.in_(voted.where(Vote.value == my_vote))

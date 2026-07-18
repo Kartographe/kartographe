@@ -11,6 +11,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.applications import ApplicationSortField
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application import Application
@@ -18,7 +19,7 @@ from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
 from src.models.application_version import ApplicationVersion
-from src.models.enum import ApplicationStatus, ApplicationType
+from src.models.enum import ApplicationStatus, ApplicationType, EntityType
 from src.models.user import User
 from src.utils.datetime import utc_now
 
@@ -38,6 +39,8 @@ class ApplicationManager(BaseEntityManager):
         statuses: list[ApplicationStatus] | None = None,
         types: list[ApplicationType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
         sort_by: ApplicationSortField = ApplicationSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
         page: int = 1,
@@ -51,6 +54,8 @@ class ApplicationManager(BaseEntityManager):
             conditions.append(Application.type.in_(types))
         if tag_ids:
             conditions.append(tag_overlap(Application, tag_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(Application, EntityType.APPLICATION, user_id, my_vote))
 
         base = select(Application).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

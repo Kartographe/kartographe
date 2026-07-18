@@ -22,12 +22,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem
+from src.serializes._base import CamelBase, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class DatabaseItem(TaggableItem):
+class DatabaseItem(TaggableItem, VotableItem):
     """A database tracked inside an account."""
 
     comment_count: int = 0
@@ -61,7 +61,7 @@ class DatabaseVersionItem(CamelBase):
     version: list[int]
 
 
-class DatabaseTableColumnItem(TaggableItem):
+class DatabaseTableColumnItem(TaggableItem, VotableItem):
     """A column of a database table."""
 
     color: str | None = None
@@ -90,7 +90,7 @@ class DatabaseTableColumnItem(TaggableItem):
     unique: bool
 
 
-class DatabaseTableItem(TaggableItem):
+class DatabaseTableItem(TaggableItem, VotableItem):
     """A table within a database version.
 
     `columns` is resolved by the manager on every table read (listing included)
@@ -120,7 +120,7 @@ class DatabaseTableItem(TaggableItem):
     type: DatabaseTableType
 
 
-class DatabaseMigrationItem(CamelBase):
+class DatabaseMigrationItem(VotableItem):
     """A planned move from a version of one database to a version of another."""
 
     comment_count: int = 0
@@ -143,7 +143,7 @@ class DatabaseMigrationItem(CamelBase):
     type: DatabaseMigrationType
 
 
-class DatabaseMigrationColumnItem(CamelBase):
+class DatabaseMigrationColumnItem(VotableItem):
     """One column-level step of a migration.
 
     A creation only carries destination endpoints, a deletion only source ones,

@@ -11,6 +11,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.application import Application
 from src.models.application_guard import ApplicationGuard
@@ -20,7 +21,7 @@ from src.models.application_route_example import ApplicationRouteExample
 from src.models.application_route_response import ApplicationRouteResponse
 from src.models.application_route_table import ApplicationRouteTable
 from src.models.application_version import ApplicationVersion
-from src.models.enum import ApplicationRouteMethod, ApplicationRouteStatus
+from src.models.enum import ApplicationRouteMethod, ApplicationRouteStatus, EntityType
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
 from src.models.user import User
 from src.utils.datetime import utc_now
@@ -28,7 +29,12 @@ from src.utils.datetime import utc_now
 
 class ApplicationRouteManager(BaseEntityManager):
     def list_for_application(
-        self, application: Application, *, tag_ids: list[uuid.UUID] | None = None
+        self,
+        application: Application,
+        *,
+        tag_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
     ) -> list[ApplicationRoute]:
         """Every enabled route of the application, most recent first.
 
@@ -37,6 +43,8 @@ class ApplicationRouteManager(BaseEntityManager):
         conditions = [ApplicationRoute.application_id == application.id, ApplicationRoute.enabled.is_(True)]
         if tag_ids:
             conditions.append(tag_overlap(ApplicationRoute, tag_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(ApplicationRoute, EntityType.APPLICATION_ROUTE, user_id, my_vote))
         return list(
             self.session.exec(
                 select(ApplicationRoute).where(*conditions).order_by(ApplicationRoute.date.desc())

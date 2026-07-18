@@ -15,6 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
+from src.filters._base import MyVoteFilter
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
@@ -59,14 +60,15 @@ _DEV = require_role(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def list_routes(
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     application: CurrentApplicationDep,
     manager: ApplicationRouteManagerDep,
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    my_vote: MyVoteFilter = None,
 ) -> ListingResponse[ApplicationRouteItem]:
-    rows = manager.list_for_application(application, tag_ids=tag_ids)
-    items = tags.enrich(EntityType.APPLICATION_ROUTE, tags.attach(rows, ApplicationRouteItem))
+    rows = manager.list_for_application(application, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+    items = tags.enrich(EntityType.APPLICATION_ROUTE, tags.attach(rows, ApplicationRouteItem), user_id=member.user_id)
     return ListingResponse.single_page(items)
 
 

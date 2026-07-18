@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import PageLimit, SortOrder
+from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.journeys import JourneySortField
 from src.forms.journeys import JourneyCreateForm, JourneyPatchForm
 from src.models.account_user import AccountUser
@@ -64,13 +64,14 @@ _EDITOR = require_role(
 )
 def list_journeys(
     account: CurrentAccountDep,
-    _: CurrentAccountUserDep,
+    member: CurrentAccountUserDep,
     manager: JourneyManagerDep,
     tags: TagManagerDep,
     journey_status: Annotated[list[JourneyStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[JourneyType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     persona_ids: Annotated[list[uuid.UUID] | None, Query(alias="personasIds")] = None,
+    my_vote: MyVoteFilter = None,
     sort_by: Annotated[JourneySortField, Query(alias="sortBy")] = JourneySortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -82,12 +83,14 @@ def list_journeys(
         types=type,
         tag_ids=tag_ids,
         persona_ids=persona_ids,
+        my_vote=my_vote,
+        user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,
         page=page,
         limit=limit.value,
     )
-    items = tags.enrich(EntityType.JOURNEY, tags.attach(rows, JourneyItem))
+    items = tags.enrich(EntityType.JOURNEY, tags.attach(rows, JourneyItem), user_id=member.user_id)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 

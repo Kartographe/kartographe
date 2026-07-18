@@ -16,17 +16,24 @@ from fastapi import HTTPException, status
 from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
+from src.managers.entity_counts import my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.enum import EntityType
 from src.models.user import User
 from src.utils.datetime import utc_now
 
 
 class DatabaseTableColumnManager(BaseEntityManager):
     def list_for_table(
-        self, table: DatabaseTable, *, tag_ids: list[uuid.UUID] | None = None
+        self,
+        table: DatabaseTable,
+        *,
+        tag_ids: list[uuid.UUID] | None = None,
+        my_vote: str | None = None,
+        user_id: uuid.UUID | None = None,
     ) -> list[DatabaseTableColumn]:
         """Every enabled column of the table, ordered by rank then insertion.
 
@@ -35,6 +42,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
         conditions = [DatabaseTableColumn.database_table_id == table.id, DatabaseTableColumn.enabled.is_(True)]
         if tag_ids:
             conditions.append(tag_overlap(DatabaseTableColumn, tag_ids))
+        if my_vote and user_id:
+            conditions.append(my_vote_filter(DatabaseTableColumn, EntityType.DATABASE_TABLE_COLUMN, user_id, my_vote))
         return list(
             self.session.exec(
                 select(DatabaseTableColumn).where(*conditions).order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())
