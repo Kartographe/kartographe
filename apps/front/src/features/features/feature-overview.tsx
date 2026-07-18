@@ -194,17 +194,19 @@ export function FeatureOverview({
             status={feature.status}
           />
         </OverviewField>
-        <OverviewField full label={t`Tags`}>
-          <EditableTagsCell
-            accountId={accountId}
-            entityType="feature"
-            loading={tagsMutation.isPending}
-            onChange={changeTags}
-            readOnly={feature.locked}
-            tags={feature.tags}
-            value={feature.tagIds}
-          />
-        </OverviewField>
+        {feature.locked && feature.tagIds.length === 0 ? null : (
+          <OverviewField full label={t`Tags`}>
+            <EditableTagsCell
+              accountId={accountId}
+              entityType="feature"
+              loading={tagsMutation.isPending}
+              onChange={changeTags}
+              readOnly={feature.locked}
+              tags={feature.tags}
+              value={feature.tagIds}
+            />
+          </OverviewField>
+        )}
         <InlineEditRichText
           disabled={feature.locked}
           full

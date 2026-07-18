@@ -215,17 +215,19 @@ export function JourneyOverview({
             value={journey.personasIds}
           />
         </OverviewField>
-        <OverviewField full label={t`Tags`}>
-          <EditableTagsCell
-            accountId={accountId}
-            entityType="journey"
-            loading={tagsMutation.isPending}
-            onChange={changeTags}
-            readOnly={journey.locked}
-            tags={journey.tags}
-            value={journey.tagIds}
-          />
-        </OverviewField>
+        {journey.locked && journey.tagIds.length === 0 ? null : (
+          <OverviewField full label={t`Tags`}>
+            <EditableTagsCell
+              accountId={accountId}
+              entityType="journey"
+              loading={tagsMutation.isPending}
+              onChange={changeTags}
+              readOnly={journey.locked}
+              tags={journey.tags}
+              value={journey.tagIds}
+            />
+          </OverviewField>
+        )}
         <InlineEditRichText
           disabled={journey.locked}
           full
