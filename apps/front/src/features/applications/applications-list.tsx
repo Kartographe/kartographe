@@ -37,6 +37,9 @@ import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_TYPE_LABELS,
 } from "@/features/applications/labels";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
@@ -109,6 +112,19 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/applications/{application_id}",
     { meta: { successMessage: t`Application supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/lock",
+    { meta: { successMessage: t`Application verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/unlock",
+    { meta: { successMessage: t`Application déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const applications = applicationsQuery.data?.items ?? [];
   const total = applicationsQuery.data?.count ?? 0;
@@ -157,6 +173,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
         path: { account_id: accountId, application_id: application.id },
       },
       body: { tagIds },
+    });
+    invalidate();
+  }
+
+  async function toggleLock(application: Application) {
+    const mutation = application.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: {
+        path: { account_id: accountId, application_id: application.id },
+      },
     });
     invalidate();
   }
@@ -223,7 +249,14 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       width: COL.title,
       render: (title: string, application) => (
         <Flex vertical>
-          <Typography.Text ellipsis>{title}</Typography.Text>
+          <Flex align="center" gap={6}>
+            <LockIndicator
+              locked={application.locked}
+              lockedBy={application.lockedBy}
+              lockedDate={application.lockedDate}
+            />
+            <Typography.Text ellipsis>{title}</Typography.Text>
+          </Flex>
           {application.description ? (
             <Typography.Text ellipsis style={{ fontSize: 12 }} type="secondary">
               {application.description}
@@ -247,7 +280,11 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       render: (type: Type, application) => (
         <ApplicationTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(application, next)}
+          onChange={
+            application.locked
+              ? undefined
+              : (next) => changeType(application, next)
+          }
           type={type}
         />
       ),
@@ -267,7 +304,11 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       render: (status: Status, application) => (
         <ApplicationStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(application, next)}
+          onChange={
+            application.locked
+              ? undefined
+              : (next) => changeStatus(application, next)
+          }
           status={status}
         />
       ),
@@ -285,6 +326,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
           entityType="application"
           loading={tagsMutation.isPending}
           onChange={(next) => changeTags(application, next)}
+          readOnly={application.locked}
           tags={tags}
           value={application.tagIds}
         />
@@ -306,9 +348,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
       render: (_, application) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={application.locked}
+              onToggle={() => toggleLock(application)}
+              pending={lockPending}
+            />
+          ) : null}
           <Link
             params={{ accountId, applicationId: application.id }}
             to="/accounts/$accountId/applications/$applicationId"
@@ -321,16 +370,26 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
               {t`Accéder`}
             </Button>
           </Link>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip
+            title={
+              application.locked ? t`Application verrouillée` : t`Modifier`
+            }
+          >
             <Button
+              disabled={application.locked}
               icon={<EditOutlined />}
               onClick={() => openEdit(application)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip
+            title={
+              application.locked ? t`Application verrouillée` : t`Supprimer`
+            }
+          >
             <Button
               danger
+              disabled={application.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(application)}
               size="small"
