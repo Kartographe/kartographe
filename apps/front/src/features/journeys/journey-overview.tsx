@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Flex, Tooltip } from "antd";
-import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { InlineEditRichText } from "@/components/overview/inline-edit-rich-text";
+import { InlineEditText } from "@/components/overview/inline-edit-text";
 import {
   OverviewField,
   OverviewFields,
 } from "@/components/overview/overview-fields";
 import { OverviewHeader } from "@/components/overview/overview-header";
 import { EditablePersonasCell } from "@/features/journeys/editable-personas-cell";
-import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
   JourneyStatusTag,
   JourneyTypeTag,
@@ -24,9 +24,12 @@ import {
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
-import { RichTextView } from "@/lib/rich-text/rich-text-view";
+import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 type Journey = components["schemas"]["JourneyItem"];
+
+const ENTITY_KEY = ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"];
+const LIST_KEY = ["get", "/v1/accounts/{account_id}/journeys"];
 
 export function JourneyOverview({
   accountId,
@@ -39,8 +42,12 @@ export function JourneyOverview({
   const { modal } = App.useApp();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [editOpen, setEditOpen] = useState(false);
 
+  const updateMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}",
+    { meta: { successMessage: t`Parcours mis à jour` } }
+  );
   const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}",
@@ -80,53 +87,53 @@ export function JourneyOverview({
   const canManageLock = useCanManageLock(accountId);
   const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
+  function invalidate() {
+    queryClient.invalidateQueries({ queryKey: ENTITY_KEY });
+    queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  const path = { account_id: accountId, journey_id: journey.id };
+
   async function toggleLock() {
     const mutation = journey.locked ? unlockMutation : lockMutation;
-    await mutation.mutateAsync({
-      params: { path: { account_id: accountId, journey_id: journey.id } },
+    await mutation.mutateAsync({ params: { path } });
+    invalidate();
+  }
+
+  async function saveTitle(title: string) {
+    await updateMutation.mutateAsync({ params: { path }, body: { title } });
+    invalidate();
+  }
+
+  async function saveDescription(description: RichTextDocument) {
+    await updateMutation.mutateAsync({
+      params: { path },
+      body: { description },
     });
     invalidate();
   }
 
   async function changeStatus(status: Journey["status"]) {
-    await statusMutation.mutateAsync({
-      params: { path: { account_id: accountId, journey_id: journey.id } },
-      body: { status },
-    });
+    await statusMutation.mutateAsync({ params: { path }, body: { status } });
     invalidate();
   }
 
   async function changeType(type: Journey["type"]) {
-    await typeMutation.mutateAsync({
-      params: { path: { account_id: accountId, journey_id: journey.id } },
-      body: { type },
-    });
+    await typeMutation.mutateAsync({ params: { path }, body: { type } });
     invalidate();
   }
 
   async function changeTags(tagIds: string[]) {
-    await tagsMutation.mutateAsync({
-      params: { path: { account_id: accountId, journey_id: journey.id } },
-      body: { tagIds },
-    });
+    await tagsMutation.mutateAsync({ params: { path }, body: { tagIds } });
     invalidate();
   }
 
   async function changePersonas(personasIds: string[]) {
     await personasMutation.mutateAsync({
-      params: { path: { account_id: accountId, journey_id: journey.id } },
+      params: { path },
       body: { personasIds },
     });
     invalidate();
-  }
-
-  function invalidate() {
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/journeys/{journey_id}"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/journeys"],
-    });
   }
 
   function confirmDelete() {
@@ -137,12 +144,8 @@ export function JourneyOverview({
       okButtonProps: { danger: true },
       cancelText: t`Annuler`,
       onOk: async () => {
-        await deleteMutation.mutateAsync({
-          params: { path: { account_id: accountId, journey_id: journey.id } },
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/v1/accounts/{account_id}/journeys"],
-        });
+        await deleteMutation.mutateAsync({ params: { path } });
+        queryClient.invalidateQueries({ queryKey: LIST_KEY });
         navigate({
           params: { accountId },
           to: "/accounts/$accountId/journeys",
@@ -164,15 +167,6 @@ export function JourneyOverview({
                 size="middle"
               />
             ) : null}
-            <Tooltip title={journey.locked ? t`Parcours verrouillé` : ""}>
-              <Button
-                disabled={journey.locked}
-                icon={<EditOutlined />}
-                onClick={() => setEditOpen(true)}
-              >
-                {t`Modifier`}
-              </Button>
-            </Tooltip>
             <Tooltip
               title={journey.locked ? t`Parcours verrouillé` : t`Supprimer`}
             >
@@ -192,7 +186,12 @@ export function JourneyOverview({
       />
 
       <OverviewFields>
-        <OverviewField label={t`Titre`}>{journey.title}</OverviewField>
+        <InlineEditText
+          disabled={journey.locked}
+          label={t`Titre`}
+          onSave={saveTitle}
+          value={journey.title}
+        />
         <OverviewField label={t`Type`}>
           <JourneyTypeTag
             loading={typeMutation.isPending}
@@ -227,17 +226,14 @@ export function JourneyOverview({
             value={journey.tagIds}
           />
         </OverviewField>
-        <OverviewField full label={t`Description`}>
-          <RichTextView value={journey.description} />
-        </OverviewField>
+        <InlineEditRichText
+          disabled={journey.locked}
+          full
+          label={t`Description`}
+          onSave={saveDescription}
+          value={journey.description}
+        />
       </OverviewFields>
-
-      <JourneyFormModal
-        accountId={accountId}
-        journey={journey}
-        onClose={() => setEditOpen(false)}
-        open={editOpen}
-      />
     </Flex>
   );
 }

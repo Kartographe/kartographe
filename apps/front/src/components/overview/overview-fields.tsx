@@ -22,6 +22,37 @@ export function OverviewFields({ children }: { children: ReactNode }) {
 }
 
 /**
+ * The bare grid cell of {@link OverviewFields}: a `label` block over its value.
+ * Takes a `ReactNode` label so callers can prepend affordances (e.g. an inline
+ * edit pencil) to the left of the text. Pass `full` to span the whole row.
+ */
+export function OverviewFieldShell({
+  label,
+  full,
+  children,
+}: {
+  label: ReactNode;
+  full?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className={cn(full && "sm:col-span-2")}>
+      <dt className="mb-1.5">{label}</dt>
+      <dd className="m-0">{children}</dd>
+    </div>
+  );
+}
+
+/** The muted 12px label text shared by every overview field. */
+export function OverviewFieldLabel({ children }: { children: ReactNode }) {
+  return (
+    <Typography.Text style={{ fontSize: 12 }} type="secondary">
+      {children}
+    </Typography.Text>
+  );
+}
+
+/**
  * A single field inside {@link OverviewFields}. Pass `full` for values that need
  * the whole row (rich-text descriptions, long lists…).
  */
@@ -35,13 +66,11 @@ export function OverviewField({
   children: ReactNode;
 }) {
   return (
-    <div className={cn(full && "sm:col-span-2")}>
-      <dt className="mb-1.5">
-        <Typography.Text style={{ fontSize: 12 }} type="secondary">
-          {label}
-        </Typography.Text>
-      </dt>
-      <dd className="m-0">{children}</dd>
-    </div>
+    <OverviewFieldShell
+      full={full}
+      label={<OverviewFieldLabel>{label}</OverviewFieldLabel>}
+    >
+      {children}
+    </OverviewFieldShell>
   );
 }

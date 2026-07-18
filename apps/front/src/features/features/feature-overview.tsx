@@ -2,20 +2,20 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Flex, Tooltip } from "antd";
-import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { InlineEditRichText } from "@/components/overview/inline-edit-rich-text";
+import { InlineEditText } from "@/components/overview/inline-edit-text";
 import {
   OverviewField,
   OverviewFields,
 } from "@/components/overview/overview-fields";
 import { OverviewHeader } from "@/components/overview/overview-header";
-import { FeatureFormModal } from "@/features/features/feature-form-modal";
 import {
   FeatureStatusTag,
   FeatureTypeTag,
@@ -23,9 +23,12 @@ import {
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
-import { RichTextView } from "@/lib/rich-text/rich-text-view";
+import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 type Feature = components["schemas"]["FeatureItem"];
+
+const ENTITY_KEY = ["get", "/v1/accounts/{account_id}/features/{feature_id}"];
+const LIST_KEY = ["get", "/v1/accounts/{account_id}/features"];
 
 export function FeatureOverview({
   accountId,
@@ -38,8 +41,12 @@ export function FeatureOverview({
   const { modal } = App.useApp();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [editOpen, setEditOpen] = useState(false);
 
+  const updateMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}",
+    { meta: { successMessage: t`Fonctionnalité mise à jour` } }
+  );
   const statusMutation = $api.useMutation(
     "patch",
     "/v1/accounts/{account_id}/features/{feature_id}",
@@ -74,17 +81,17 @@ export function FeatureOverview({
   const canManageLock = useCanManageLock(accountId);
   const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
+  function invalidateEntity() {
+    queryClient.invalidateQueries({ queryKey: ENTITY_KEY });
+    queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  const path = { account_id: accountId, feature_id: feature.id };
+
   async function toggleLock() {
     const mutation = feature.locked ? unlockMutation : lockMutation;
-    await mutation.mutateAsync({
-      params: { path: { account_id: accountId, feature_id: feature.id } },
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features"],
-    });
+    await mutation.mutateAsync({ params: { path } });
+    invalidateEntity();
   }
 
   function confirmDelete() {
@@ -95,12 +102,8 @@ export function FeatureOverview({
       okButtonProps: { danger: true },
       cancelText: t`Annuler`,
       onOk: async () => {
-        await deleteMutation.mutateAsync({
-          params: { path: { account_id: accountId, feature_id: feature.id } },
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/v1/accounts/{account_id}/features"],
-        });
+        await deleteMutation.mutateAsync({ params: { path } });
+        queryClient.invalidateQueries({ queryKey: LIST_KEY });
         navigate({
           params: { accountId },
           to: "/accounts/$accountId/features",
@@ -109,43 +112,32 @@ export function FeatureOverview({
     });
   }
 
+  async function saveTitle(title: string) {
+    await updateMutation.mutateAsync({ params: { path }, body: { title } });
+    invalidateEntity();
+  }
+
+  async function saveDescription(description: RichTextDocument) {
+    await updateMutation.mutateAsync({
+      params: { path },
+      body: { description },
+    });
+    invalidateEntity();
+  }
+
   async function changeStatus(status: Feature["status"]) {
-    await statusMutation.mutateAsync({
-      params: { path: { account_id: accountId, feature_id: feature.id } },
-      body: { status },
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features"],
-    });
+    await statusMutation.mutateAsync({ params: { path }, body: { status } });
+    invalidateEntity();
   }
 
   async function changeType(type: Feature["type"]) {
-    await typeMutation.mutateAsync({
-      params: { path: { account_id: accountId, feature_id: feature.id } },
-      body: { type },
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features"],
-    });
+    await typeMutation.mutateAsync({ params: { path }, body: { type } });
+    invalidateEntity();
   }
 
   async function changeTags(tagIds: string[]) {
-    await tagsMutation.mutateAsync({
-      params: { path: { account_id: accountId, feature_id: feature.id } },
-      body: { tagIds },
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features/{feature_id}"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["get", "/v1/accounts/{account_id}/features"],
-    });
+    await tagsMutation.mutateAsync({ params: { path }, body: { tagIds } });
+    invalidateEntity();
   }
 
   return (
@@ -161,17 +153,6 @@ export function FeatureOverview({
                 size="middle"
               />
             ) : null}
-            <Tooltip
-              title={feature.locked ? t`Fonctionnalité verrouillée` : ""}
-            >
-              <Button
-                disabled={feature.locked}
-                icon={<EditOutlined />}
-                onClick={() => setEditOpen(true)}
-              >
-                {t`Modifier`}
-              </Button>
-            </Tooltip>
             <Tooltip
               title={
                 feature.locked ? t`Fonctionnalité verrouillée` : t`Supprimer`
@@ -193,7 +174,12 @@ export function FeatureOverview({
       />
 
       <OverviewFields>
-        <OverviewField label={t`Titre`}>{feature.title}</OverviewField>
+        <InlineEditText
+          disabled={feature.locked}
+          label={t`Titre`}
+          onSave={saveTitle}
+          value={feature.title}
+        />
         <OverviewField label={t`Type`}>
           <FeatureTypeTag
             loading={typeMutation.isPending}
@@ -219,17 +205,14 @@ export function FeatureOverview({
             value={feature.tagIds}
           />
         </OverviewField>
-        <OverviewField full label={t`Description`}>
-          <RichTextView value={feature.description} />
-        </OverviewField>
+        <InlineEditRichText
+          disabled={feature.locked}
+          full
+          label={t`Description`}
+          onSave={saveDescription}
+          value={feature.description}
+        />
       </OverviewFields>
-
-      <FeatureFormModal
-        accountId={accountId}
-        feature={feature}
-        onClose={() => setEditOpen(false)}
-        open={editOpen}
-      />
     </Flex>
   );
 }
