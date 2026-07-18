@@ -479,6 +479,35 @@ class EntityType(str, Enum):
     JOURNEY_SCENARIO_STEP = "journey_scenario_step"
 
 
+class SearchEntityType(str, Enum):
+    """The kind of entity a full-text `search` index row points at.
+
+    A superset of `EntityType`: every entity a comment/vote can target is also
+    searchable, plus `comment` itself (a comment's rich-text is indexed and its
+    result links back to the commented entity). Kept separate from `EntityType`
+    so the search surface can grow on its own — `EntityType` is locked in
+    lock-step with `entity_ref._SPECS` (a hard `assert`), whereas search may index
+    kinds that have no polymorphic entity_ref. Backed by its own Postgres enum
+    type (`search_entity_type`).
+    """
+
+    FEATURE = "feature"
+    APPLICATION = "application"
+    APPLICATION_ROUTE = "application_route"
+    JOURNEY = "journey"
+    PERSONA = "persona"
+    DATABASE = "database"
+    DATABASE_TABLE = "database_table"
+    DATABASE_TABLE_COLUMN = "database_table_column"
+    DATABASE_MIGRATION = "database_migration"
+    DATABASE_MIGRATION_COLUMN = "database_migration_column"
+    SERVICE = "service"
+    SERVICE_ACTION = "service_action"
+    JOURNEY_SCENARIO = "journey_scenario"
+    JOURNEY_SCENARIO_STEP = "journey_scenario_step"
+    COMMENT = "comment"
+
+
 class ServiceType(str, Enum):
     """Where the service comes from."""
 

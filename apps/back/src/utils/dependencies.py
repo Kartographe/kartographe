@@ -53,6 +53,7 @@ from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAsse
 from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
 from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteManager
 from src.managers.persona import PersonaManager
+from src.managers.search import SearchManager
 from src.managers.service import ServiceManager
 from src.managers.service_action import ServiceActionManager
 from src.managers.stats import StatsManager
@@ -1097,6 +1098,15 @@ def get_current_service_action(
 
 
 CurrentServiceActionDep = Annotated[ServiceAction, Depends(get_current_service_action)]
+
+
+# --- Search -------------------------------------------------------------
+
+def get_search_manager(session: SessionDep) -> SearchManager:
+    return SearchManager(session)
+
+
+SearchManagerDep = Annotated[SearchManager, Depends(get_search_manager)]
 
 
 # --- Comments -----------------------------------------------------------

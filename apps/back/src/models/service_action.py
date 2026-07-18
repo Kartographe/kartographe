@@ -10,21 +10,30 @@ are absent for non-HTTP actions (events, jobs, …).
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
-from src.models.enum import ServiceActionMethod, ServiceActionStatus, ServiceActionType
+from src.models._search import Searchable
+from src.models.enum import (
+    SearchEntityType,
+    ServiceActionMethod,
+    ServiceActionStatus,
+    ServiceActionType,
+)
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class ServiceAction(LockableMixin, BaseModel, table=True):
+class ServiceAction(LockableMixin, BaseModel, Searchable, table=True):
     __tablename__ = "service_action"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.SERVICE_ACTION
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     service_id: uuid.UUID = Field(foreign_key="service.id", index=True)
@@ -48,3 +57,6 @@ class ServiceAction(LockableMixin, BaseModel, table=True):
     locked_by: "User" = Relationship(
         sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[ServiceAction.locked_by_id]"}
     )
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        return {"A": [self.title, self.path], "B": [tiptap_to_text(self.description)]}

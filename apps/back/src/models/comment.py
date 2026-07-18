@@ -11,20 +11,24 @@ removed comment keeps its row for the thread but drops its `value`.
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
-from src.models.enum import EntityType, CommentStatus
+from src.models._search import Searchable
+from src.models.enum import EntityType, CommentStatus, SearchEntityType
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class Comment(BaseModel, table=True):
+class Comment(BaseModel, Searchable, table=True):
     __tablename__ = "comment"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.COMMENT
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     owner_id: uuid.UUID = Field(foreign_key="user.id", index=True)
@@ -41,3 +45,8 @@ class Comment(BaseModel, table=True):
     value: dict | None = Field(default=None, sa_type=JSON)
 
     owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        # A removed comment clears its `value`, yielding an empty vector, which
+        # the indexer turns into a delete — removed comments leave the index.
+        return {"A": [tiptap_to_text(self.value)]}

@@ -47,6 +47,7 @@ from src.models.oauth_authorization_request import OauthAuthorizationRequest
 from src.models.oauth_client import OauthClient
 from src.models.oauth_grant import OauthGrant
 from src.models.persona import Persona
+from src.models.search import Search
 from src.models.service import Service
 from src.models.service_action import ServiceAction
 from src.models.tag import Tag
@@ -95,6 +96,7 @@ __all__ = [
     "OauthClient",
     "OauthGrant",
     "Persona",
+    "Search",
     "Service",
     "ServiceAction",
     "Tag",
@@ -104,3 +106,9 @@ __all__ = [
     "UserAuthenticationTwoFactor",
     "Vote",
 ]
+
+# Wire the full-text index listeners once every model class is mapped, so any
+# `Searchable` table auto-registers its insert/update/delete index-sync hooks.
+from src.services.search_indexer import wire_search_indexers  # noqa: E402
+
+wire_search_indexers()

@@ -11,21 +11,26 @@ A column may model a foreign key by pointing at another table
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
+from src.models._search import Searchable
+from src.models.enum import SearchEntityType
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.database_column_type import DatabaseColumnType
     from src.models.user import User
 
 
-class DatabaseTableColumn(LockableMixin, BaseModel, table=True):
+class DatabaseTableColumn(LockableMixin, BaseModel, Searchable, table=True):
     __tablename__ = "database_table_column"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.DATABASE_TABLE_COLUMN
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     database_table_id: uuid.UUID = Field(foreign_key="database_table.id", index=True)
@@ -62,3 +67,6 @@ class DatabaseTableColumn(LockableMixin, BaseModel, table=True):
     locked_by: "User" = Relationship(
         sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[DatabaseTableColumn.locked_by_id]"}
     )
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        return {"A": [self.name], "B": [tiptap_to_text(self.description)]}

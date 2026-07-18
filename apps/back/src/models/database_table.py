@@ -6,21 +6,25 @@
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import ARRAY, JSON, Column, Uuid
 from sqlmodel import AutoString, Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
-from src.models.enum import DatabaseTableStatus, DatabaseTableType
+from src.models._search import Searchable
+from src.models.enum import DatabaseTableStatus, DatabaseTableType, SearchEntityType
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class DatabaseTable(LockableMixin, BaseModel, table=True):
+class DatabaseTable(LockableMixin, BaseModel, Searchable, table=True):
     __tablename__ = "database_table"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.DATABASE_TABLE
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     database_id: uuid.UUID = Field(foreign_key="database.id", index=True)
@@ -49,3 +53,10 @@ class DatabaseTable(LockableMixin, BaseModel, table=True):
     locked_by: "User" = Relationship(
         sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[DatabaseTable.locked_by_id]"}
     )
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        return {
+            "A": [self.name],
+            "B": [tiptap_to_text(self.description)],
+            "C": [self.table_schema],
+        }

@@ -76,6 +76,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Dashboard statistics: per-entity counts, period deltas and sparkline series.",
     },
     {
+        "name": "api.accounts.search",
+        "x-displayName": "Accounts › Search",
+        "description": "Full-text search across an account's entities and comments.",
+    },
+    {
         "name": "api.applications",
         "x-displayName": "Applications",
         "description": "Create and manage the applications tracked inside an account.",

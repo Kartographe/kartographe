@@ -10,21 +10,26 @@ Steps form a tree via the optional self-referential
 """
 
 import uuid
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import ARRAY, JSON, Uuid
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
+from src.models._search import Searchable
+from src.models.enum import SearchEntityType
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.action_type import ActionType
     from src.models.user import User
 
 
-class JourneyScenarioStep(LockableMixin, BaseModel, table=True):
+class JourneyScenarioStep(LockableMixin, BaseModel, Searchable, table=True):
     __tablename__ = "journey_scenario_step"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.JOURNEY_SCENARIO_STEP
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     journey_id: uuid.UUID = Field(foreign_key="journey.id", index=True)
@@ -46,3 +51,6 @@ class JourneyScenarioStep(LockableMixin, BaseModel, table=True):
 
     action_type: "ActionType" = Relationship()
     locked_by: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        return {"A": [self.title], "B": [tiptap_to_text(self.description)]}

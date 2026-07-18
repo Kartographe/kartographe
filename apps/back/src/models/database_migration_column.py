@@ -12,21 +12,29 @@ nullable so each type only fills the sides it uses.
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from sqlalchemy import JSON
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
-from src.models.enum import DatabaseMigrationColumnStatus, DatabaseMigrationColumnType
+from src.models._search import Searchable
+from src.models.enum import (
+    DatabaseMigrationColumnStatus,
+    DatabaseMigrationColumnType,
+    SearchEntityType,
+)
+from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
     from src.models.user import User
 
 
-class DatabaseMigrationColumn(LockableMixin, BaseModel, table=True):
+class DatabaseMigrationColumn(LockableMixin, BaseModel, Searchable, table=True):
     __tablename__ = "database_migration_column"
+
+    SEARCH_ENTITY_TYPE: ClassVar[SearchEntityType] = SearchEntityType.DATABASE_MIGRATION_COLUMN
 
     account_id: uuid.UUID = Field(foreign_key="account.id", index=True)
     database_migration_id: uuid.UUID = Field(foreign_key="database_migration.id", index=True)
@@ -61,3 +69,8 @@ class DatabaseMigrationColumn(LockableMixin, BaseModel, table=True):
     locked_by: "User" = Relationship(
         sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "[DatabaseMigrationColumn.locked_by_id]"}
     )
+
+    def search_vector(self) -> dict[str, list[str | None]]:
+        # No title/name of its own — its description and transformation recipe
+        # are the searchable text.
+        return {"A": [tiptap_to_text(self.description)], "B": [self.transformation_method]}
