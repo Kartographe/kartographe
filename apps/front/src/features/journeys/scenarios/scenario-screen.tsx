@@ -73,6 +73,16 @@ export function ScenarioScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Criticité mise à jour` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
+  const statusMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
+    { meta: { successMessage: t`Statut mis à jour` } }
+  );
 
   const steps = stepsQuery.data?.items ?? [];
   const stepById = new Map(steps.map((step) => [step.id, step]));
@@ -82,17 +92,31 @@ export function ScenarioScreen({
     queryClient.invalidateQueries({ queryKey: STEPS_KEY });
   }
 
-  async function changeCriticity(criticity: JourneyScenario["criticity"]) {
-    await criticityMutation.mutateAsync({
-      params: { path },
-      body: { criticity },
-    });
+  function invalidateScenario() {
     queryClient.invalidateQueries({
       queryKey: [
         "get",
         "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
       ],
     });
+  }
+
+  async function changeCriticity(criticity: JourneyScenario["criticity"]) {
+    await criticityMutation.mutateAsync({
+      params: { path },
+      body: { criticity },
+    });
+    invalidateScenario();
+  }
+
+  async function changeType(type: JourneyScenario["type"]) {
+    await typeMutation.mutateAsync({ params: { path }, body: { type } });
+    invalidateScenario();
+  }
+
+  async function changeStatus(status: JourneyScenario["status"]) {
+    await statusMutation.mutateAsync({ params: { path }, body: { status } });
+    invalidateScenario();
   }
 
   function confirmDeleteStep(step: Step) {
@@ -156,13 +180,21 @@ export function ScenarioScreen({
       </Flex>
 
       <Flex align="center" gap={8} wrap>
-        <ScenarioTypeTag type={scenario.type} />
+        <ScenarioTypeTag
+          loading={typeMutation.isPending}
+          onChange={changeType}
+          type={scenario.type}
+        />
         <ScenarioCriticityTag
           criticity={scenario.criticity}
           loading={criticityMutation.isPending}
           onChange={changeCriticity}
         />
-        <ScenarioStatusTag status={scenario.status} />
+        <ScenarioStatusTag
+          loading={statusMutation.isPending}
+          onChange={changeStatus}
+          status={scenario.status}
+        />
         {scenario.personasIds.map((id) => (
           <Tag key={id} style={{ marginInlineEnd: 0 }}>
             {personas.title(id) ?? t`Persona inconnu`}
