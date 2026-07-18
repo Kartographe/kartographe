@@ -5,7 +5,7 @@
 import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Typography } from "antd";
+import { Button, Flex, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
@@ -14,6 +14,8 @@ import {
   OverviewFields,
 } from "@/components/overview/overview-fields";
 import { OverviewHeader } from "@/components/overview/overview-header";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { ServiceFormModal } from "@/features/services/service-form-modal";
 import {
   ServiceStatusTag,
@@ -52,6 +54,32 @@ export function ServiceOverview({
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Type mis à jour` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/lock",
+    { meta: { successMessage: t`Service verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/unlock",
+    { meta: { successMessage: t`Service déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
+
+  async function toggleLock() {
+    const mutation = service.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services"],
+    });
+  }
 
   async function changeStatus(status: Service["status"]) {
     await statusMutation.mutateAsync({
@@ -83,9 +111,25 @@ export function ServiceOverview({
     <Flex gap={16} vertical>
       <OverviewHeader
         actions={
-          <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
-            {t`Modifier`}
-          </Button>
+          <Flex gap={8}>
+            {canManageLock ? (
+              <LockToggleButton
+                locked={service.locked}
+                onToggle={toggleLock}
+                pending={lockPending}
+                size="middle"
+              />
+            ) : null}
+            <Tooltip title={service.locked ? t`Service verrouillé` : ""}>
+              <Button
+                disabled={service.locked}
+                icon={<EditOutlined />}
+                onClick={() => setEditOpen(true)}
+              >
+                {t`Modifier`}
+              </Button>
+            </Tooltip>
+          </Flex>
         }
         date={service.date}
         owner={service.owner}
@@ -98,14 +142,14 @@ export function ServiceOverview({
         <OverviewField label={t`Type`}>
           <ServiceTypeTag
             loading={typeMutation.isPending}
-            onChange={changeType}
+            onChange={service.locked ? undefined : changeType}
             type={service.type}
           />
         </OverviewField>
         <OverviewField label={t`Statut`}>
           <ServiceStatusTag
             loading={statusMutation.isPending}
-            onChange={changeStatus}
+            onChange={service.locked ? undefined : changeStatus}
             status={service.status}
           />
         </OverviewField>

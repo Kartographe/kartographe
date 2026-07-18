@@ -28,6 +28,9 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import {
   SERVICE_STATUS_LABELS,
   SERVICE_TYPE_LABELS,
@@ -98,6 +101,19 @@ export function ServicesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Service supprimé` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/lock",
+    { meta: { successMessage: t`Service verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/unlock",
+    { meta: { successMessage: t`Service déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const services = servicesQuery.data?.items ?? [];
   const total = servicesQuery.data?.count ?? 0;
@@ -131,6 +147,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, service_id: service.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function toggleLock(service: Service) {
+    const mutation = service.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
     });
     invalidate();
   }
@@ -194,7 +218,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
       width: COL.title,
       render: (title: string, service) => (
         <Flex vertical>
-          <Typography.Text ellipsis>{title}</Typography.Text>
+          <Flex align="center" gap={6}>
+            <LockIndicator
+              locked={service.locked}
+              lockedBy={service.lockedBy}
+              lockedDate={service.lockedDate}
+            />
+            <Typography.Text ellipsis>{title}</Typography.Text>
+          </Flex>
           {service.url ? (
             <Typography.Text ellipsis style={{ fontSize: 12 }} type="secondary">
               {service.url}
@@ -218,7 +249,9 @@ export function ServicesList({ accountId }: { accountId: string }) {
       render: (type: Type, service) => (
         <ServiceTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(service, next)}
+          onChange={
+            service.locked ? undefined : (next) => changeType(service, next)
+          }
           type={type}
         />
       ),
@@ -238,7 +271,9 @@ export function ServicesList({ accountId }: { accountId: string }) {
       render: (status: Status, service) => (
         <ServiceStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(service, next)}
+          onChange={
+            service.locked ? undefined : (next) => changeStatus(service, next)
+          }
           status={status}
         />
       ),
@@ -259,9 +294,16 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
       render: (_, service) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={service.locked}
+              onToggle={() => toggleLock(service)}
+              pending={lockPending}
+            />
+          ) : null}
           <Link
             params={{ accountId, serviceId: service.id }}
             to="/accounts/$accountId/services/$serviceId"
@@ -274,16 +316,20 @@ export function ServicesList({ accountId }: { accountId: string }) {
               {t`Accéder`}
             </Button>
           </Link>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip title={service.locked ? t`Service verrouillé` : t`Modifier`}>
             <Button
+              disabled={service.locked}
               icon={<EditOutlined />}
               onClick={() => openEdit(service)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip
+            title={service.locked ? t`Service verrouillé` : t`Supprimer`}
+          >
             <Button
               danger
+              disabled={service.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(service)}
               size="small"

@@ -32,6 +32,9 @@ import {
   EXPAND_COLUMN_WIDTH,
   scrollX,
 } from "@/components/table/columns";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import {
   PERSONA_STATUS_LABELS,
   PERSONA_TYPE_LABELS,
@@ -119,6 +122,19 @@ export function PersonasList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/personas/{persona_id}",
     { meta: { successMessage: t`Persona supprimé` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/personas/{persona_id}/lock",
+    { meta: { successMessage: t`Persona verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/personas/{persona_id}/unlock",
+    { meta: { successMessage: t`Persona déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const personas = personasQuery.data?.items ?? [];
   const total = personasQuery.data?.count ?? 0;
@@ -159,6 +175,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
     await tagsMutation.mutateAsync({
       params: { path: { account_id: accountId, persona_id: persona.id } },
       body: { tagIds },
+    });
+    invalidate();
+  }
+
+  async function toggleLock(persona: Persona) {
+    const mutation = persona.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, persona_id: persona.id } },
     });
     invalidate();
   }
@@ -222,6 +246,16 @@ export function PersonasList({ accountId }: { accountId: string }) {
       sortOrder: antdOrder("title"),
       width: COL.title,
       ellipsis: true,
+      render: (title: string, persona) => (
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={persona.locked}
+            lockedBy={persona.lockedBy}
+            lockedDate={persona.lockedDate}
+          />
+          <Typography.Text ellipsis>{title}</Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: t`Type`,
@@ -238,7 +272,9 @@ export function PersonasList({ accountId }: { accountId: string }) {
       render: (type: Type, persona) => (
         <PersonaTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(persona, next)}
+          onChange={
+            persona.locked ? undefined : (next) => changeType(persona, next)
+          }
           type={type}
         />
       ),
@@ -258,7 +294,9 @@ export function PersonasList({ accountId }: { accountId: string }) {
       render: (status: Status, persona) => (
         <PersonaStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(persona, next)}
+          onChange={
+            persona.locked ? undefined : (next) => changeStatus(persona, next)
+          }
           status={status}
         />
       ),
@@ -276,6 +314,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
           entityType="persona"
           loading={tagsMutation.isPending}
           onChange={(next) => changeTags(persona, next)}
+          readOnly={persona.locked}
           tags={tags}
           value={persona.tagIds}
         />
@@ -297,9 +336,16 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 3 }),
+      width: actionsWidth({ icons: canManageLock ? 4 : 3 }),
       render: (_, persona) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={persona.locked}
+              onToggle={() => toggleLock(persona)}
+              pending={lockPending}
+            />
+          ) : null}
           <Tooltip title={t`Commentaires`}>
             <Button
               icon={<CommentOutlined />}
@@ -307,16 +353,20 @@ export function PersonasList({ accountId }: { accountId: string }) {
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip title={persona.locked ? t`Persona verrouillé` : t`Modifier`}>
             <Button
+              disabled={persona.locked}
               icon={<EditOutlined />}
               onClick={() => openEdit(persona)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip
+            title={persona.locked ? t`Persona verrouillé` : t`Supprimer`}
+          >
             <Button
               danger
+              disabled={persona.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(persona)}
               size="small"

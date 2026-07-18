@@ -37,6 +37,9 @@ import {
   DATABASE_STATUS_LABELS,
   DATABASE_TYPE_LABELS,
 } from "@/features/databases/labels";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
@@ -109,6 +112,19 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/databases/{database_id}",
     { meta: { successMessage: t`Base de données supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/lock",
+    { meta: { successMessage: t`Base de données verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/unlock",
+    { meta: { successMessage: t`Base de données déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const databases = databasesQuery.data?.items ?? [];
   const total = databasesQuery.data?.count ?? 0;
@@ -151,6 +167,14 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     await tagsMutation.mutateAsync({
       params: { path: { account_id: accountId, database_id: database.id } },
       body: { tagIds },
+    });
+    invalidate();
+  }
+
+  async function toggleLock(database: Database) {
+    const mutation = database.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, database_id: database.id } },
     });
     invalidate();
   }
@@ -214,6 +238,16 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       sortOrder: antdOrder("title"),
       width: COL.title,
       ellipsis: true,
+      render: (title: string, database) => (
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={database.locked}
+            lockedBy={database.lockedBy}
+            lockedDate={database.lockedDate}
+          />
+          <Typography.Text ellipsis>{title}</Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: t`Moteur`,
@@ -230,7 +264,9 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       render: (type: Type, database) => (
         <DatabaseTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(database, next)}
+          onChange={
+            database.locked ? undefined : (next) => changeType(database, next)
+          }
           type={type}
         />
       ),
@@ -250,7 +286,9 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       render: (status: Status, database) => (
         <DatabaseStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(database, next)}
+          onChange={
+            database.locked ? undefined : (next) => changeStatus(database, next)
+          }
           status={status}
         />
       ),
@@ -268,6 +306,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
           entityType="database"
           loading={tagsMutation.isPending}
           onChange={(next) => changeTags(database, next)}
+          readOnly={database.locked}
           tags={tags}
           value={database.tagIds}
         />
@@ -289,9 +328,16 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
       render: (_, database) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={database.locked}
+              onToggle={() => toggleLock(database)}
+              pending={lockPending}
+            />
+          ) : null}
           <Link
             params={{ accountId, databaseId: database.id }}
             to="/accounts/$accountId/databases/$databaseId"
@@ -304,16 +350,26 @@ export function DatabasesList({ accountId }: { accountId: string }) {
               {t`Accéder`}
             </Button>
           </Link>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip
+            title={
+              database.locked ? t`Base de données verrouillée` : t`Modifier`
+            }
+          >
             <Button
+              disabled={database.locked}
               icon={<EditOutlined />}
               onClick={() => openEdit(database)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip
+            title={
+              database.locked ? t`Base de données verrouillée` : t`Supprimer`
+            }
+          >
             <Button
               danger
+              disabled={database.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(database)}
               size="small"
