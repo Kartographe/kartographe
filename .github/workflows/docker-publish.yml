@@ -4,10 +4,16 @@
 
 name: Publish Docker images
 
-# Build the two application images and push them to the public Docker Hub
-# repositories on every git tag, then publish a GitHub release:
+# On every git tag, build the two application images for amd64 AND arm64, push
+# them to the public Docker Hub repositories, then publish a GitHub release:
 #   - kartographe/kartographe-back   (apps/back)
 #   - kartographe/kartographe-front  (apps/front)
+#
+# Each (image, platform) is built on its OWN native runner — arm64 on GitHub's
+# free `ubuntu-*-arm` runners — instead of emulating arm64 with QEMU. QEMU makes
+# the Vite build (transform + minify) crawl and can crash it outright
+# ("qemu: uncaught target signal 4 (Illegal instruction)"). The per-platform
+# images are pushed by digest, then merged into one multi-arch manifest per image.
 #
 # The release notes are generated from the `Changelog:` commit trailers between
 # the previous tag and this one, grouped by category (like GitLab's changelog),
@@ -21,8 +27,9 @@ on:
       - "*"
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+  build:
+    name: ${{ matrix.name }} (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
     strategy:
@@ -33,18 +40,30 @@ jobs:
             image: kartographe/kartographe-back
             context: ./apps/back
             dockerfile: ./apps/back/Dockerfile
+            platform: linux/amd64
+            runner: ubuntu-latest
+          - name: back
+            image: kartographe/kartographe-back
+            context: ./apps/back
+            dockerfile: ./apps/back/Dockerfile
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
           - name: front
             image: kartographe/kartographe-front
             context: ./apps/front
             dockerfile: ./apps/front/docker/Dockerfile
+            platform: linux/amd64
+            runner: ubuntu-latest
+          - name: front
+            image: kartographe/kartographe-front
+            context: ./apps/front
+            dockerfile: ./apps/front/docker/Dockerfile
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
 
-    name: ${{ matrix.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -55,7 +74,71 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Derive image tags and labels
+      - name: Derive labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=image,name=${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.name }}-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}-${{ matrix.platform }}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.name }}-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: ${{ matrix.name }} manifest
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: back
+            image: kartographe/kartographe-back
+          - name: front
+            image: kartographe/kartographe-front
+
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          pattern: digests-${{ matrix.name }}-*
+          path: /tmp/digests
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Derive image tags
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -71,20 +154,18 @@ jobs:
           flavor: |
             latest=auto
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.name }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+      - name: Create and push the multi-arch manifest
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ matrix.image }}@sha256:%s ' *)
+
+      - name: Inspect
+        run: docker buildx imagetools inspect ${{ matrix.image }}:${{ steps.meta.outputs.version }}
 
   release:
-    needs: build-and-push
+    needs: merge
     runs-on: ubuntu-latest
     permissions:
       contents: write
