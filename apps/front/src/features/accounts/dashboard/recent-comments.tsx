@@ -104,20 +104,38 @@ export function RecentComments({ accountId }: { accountId: string }) {
   const { t } = useLingui();
   const [filter, setFilter] = useState<EntityType | typeof ALL>(ALL);
 
+  // Unfiltered stream — drives the Segmented options (which kinds have comments).
+  const typesQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/comments",
+    {
+      params: {
+        path: { account_id: accountId },
+        query: { status: ["published"], sortBy: "date", sortOrder: "desc" },
+      },
+    }
+  );
+
+  // The displayed list — filtered by kind server-side (deduped with the query
+  // above when the filter is "all", same query key).
   const query = $api.useQuery("get", "/v1/accounts/{account_id}/comments", {
     params: {
       path: { account_id: accountId },
-      query: { status: ["published"], sortBy: "date", sortOrder: "desc" },
+      query: {
+        status: ["published"],
+        entityType: filter === ALL ? undefined : [filter],
+        sortBy: "date",
+        sortOrder: "desc",
+      },
     },
   });
 
-  const all = query.data?.items ?? [];
-  const presentTypes = [...new Set(all.map((comment) => comment.entityType))];
-  const filtered = (
-    filter === ALL
-      ? all
-      : all.filter((comment) => comment.entityType === filter)
-  ).slice(0, RECENT_COUNT);
+  const presentTypes = [
+    ...new Set(
+      (typesQuery.data?.items ?? []).map((comment) => comment.entityType)
+    ),
+  ];
+  const filtered = (query.data?.items ?? []).slice(0, RECENT_COUNT);
 
   const options = [
     { label: t`Tous`, value: ALL },
@@ -128,16 +146,16 @@ export function RecentComments({ accountId }: { accountId: string }) {
   ];
 
   return (
-    <Card size="small" title={t`Derniers commentaires`}>
-      <Flex gap={12} vertical>
-        {presentTypes.length > 1 ? (
-          <Segmented
-            onChange={(value) => setFilter(value as EntityType | typeof ALL)}
-            options={options}
-            size="small"
-            value={filter}
-          />
-        ) : null}
+    <Flex gap={12} vertical>
+      {presentTypes.length > 1 ? (
+        <Segmented
+          onChange={(value) => setFilter(value as EntityType | typeof ALL)}
+          options={options}
+          size="small"
+          value={filter}
+        />
+      ) : null}
+      <Card size="small" title={t`Derniers commentaires`}>
         <List
           dataSource={filtered}
           loading={query.isLoading}
@@ -147,7 +165,7 @@ export function RecentComments({ accountId }: { accountId: string }) {
           )}
           size="small"
         />
-      </Flex>
-    </Card>
+      </Card>
+    </Flex>
   );
 }

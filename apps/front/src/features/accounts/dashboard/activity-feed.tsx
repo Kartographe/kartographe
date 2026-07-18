@@ -12,12 +12,12 @@ import {
   Empty,
   Flex,
   List,
-  Tabs,
+  Segmented,
   Tooltip,
   Typography,
 } from "antd";
 import dayjs from "dayjs";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import type { Typology } from "@/features/accounts/dashboard/metrics";
@@ -29,6 +29,7 @@ import {
   JourneyStatusTag,
   ScenarioStatusTag,
 } from "@/features/journeys/journey-tags";
+import { LockIndicator } from "@/features/lock/lock-indicator";
 import { ServiceStatusTag } from "@/features/services/service-tags";
 
 type Owner = components["schemas"]["OwnerItem"];
@@ -45,6 +46,9 @@ function ActivityRow({
   tag,
   owner,
   date,
+  locked,
+  lockedBy,
+  lockedDate,
 }: {
   title: string;
   to: string;
@@ -52,6 +56,9 @@ function ActivityRow({
   tag: ReactNode;
   owner: Owner;
   date: string;
+  locked: boolean;
+  lockedBy?: Owner | null;
+  lockedDate?: string | null;
 }) {
   const { t } = useLingui();
   const name = ownerName(owner, t`Utilisateur`);
@@ -64,6 +71,11 @@ function ActivityRow({
             {(name[0] ?? "?").toUpperCase()}
           </Avatar>
         </Tooltip>
+        <LockIndicator
+          locked={locked}
+          lockedBy={lockedBy}
+          lockedDate={lockedDate}
+        />
         <Link params={params} style={{ flex: 1, minWidth: 0 }} to={to}>
           <Typography.Text ellipsis strong style={{ fontSize: 13 }}>
             {title}
@@ -103,6 +115,9 @@ function RecentFeatures({ accountId }: { accountId: string }) {
       renderItem={(feature) => (
         <ActivityRow
           date={feature.date}
+          locked={feature.locked}
+          lockedBy={feature.lockedBy}
+          lockedDate={feature.lockedDate}
           owner={feature.owner}
           params={{ accountId, featureId: feature.id }}
           tag={<FeatureStatusTag status={feature.status} />}
@@ -130,6 +145,9 @@ function RecentJourneys({ accountId }: { accountId: string }) {
       renderItem={(journey) => (
         <ActivityRow
           date={journey.date}
+          locked={journey.locked}
+          lockedBy={journey.lockedBy}
+          lockedDate={journey.lockedDate}
           owner={journey.owner}
           params={{ accountId, journeyId: journey.id }}
           tag={<JourneyStatusTag status={journey.status} />}
@@ -157,6 +175,9 @@ function RecentScenarios({ accountId }: { accountId: string }) {
       renderItem={(scenario) => (
         <ActivityRow
           date={scenario.date}
+          locked={scenario.locked}
+          lockedBy={scenario.lockedBy}
+          lockedDate={scenario.lockedDate}
           owner={scenario.owner}
           // Scenarios link to their exact page under the parent journey.
           params={{
@@ -189,6 +210,9 @@ function RecentApplications({ accountId }: { accountId: string }) {
       renderItem={(application) => (
         <ActivityRow
           date={application.date}
+          locked={application.locked}
+          lockedBy={application.lockedBy}
+          lockedDate={application.lockedDate}
           owner={application.owner}
           params={{ accountId, applicationId: application.id }}
           tag={<ApplicationStatusTag status={application.status} />}
@@ -216,6 +240,9 @@ function RecentDatabases({ accountId }: { accountId: string }) {
       renderItem={(database) => (
         <ActivityRow
           date={database.date}
+          locked={database.locked}
+          lockedBy={database.lockedBy}
+          lockedDate={database.lockedDate}
           owner={database.owner}
           params={{ accountId, databaseId: database.id }}
           tag={<DatabaseStatusTag status={database.status} />}
@@ -243,6 +270,9 @@ function RecentServices({ accountId }: { accountId: string }) {
       renderItem={(service) => (
         <ActivityRow
           date={service.date}
+          locked={service.locked}
+          lockedBy={service.lockedBy}
+          lockedDate={service.lockedDate}
           owner={service.owner}
           params={{ accountId, serviceId: service.id }}
           tag={<ServiceStatusTag status={service.status} />}
@@ -297,14 +327,15 @@ const TAB_META: Record<
 /** Which streams each viewpoint surfaces — kept where they belong: the produit
  * artefacts under Produit, the technique ones under Technique, and a broad mix
  * on the overview. */
-const TAB_GROUPS: Record<Typology, ActivityTab[]> = {
+const TAB_GROUPS: Record<Typology, [ActivityTab, ...ActivityTab[]]> = {
   overview: ["features", "journeys", "applications", "databases"],
   produit: ["features", "journeys", "scenarios"],
   technique: ["applications", "databases", "services"],
 };
 
-/** The "Activité" panel: the newest entities for the active viewpoint, tabbed by
- * kind, each as a compact one-line feed. */
+/** The "Activités" panel: the newest entities for the active viewpoint. The kind
+ * is picked with a Segmented above the card frame, each stream a compact one-line
+ * feed. */
 export function ActivityFeed({
   accountId,
   typology,
@@ -313,19 +344,25 @@ export function ActivityFeed({
   typology: Typology;
 }) {
   const { t } = useLingui();
+  const tabs = TAB_GROUPS[typology];
+  const [active, setActive] = useState<ActivityTab>(tabs[0]);
+  // Fall back to the first stream when the viewpoint drops the active one.
+  const current = tabs.includes(active) ? active : tabs[0];
 
   return (
-    <Card size="small" title={t`Activité`}>
-      <Tabs
-        // Remount the pane set when the viewpoint changes so tabs stay valid.
-        items={TAB_GROUPS[typology].map((tab) => ({
-          key: tab,
+    <Flex gap={12} vertical>
+      <Segmented<ActivityTab>
+        onChange={setActive}
+        options={tabs.map((tab) => ({
+          value: tab,
           label: t(TAB_META[tab].label),
-          children: TAB_META[tab].render(accountId),
         }))}
-        key={typology}
         size="small"
+        value={current}
       />
-    </Card>
+      <Card size="small" title={t`Activités`}>
+        {TAB_META[current].render(accountId)}
+      </Card>
+    </Flex>
   );
 }
