@@ -50,6 +50,9 @@ import {
 } from "@/features/databases/identifier";
 import { ColorSwatch } from "@/features/databases/tables/color-swatch";
 import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 
 type DatabaseTable = components["schemas"]["DatabaseTableItem"];
 type Column = components["schemas"]["DatabaseTableColumnItem"];
@@ -152,9 +155,12 @@ function DraftFields({
 interface ColumnRowProps {
   column: Column;
   columnTypes: ColumnTypeLookup;
+  canManageLock: boolean;
+  lockPending: boolean;
   onComment: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onToggleLock: () => void;
 }
 
 /**
@@ -164,9 +170,12 @@ interface ColumnRowProps {
 function ColumnRow({
   column,
   columnTypes,
+  canManageLock,
+  lockPending,
   onComment,
   onEdit,
   onDelete,
+  onToggleLock,
 }: ColumnRowProps) {
   const { t } = useLingui();
   const {
@@ -203,6 +212,11 @@ function ColumnRow({
         />
       </Tooltip>
       <ColorSwatch color={column.color} size={10} />
+      <LockIndicator
+        locked={column.locked}
+        lockedBy={column.lockedBy}
+        lockedDate={column.lockedDate}
+      />
       <Typography.Text code style={{ minWidth: 160 }}>
         {column.name}
       </Typography.Text>
@@ -214,15 +228,28 @@ function ColumnRow({
       {column.nullable ? <Tag>{t`Nullable`}</Tag> : null}
       {column.systemField ? <Tag>{t`Système`}</Tag> : null}
 
+      {canManageLock ? (
+        <LockToggleButton
+          locked={column.locked}
+          onToggle={onToggleLock}
+          pending={lockPending}
+        />
+      ) : null}
       <Tooltip title={t`Commentaires`}>
         <Button icon={<CommentOutlined />} onClick={onComment} size="small" />
       </Tooltip>
-      <Tooltip title={t`Modifier`}>
-        <Button icon={<EditOutlined />} onClick={onEdit} size="small" />
+      <Tooltip title={column.locked ? t`Colonne verrouillée` : t`Modifier`}>
+        <Button
+          disabled={column.locked}
+          icon={<EditOutlined />}
+          onClick={onEdit}
+          size="small"
+        />
       </Tooltip>
-      <Tooltip title={t`Supprimer`}>
+      <Tooltip title={column.locked ? t`Colonne verrouillée` : t`Supprimer`}>
         <Button
           danger
+          disabled={column.locked}
           icon={<DeleteOutlined />}
           onClick={onDelete}
           size="small"
@@ -282,6 +309,35 @@ export function TableColumns({
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/reorder",
     { meta: { successMessage: t`Colonnes réordonnées` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/lock",
+    { meta: { successMessage: t`Colonne verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/unlock",
+    { meta: { successMessage: t`Colonne déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
+
+  async function toggleColumnLock(column: Column) {
+    const mutation = column.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: {
+        path: {
+          account_id: accountId,
+          database_id: databaseId,
+          database_version_id: versionId,
+          database_table_id: table.id,
+          database_table_column_id: column.id,
+        },
+      },
+    });
+    queryClient.invalidateQueries({ queryKey: TABLES_KEY });
+  }
 
   const stored = [...(table.columns ?? [])].sort((a, b) => a.rank - b.rank);
   const columns = pendingOrder ?? stored;
@@ -363,12 +419,15 @@ export function TableColumns({
           <Flex gap={8} vertical>
             {columns.map((column) => (
               <ColumnRow
+                canManageLock={canManageLock}
                 column={column}
                 columnTypes={columnTypes}
                 key={column.id}
+                lockPending={lockPending}
                 onComment={() => onComment(column)}
                 onDelete={() => onDelete(column)}
                 onEdit={() => onEdit(column)}
+                onToggleLock={() => toggleColumnLock(column)}
               />
             ))}
           </Flex>

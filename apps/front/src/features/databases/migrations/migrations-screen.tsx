@@ -34,6 +34,9 @@ import {
 import { MigrationEndpoints } from "@/features/databases/migrations/migration-endpoints";
 import { MigrationFormModal } from "@/features/databases/migrations/migration-form-modal";
 import { useVersionLookup } from "@/features/databases/migrations/use-version-lookup";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 
 type DatabaseMigration = components["schemas"]["DatabaseMigrationItem"];
 
@@ -67,6 +70,19 @@ export function MigrationsScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}",
     { meta: { successMessage: t`Migration supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/lock",
+    { meta: { successMessage: t`Migration verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/unlock",
+    { meta: { successMessage: t`Migration déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const migrations = migrationsQuery.data?.items ?? [];
   const versions = useVersionLookup(accountId, [
@@ -93,6 +109,14 @@ export function MigrationsScreen({
     });
   }
 
+  async function toggleLock(migration: DatabaseMigration) {
+    const mutation = migration.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { ...path, database_migration_id: migration.id } },
+    });
+    queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
   const formModal =
     form === null ? null : (
       <MigrationFormModal
@@ -112,7 +136,14 @@ export function MigrationsScreen({
       width: COL.title,
       ellipsis: true,
       render: (_, migration) => (
-        <Typography.Text>{migration.title}</Typography.Text>
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={migration.locked}
+            lockedBy={migration.lockedBy}
+            lockedDate={migration.lockedDate}
+          />
+          <Typography.Text ellipsis>{migration.title}</Typography.Text>
+        </Flex>
       ),
     },
     {
@@ -160,9 +191,16 @@ export function MigrationsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
       render: (_, migration) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={migration.locked}
+              onToggle={() => toggleLock(migration)}
+              pending={lockPending}
+            />
+          ) : null}
           <Link
             params={{ accountId, databaseId, migrationId: migration.id }}
             to="/accounts/$accountId/databases/$databaseId/migrations/$migrationId"
@@ -175,16 +213,22 @@ export function MigrationsScreen({
               {t`Accéder`}
             </Button>
           </Link>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip
+            title={migration.locked ? t`Migration verrouillée` : t`Modifier`}
+          >
             <Button
+              disabled={migration.locked}
               icon={<EditOutlined />}
               onClick={() => setForm(migration)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip
+            title={migration.locked ? t`Migration verrouillée` : t`Supprimer`}
+          >
             <Button
               danger
+              disabled={migration.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(migration)}
               size="small"

@@ -42,6 +42,9 @@ import { MigrationColumnFormModal } from "@/features/databases/migrations/migrat
 import { MigrationCommentsDrawer } from "@/features/databases/migrations/migration-comments-drawer";
 import { MigrationEndpoints } from "@/features/databases/migrations/migration-endpoints";
 import { useVersionLookup } from "@/features/databases/migrations/use-version-lookup";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type S = components["schemas"];
@@ -171,6 +174,48 @@ export function MigrationColumnsScreen({
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}",
     { meta: { successMessage: t`Étape supprimée` } }
   );
+  const migrationLockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/lock",
+    { meta: { successMessage: t`Migration verrouillée` } }
+  );
+  const migrationUnlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/unlock",
+    { meta: { successMessage: t`Migration déverrouillée` } }
+  );
+  const columnLockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/lock",
+    { meta: { successMessage: t`Étape verrouillée` } }
+  );
+  const columnUnlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/unlock",
+    { meta: { successMessage: t`Étape déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const migrationLockPending =
+    migrationLockMutation.isPending || migrationUnlockMutation.isPending;
+  const columnLockPending =
+    columnLockMutation.isPending || columnUnlockMutation.isPending;
+
+  async function toggleMigrationLock() {
+    const mutation = migration.locked
+      ? migrationUnlockMutation
+      : migrationLockMutation;
+    await mutation.mutateAsync({ params: { path } });
+    queryClient.invalidateQueries({ queryKey: MIGRATIONS_KEY });
+  }
+
+  async function toggleColumnLock(column: MigrationColumn) {
+    const mutation = column.locked ? columnUnlockMutation : columnLockMutation;
+    await mutation.mutateAsync({
+      params: { path: { ...path, database_migration_column_id: column.id } },
+    });
+    queryClient.invalidateQueries({ queryKey: COLUMNS_KEY });
+  }
 
   // Each status is its own endpoint, so each needs its own hook — no path can be
   // built from the target status without losing the generated types.
@@ -315,10 +360,25 @@ export function MigrationColumnsScreen({
   const header = (
     <Flex gap={12} vertical>
       <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {migration.title}
-        </Typography.Title>
+        <Flex align="center" gap={8}>
+          <LockIndicator
+            locked={migration.locked}
+            lockedBy={migration.lockedBy}
+            lockedDate={migration.lockedDate}
+          />
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            {migration.title}
+          </Typography.Title>
+        </Flex>
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={migration.locked}
+              onToggle={toggleMigrationLock}
+              pending={migrationLockPending}
+              size="middle"
+            />
+          ) : null}
           <Tooltip title={t`Commentaires`}>
             <Button
               icon={<CommentOutlined />}
@@ -326,6 +386,7 @@ export function MigrationColumnsScreen({
             />
           </Tooltip>
           <Dropdown
+            disabled={migration.locked}
             menu={{
               items: MIGRATION_STATUSES.map((status) => ({
                 key: status,
@@ -362,8 +423,15 @@ export function MigrationColumnsScreen({
       key: "type",
       dataIndex: "type",
       width: COL.type,
-      render: (type: MigrationColumn["type"]) => (
-        <MigrationColumnTypeTag type={type} />
+      render: (type: MigrationColumn["type"], column) => (
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={column.locked}
+            lockedBy={column.lockedBy}
+            lockedDate={column.lockedDate}
+          />
+          <MigrationColumnTypeTag type={type} />
+        </Flex>
       ),
     },
     {
@@ -419,9 +487,16 @@ export function MigrationColumnsScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 4 }),
+      width: actionsWidth({ icons: canManageLock ? 5 : 4 }),
       render: (_, column) => (
         <Space>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={column.locked}
+              onToggle={() => toggleColumnLock(column)}
+              pending={columnLockPending}
+            />
+          ) : null}
           <Tooltip title={t`Commentaires`}>
             <Button
               icon={<CommentOutlined />}
@@ -430,6 +505,7 @@ export function MigrationColumnsScreen({
             />
           </Tooltip>
           <Dropdown
+            disabled={column.locked}
             menu={{
               items: COLUMN_STATUSES.map((status) => ({
                 key: status,
@@ -441,16 +517,18 @@ export function MigrationColumnsScreen({
           >
             <Button icon={<SwapOutlined />} size="small" />
           </Dropdown>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip title={column.locked ? t`Étape verrouillée` : t`Modifier`}>
             <Button
+              disabled={column.locked}
               icon={<EditOutlined />}
               onClick={() => setForm(column)}
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip title={column.locked ? t`Étape verrouillée` : t`Supprimer`}>
             <Button
               danger
+              disabled={column.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(column)}
               size="small"

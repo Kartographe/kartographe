@@ -4,6 +4,7 @@
 
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Descriptions,
@@ -16,11 +17,15 @@ import {
   Typography,
 } from "antd";
 import { useState } from "react";
+import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { StepAssertions } from "@/features/journeys/steps/step-assertions";
 import { StepFiles } from "@/features/journeys/steps/step-files";
 import { StepRoutes } from "@/features/journeys/steps/step-routes";
 import { useActionTypes } from "@/features/journeys/steps/use-action-types";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Step = components["schemas"]["JourneyScenarioStepItem"];
@@ -51,7 +56,41 @@ export function StepDrawer({
 }) {
   const { t } = useLingui();
   const actionTypes = useActionTypes();
+  const queryClient = useQueryClient();
   const [panel, setPanel] = useState<Panel>("files");
+
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/lock",
+    { meta: { successMessage: t`Étape verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/unlock",
+    { meta: { successMessage: t`Étape déverrouillée` } }
+  );
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
+
+  async function toggleLock(target: Step) {
+    const mutation = target.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: {
+        path: {
+          account_id: accountId,
+          journey_id: journeyId,
+          scenario_id: scenarioId,
+          step_id: target.id,
+        },
+      },
+    });
+    queryClient.invalidateQueries({
+      queryKey: [
+        "get",
+        "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps",
+      ],
+    });
+  }
 
   const actionLabel = actionTypes.label(step?.actionTypeId);
   const parameters = step?.parameters ?? {};
@@ -70,13 +109,22 @@ export function StepDrawer({
             >
               {t`Étape suivante`}
             </Button>
+            {canManageLock ? (
+              <LockToggleButton
+                locked={step.locked}
+                onToggle={() => toggleLock(step)}
+                pending={lockPending}
+              />
+            ) : null}
             <Button
+              disabled={step.locked}
               icon={<EditOutlined />}
               onClick={() => onEdit(step)}
               size="small"
             />
             <Button
               danger
+              disabled={step.locked}
               icon={<DeleteOutlined />}
               onClick={() => onDelete(step)}
               size="small"
@@ -89,6 +137,11 @@ export function StepDrawer({
       title={
         step ? (
           <Flex align="center" gap={12} style={{ minWidth: 0 }}>
+            <LockIndicator
+              locked={step.locked}
+              lockedBy={step.lockedBy}
+              lockedDate={step.lockedDate}
+            />
             <Typography.Text ellipsis strong>
               {step.title}
             </Typography.Text>
