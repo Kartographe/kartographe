@@ -32,7 +32,6 @@ export const dtoEnums = {
   ApplicationType: ["backoffice", "customer", "public", "mixed", "other"] as const satisfies readonly S["ApplicationType"][],
   ApplicationVersionType: ["alpha", "beta", "stable", "dev"] as const satisfies readonly S["ApplicationVersionType"][],
   AssertionTypeCategory: ["browser", "database"] as const satisfies readonly S["AssertionTypeCategory"][],
-  CommentEntityType: ["feature", "application", "application_route", "journey", "persona", "database", "database_table", "database_table_column", "database_migration", "database_migration_column", "service", "service_action", "journey_scenario", "journey_scenario_step"] as const satisfies readonly S["CommentEntityType"][],
   CommentSortField: ["date", "status", "status_date"] as const satisfies readonly S["CommentSortField"][],
   CommentStatus: ["published", "removed"] as const satisfies readonly S["CommentStatus"][],
   DatabaseMigrationColumnStatus: ["draft", "to_be_confirmed", "confirmed"] as const satisfies readonly S["DatabaseMigrationColumnStatus"][],
@@ -46,6 +45,7 @@ export const dtoEnums = {
   DatabaseType: ["mysql", "postgresql"] as const satisfies readonly S["DatabaseType"][],
   DatabaseVersionStatus: ["draft", "active", "archived"] as const satisfies readonly S["DatabaseVersionStatus"][],
   Edition: ["community"] as const satisfies readonly S["Edition"][],
+  EntityType: ["feature", "application", "application_route", "journey", "persona", "database", "database_table", "database_table_column", "database_migration", "database_migration_column", "service", "service_action", "journey_scenario", "journey_scenario_step"] as const satisfies readonly S["EntityType"][],
   FeatureFileStatus: ["uploaded", "archived"] as const satisfies readonly S["FeatureFileStatus"][],
   FeatureFileType: ["screenshot", "video", "document", "other"] as const satisfies readonly S["FeatureFileType"][],
   FeatureSortField: ["date", "title", "status", "type"] as const satisfies readonly S["FeatureSortField"][],
@@ -80,6 +80,9 @@ export const dtoEnums = {
   UserGender: ["unknown", "male", "female"] as const satisfies readonly S["UserGender"][],
   UserTheme: ["system", "light", "dark"] as const satisfies readonly S["UserTheme"][],
   UserType: ["physical", "application"] as const satisfies readonly S["UserType"][],
+  VoteRole: ["product_owner", "developer", "qa", "data_analyst", "other"] as const satisfies readonly S["VoteRole"][],
+  VoteSortField: ["date", "value", "role"] as const satisfies readonly S["VoteSortField"][],
+  VoteValue: ["upvote", "downvote", "pending_question", "dont_know"] as const satisfies readonly S["VoteValue"][],
 } as const;
 
 export type DTOEnumName = keyof typeof dtoEnums;

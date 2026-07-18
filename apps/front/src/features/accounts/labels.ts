@@ -7,6 +7,7 @@ import { msg } from "@lingui/core/macro";
 import type { components } from "@/api/generated/schema";
 
 type Role = components["schemas"]["AccountUserRole"];
+type VoteRole = components["schemas"]["VoteRole"];
 type InvitationStatus = components["schemas"]["AccountUserInvitationStatus"];
 type AccountStatus = components["schemas"]["AccountStatus"];
 type MembershipType = components["schemas"]["AccountUserType"];
@@ -43,6 +44,30 @@ export const ROLE_COLORS: Record<Role, string> = {
   developer: "green",
   data_analyst: "volcano",
   commentator: "default",
+};
+
+export const VOTE_ROLE_LABELS: Record<VoteRole, MessageDescriptor> = {
+  product_owner: msg`Product Owner`,
+  developer: msg`Développeur`,
+  qa: msg`QA`,
+  data_analyst: msg`Data Analyst`,
+  other: msg`Autre`,
+};
+
+export const VOTE_ROLE_DESCRIPTIONS: Record<VoteRole, MessageDescriptor> = {
+  product_owner: msg`Vote au nom du produit et des priorités métier.`,
+  developer: msg`Vote du point de vue technique et de l'implémentation.`,
+  qa: msg`Vote sous l'angle qualité, tests et validation.`,
+  data_analyst: msg`Vote sous l'angle données et métrologie.`,
+  other: msg`Aucun rôle de vote spécifique.`,
+};
+
+export const VOTE_ROLE_COLORS: Record<VoteRole, string> = {
+  product_owner: "purple",
+  developer: "green",
+  qa: "cyan",
+  data_analyst: "volcano",
+  other: "default",
 };
 
 export const INVITATION_STATUS_LABELS: Record<

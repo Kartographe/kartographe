@@ -14,10 +14,13 @@ import { AccountRoleTag } from "@/features/accounts/account-role-tag";
 import {
   MEMBERSHIP_TYPE_LABELS,
   ROLE_LABELS,
+  VOTE_ROLE_LABELS,
 } from "@/features/accounts/labels";
+import { VoteRoleTag } from "@/features/accounts/vote-role-tag";
 
 type Member = components["schemas"]["AccountUserItem"];
 type Role = components["schemas"]["AccountUserRole"];
+type VoteRole = components["schemas"]["VoteRole"];
 
 interface AccountMembersProps {
   accountId: string;
@@ -44,6 +47,11 @@ export function AccountMembers({
     "/v1/accounts/{account_id}/users/{account_user_id}",
     { meta: { successMessage: t`Rôle mis à jour` } }
   );
+  const updateVoteRoleMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/users/{account_user_id}",
+    { meta: { successMessage: t`Rôle de vote mis à jour` } }
+  );
   const removeMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/users/{account_user_id}",
@@ -65,10 +73,23 @@ export function AccountMembers({
     (value) => myRole === "owner" || value !== "owner"
   ).map((value) => ({ value, label: t(ROLE_LABELS[value]) }));
 
+  const voteRoleOptions = dtoEnums.VoteRole.map((value) => ({
+    value,
+    label: t(VOTE_ROLE_LABELS[value]),
+  }));
+
   async function changeRole(member: Member, role: Role) {
     await updateRoleMutation.mutateAsync({
       params: { path: { account_id: accountId, account_user_id: member.id } },
       body: { role },
+    });
+    invalidate();
+  }
+
+  async function changeVoteRole(member: Member, voteRole: VoteRole) {
+    await updateVoteRoleMutation.mutateAsync({
+      params: { path: { account_id: accountId, account_user_id: member.id } },
+      body: { voteRole },
     });
     invalidate();
   }
@@ -149,6 +170,32 @@ export function AccountMembers({
             size="small"
             style={{ minWidth: 160 }}
             value={role}
+          />
+        );
+      },
+    },
+    {
+      // Wider than a plain tag: holds the inline vote-role `Select`.
+      title: t`Rôle de vote`,
+      dataIndex: "voteRole",
+      width: COL.text,
+      filters: dtoEnums.VoteRole.map((value) => ({
+        text: t(VOTE_ROLE_LABELS[value]),
+        value,
+      })),
+      onFilter: (value, member) => member.voteRole === value,
+      render: (voteRole: VoteRole, member) => {
+        if (!isAdmin) {
+          return <VoteRoleTag voteRole={voteRole} />;
+        }
+        return (
+          <Select
+            loading={updateVoteRoleMutation.isPending}
+            onChange={(value: VoteRole) => changeVoteRole(member, value)}
+            options={voteRoleOptions}
+            size="small"
+            style={{ minWidth: 160 }}
+            value={voteRole}
           />
         );
       },

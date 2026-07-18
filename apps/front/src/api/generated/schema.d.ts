@@ -178,8 +178,8 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Change a member's role
-         * @description Change a member's role. Owners/administrators only. You cannot change your own role, only an owner can grant the owner role, and the last owner cannot be demoted.
+         * Change a member's role and/or voting role
+         * @description Change a member's account role and/or their voting role. Owners/administrators only. For the account role: you cannot change your own, only an owner can grant the owner role, and the last owner cannot be demoted. The voting role has no such restrictions. Omitted fields are left untouched.
          */
         patch: operations["api_accounts_users_update"];
         trace?: never;
@@ -996,6 +996,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List application votes
+         * @description List the votes on an application, oldest first. Any member may read.
+         */
+        get: operations["api_applications_votes_list"];
+        put?: never;
+        /**
+         * Vote on an application
+         * @description Cast or update your vote on an application. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_applications_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route votes
+         * @description List the votes on a application route, oldest first. Any member may read.
+         */
+        get: operations["api_applications_routes_votes_list"];
+        put?: never;
+        /**
+         * Vote on a route
+         * @description Cast or update your vote on a application route. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_applications_routes_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -1212,6 +1260,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature votes
+         * @description List the votes on a feature, oldest first. Any member may read.
+         */
+        get: operations["api_features_votes_list"];
+        put?: never;
+        /**
+         * Vote on a feature
+         * @description Cast or update your vote on a feature. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_features_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/personas": {
         parameters: {
             query?: never;
@@ -1282,6 +1354,30 @@ export interface paths {
          * @description Post a comment on a persona. Any member may post.
          */
         post: operations["api_personas_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List persona votes
+         * @description List the votes on a persona, oldest first. Any member may read.
+         */
+        get: operations["api_personas_votes_list"];
+        put?: never;
+        /**
+         * Vote on a persona
+         * @description Cast or update your vote on a persona. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_personas_votes_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1702,6 +1798,78 @@ export interface paths {
          * @description Post a comment on a scenario step. Any member may post.
          */
         post: operations["api_journeys_scenarios_steps_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journey votes
+         * @description List the votes on a journey, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_votes_list"];
+        put?: never;
+        /**
+         * Vote on a journey
+         * @description Cast or update your vote on a journey. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_journeys_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List scenario votes
+         * @description List the votes on a journey scenario, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_scenarios_votes_list"];
+        put?: never;
+        /**
+         * Vote on a scenario
+         * @description Cast or update your vote on a journey scenario. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_journeys_scenarios_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List step votes
+         * @description List the votes on a scenario step, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_scenarios_steps_votes_list"];
+        put?: never;
+        /**
+         * Vote on a step
+         * @description Cast or update your vote on a scenario step. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_journeys_scenarios_steps_votes_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2302,6 +2470,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database votes
+         * @description List the votes on a database, oldest first. Any member may read.
+         */
+        get: operations["api_databases_votes_list"];
+        put?: never;
+        /**
+         * Vote on a database
+         * @description Cast or update your vote on a database. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_databases_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List table votes
+         * @description List the votes on a database table, oldest first. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_votes_list"];
+        put?: never;
+        /**
+         * Vote on a table
+         * @description Cast or update your vote on a database table. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_databases_versions_tables_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List column votes
+         * @description List the votes on a database column, oldest first. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_columns_votes_list"];
+        put?: never;
+        /**
+         * Vote on a column
+         * @description Cast or update your vote on a database column. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_databases_versions_tables_columns_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration votes
+         * @description List the votes on a database migration, oldest first. Any member may read.
+         */
+        get: operations["api_databases_migrations_votes_list"];
+        put?: never;
+        /**
+         * Vote on a migration
+         * @description Cast or update your vote on a database migration. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_databases_migrations_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration column votes
+         * @description List the votes on a migration column step, oldest first. Any member may read.
+         */
+        get: operations["api_databases_migrations_columns_votes_list"];
+        put?: never;
+        /**
+         * Vote on a migration column
+         * @description Cast or update your vote on a migration column step. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_databases_migrations_columns_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services": {
         parameters: {
             query?: never;
@@ -2454,6 +2742,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/{service_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List service votes
+         * @description List the votes on a service, oldest first. Any member may read.
+         */
+        get: operations["api_services_votes_list"];
+        put?: never;
+        /**
+         * Vote on a service
+         * @description Cast or update your vote on a service. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_services_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List service action votes
+         * @description List the votes on a service action, oldest first. Any member may read.
+         */
+        get: operations["api_services_actions_votes_list"];
+        put?: never;
+        /**
+         * Vote on a service action
+         * @description Cast or update your vote on a service action. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_services_actions_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/tags": {
         parameters: {
             query?: never;
@@ -2592,6 +2928,26 @@ export interface paths {
          * @description Post a reply to a comment. Any member may reply.
          */
         post: operations["api_comments_replies_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List votes
+         * @description List the votes of the account, most recent first. Filter by entity type, entity id, owner, role and/or value (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the vote's date, ISO-8601), and sort by date/value/role. Each vote carries its resolved `entity` — the voted entity's type, id and label, with its containing entities in `parents` (null when the entity has since been deleted). Any member may read.
+         */
+        get: operations["api_votes_list"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3726,13 +4082,18 @@ export interface components {
             status: components["schemas"]["AccountUserStatus"];
             type: components["schemas"]["AccountUserType"];
             user: components["schemas"]["AccountUserUserRefItem"];
+            voteRole: components["schemas"]["VoteRole"];
         };
         /**
          * AccountUserPatchForm
-         * @description Change a member's role.
+         * @description Update a member's account role and/or their voting role.
+         *
+         *     Both fields are optional so either can be changed on its own; omitted fields
+         *     are left untouched.
          */
         AccountUserPatchForm: {
-            role: components["schemas"]["AccountUserRole"];
+            role?: components["schemas"]["AccountUserRole"] | null;
+            voteRole?: components["schemas"]["VoteRole"] | null;
         };
         /**
          * AccountUserRole
@@ -4851,53 +5212,6 @@ export interface components {
             };
         };
         /**
-         * CommentEntityNode
-         * @description One entity in a comment's breadcrumb: what it is, and how to name it.
-         */
-        CommentEntityNode: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            type: components["schemas"]["CommentEntityType"];
-            /** Label */
-            label: string;
-        };
-        /**
-         * CommentEntityRef
-         * @description A display-ready pointer to the entity a comment is attached to.
-         *
-         *     `label` is derived per type (a title, a name, or `METHOD /path`). `parents`
-         *     lists the containing entities, outermost first, so a column named `email`
-         *     can be told apart from another one: `[database, table]` for the column.
-         *
-         *     Deliberately flat rather than a self-referencing `parent`: `fastapi-mcp`
-         *     inlines every `$ref` when it converts the OpenAPI spec into MCP tools, so a
-         *     recursive schema blows the stack at app boot.
-         */
-        CommentEntityRef: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            type: components["schemas"]["CommentEntityType"];
-            /** Label */
-            label: string;
-            /**
-             * Parents
-             * @default []
-             */
-            parents: components["schemas"]["CommentEntityNode"][];
-        };
-        /**
-         * CommentEntityType
-         * @description The kind of entity a comment can be attached to.
-         * @enum {string}
-         */
-        CommentEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step";
-        /**
          * CommentItem
          * @description A threaded comment on an account entity.
          */
@@ -4912,7 +5226,7 @@ export interface components {
              * Format: uuid
              */
             entityId: string;
-            entityType: components["schemas"]["CommentEntityType"];
+            entityType: components["schemas"]["EntityType"];
             /**
              * Id
              * Format: uuid
@@ -4955,7 +5269,7 @@ export interface components {
              * Format: uuid
              */
             entityId: string;
-            entityType: components["schemas"]["CommentEntityType"];
+            entityType: components["schemas"]["EntityType"];
             /**
              * Id
              * Format: uuid
@@ -4979,7 +5293,7 @@ export interface components {
             value?: {
                 [key: string]: unknown;
             } | null;
-            entity?: components["schemas"]["CommentEntityRef"] | null;
+            entity?: components["schemas"]["EntityRef"] | null;
         };
         /**
          * CommentPatchForm
@@ -5684,6 +5998,58 @@ export interface components {
             features: string[];
         };
         /**
+         * EntityNode
+         * @description One entity in a breadcrumb: what it is, and how to name it.
+         */
+        EntityNode: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            type: components["schemas"]["EntityType"];
+            /** Label */
+            label: string;
+        };
+        /**
+         * EntityRef
+         * @description A display-ready pointer to the entity something is attached to.
+         *
+         *     `label` is derived per type (a title, a name, or `METHOD /path`). `parents`
+         *     lists the containing entities, outermost first, so a column named `email`
+         *     can be told apart from another one: `[database, table]` for the column.
+         *
+         *     Deliberately flat rather than a self-referencing `parent`: `fastapi-mcp`
+         *     inlines every `$ref` when it converts the OpenAPI spec into MCP tools, so a
+         *     recursive schema blows the stack at app boot.
+         */
+        EntityRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            type: components["schemas"]["EntityType"];
+            /** Label */
+            label: string;
+            /**
+             * Parents
+             * @default []
+             */
+            parents: components["schemas"]["EntityNode"][];
+        };
+        /**
+         * EntityType
+         * @description The kind of account entity a comment or a vote can be attached to.
+         *
+         *     Shared, centralized list so comments and votes point at the same set of
+         *     targets by (`entity_type`, `entity_id`) — the polymorphic pair both tables
+         *     carry instead of a foreign key. Backed by a single Postgres enum type
+         *     (`entity_type`).
+         * @enum {string}
+         */
+        EntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step";
+        /**
          * ErrorResponse
          * @description A business error: a single human-readable message.
          */
@@ -6163,6 +6529,10 @@ export interface components {
         /** ItemResponse[UsageReport] */
         ItemResponse_UsageReport_: {
             item: components["schemas"]["UsageReport"];
+        };
+        /** ItemResponse[VoteItem] */
+        ItemResponse_VoteItem_: {
+            item: components["schemas"]["VoteItem"];
         };
         /**
          * JourneyCreateForm
@@ -7063,6 +7433,26 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["TagItem"][];
+        };
+        /** ListingResponse[VoteItem] */
+        ListingResponse_VoteItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["VoteItem"][];
+        };
+        /** ListingResponse[VoteListItem] */
+        ListingResponse_VoteListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["VoteListItem"][];
         };
         /**
          * LoginForm
@@ -8138,6 +8528,107 @@ export interface components {
             /** Errors */
             errors: components["schemas"]["FieldError"][];
         };
+        /**
+         * VoteItem
+         * @description A member's vote on an account entity.
+         */
+        VoteItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            role: components["schemas"]["VoteRole"];
+            value: components["schemas"]["VoteValue"];
+        };
+        /**
+         * VoteListItem
+         * @description A vote enriched with its resolved entity.
+         *
+         *     `entity` is null when the target has been soft-deleted — the vote still
+         *     exists, its entity no longer does.
+         */
+        VoteListItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            role: components["schemas"]["VoteRole"];
+            value: components["schemas"]["VoteValue"];
+            entity?: components["schemas"]["EntityRef"] | null;
+        };
+        /**
+         * VoteRole
+         * @description The hat a member wears when voting on an entity.
+         *
+         *     Snapshotted onto each vote from the member's `vote_role` (see
+         *     `AccountUser.vote_role`), so a vote records the standpoint it was cast from
+         *     even if the member's role later changes. `other` is the default for members
+         *     with no domain-specific voting role.
+         * @enum {string}
+         */
+        VoteRole: "product_owner" | "developer" | "qa" | "data_analyst" | "other";
+        /**
+         * VoteSortField
+         * @description Sortable columns for the votes listing.
+         * @enum {string}
+         */
+        VoteSortField: "date" | "value" | "role";
+        /**
+         * VoteUpsertForm
+         * @description Cast (or update) the caller's vote on an entity.
+         *
+         *     Only the stance is provided; the vote's `role` is snapshotted server-side
+         *     from the member's `vote_role`.
+         */
+        VoteUpsertForm: {
+            /** @description The member's stance on the entity. */
+            value: components["schemas"]["VoteValue"];
+        };
+        /**
+         * VoteValue
+         * @description A member's stance on an entity.
+         *
+         *     `pending_question` flags an open question ("?") rather than an opinion;
+         *     `dont_know` is an explicit abstention.
+         * @enum {string}
+         */
+        VoteValue: "upvote" | "downvote" | "pending_question" | "dont_know";
     };
     responses: never;
     parameters: never;
@@ -12511,6 +13002,180 @@ export interface operations {
             };
         };
     };
+    api_applications_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_features_list: {
         parameters: {
             query?: {
@@ -13442,6 +14107,92 @@ export interface operations {
             };
         };
     };
+    api_features_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_personas_list: {
         parameters: {
             query?: {
@@ -13768,6 +14519,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
                 };
             };
             /** @description Persona not found */
@@ -15696,6 +16533,270 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
                 };
             };
             /** @description Journey, scenario or step not found */
@@ -18161,6 +19262,452 @@ export interface operations {
             };
         };
     };
+    api_databases_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_list: {
         parameters: {
             query?: {
@@ -18855,6 +20402,180 @@ export interface operations {
             };
         };
     };
+    api_services_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_tags_list: {
         parameters: {
             query?: {
@@ -19114,7 +20835,7 @@ export interface operations {
     api_comments_list: {
         parameters: {
             query?: {
-                entityType?: components["schemas"]["CommentEntityType"][] | null;
+                entityType?: components["schemas"]["EntityType"][] | null;
                 entityId?: string[] | null;
                 ownerId?: string[] | null;
                 status?: components["schemas"]["CommentStatus"][] | null;
@@ -19420,6 +21141,56 @@ export interface operations {
                 };
             };
             /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_votes_list: {
+        parameters: {
+            query?: {
+                entityType?: components["schemas"]["EntityType"][] | null;
+                entityId?: string[] | null;
+                ownerId?: string[] | null;
+                role?: components["schemas"]["VoteRole"][] | null;
+                value?: components["schemas"]["VoteValue"][] | null;
+                lbound?: string | null;
+                ubound?: string | null;
+                sortBy?: components["schemas"]["VoteSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteListItem_"];
+                };
+            };
+            /** @description Account not found */
             404: {
                 headers: {
                     [name: string]: unknown;
