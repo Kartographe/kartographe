@@ -5,12 +5,15 @@
 import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Descriptions, Flex, Space, Typography } from "antd";
-import dayjs from "dayjs";
+import { Button, Flex } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { OwnerCell } from "@/features/accounts/owner-cell";
+import {
+  OverviewField,
+  OverviewFields,
+} from "@/components/overview/overview-fields";
+import { OverviewHeader } from "@/components/overview/overview-header";
 import { ApplicationFormModal } from "@/features/applications/application-form-modal";
 import {
   ApplicationStatusTag,
@@ -79,48 +82,38 @@ export function ApplicationOverview({
 
   return (
     <Flex gap={16} vertical>
-      <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t`Vue d'ensemble`}
-        </Typography.Title>
-        <Space>
+      <OverviewHeader
+        actions={
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-        </Space>
-      </Flex>
+        }
+        date={application.date}
+        owner={application.owner}
+        statusDate={application.statusDate}
+        title={t`Vue d'ensemble`}
+      />
 
-      <Descriptions bordered column={1} size="small">
-        <Descriptions.Item label={t`Titre`}>
-          {application.title}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Type`}>
+      <OverviewFields>
+        <OverviewField label={t`Titre`}>{application.title}</OverviewField>
+        <OverviewField label={t`Type`}>
           <ApplicationTypeTag
             loading={typeMutation.isPending}
             onChange={changeType}
             type={application.type}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut`}>
+        </OverviewField>
+        <OverviewField label={t`Statut`}>
           <ApplicationStatusTag
             loading={statusMutation.isPending}
             onChange={changeStatus}
             status={application.status}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Description`}>
+        </OverviewField>
+        <OverviewField full label={t`Description`}>
           {application.description || "—"}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Propriétaire`}>
-          <OwnerCell owner={application.owner} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Créée le`}>
-          {dayjs(application.date).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut modifié le`}>
-          {dayjs(application.statusDate).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-      </Descriptions>
+        </OverviewField>
+      </OverviewFields>
 
       <ApplicationFormModal
         accountId={accountId}

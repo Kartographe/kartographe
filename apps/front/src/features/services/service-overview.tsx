@@ -5,12 +5,15 @@
 import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Descriptions, Flex, Space, Typography } from "antd";
-import dayjs from "dayjs";
+import { Button, Flex, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { OwnerCell } from "@/features/accounts/owner-cell";
+import {
+  OverviewField,
+  OverviewFields,
+} from "@/components/overview/overview-fields";
+import { OverviewHeader } from "@/components/overview/overview-header";
 import { ServiceFormModal } from "@/features/services/service-form-modal";
 import {
   ServiceStatusTag,
@@ -78,52 +81,44 @@ export function ServiceOverview({
 
   return (
     <Flex gap={16} vertical>
-      <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t`Informations`}
-        </Typography.Title>
-        <Space>
+      <OverviewHeader
+        actions={
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-        </Space>
-      </Flex>
+        }
+        date={service.date}
+        owner={service.owner}
+        statusDate={service.statusDate}
+        title={t`Informations`}
+      />
 
-      <Descriptions bordered column={1} size="small">
-        <Descriptions.Item label={t`Titre`}>{service.title}</Descriptions.Item>
-        <Descriptions.Item label={t`Type`}>
+      <OverviewFields>
+        <OverviewField label={t`Titre`}>{service.title}</OverviewField>
+        <OverviewField label={t`Type`}>
           <ServiceTypeTag
             loading={typeMutation.isPending}
             onChange={changeType}
             type={service.type}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut`}>
+        </OverviewField>
+        <OverviewField label={t`Statut`}>
           <ServiceStatusTag
             loading={statusMutation.isPending}
             onChange={changeStatus}
             status={service.status}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`URL`}>
+        </OverviewField>
+        <OverviewField label={t`URL`}>
           {service.url ? <ExternalLink url={service.url} /> : "—"}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`URL OpenAPI`}>
+        </OverviewField>
+        <OverviewField label={t`URL OpenAPI`}>
           {service.openapiUrl ? <ExternalLink url={service.openapiUrl} /> : "—"}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Description`}>
+        </OverviewField>
+        <OverviewField full label={t`Description`}>
           <RichTextView value={service.description} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Propriétaire`}>
-          <OwnerCell owner={service.owner} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Créé le`}>
-          {dayjs(service.date).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut modifié le`}>
-          {dayjs(service.statusDate).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-      </Descriptions>
+        </OverviewField>
+      </OverviewFields>
 
       <ServiceFormModal
         accountId={accountId}

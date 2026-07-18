@@ -5,12 +5,15 @@
 import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Descriptions, Flex, Space, Typography } from "antd";
-import dayjs from "dayjs";
+import { Button, Flex } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { OwnerCell } from "@/features/accounts/owner-cell";
+import {
+  OverviewField,
+  OverviewFields,
+} from "@/components/overview/overview-fields";
+import { OverviewHeader } from "@/components/overview/overview-header";
 import { DatabaseFormModal } from "@/features/databases/database-form-modal";
 import {
   DatabaseStatusTag,
@@ -74,46 +77,38 @@ export function DatabaseOverview({
 
   return (
     <Flex gap={16} vertical>
-      <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t`Informations`}
-        </Typography.Title>
-        <Space>
+      <OverviewHeader
+        actions={
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-        </Space>
-      </Flex>
+        }
+        date={database.date}
+        owner={database.owner}
+        statusDate={database.statusDate}
+        title={t`Informations`}
+      />
 
-      <Descriptions bordered column={1} size="small">
-        <Descriptions.Item label={t`Titre`}>{database.title}</Descriptions.Item>
-        <Descriptions.Item label={t`Moteur`}>
+      <OverviewFields>
+        <OverviewField label={t`Titre`}>{database.title}</OverviewField>
+        <OverviewField label={t`Moteur`}>
           <DatabaseTypeTag
             loading={typeMutation.isPending}
             onChange={changeType}
             type={database.type}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut`}>
+        </OverviewField>
+        <OverviewField label={t`Statut`}>
           <DatabaseStatusTag
             loading={statusMutation.isPending}
             onChange={changeStatus}
             status={database.status}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Description`}>
+        </OverviewField>
+        <OverviewField full label={t`Description`}>
           <RichTextView value={database.description} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Propriétaire`}>
-          <OwnerCell owner={database.owner} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Créée le`}>
-          {dayjs(database.date).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut modifié le`}>
-          {dayjs(database.statusDate).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-      </Descriptions>
+        </OverviewField>
+      </OverviewFields>
 
       <DatabaseFormModal
         accountId={accountId}

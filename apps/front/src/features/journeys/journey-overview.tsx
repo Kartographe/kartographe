@@ -5,12 +5,15 @@
 import { EditOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Descriptions, Flex, Space, Tag, Typography } from "antd";
-import dayjs from "dayjs";
+import { Button, Flex, Tag } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
-import { OwnerCell } from "@/features/accounts/owner-cell";
+import {
+  OverviewField,
+  OverviewFields,
+} from "@/components/overview/overview-fields";
+import { OverviewHeader } from "@/components/overview/overview-header";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
   JourneyStatusTag,
@@ -72,34 +75,35 @@ export function JourneyOverview({
 
   return (
     <Flex gap={16} vertical>
-      <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t`Informations`}
-        </Typography.Title>
-        <Space>
+      <OverviewHeader
+        actions={
           <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
             {t`Modifier`}
           </Button>
-        </Space>
-      </Flex>
+        }
+        date={journey.date}
+        owner={journey.owner}
+        statusDate={journey.statusDate}
+        title={t`Informations`}
+      />
 
-      <Descriptions bordered column={1} size="small">
-        <Descriptions.Item label={t`Titre`}>{journey.title}</Descriptions.Item>
-        <Descriptions.Item label={t`Type`}>
+      <OverviewFields>
+        <OverviewField label={t`Titre`}>{journey.title}</OverviewField>
+        <OverviewField label={t`Type`}>
           <JourneyTypeTag
             loading={typeMutation.isPending}
             onChange={changeType}
             type={journey.type}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut`}>
+        </OverviewField>
+        <OverviewField label={t`Statut`}>
           <JourneyStatusTag
             loading={statusMutation.isPending}
             onChange={changeStatus}
             status={journey.status}
           />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Personas`}>
+        </OverviewField>
+        <OverviewField full label={t`Personas`}>
           {journey.personasIds.length ? (
             <Flex gap={4} wrap>
               {journey.personasIds.map((id) => (
@@ -111,20 +115,11 @@ export function JourneyOverview({
           ) : (
             "—"
           )}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Description`}>
+        </OverviewField>
+        <OverviewField full label={t`Description`}>
           <RichTextView value={journey.description} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Propriétaire`}>
-          <OwnerCell owner={journey.owner} />
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Créé le`}>
-          {dayjs(journey.date).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-        <Descriptions.Item label={t`Statut modifié le`}>
-          {dayjs(journey.statusDate).format("DD/MM/YYYY HH:mm")}
-        </Descriptions.Item>
-      </Descriptions>
+        </OverviewField>
+      </OverviewFields>
 
       <JourneyFormModal
         accountId={accountId}
