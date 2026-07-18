@@ -21,6 +21,8 @@ import {
   JourneyStatusTag,
   JourneyTypeTag,
 } from "@/features/journeys/journey-tags";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -64,6 +66,27 @@ export function JourneyOverview({
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Parcours supprimé` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/lock",
+    { meta: { successMessage: t`Parcours verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/unlock",
+    { meta: { successMessage: t`Parcours déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
+
+  async function toggleLock() {
+    const mutation = journey.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+    });
+    invalidate();
+  }
 
   async function changeStatus(status: Journey["status"]) {
     await statusMutation.mutateAsync({
@@ -133,12 +156,29 @@ export function JourneyOverview({
       <OverviewHeader
         actions={
           <Flex gap={8}>
-            <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
-              {t`Modifier`}
-            </Button>
-            <Tooltip title={t`Supprimer`}>
+            {canManageLock ? (
+              <LockToggleButton
+                locked={journey.locked}
+                onToggle={toggleLock}
+                pending={lockPending}
+                size="middle"
+              />
+            ) : null}
+            <Tooltip title={journey.locked ? t`Parcours verrouillé` : ""}>
+              <Button
+                disabled={journey.locked}
+                icon={<EditOutlined />}
+                onClick={() => setEditOpen(true)}
+              >
+                {t`Modifier`}
+              </Button>
+            </Tooltip>
+            <Tooltip
+              title={journey.locked ? t`Parcours verrouillé` : t`Supprimer`}
+            >
               <Button
                 danger
+                disabled={journey.locked}
                 icon={<DeleteOutlined />}
                 onClick={confirmDelete}
               />
@@ -156,14 +196,14 @@ export function JourneyOverview({
         <OverviewField label={t`Type`}>
           <JourneyTypeTag
             loading={typeMutation.isPending}
-            onChange={changeType}
+            onChange={journey.locked ? undefined : changeType}
             type={journey.type}
           />
         </OverviewField>
         <OverviewField label={t`Statut`}>
           <JourneyStatusTag
             loading={statusMutation.isPending}
-            onChange={changeStatus}
+            onChange={journey.locked ? undefined : changeStatus}
             status={journey.status}
           />
         </OverviewField>
@@ -172,6 +212,7 @@ export function JourneyOverview({
             accountId={accountId}
             loading={personasMutation.isPending}
             onChange={changePersonas}
+            readOnly={journey.locked}
             value={journey.personasIds}
           />
         </OverviewField>
@@ -181,6 +222,7 @@ export function JourneyOverview({
             entityType="journey"
             loading={tagsMutation.isPending}
             onChange={changeTags}
+            readOnly={journey.locked}
             tags={journey.tags}
             value={journey.tagIds}
           />

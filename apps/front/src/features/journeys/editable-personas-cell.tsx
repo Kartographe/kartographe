@@ -16,6 +16,8 @@ interface EditablePersonasCellProps {
   onChange: (personasIds: string[]) => void;
   /** A change is being persisted — interactions are frozen until it lands. */
   loading?: boolean;
+  /** Display-only: show the chips without detach/attach affordances (locked). */
+  readOnly?: boolean;
   /**
    * Chips wrap onto several lines by default (roomy layouts like the overview).
    * Pass `false` in a table so the cell stays a single line and the table keeps
@@ -34,6 +36,7 @@ export function EditablePersonasCell({
   value,
   onChange,
   loading = false,
+  readOnly = false,
   wrap = true,
 }: EditablePersonasCellProps) {
   const { t } = useLingui();
@@ -102,7 +105,7 @@ export function EditablePersonasCell({
     >
       {value.map((id) => (
         <Tag
-          closable={!loading}
+          closable={!(loading || readOnly)}
           key={id}
           onClose={(event) => {
             event.preventDefault();
@@ -114,30 +117,32 @@ export function EditablePersonasCell({
           {personas.title(id) ?? t`Persona inconnu`}
         </Tag>
       ))}
-      <Popover
-        content={picker}
-        onOpenChange={(next) => {
-          setOpen(next);
-          if (!next) {
-            setSearch("");
-          }
-        }}
-        open={open}
-        placement="bottomLeft"
-        trigger="click"
-      >
-        <Tag
-          style={{
-            borderStyle: "dashed",
-            cursor: loading ? "not-allowed" : "pointer",
-            flexShrink: 0,
-            marginInlineEnd: 0,
-            opacity: loading ? 0.5 : 1,
+      {readOnly ? null : (
+        <Popover
+          content={picker}
+          onOpenChange={(next) => {
+            setOpen(next);
+            if (!next) {
+              setSearch("");
+            }
           }}
+          open={open}
+          placement="bottomLeft"
+          trigger="click"
         >
-          <PlusOutlined />
-        </Tag>
-      </Popover>
+          <Tag
+            style={{
+              borderStyle: "dashed",
+              cursor: loading ? "not-allowed" : "pointer",
+              flexShrink: 0,
+              marginInlineEnd: 0,
+              opacity: loading ? 0.5 : 1,
+            }}
+          >
+            <PlusOutlined />
+          </Tag>
+        </Popover>
+      )}
     </Flex>
   );
 }

@@ -25,6 +25,9 @@ import {
   JOURNEY_TYPE_LABELS,
 } from "@/features/journeys/labels";
 import { usePersonas } from "@/features/journeys/use-personas";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 
@@ -103,6 +106,19 @@ export function JourneysList({ accountId }: { accountId: string }) {
     "/v1/accounts/{account_id}/journeys/{journey_id}",
     { meta: { successMessage: t`Personas mis à jour` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/lock",
+    { meta: { successMessage: t`Parcours verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/unlock",
+    { meta: { successMessage: t`Parcours déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const journeys = journeysQuery.data?.items ?? [];
   const total = journeysQuery.data?.count ?? 0;
@@ -152,6 +168,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
     invalidate();
   }
 
+  async function toggleLock(journey: Journey) {
+    const mutation = journey.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { account_id: accountId, journey_id: journey.id } },
+    });
+    invalidate();
+  }
+
   const antdOrder = (field: SortField): "ascend" | "descend" | null => {
     if (sortBy !== field) {
       return null;
@@ -197,6 +221,16 @@ export function JourneysList({ accountId }: { accountId: string }) {
       // Titre no longer grows with the viewport, so it needs the room upfront.
       width: TITLE_WIDTH,
       ellipsis: true,
+      render: (title: string, journey) => (
+        <Flex align="center" gap={6}>
+          <LockIndicator
+            locked={journey.locked}
+            lockedBy={journey.lockedBy}
+            lockedDate={journey.lockedDate}
+          />
+          <Typography.Text ellipsis>{title}</Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: t`Type`,
@@ -213,7 +247,9 @@ export function JourneysList({ accountId }: { accountId: string }) {
       render: (type: Type, journey) => (
         <JourneyTypeTag
           loading={typeMutation.isPending}
-          onChange={(next) => changeType(journey, next)}
+          onChange={
+            journey.locked ? undefined : (next) => changeType(journey, next)
+          }
           type={type}
         />
       ),
@@ -233,7 +269,9 @@ export function JourneysList({ accountId }: { accountId: string }) {
       render: (status: Status, journey) => (
         <JourneyStatusTag
           loading={statusMutation.isPending}
-          onChange={(next) => changeStatus(journey, next)}
+          onChange={
+            journey.locked ? undefined : (next) => changeStatus(journey, next)
+          }
           status={status}
         />
       ),
@@ -252,6 +290,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           accountId={accountId}
           loading={personasMutation.isPending}
           onChange={(next) => changePersonas(journey, next)}
+          readOnly={journey.locked}
           value={journey.personasIds}
           wrap={false}
         />
@@ -270,6 +309,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           entityType="journey"
           loading={tagsMutation.isPending}
           onChange={(next) => changeTags(journey, next)}
+          readOnly={journey.locked}
           tags={tags}
           value={journey.tagIds}
         />
@@ -291,16 +331,29 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 1 : 0, labelled: 1 }),
       render: (_, journey) => (
-        <Link
-          params={{ accountId, journeyId: journey.id }}
-          to="/accounts/$accountId/journeys/$journeyId"
-        >
-          <Button icon={<ArrowRightOutlined />} iconPosition="end" size="small">
-            {t`Accéder`}
-          </Button>
-        </Link>
+        <Flex align="center" gap={4} justify="flex-end">
+          {canManageLock ? (
+            <LockToggleButton
+              locked={journey.locked}
+              onToggle={() => toggleLock(journey)}
+              pending={lockPending}
+            />
+          ) : null}
+          <Link
+            params={{ accountId, journeyId: journey.id }}
+            to="/accounts/$accountId/journeys/$journeyId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+        </Flex>
       ),
     },
   ];
