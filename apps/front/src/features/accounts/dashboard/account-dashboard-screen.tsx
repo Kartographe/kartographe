@@ -18,6 +18,7 @@ import {
   type Period,
 } from "@/features/accounts/dashboard/period";
 import { RecentComments } from "@/features/accounts/dashboard/recent-comments";
+import { RecentVotes } from "@/features/accounts/dashboard/recent-votes";
 
 const { RangePicker } = DatePicker;
 
@@ -106,6 +107,8 @@ export function AccountDashboardScreen({ accountId }: { accountId: string }) {
       ) : (
         <ActivityFeed accountId={accountId} typology={typology} />
       )}
+
+      <RecentVotes accountId={accountId} />
     </Flex>
   );
 }

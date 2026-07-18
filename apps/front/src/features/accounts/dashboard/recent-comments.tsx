@@ -147,6 +147,9 @@ export function RecentComments({ accountId }: { accountId: string }) {
 
   return (
     <Flex gap={12} vertical>
+      <Typography.Title level={5} style={{ margin: 0 }}>
+        {t`Derniers commentaires`}
+      </Typography.Title>
       {presentTypes.length > 1 ? (
         <Segmented
           onChange={(value) => setFilter(value as EntityType | typeof ALL)}
@@ -155,7 +158,7 @@ export function RecentComments({ accountId }: { accountId: string }) {
           value={filter}
         />
       ) : null}
-      <Card size="small" title={t`Derniers commentaires`}>
+      <Card size="small">
         <List
           dataSource={filtered}
           loading={query.isLoading}

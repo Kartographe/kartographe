@@ -351,6 +351,9 @@ export function ActivityFeed({
 
   return (
     <Flex gap={12} vertical>
+      <Typography.Title level={5} style={{ margin: 0 }}>
+        {t`Activités`}
+      </Typography.Title>
       <Segmented<ActivityTab>
         onChange={setActive}
         options={tabs.map((tab) => ({
@@ -360,9 +363,7 @@ export function ActivityFeed({
         size="small"
         value={current}
       />
-      <Card size="small" title={t`Activités`}>
-        {TAB_META[current].render(accountId)}
-      </Card>
+      <Card size="small">{TAB_META[current].render(accountId)}</Card>
     </Flex>
   );
 }
