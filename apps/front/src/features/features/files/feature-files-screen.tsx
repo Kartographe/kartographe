@@ -6,8 +6,6 @@ import {
   DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
-  InboxOutlined,
-  RocketOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -35,18 +33,21 @@ import {
   FeatureFileTypeTag,
 } from "@/features/features/feature-tags";
 import { FeatureFileFormModal } from "@/features/features/files/feature-file-form-modal";
+import { fileIcon } from "@/features/features/files/file-icon";
 import { uploadFeatureFile } from "@/features/features/files/upload-feature-file";
 import { formatFileSize } from "@/lib/format/file-size";
 
 type FeatureFile = components["schemas"]["FeatureFileItem"];
+type FeatureFileType = components["schemas"]["FeatureFileType"];
+type FeatureFileStatus = components["schemas"]["FeatureFileStatus"];
 
 const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/features/{feature_id}/files",
 ];
 
-/** No `COL` key fits a file size — "1,2 Mo" and its header need no more. */
-const SIZE_WIDTH = 120;
+/** The « Fichier » cell stacks the name over its file name and size. */
+const FILE_COL_WIDTH = 340;
 
 export function FeatureFilesScreen({
   accountId,
@@ -77,6 +78,11 @@ export function FeatureFilesScreen({
     "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}/archive",
     { meta: { successMessage: t`Fichier archivé` } }
   );
+  const typeMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}",
+    { meta: { successMessage: t`Type mis à jour` } }
+  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/features/{feature_id}/files/{feature_file_id}",
@@ -100,14 +106,26 @@ export function FeatureFilesScreen({
     invalidate();
   }
 
-  async function toggleStatus(file: FeatureFile) {
-    const params = { path: { ...path, feature_file_id: file.id } };
-    // A file is only ever `uploaded` or `archived` — no draft to activate from.
-    if (file.status === "archived") {
-      await activateMutation.mutateAsync({ params });
-    } else {
-      await archiveMutation.mutateAsync({ params });
+  // A file is only ever `uploaded` or `archived`: archiving and restoring go
+  // through their own endpoints, driven here from the status dropdown.
+  async function changeStatus(file: FeatureFile, status: FeatureFileStatus) {
+    if (status === file.status) {
+      return;
     }
+    const params = { path: { ...path, feature_file_id: file.id } };
+    if (status === "archived") {
+      await archiveMutation.mutateAsync({ params });
+    } else {
+      await activateMutation.mutateAsync({ params });
+    }
+    invalidate();
+  }
+
+  async function changeType(file: FeatureFile, type: FeatureFileType) {
+    await typeMutation.mutateAsync({
+      params: { path: { ...path, feature_file_id: file.id } },
+      body: { type },
+    });
     invalidate();
   }
 
@@ -176,25 +194,28 @@ export function FeatureFilesScreen({
 
   const columns: TableProps<FeatureFile>["columns"] = [
     {
-      title: t`Nom`,
+      title: t`Fichier`,
       key: "name",
       dataIndex: "name",
-      width: COL.title,
+      width: FILE_COL_WIDTH,
       ellipsis: true,
-      render: (name: string) => (
-        <Typography.Text strong>{name}</Typography.Text>
-      ),
-    },
-    {
-      title: t`Fichier`,
-      key: "fileName",
-      dataIndex: "fileName",
-      width: COL.text,
-      ellipsis: true,
-      render: (fileName: string) => (
-        <Typography.Text code ellipsis>
-          {fileName}
-        </Typography.Text>
+      render: (name: string, file) => (
+        <Flex align="center" gap={12} style={{ minWidth: 0 }}>
+          <span
+            aria-hidden
+            style={{ color: "var(--ant-color-text-secondary)", fontSize: 22 }}
+          >
+            {fileIcon(file.fileExtension, file.type)}
+          </span>
+          <Flex style={{ minWidth: 0 }} vertical>
+            <Typography.Text ellipsis strong>
+              {name}
+            </Typography.Text>
+            <Typography.Text ellipsis style={{ fontSize: 12 }} type="secondary">
+              {file.fileName} · {formatFileSize(file.fileSize, i18n.locale)}
+            </Typography.Text>
+          </Flex>
+        </Flex>
       ),
     },
     {
@@ -202,45 +223,47 @@ export function FeatureFilesScreen({
       key: "type",
       dataIndex: "type",
       width: COL.type,
-      render: (type: FeatureFile["type"]) => <FeatureFileTypeTag type={type} />,
+      render: (type: FeatureFile["type"], file) => (
+        <FeatureFileTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(file, next)}
+          type={type}
+        />
+      ),
     },
     {
       title: t`Statut`,
       key: "status",
       dataIndex: "status",
       width: COL.status,
-      render: (status: FeatureFile["status"]) => (
-        <FeatureFileStatusTag status={status} />
+      render: (status: FeatureFile["status"], file) => (
+        <FeatureFileStatusTag
+          loading={activateMutation.isPending || archiveMutation.isPending}
+          onChange={(next) => changeStatus(file, next)}
+          status={status}
+        />
       ),
     },
     {
-      title: t`Taille`,
-      key: "fileSize",
-      dataIndex: "fileSize",
-      width: SIZE_WIDTH,
-      render: (fileSize: number) => formatFileSize(fileSize, i18n.locale),
-    },
-    {
-      title: t`Déposé par`,
+      title: t`Dépôt`,
       key: "owner",
       dataIndex: "owner",
       width: COL.text,
-      render: (_owner, row) => <OwnerCell owner={row.owner} />,
-    },
-    {
-      title: t`Déposé le`,
-      key: "date",
-      dataIndex: "date",
-      width: COL.date,
-      render: (value: string | null) =>
-        value ? dayjs(value).format("DD/MM/YYYY") : "—",
+      render: (_owner, file) => (
+        <Flex style={{ minWidth: 0 }} vertical>
+          <OwnerCell owner={file.owner} size={20} />
+          <Typography.Text style={{ fontSize: 12 }} type="secondary">
+            {file.date ? t`le ${dayjs(file.date).format("DD/MM/YYYY")}` : "—"}
+          </Typography.Text>
+        </Flex>
+      ),
     },
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 4 }),
+      width: actionsWidth({ icons: 3 }),
       render: (_, file) => (
         <Space>
           <Tooltip title={t`Télécharger`}>
@@ -254,21 +277,6 @@ export function FeatureFilesScreen({
             <Button
               icon={<EditOutlined />}
               onClick={() => setEditing(file)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip
-            title={file.status === "archived" ? t`Restaurer` : t`Archiver`}
-          >
-            <Button
-              icon={
-                file.status === "archived" ? (
-                  <RocketOutlined />
-                ) : (
-                  <InboxOutlined />
-                )
-              }
-              onClick={() => toggleStatus(file)}
               size="small"
             />
           </Tooltip>

@@ -65,25 +65,41 @@ export function FeatureTypeTag({
 
 export function FeatureFileStatusTag({
   status,
+  onChange,
+  loading,
 }: {
   status: S["FeatureFileStatus"];
+  onChange?: (status: S["FeatureFileStatus"]) => void;
+  loading?: boolean;
 }) {
   return (
     <EnumTag
       colors={FEATURE_FILE_STATUS_COLORS}
       descriptions={FEATURE_FILE_STATUS_DESCRIPTIONS}
       labels={FEATURE_FILE_STATUS_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={status}
     />
   );
 }
 
-export function FeatureFileTypeTag({ type }: { type: S["FeatureFileType"] }) {
+export function FeatureFileTypeTag({
+  type,
+  onChange,
+  loading,
+}: {
+  type: S["FeatureFileType"];
+  onChange?: (type: S["FeatureFileType"]) => void;
+  loading?: boolean;
+}) {
   return (
     <EnumTag
       colors={FEATURE_FILE_TYPE_COLORS}
       descriptions={FEATURE_FILE_TYPE_DESCRIPTIONS}
       labels={FEATURE_FILE_TYPE_LABELS}
+      loading={loading}
+      onChange={onChange}
       value={type}
     />
   );
