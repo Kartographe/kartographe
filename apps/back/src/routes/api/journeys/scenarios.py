@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.journeys import JourneyScenarioItem
 from src.serializes.errors import ErrorResponse
@@ -69,7 +69,7 @@ def list_scenarios(
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[JourneyScenarioItem]:
     rows = manager.list_for_journey(journey, tag_ids=tag_ids)
-    items = tags.attach(rows, JourneyScenarioItem)
+    items = tags.enrich(EntityType.JOURNEY_SCENARIO, tags.attach(rows, JourneyScenarioItem))
     return ListingResponse.single_page(items)
 
 
@@ -118,7 +118,7 @@ def create_scenario(
 def get_scenario(
     _: CurrentAccountUserDep, scenario: CurrentJourneyScenarioDep, tags: TagManagerDep
 ) -> ItemResponse[JourneyScenarioItem]:
-    return ItemResponse(item=tags.attach_one(scenario, JourneyScenarioItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.JOURNEY_SCENARIO, tags.attach_one(scenario, JourneyScenarioItem)))
 
 
 @router.patch(

@@ -18,7 +18,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.databases import DatabaseSortField
 from src.forms.databases import DatabaseCreateForm, DatabasePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, DatabaseStatus, DatabaseType
+from src.models.enum import AccountUserRole, DatabaseStatus, DatabaseType, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseItem
 from src.serializes.errors import ErrorResponse
@@ -81,7 +81,7 @@ def list_databases(
         page=page,
         limit=limit.value,
     )
-    items = tags.attach(rows, DatabaseItem)
+    items = tags.enrich(EntityType.DATABASE, tags.attach(rows, DatabaseItem))
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -121,7 +121,7 @@ def create_database(
 def get_database(
     _: CurrentAccountUserDep, database: CurrentDatabaseDep, tags: TagManagerDep
 ) -> ItemResponse[DatabaseItem]:
-    return ItemResponse(item=tags.attach_one(database, DatabaseItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.DATABASE, tags.attach_one(database, DatabaseItem)))
 
 
 @router.patch(

@@ -23,6 +23,7 @@ from src.serializes.users import OwnerItem
 class ApplicationItem(CamelBase):
     """An application tracked inside an account."""
 
+    comment_count: int = 0
     date: datetime
     description: str | None = None
     id: uuid.UUID

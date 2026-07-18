@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.forms.databases import DatabaseMigrationCreateForm, DatabaseMigrationPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, DatabaseMigrationStatus
+from src.models.enum import AccountUserRole, DatabaseMigrationStatus, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseMigrationItem
 from src.serializes.errors import ErrorResponse
@@ -59,7 +59,10 @@ def list_migrations(
     database: CurrentDatabaseDep,
     manager: DatabaseMigrationManagerDep,
 ) -> ListingResponse[DatabaseMigrationItem]:
-    items = [DatabaseMigrationItem.model_validate(row) for row in manager.list_for_database(database)]
+    items = manager.enrich(
+        EntityType.DATABASE_MIGRATION,
+        [DatabaseMigrationItem.model_validate(row) for row in manager.list_for_database(database)],
+    )
     return ListingResponse.single_page(items)
 
 
@@ -102,9 +105,13 @@ def create_migration(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_migration(
-    _: CurrentAccountUserDep, migration: CurrentDatabaseMigrationDep
+    _: CurrentAccountUserDep,
+    migration: CurrentDatabaseMigrationDep,
+    manager: DatabaseMigrationManagerDep,
 ) -> ItemResponse[DatabaseMigrationItem]:
-    return ItemResponse(item=DatabaseMigrationItem.model_validate(migration))
+    return ItemResponse(
+        item=manager.enrich_one(EntityType.DATABASE_MIGRATION, DatabaseMigrationItem.model_validate(migration))
+    )
 
 
 @router.patch(

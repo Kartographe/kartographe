@@ -19,7 +19,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.journeys import JourneySortField
 from src.forms.journeys import JourneyCreateForm, JourneyPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, JourneyStatus, JourneyType
+from src.models.enum import AccountUserRole, EntityType, JourneyStatus, JourneyType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.journeys import JourneyItem
 from src.serializes.errors import ErrorResponse
@@ -87,7 +87,7 @@ def list_journeys(
         page=page,
         limit=limit.value,
     )
-    items = tags.attach(rows, JourneyItem)
+    items = tags.enrich(EntityType.JOURNEY, tags.attach(rows, JourneyItem))
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -133,7 +133,7 @@ def create_journey(
 def get_journey(
     _: CurrentAccountUserDep, journey: CurrentJourneyDep, tags: TagManagerDep
 ) -> ItemResponse[JourneyItem]:
-    return ItemResponse(item=tags.attach_one(journey, JourneyItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.JOURNEY, tags.attach_one(journey, JourneyItem)))
 
 
 @router.patch(

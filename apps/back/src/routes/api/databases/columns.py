@@ -20,7 +20,7 @@ from src.forms.databases import (
     DatabaseTableColumnReorderForm,
 )
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseTableColumnItem
 from src.serializes.errors import ErrorResponse
@@ -77,7 +77,7 @@ def list_columns(
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[DatabaseTableColumnItem]:
     rows = manager.list_for_table(table, tag_ids=tag_ids)
-    items = tags.attach(rows, DatabaseTableColumnItem)
+    items = tags.enrich(EntityType.DATABASE_TABLE_COLUMN, tags.attach(rows, DatabaseTableColumnItem))
     return ListingResponse.single_page(items)
 
 
@@ -139,7 +139,10 @@ def reorder_columns(
     _: Annotated[AccountUser, Depends(_DATA_DEV)],
 ) -> ListingResponse[DatabaseTableColumnItem]:
     rows = manager.reorder(table, column_ids=form.column_ids, ranks=form.ranks)
-    items = [DatabaseTableColumnItem.model_validate(row) for row in rows]
+    items = manager.enrich(
+        EntityType.DATABASE_TABLE_COLUMN,
+        [DatabaseTableColumnItem.model_validate(row) for row in rows],
+    )
     return ListingResponse.single_page(items)
 
 
@@ -154,7 +157,7 @@ def reorder_columns(
 def get_column(
     _: CurrentAccountUserDep, column: CurrentDatabaseTableColumnDep, tags: TagManagerDep
 ) -> ItemResponse[DatabaseTableColumnItem]:
-    return ItemResponse(item=tags.attach_one(column, DatabaseTableColumnItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.DATABASE_TABLE_COLUMN, tags.attach_one(column, DatabaseTableColumnItem)))
 
 
 @router.patch(

@@ -19,7 +19,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.applications import ApplicationSortField
 from src.forms.applications import ApplicationCreateForm, ApplicationPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ApplicationStatus, ApplicationType
+from src.models.enum import AccountUserRole, ApplicationStatus, ApplicationType, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationItem
 from src.serializes.errors import ErrorResponse
@@ -77,7 +77,7 @@ def list_applications(
         page=page,
         limit=limit.value,
     )
-    items = tags.attach(rows, ApplicationItem)
+    items = tags.enrich(EntityType.APPLICATION, tags.attach(rows, ApplicationItem))
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -114,7 +114,7 @@ def create_application(
 def get_application(
     _: CurrentAccountUserDep, application: CurrentApplicationDep, tags: TagManagerDep
 ) -> ItemResponse[ApplicationItem]:
-    return ItemResponse(item=tags.attach_one(application, ApplicationItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.APPLICATION, tags.attach_one(application, ApplicationItem)))
 
 
 @router.patch(

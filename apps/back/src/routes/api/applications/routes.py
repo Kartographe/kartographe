@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRouteItem
 from src.serializes.errors import ErrorResponse
@@ -66,7 +66,7 @@ def list_routes(
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[ApplicationRouteItem]:
     rows = manager.list_for_application(application, tag_ids=tag_ids)
-    items = tags.attach(rows, ApplicationRouteItem)
+    items = tags.enrich(EntityType.APPLICATION_ROUTE, tags.attach(rows, ApplicationRouteItem))
     return ListingResponse.single_page(items)
 
 
@@ -123,7 +123,7 @@ def create_route(
 def get_route(
     _: CurrentAccountUserDep, route: CurrentApplicationRouteDep, tags: TagManagerDep
 ) -> ItemResponse[ApplicationRouteItem]:
-    return ItemResponse(item=tags.attach_one(route, ApplicationRouteItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.APPLICATION_ROUTE, tags.attach_one(route, ApplicationRouteItem)))
 
 
 @router.patch(

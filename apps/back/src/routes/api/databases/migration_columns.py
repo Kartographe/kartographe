@@ -18,7 +18,7 @@ from src.forms.databases import (
     DatabaseMigrationColumnPatchForm,
 )
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, DatabaseMigrationColumnStatus
+from src.models.enum import AccountUserRole, DatabaseMigrationColumnStatus, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseMigrationColumnItem
 from src.serializes.errors import ErrorResponse
@@ -70,10 +70,10 @@ def list_migration_columns(
     migration: CurrentDatabaseMigrationDep,
     manager: DatabaseMigrationColumnManagerDep,
 ) -> ListingResponse[DatabaseMigrationColumnItem]:
-    items = [
-        DatabaseMigrationColumnItem.model_validate(row)
-        for row in manager.list_for_migration(migration)
-    ]
+    items = manager.enrich(
+        EntityType.DATABASE_MIGRATION_COLUMN,
+        [DatabaseMigrationColumnItem.model_validate(row) for row in manager.list_for_migration(migration)],
+    )
     return ListingResponse.single_page(items)
 
 
@@ -120,9 +120,15 @@ def create_migration_column(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_migration_column(
-    _: CurrentAccountUserDep, column: CurrentDatabaseMigrationColumnDep
+    _: CurrentAccountUserDep,
+    column: CurrentDatabaseMigrationColumnDep,
+    manager: DatabaseMigrationColumnManagerDep,
 ) -> ItemResponse[DatabaseMigrationColumnItem]:
-    return ItemResponse(item=DatabaseMigrationColumnItem.model_validate(column))
+    return ItemResponse(
+        item=manager.enrich_one(
+            EntityType.DATABASE_MIGRATION_COLUMN, DatabaseMigrationColumnItem.model_validate(column)
+        )
+    )
 
 
 @router.patch(

@@ -18,7 +18,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.features import FeatureSortField
 from src.forms.features import FeatureCreateForm, FeaturePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, FeatureStatus, FeatureType
+from src.models.enum import AccountUserRole, EntityType, FeatureStatus, FeatureType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.features import FeatureItem
 from src.serializes.errors import ErrorResponse
@@ -84,7 +84,7 @@ def list_features(
         page=page,
         limit=limit.value,
     )
-    items = tags.attach(rows, FeatureItem)
+    items = tags.enrich(EntityType.FEATURE, tags.attach(rows, FeatureItem))
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -124,7 +124,7 @@ def create_feature(
 def get_feature(
     _: CurrentAccountUserDep, feature: CurrentFeatureDep, tags: TagManagerDep
 ) -> ItemResponse[FeatureItem]:
-    return ItemResponse(item=tags.attach_one(feature, FeatureItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.FEATURE, tags.attach_one(feature, FeatureItem)))
 
 
 @router.patch(

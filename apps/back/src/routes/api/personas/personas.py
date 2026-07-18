@@ -17,7 +17,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.personas import PersonaSortField
 from src.forms.personas import PersonaCreateForm, PersonaPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, PersonaStatus, PersonaType
+from src.models.enum import AccountUserRole, EntityType, PersonaStatus, PersonaType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.personas import PersonaItem
 from src.serializes.errors import ErrorResponse
@@ -82,7 +82,7 @@ def list_personas(
         page=page,
         limit=limit.value,
     )
-    items = tags.attach(rows, PersonaItem)
+    items = tags.enrich(EntityType.PERSONA, tags.attach(rows, PersonaItem))
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -118,7 +118,7 @@ def create_persona(
 def get_persona(
     _: CurrentAccountUserDep, persona: CurrentPersonaDep, tags: TagManagerDep
 ) -> ItemResponse[PersonaItem]:
-    return ItemResponse(item=tags.attach_one(persona, PersonaItem))
+    return ItemResponse(item=tags.enrich_one(EntityType.PERSONA, tags.attach_one(persona, PersonaItem)))
 
 
 @router.patch(

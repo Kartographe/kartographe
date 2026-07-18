@@ -21,6 +21,7 @@ from src.serializes.users import OwnerItem
 class ServiceItem(CamelBase):
     """A service tracked inside an account."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -42,6 +43,7 @@ class ServiceItem(CamelBase):
 class ServiceActionItem(CamelBase):
     """An action exposed by a service."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID

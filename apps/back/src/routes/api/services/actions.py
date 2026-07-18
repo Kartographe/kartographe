@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.forms.services import ServiceActionCreateForm, ServiceActionPatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.services import ServiceActionItem
@@ -56,7 +56,10 @@ def list_actions(
     service: CurrentServiceDep,
     manager: ServiceActionManagerDep,
 ) -> ListingResponse[ServiceActionItem]:
-    items = [ServiceActionItem.model_validate(row) for row in manager.list_for_service(service)]
+    items = manager.enrich(
+        EntityType.SERVICE_ACTION,
+        [ServiceActionItem.model_validate(row) for row in manager.list_for_service(service)],
+    )
     return ListingResponse.single_page(items)
 
 
@@ -97,9 +100,9 @@ def create_action(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_action(
-    _: CurrentAccountUserDep, action: CurrentServiceActionDep
+    _: CurrentAccountUserDep, action: CurrentServiceActionDep, manager: ServiceActionManagerDep
 ) -> ItemResponse[ServiceActionItem]:
-    return ItemResponse(item=ServiceActionItem.model_validate(action))
+    return ItemResponse(item=manager.enrich_one(EntityType.SERVICE_ACTION, ServiceActionItem.model_validate(action)))
 
 
 @router.patch(

@@ -15,7 +15,12 @@ from fastapi import APIRouter, Query
 
 from src.filters._base import PageLimit, SortOrder
 from src.filters.journey_scenarios import JourneyScenarioSortField
-from src.models.enum import JourneyScenarioCriticity, JourneyScenarioStatus, JourneyScenarioType
+from src.models.enum import (
+    EntityType,
+    JourneyScenarioCriticity,
+    JourneyScenarioStatus,
+    JourneyScenarioType,
+)
 from src.serializes._base import ListingResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.journeys import JourneyScenarioListItem
@@ -78,4 +83,5 @@ def list_scenarios(
         item.model_copy(update={"journey_title": titles.get(item.journey_id)})
         for item in tags.attach(rows, JourneyScenarioListItem)
     ]
+    manager.enrich(EntityType.JOURNEY_SCENARIO, items)
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)

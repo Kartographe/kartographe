@@ -60,6 +60,7 @@ class ApplicationRouteItem(CamelBase):
     """An HTTP route exposed by an application."""
 
     accepted_format: list[str]
+    comment_count: int = 0
     application_guard_ids: list[uuid.UUID]
     application_role_ids: list[uuid.UUID]
     body_schema: dict

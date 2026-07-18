@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.forms.databases import DatabaseTableCreateForm, DatabaseTablePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole
+from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.databases import DatabaseTableItem
 from src.serializes.errors import ErrorResponse
@@ -64,7 +64,9 @@ def list_tables(
     manager: DatabaseTableManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
 ) -> ListingResponse[DatabaseTableItem]:
-    items = manager.to_items(manager.list_for_version(version, tag_ids=tag_ids))
+    items = manager.enrich(
+        EntityType.DATABASE_TABLE, manager.to_items(manager.list_for_version(version, tag_ids=tag_ids))
+    )
     return ListingResponse.single_page(items)
 
 
@@ -114,7 +116,7 @@ def get_table(
     table: CurrentDatabaseTableDep,
     manager: DatabaseTableManagerDep,
 ) -> ItemResponse[DatabaseTableItem]:
-    return ItemResponse(item=manager.to_item(table, with_columns=True))
+    return ItemResponse(item=manager.enrich_one(EntityType.DATABASE_TABLE, manager.to_item(table, with_columns=True)))
 
 
 @router.patch(

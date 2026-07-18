@@ -17,7 +17,7 @@ from src.filters._base import PageLimit, SortOrder
 from src.filters.services import ServiceSortField
 from src.forms.services import ServiceCreateForm, ServicePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, ServiceStatus, ServiceType
+from src.models.enum import AccountUserRole, EntityType, ServiceStatus, ServiceType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.services import ServiceItem
@@ -75,7 +75,7 @@ def list_services(
         page=page,
         limit=limit.value,
     )
-    items = [ServiceItem.model_validate(row) for row in rows]
+    items = manager.enrich(EntityType.SERVICE, [ServiceItem.model_validate(row) for row in rows])
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
 
@@ -116,8 +116,10 @@ def create_service(
     response_model=ItemResponse[ServiceItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
-def get_service(_: CurrentAccountUserDep, service: CurrentServiceDep) -> ItemResponse[ServiceItem]:
-    return ItemResponse(item=ServiceItem.model_validate(service))
+def get_service(
+    _: CurrentAccountUserDep, service: CurrentServiceDep, manager: ServiceManagerDep
+) -> ItemResponse[ServiceItem]:
+    return ItemResponse(item=manager.enrich_one(EntityType.SERVICE, ServiceItem.model_validate(service)))
 
 
 @router.patch(

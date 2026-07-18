@@ -28,6 +28,7 @@ from src.serializes.users import OwnerItem
 class DatabaseItem(CamelBase):
     """A database tracked inside an account."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -60,6 +61,7 @@ class DatabaseTableColumnItem(CamelBase):
     """A column of a database table."""
 
     color: str | None = None
+    comment_count: int = 0
     database_column_type_id: uuid.UUID
     date: datetime
     default_value: str
@@ -91,6 +93,7 @@ class DatabaseTableItem(CamelBase):
 
     color: str | None = None
     columns: list[DatabaseTableColumnItem] | None = None
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -112,6 +115,7 @@ class DatabaseTableItem(CamelBase):
 class DatabaseMigrationItem(CamelBase):
     """A planned move from a version of one database to a version of another."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     destination_database_id: uuid.UUID
@@ -136,6 +140,7 @@ class DatabaseMigrationColumnItem(CamelBase):
     and a migration carries both.
     """
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     destination_database_table_column_id: uuid.UUID | None = None

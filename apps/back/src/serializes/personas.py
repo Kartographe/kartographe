@@ -16,6 +16,7 @@ from src.serializes.tags import TagItem
 class PersonaItem(CamelBase):
     """A persona tracked inside an account."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID

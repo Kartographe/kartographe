@@ -16,6 +16,7 @@ from src.serializes.users import OwnerItem
 class FeatureItem(CamelBase):
     """A feature tracked at the account level."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID

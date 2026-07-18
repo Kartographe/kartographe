@@ -25,6 +25,7 @@ from src.serializes.users import OwnerItem
 class JourneyItem(CamelBase):
     """A user journey tracked inside an account."""
 
+    comment_count: int = 0
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -46,6 +47,7 @@ class JourneyItem(CamelBase):
 class JourneyScenarioItem(CamelBase):
     """A scenario inside a journey."""
 
+    comment_count: int = 0
     criticity: JourneyScenarioCriticity
     date: datetime
     description: dict | None = None
@@ -79,6 +81,7 @@ class JourneyScenarioStepItem(CamelBase):
     """A step inside a scenario (nodes form a tree via `parentId`)."""
 
     action_type_id: uuid.UUID | None = None
+    comment_count: int = 0
     description: dict | None = None
     id: uuid.UUID
     locked: bool
