@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { useLingui } from "@lingui/react/macro";
-import { Button, Divider, Empty, Flex, Spin } from "antd";
+import { Button, Divider, Flex, Spin } from "antd";
 import { useState } from "react";
 import type { components } from "@/api/generated/schema";
 import { useCurrentUser } from "@/features/account/hooks/use-current-user";
@@ -81,10 +81,6 @@ export function CommentsFeed({
         <Flex align="center" justify="center" style={{ minHeight: 120 }}>
           <Spin />
         </Flex>
-      ) : null}
-
-      {!isLoading && comments.length === 0 ? (
-        <Empty description={t`Aucun commentaire`} />
       ) : null}
 
       {comments.length > 0 ? (
