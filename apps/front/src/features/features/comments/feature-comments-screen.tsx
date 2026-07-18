@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Flex, Typography } from "antd";
 import { $api } from "@/api/$api";
 import { CommentsFeed } from "@/features/comments/comments-feed";
+import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 const LIST_KEY = [
@@ -41,6 +42,7 @@ export function FeatureCommentsScreen({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    invalidateEntityQueries(queryClient, "feature");
   }
 
   async function publish(value: RichTextDocument) {

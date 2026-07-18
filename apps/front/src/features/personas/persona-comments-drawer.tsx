@@ -8,6 +8,7 @@ import { Drawer, Flex, Typography } from "antd";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { CommentsFeed } from "@/features/comments/comments-feed";
+import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
 import { PersonaTypeTag } from "@/features/personas/persona-tags";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
@@ -49,6 +50,7 @@ export function PersonaCommentsDrawer({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    invalidateEntityQueries(queryClient, "persona");
   }
 
   async function publish(value: RichTextDocument) {

@@ -10,6 +10,7 @@ import type { components } from "@/api/generated/schema";
 import { MethodTag } from "@/components/method-tag";
 import { RoutePath } from "@/components/route-path";
 import { CommentsFeed } from "@/features/comments/comments-feed";
+import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 type ServiceAction = components["schemas"]["ServiceActionItem"];
@@ -70,6 +71,7 @@ export function ActionCommentsDrawer({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    invalidateEntityQueries(queryClient, "service_action");
   }
 
   async function publish(value: RichTextDocument) {

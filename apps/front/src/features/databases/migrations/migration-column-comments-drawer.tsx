@@ -9,6 +9,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { CommentsFeed } from "@/features/comments/comments-feed";
 import { MigrationColumnTypeTag } from "@/features/databases/database-tags";
+import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 
 type MigrationColumn = components["schemas"]["DatabaseMigrationColumnItem"];
@@ -61,6 +62,7 @@ export function MigrationColumnCommentsDrawer({
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    invalidateEntityQueries(queryClient, "database_migration_column");
   }
 
   async function publish(value: RichTextDocument) {

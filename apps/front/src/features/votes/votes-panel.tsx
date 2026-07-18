@@ -19,6 +19,7 @@ import type { components } from "@/api/generated/schema";
 import { ownerName } from "@/features/accounts/owner-cell";
 import { VoteRoleTag } from "@/features/accounts/vote-role-tag";
 import { CommentAvatar } from "@/features/comments/comment-avatar";
+import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
 import {
   VOTE_VALUE_COLORS,
   VOTE_VALUE_ICONS,
@@ -126,6 +127,7 @@ export function VotesPanel({
       body: { entityType, entityId, value },
     });
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    invalidateEntityQueries(queryClient, entityType);
   }
 
   return (
