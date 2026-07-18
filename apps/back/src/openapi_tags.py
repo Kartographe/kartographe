@@ -71,6 +71,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "The edition an account runs under and the licensed features unlocked for it.",
     },
     {
+        "name": "api.accounts.stats",
+        "x-displayName": "Accounts › Statistics",
+        "description": "Dashboard statistics: per-entity counts, period deltas and sparkline series.",
+    },
+    {
         "name": "api.applications",
         "x-displayName": "Applications",
         "description": "Create and manage the applications tracked inside an account.",

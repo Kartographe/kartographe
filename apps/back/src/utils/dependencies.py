@@ -55,6 +55,7 @@ from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteMan
 from src.managers.persona import PersonaManager
 from src.managers.service import ServiceManager
 from src.managers.service_action import ServiceActionManager
+from src.managers.stats import StatsManager
 from src.managers.tag import TagManager
 from src.managers.usage import UsageManager
 from src.managers.vote import VoteManager
@@ -1028,6 +1029,15 @@ def get_usage_manager(session: SessionDep) -> UsageManager:
 
 
 UsageManagerDep = Annotated[UsageManager, Depends(get_usage_manager)]
+
+
+# --- Stats --------------------------------------------------------------
+
+def get_stats_manager(session: SessionDep) -> StatsManager:
+    return StatsManager(session)
+
+
+StatsManagerDep = Annotated[StatsManager, Depends(get_stats_manager)]
 
 
 # --- Tags ---------------------------------------------------------------
