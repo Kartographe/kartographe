@@ -19,6 +19,8 @@ from src.models.enum import (
     DatabaseTableType,
     DatabaseType,
     DatabaseVersionStatus,
+    VoteRole,
+    VoteValue,
 )
 from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
@@ -29,6 +31,8 @@ class DatabaseItem(TaggableItem):
     """A database tracked inside an account."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -62,6 +66,8 @@ class DatabaseTableColumnItem(TaggableItem):
 
     color: str | None = None
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     database_column_type_id: uuid.UUID
     date: datetime
     default_value: str
@@ -94,6 +100,8 @@ class DatabaseTableItem(TaggableItem):
     color: str | None = None
     columns: list[DatabaseTableColumnItem] | None = None
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -116,6 +124,8 @@ class DatabaseMigrationItem(CamelBase):
     """A planned move from a version of one database to a version of another."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     destination_database_id: uuid.UUID
@@ -141,6 +151,8 @@ class DatabaseMigrationColumnItem(CamelBase):
     """
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     destination_database_table_column_id: uuid.UUID | None = None

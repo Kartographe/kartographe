@@ -19,6 +19,8 @@ from src.models.enum import (
     ApplicationRouteStatus,
     ApplicationRouteTableAction,
     ApplicationRouteTableType,
+    VoteRole,
+    VoteValue,
 )
 from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
@@ -61,6 +63,8 @@ class ApplicationRouteItem(TaggableItem):
 
     accepted_format: list[str]
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     application_guard_ids: list[uuid.UUID]
     application_role_ids: list[uuid.UUID]
     body_schema: dict

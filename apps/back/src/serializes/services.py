@@ -13,6 +13,8 @@ from src.models.enum import (
     ServiceActionType,
     ServiceStatus,
     ServiceType,
+    VoteRole,
+    VoteValue,
 )
 from src.serializes._base import CamelBase
 from src.serializes.users import OwnerItem
@@ -22,6 +24,8 @@ class ServiceItem(CamelBase):
     """A service tracked inside an account."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -44,6 +48,8 @@ class ServiceActionItem(CamelBase):
     """An action exposed by a service."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     id: uuid.UUID

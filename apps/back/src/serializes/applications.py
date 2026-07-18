@@ -14,6 +14,8 @@ from src.models.enum import (
     ApplicationStatus,
     ApplicationType,
     ApplicationVersionType,
+    VoteRole,
+    VoteValue,
 )
 from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
@@ -24,6 +26,8 @@ class ApplicationItem(TaggableItem):
     """An application tracked inside an account."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: str | None = None
     id: uuid.UUID

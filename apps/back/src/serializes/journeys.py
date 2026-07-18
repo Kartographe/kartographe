@@ -16,6 +16,8 @@ from src.models.enum import (
     JourneyScenarioType,
     JourneyStatus,
     JourneyType,
+    VoteRole,
+    VoteValue,
 )
 from src.serializes._base import CamelBase, TaggableItem
 from src.serializes.tags import TagItem
@@ -26,6 +28,8 @@ class JourneyItem(TaggableItem):
     """A user journey tracked inside an account."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -48,6 +52,8 @@ class JourneyScenarioItem(TaggableItem):
     """A scenario inside a journey."""
 
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     criticity: JourneyScenarioCriticity
     date: datetime
     description: dict | None = None
@@ -82,6 +88,8 @@ class JourneyScenarioStepItem(TaggableItem):
 
     action_type_id: uuid.UUID | None = None
     comment_count: int = 0
+    votes_counts_by_value: dict[VoteValue, int] = {}
+    votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
     description: dict | None = None
     id: uuid.UUID
     locked: bool

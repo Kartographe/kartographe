@@ -21,7 +21,12 @@ from collections.abc import Sequence
 from sqlmodel import Session, func, select
 
 from src.models.comment import Comment
-from src.models.enum import EntityType
+from src.models.enum import EntityType, VoteRole, VoteValue
+from src.models.vote import Vote
+
+# Per-entity vote tallies: {value: n} and {role: {value: n}}.
+VotesByValue = dict[VoteValue, int]
+VotesByRoleValue = dict[VoteRole, dict[VoteValue, int]]
 
 
 def comment_counts(
@@ -42,6 +47,36 @@ def comment_counts(
     return {entity_id: count for entity_id, count in rows}
 
 
+def vote_counts(
+    session: Session, entity_type: EntityType, entity_ids: Sequence[uuid.UUID]
+) -> tuple[dict[uuid.UUID, VotesByValue], dict[uuid.UUID, VotesByRoleValue]]:
+    """Vote tallies per entity — both by value and by (role, value) — in one query.
+
+    `by_value` sums across roles; `by_role_value` keeps the role breakdown. An
+    entity absent from a map has no votes.
+    """
+    by_value: dict[uuid.UUID, VotesByValue] = {}
+    by_role_value: dict[uuid.UUID, VotesByRoleValue] = {}
+    if not entity_ids:
+        return by_value, by_role_value
+
+    rows = session.exec(
+        select(Vote.entity_id, Vote.role, Vote.value, func.count(Vote.id))
+        .where(
+            Vote.entity_type == entity_type,
+            Vote.entity_id.in_(entity_ids),
+            Vote.enabled.is_(True),
+        )
+        .group_by(Vote.entity_id, Vote.role, Vote.value)
+    ).all()
+    for entity_id, role, value, count in rows:
+        value_tally = by_value.setdefault(entity_id, {})
+        value_tally[value] = value_tally.get(value, 0) + count
+        role_tally = by_role_value.setdefault(entity_id, {}).setdefault(role, {})
+        role_tally[value] = role_tally.get(value, 0) + count
+    return by_value, by_role_value
+
+
 def enrich_items(session: Session, entity_type: EntityType, items: list) -> list:
     """Fill each item's aggregate-count fields in place, then return `items`.
 
@@ -53,10 +88,16 @@ def enrich_items(session: Session, entity_type: EntityType, items: list) -> list
         return items
 
     entity_ids = [item.id for item in items]
-
     comments = comment_counts(session, entity_type, entity_ids)
+    votes_by_value, votes_by_role_value = vote_counts(session, entity_type, entity_ids)
+
     for item in items:
-        if "comment_count" in type(item).model_fields:
+        fields = type(item).model_fields
+        if "comment_count" in fields:
             item.comment_count = comments.get(item.id, 0)
+        if "votes_counts_by_value" in fields:
+            item.votes_counts_by_value = votes_by_value.get(item.id, {})
+        if "votes_counts_by_role_value" in fields:
+            item.votes_counts_by_role_value = votes_by_role_value.get(item.id, {})
 
     return items
