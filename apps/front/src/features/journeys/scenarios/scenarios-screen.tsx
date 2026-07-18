@@ -2,26 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  ArrowRightOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { ArrowRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { TableProps } from "antd";
-import {
-  App,
-  Button,
-  Empty,
-  Flex,
-  Space,
-  Table,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Empty, Flex, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { $api } from "@/api/$api";
@@ -49,7 +35,6 @@ export function ScenariosScreen({
   journeyId: string;
 }) {
   const { t } = useLingui();
-  const { modal } = App.useApp();
   const queryClient = useQueryClient();
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<JourneyScenario | undefined | null>(null);
@@ -75,11 +60,6 @@ export function ScenariosScreen({
     "patch",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Criticité mise à jour` } }
-  );
-  const deleteMutation = $api.useMutation(
-    "delete",
-    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
-    { meta: { successMessage: t`Scénario supprimé` } }
   );
 
   const scenarios = scenariosQuery.data?.items ?? [];
@@ -119,22 +99,6 @@ export function ScenariosScreen({
       body: { criticity },
     });
     invalidate();
-  }
-
-  function confirmDelete(scenario: JourneyScenario) {
-    modal.confirm({
-      title: t`Supprimer ${scenario.title} ?`,
-      content: t`Ses étapes, leurs fichiers et leurs assertions seront supprimés également. Cette action est irréversible.`,
-      okText: t`Supprimer`,
-      okButtonProps: { danger: true },
-      cancelText: t`Annuler`,
-      onOk: async () => {
-        await deleteMutation.mutateAsync({
-          params: { path: { ...path, scenario_id: scenario.id } },
-        });
-        invalidate();
-      },
-    });
   }
 
   const formModal =
@@ -212,37 +176,16 @@ export function ScenariosScreen({
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: 2, labelled: 1 }),
+      width: actionsWidth({ labelled: 1 }),
       render: (_, scenario) => (
-        <Space>
-          <Link
-            params={{ accountId, journeyId, scenarioId: scenario.id }}
-            to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
-          >
-            <Button
-              icon={<ArrowRightOutlined />}
-              iconPosition="end"
-              size="small"
-            >
-              {t`Accéder`}
-            </Button>
-          </Link>
-          <Tooltip title={t`Modifier`}>
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => setForm(scenario)}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title={t`Supprimer`}>
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => confirmDelete(scenario)}
-              size="small"
-            />
-          </Tooltip>
-        </Space>
+        <Link
+          params={{ accountId, journeyId, scenarioId: scenario.id }}
+          to="/accounts/$accountId/journeys/$journeyId/scenarios/$scenarioId"
+        >
+          <Button icon={<ArrowRightOutlined />} iconPosition="end" size="small">
+            {t`Accéder`}
+          </Button>
+        </Link>
       ),
     },
   ];
