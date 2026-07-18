@@ -28,6 +28,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -40,6 +41,7 @@ import {
   ServiceStatusTag,
   ServiceTypeTag,
 } from "@/features/services/service-tags";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type Service = components["schemas"]["ServiceItem"];
 type Status = components["schemas"]["ServiceStatus"];
@@ -67,6 +69,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const servicesQuery = $api.useQuery(
     "get",
@@ -81,6 +84,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
           sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
+          ...(myVote ? { myVote } : {}),
         },
       },
     }
@@ -191,6 +195,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
     setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -289,12 +294,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 4 : 3, labelled: 1 }),
       render: (_, service) => (
         <Space>
           {canManageLock ? (
@@ -304,6 +310,12 @@ export function ServicesList({ accountId }: { accountId: string }) {
               pending={lockPending}
             />
           ) : null}
+          <Link
+            params={{ accountId, serviceId: service.id }}
+            to="/accounts/$accountId/services/$serviceId/comments"
+          >
+            <CommentCountButton count={service.commentCount} />
+          </Link>
           <Link
             params={{ accountId, serviceId: service.id }}
             to="/accounts/$accountId/services/$serviceId"

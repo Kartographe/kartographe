@@ -2,12 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import type { TableProps } from "antd";
@@ -32,6 +27,7 @@ import {
   EXPAND_COLUMN_WIDTH,
   scrollX,
 } from "@/components/table/columns";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -47,6 +43,7 @@ import {
 } from "@/features/personas/persona-tags";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
+import { votesColumn } from "@/features/votes/votes-column";
 import { isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
@@ -80,6 +77,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const tagFilters = useTagFilters(accountId, "persona");
 
@@ -97,6 +95,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
+          ...(myVote ? { myVote } : {}),
         },
       },
     }
@@ -220,6 +219,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
     setTagIds((filters.tags as string[] | null) ?? []);
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -331,6 +331,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
@@ -346,13 +347,10 @@ export function PersonasList({ accountId }: { accountId: string }) {
               pending={lockPending}
             />
           ) : null}
-          <Tooltip title={t`Commentaires`}>
-            <Button
-              icon={<CommentOutlined />}
-              onClick={() => setCommented(persona)}
-              size="small"
-            />
-          </Tooltip>
+          <CommentCountButton
+            count={persona.commentCount}
+            onClick={() => setCommented(persona)}
+          />
           <Tooltip title={persona.locked ? t`Persona verrouillé` : t`Modifier`}>
             <Button
               disabled={persona.locked}

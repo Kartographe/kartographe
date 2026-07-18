@@ -2,12 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Plural, useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,6 +12,7 @@ import {
   Empty,
   Flex,
   Segmented,
+  Select,
   Spin,
   Tooltip,
   Typography,
@@ -24,6 +20,7 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import {
   TableStatusTag,
   TableTypeTag,
@@ -41,6 +38,8 @@ import { useColumnTypes } from "@/features/databases/use-column-types";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { VotesCell } from "@/features/votes/votes-cell";
+import { myVoteFilters } from "@/features/votes/votes-column";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type Database = components["schemas"]["DatabaseItem"];
@@ -90,6 +89,7 @@ export function TablesScreen({
   const [commentedColumn, setCommentedColumn] = useState<
     ColumnTarget | undefined
   >(undefined);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const selectedId = version.id;
   const path = {
@@ -101,7 +101,7 @@ export function TablesScreen({
   const tablesQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const statusMutation = $api.useMutation(
     "patch",
@@ -251,7 +251,12 @@ export function TablesScreen({
       </Flex>
     ),
     extra: (
-      <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+      <Flex align="center" gap={8} onClick={(event) => event.stopPropagation()}>
+        <VotesCell
+          countsByRoleValue={table.votesCountsByRoleValue}
+          countsByValue={table.votesCountsByValue}
+          myVote={table.myVote}
+        />
         {canManageLock ? (
           <LockToggleButton
             locked={table.locked}
@@ -259,13 +264,10 @@ export function TablesScreen({
             pending={tableLockPending}
           />
         ) : null}
-        <Tooltip title={t`Commentaires`}>
-          <Button
-            icon={<CommentOutlined />}
-            onClick={() => setCommentedTable(table)}
-            size="small"
-          />
-        </Tooltip>
+        <CommentCountButton
+          count={table.commentCount}
+          onClick={() => setCommentedTable(table)}
+        />
         <Tooltip title={table.locked ? t`Table verrouillée` : t`Modifier`}>
           <Button
             disabled={table.locked}
@@ -335,6 +337,18 @@ export function TablesScreen({
           <VersionStatusTag status={version.status} />
         </Flex>
         <Flex align="center" gap={12}>
+          <Select
+            allowClear
+            onChange={setMyVote}
+            options={myVoteFilters(t, t`Pas encore voté`).map((option) => ({
+              label: option.text,
+              value: option.value,
+            }))}
+            placeholder={t`Mon vote`}
+            size="small"
+            style={{ minWidth: 150 }}
+            value={myVote}
+          />
           <Segmented
             onChange={(value) => setView(value as "list" | "graph")}
             options={[

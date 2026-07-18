@@ -19,6 +19,7 @@ import {
   ScenarioTypeTag,
 } from "@/features/journeys/journey-tags";
 import { ScenarioFormModal } from "@/features/journeys/scenarios/scenario-form-modal";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type JourneyScenario = components["schemas"]["JourneyScenarioItem"];
 
@@ -38,13 +39,14 @@ export function ScenariosScreen({
   const queryClient = useQueryClient();
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<JourneyScenario | undefined | null>(null);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const path = { account_id: accountId, journey_id: journeyId };
 
   const scenariosQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const statusMutation = $api.useMutation(
     "patch",
@@ -100,6 +102,13 @@ export function ScenariosScreen({
     });
     invalidate();
   }
+
+  const onChange: TableProps<JourneyScenario>["onChange"] = (
+    _pagination,
+    filters
+  ) => {
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+  };
 
   const formModal =
     form === null ? null : (
@@ -171,6 +180,7 @@ export function ScenariosScreen({
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
@@ -231,6 +241,7 @@ export function ScenariosScreen({
         columns={columns}
         dataSource={scenarios}
         loading={scenariosQuery.isLoading}
+        onChange={onChange}
         pagination={false}
         rowKey="id"
         scroll={scrollX(columns)}

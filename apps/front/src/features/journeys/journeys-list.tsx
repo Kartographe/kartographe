@@ -14,6 +14,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { EditablePersonasCell } from "@/features/journeys/editable-personas-cell";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
@@ -30,6 +31,7 @@ import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type Journey = components["schemas"]["JourneyItem"];
 type Status = components["schemas"]["JourneyStatus"];
@@ -63,6 +65,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const [types, setTypes] = useState<Type[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [personasIds, setPersonasIds] = useState<string[]>([]);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const tagFilters = useTagFilters(accountId, "journey");
 
@@ -81,6 +84,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(personasIds.length ? { personasIds } : {}),
+          ...(myVote ? { myVote } : {}),
         },
       },
     }
@@ -194,6 +198,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
     setTypes((filters.type as Type[] | null) ?? []);
     setTagIds((filters.tags as string[] | null) ?? []);
     setPersonasIds((filters.personasIds as string[] | null) ?? []);
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -326,12 +331,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: canManageLock ? 1 : 0, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 2 : 1, labelled: 1 }),
       render: (_, journey) => (
         <Flex align="center" gap={4} justify="flex-end">
           {canManageLock ? (
@@ -341,6 +347,12 @@ export function JourneysList({ accountId }: { accountId: string }) {
               pending={lockPending}
             />
           ) : null}
+          <Link
+            params={{ accountId, journeyId: journey.id }}
+            to="/accounts/$accountId/journeys/$journeyId/comments"
+          >
+            <CommentCountButton count={journey.commentCount} />
+          </Link>
           <Link
             params={{ accountId, journeyId: journey.id }}
             to="/accounts/$accountId/journeys/$journeyId"

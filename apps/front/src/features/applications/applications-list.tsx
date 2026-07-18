@@ -37,11 +37,13 @@ import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_TYPE_LABELS,
 } from "@/features/applications/labels";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type Application = components["schemas"]["ApplicationItem"];
 type Status = components["schemas"]["ApplicationStatus"];
@@ -70,6 +72,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const tagFilters = useTagFilters(accountId, "application");
 
@@ -87,6 +90,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
+          ...(myVote ? { myVote } : {}),
         },
       },
     }
@@ -222,6 +226,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
     setTagIds((filters.tags as string[] | null) ?? []);
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
       setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
@@ -343,12 +348,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
       align: "right",
       fixed: "right",
-      width: actionsWidth({ icons: canManageLock ? 3 : 2, labelled: 1 }),
+      width: actionsWidth({ icons: canManageLock ? 4 : 3, labelled: 1 }),
       render: (_, application) => (
         <Space>
           {canManageLock ? (
@@ -358,6 +364,12 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
               pending={lockPending}
             />
           ) : null}
+          <Link
+            params={{ accountId, applicationId: application.id }}
+            to="/accounts/$accountId/applications/$applicationId/comments"
+          >
+            <CommentCountButton count={application.commentCount} />
+          </Link>
           <Link
             params={{ accountId, applicationId: application.id }}
             to="/accounts/$accountId/applications/$applicationId"

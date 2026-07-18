@@ -37,6 +37,7 @@ import { useVersionLookup } from "@/features/databases/migrations/use-version-lo
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { votesColumn } from "@/features/votes/votes-column";
 
 type DatabaseMigration = components["schemas"]["DatabaseMigrationItem"];
 
@@ -57,13 +58,14 @@ export function MigrationsScreen({
   const queryClient = useQueryClient();
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<DatabaseMigration | undefined | null>(null);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const path = { account_id: accountId, database_id: databaseId };
 
   const migrationsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/migrations",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -116,6 +118,13 @@ export function MigrationsScreen({
     });
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
+
+  const onChange: TableProps<DatabaseMigration>["onChange"] = (
+    _pagination,
+    filters
+  ) => {
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+  };
 
   const formModal =
     form === null ? null : (
@@ -186,6 +195,7 @@ export function MigrationsScreen({
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
@@ -280,6 +290,7 @@ export function MigrationsScreen({
         columns={columns}
         dataSource={migrations}
         loading={migrationsQuery.isLoading}
+        onChange={onChange}
         pagination={false}
         rowKey="id"
         scroll={scrollX(columns)}

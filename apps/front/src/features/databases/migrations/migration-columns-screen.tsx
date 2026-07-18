@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import {
-  CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
@@ -27,6 +26,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import {
   MigrationColumnStatusTag,
   MigrationColumnTypeTag,
@@ -45,6 +45,7 @@ import { useVersionLookup } from "@/features/databases/migrations/use-version-lo
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { votesColumn } from "@/features/votes/votes-column";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type S = components["schemas"];
@@ -130,6 +131,7 @@ export function MigrationColumnsScreen({
   const [commentedColumn, setCommentedColumn] = useState<
     MigrationColumn | undefined
   >(undefined);
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const path = {
     account_id: accountId,
@@ -140,7 +142,7 @@ export function MigrationColumnsScreen({
   const columnsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const sourceTablesQuery = $api.useQuery(
     "get",
@@ -334,6 +336,13 @@ export function MigrationColumnsScreen({
     });
   }
 
+  const onChange: TableProps<MigrationColumn>["onChange"] = (
+    _pagination,
+    filters
+  ) => {
+    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+  };
+
   const formModal =
     form === null ? null : (
       <MigrationColumnFormModal
@@ -379,12 +388,10 @@ export function MigrationColumnsScreen({
               size="middle"
             />
           ) : null}
-          <Tooltip title={t`Commentaires`}>
-            <Button
-              icon={<CommentOutlined />}
-              onClick={() => setMigrationCommentsOpen(true)}
-            />
-          </Tooltip>
+          <CommentCountButton
+            count={migration.commentCount}
+            onClick={() => setMigrationCommentsOpen(true)}
+          />
           <Dropdown
             disabled={migration.locked}
             menu={{
@@ -482,6 +489,7 @@ export function MigrationColumnsScreen({
         <MigrationColumnStatusTag status={status} />
       ),
     },
+    votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
     {
       title: "",
       key: "actions",
@@ -497,13 +505,10 @@ export function MigrationColumnsScreen({
               pending={columnLockPending}
             />
           ) : null}
-          <Tooltip title={t`Commentaires`}>
-            <Button
-              icon={<CommentOutlined />}
-              onClick={() => setCommentedColumn(column)}
-              size="small"
-            />
-          </Tooltip>
+          <CommentCountButton
+            count={column.commentCount}
+            onClick={() => setCommentedColumn(column)}
+          />
           <Dropdown
             disabled={column.locked}
             menu={{
@@ -554,6 +559,7 @@ export function MigrationColumnsScreen({
           columns={tableColumns}
           dataSource={columns}
           loading={columnsQuery.isLoading}
+          onChange={onChange}
           pagination={false}
           rowKey="id"
           scroll={scrollX(tableColumns)}

@@ -2,12 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,6 +12,7 @@ import {
   Descriptions,
   Empty,
   Flex,
+  Select,
   Spin,
   Tooltip,
   Typography,
@@ -30,6 +26,7 @@ import {
   tintMethod,
 } from "@/components/method-tag";
 import { RoutePath } from "@/components/route-path";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -39,6 +36,8 @@ import {
   ActionStatusTag,
   ActionTypeTag,
 } from "@/features/services/service-tags";
+import { VotesCell } from "@/features/votes/votes-cell";
+import { myVoteFilters } from "@/features/votes/votes-column";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type ServiceAction = components["schemas"]["ServiceActionItem"];
@@ -79,13 +78,14 @@ export function ActionsScreen({
   const [commented, setCommented] = useState<ServiceAction | undefined>(
     undefined
   );
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const path = { account_id: accountId, service_id: serviceId };
 
   const actionsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/services/{service_id}/actions",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const statusMutation = $api.useMutation(
     "patch",
@@ -200,7 +200,16 @@ export function ActionsScreen({
         </Flex>
       ),
       extra: (
-        <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+        <Flex
+          align="center"
+          gap={8}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <VotesCell
+            countsByRoleValue={action.votesCountsByRoleValue}
+            countsByValue={action.votesCountsByValue}
+            myVote={action.myVote}
+          />
           {canManageLock ? (
             <LockToggleButton
               locked={action.locked}
@@ -208,13 +217,10 @@ export function ActionsScreen({
               pending={lockPending}
             />
           ) : null}
-          <Tooltip title={t`Commentaires`}>
-            <Button
-              icon={<CommentOutlined />}
-              onClick={() => setCommented(action)}
-              size="small"
-            />
-          </Tooltip>
+          <CommentCountButton
+            count={action.commentCount}
+            onClick={() => setCommented(action)}
+          />
           <Tooltip title={action.locked ? t`Action verrouillée` : t`Modifier`}>
             <Button
               disabled={action.locked}
@@ -265,16 +271,30 @@ export function ActionsScreen({
         <Typography.Title level={4} style={{ margin: 0 }}>
           {t`Actions`}
         </Typography.Title>
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditing(undefined);
-            setFormOpen(true);
-          }}
-          type="primary"
-        >
-          {t`Créer une action`}
-        </Button>
+        <Flex align="center" gap={12}>
+          <Select
+            allowClear
+            onChange={setMyVote}
+            options={myVoteFilters(t, t`Pas encore voté`).map((option) => ({
+              label: option.text,
+              value: option.value,
+            }))}
+            placeholder={t`Mon vote`}
+            size="small"
+            style={{ minWidth: 150 }}
+            value={myVote}
+          />
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditing(undefined);
+              setFormOpen(true);
+            }}
+            type="primary"
+          >
+            {t`Créer une action`}
+          </Button>
+        </Flex>
       </Flex>
 
       {actionsQuery.isLoading ? (

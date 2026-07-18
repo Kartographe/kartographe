@@ -2,12 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,6 +12,7 @@ import {
   Descriptions,
   Empty,
   Flex,
+  Select,
   Spin,
   Tag,
   Tooltip,
@@ -34,9 +30,12 @@ import { RoutePath } from "@/components/route-path";
 import { ApplicationStatusTag } from "@/features/applications/application-tags";
 import { RouteCommentsDrawer } from "@/features/applications/routes/route-comments-drawer";
 import { RouteFormModal } from "@/features/applications/routes/route-form-modal";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { VotesCell } from "@/features/votes/votes-cell";
+import { myVoteFilters } from "@/features/votes/votes-column";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type ApplicationRoute = components["schemas"]["ApplicationRouteItem"];
@@ -63,13 +62,14 @@ export function RoutesScreen({
   const [commented, setCommented] = useState<ApplicationRoute | undefined>(
     undefined
   );
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   const path = { account_id: accountId, application_id: applicationId };
 
   const routesQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/applications/{application_id}/routes",
-    { params: { path } }
+    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
   );
   const guardsQuery = $api.useQuery(
     "get",
@@ -189,7 +189,16 @@ export function RoutesScreen({
         </Flex>
       ),
       extra: (
-        <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+        <Flex
+          align="center"
+          gap={8}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <VotesCell
+            countsByRoleValue={route.votesCountsByRoleValue}
+            countsByValue={route.votesCountsByValue}
+            myVote={route.myVote}
+          />
           {canManageLock ? (
             <LockToggleButton
               locked={route.locked}
@@ -197,13 +206,10 @@ export function RoutesScreen({
               pending={lockPending}
             />
           ) : null}
-          <Tooltip title={t`Commentaires`}>
-            <Button
-              icon={<CommentOutlined />}
-              onClick={() => setCommented(route)}
-              size="small"
-            />
-          </Tooltip>
+          <CommentCountButton
+            count={route.commentCount}
+            onClick={() => setCommented(route)}
+          />
           <Tooltip title={route.locked ? t`Route verrouillée` : t`Modifier`}>
             <Button
               disabled={route.locked}
@@ -279,16 +285,30 @@ export function RoutesScreen({
         <Typography.Title level={4} style={{ margin: 0 }}>
           {t`Routes`}
         </Typography.Title>
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditing(undefined);
-            setFormOpen(true);
-          }}
-          type="primary"
-        >
-          {t`Créer une route`}
-        </Button>
+        <Flex align="center" gap={12}>
+          <Select
+            allowClear
+            onChange={setMyVote}
+            options={myVoteFilters(t, t`Pas encore voté`).map((option) => ({
+              label: option.text,
+              value: option.value,
+            }))}
+            placeholder={t`Mon vote`}
+            size="small"
+            style={{ minWidth: 150 }}
+            value={myVote}
+          />
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditing(undefined);
+              setFormOpen(true);
+            }}
+            type="primary"
+          >
+            {t`Créer une route`}
+          </Button>
+        </Flex>
       </Flex>
 
       {routesQuery.isLoading ? (

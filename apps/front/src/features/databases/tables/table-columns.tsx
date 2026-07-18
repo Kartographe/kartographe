@@ -5,7 +5,6 @@
 import {
   CheckOutlined,
   CloseOutlined,
-  CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   HolderOutlined,
@@ -44,6 +43,7 @@ import {
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { CommentCountButton } from "@/features/comments/comment-count-button";
 import {
   isIdentifier,
   stripNonIdentifier,
@@ -53,6 +53,7 @@ import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { VotesCell } from "@/features/votes/votes-cell";
 
 type DatabaseTable = components["schemas"]["DatabaseTableItem"];
 type Column = components["schemas"]["DatabaseTableColumnItem"];
@@ -228,6 +229,11 @@ function ColumnRow({
       {column.nullable ? <Tag>{t`Nullable`}</Tag> : null}
       {column.systemField ? <Tag>{t`Système`}</Tag> : null}
 
+      <VotesCell
+        countsByRoleValue={column.votesCountsByRoleValue}
+        countsByValue={column.votesCountsByValue}
+        myVote={column.myVote}
+      />
       {canManageLock ? (
         <LockToggleButton
           locked={column.locked}
@@ -235,9 +241,7 @@ function ColumnRow({
           pending={lockPending}
         />
       ) : null}
-      <Tooltip title={t`Commentaires`}>
-        <Button icon={<CommentOutlined />} onClick={onComment} size="small" />
-      </Tooltip>
+      <CommentCountButton count={column.commentCount} onClick={onComment} />
       <Tooltip title={column.locked ? t`Colonne verrouillée` : t`Modifier`}>
         <Button
           disabled={column.locked}
