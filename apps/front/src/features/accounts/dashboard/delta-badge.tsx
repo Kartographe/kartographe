@@ -36,10 +36,23 @@ export function DeltaBadge({ delta }: { delta: number | null | undefined }) {
 
   const up = delta > 0;
   const color = up ? "var(--ant-color-success)" : "var(--ant-color-error)";
+  const bg = up ? "var(--ant-color-success-bg)" : "var(--ant-color-error-bg)";
 
   return (
     <Tooltip title={t`Comparé à la période précédente`}>
-      <Flex align="center" gap={2} style={{ color, fontSize: 12 }}>
+      <Flex
+        align="center"
+        gap={2}
+        style={{
+          background: bg,
+          borderRadius: 999,
+          color,
+          fontSize: 12,
+          fontWeight: 500,
+          lineHeight: 1,
+          padding: "2px 8px",
+        }}
+      >
         {up ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
         <span>{formatSignedPercent(delta, i18n.locale)}</span>
       </Flex>

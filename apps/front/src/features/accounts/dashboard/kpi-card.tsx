@@ -11,6 +11,10 @@ import { formatInteger } from "@/lib/format/number";
 
 type StatMetric = components["schemas"]["StatMetric"];
 
+/** The fields a tile actually renders — lets synthetic (summed) metrics skip a
+ * single-entity `key` they don't have. */
+type KpiMetric = Pick<StatMetric, "total" | "series" | "periodCount" | "delta">;
+
 const SPARKLINE_WIDTH = 96;
 
 /** One KPI tile: label, all-time total, a velocity sparkline, and the period
@@ -20,7 +24,7 @@ export function KpiCard({
   metric,
 }: {
   label: string;
-  metric: StatMetric;
+  metric: KpiMetric;
 }) {
   const { t, i18n } = useLingui();
 

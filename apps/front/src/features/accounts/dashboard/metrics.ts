@@ -35,21 +35,35 @@ export const METRIC_LABELS: Record<StatEntityKey, MessageDescriptor> = {
 /**
  * Which metrics each viewpoint surfaces, in display order. `/stats` returns them
  * all; the segmented control only picks the subset to render — no re-fetch.
+ *
+ * The overview stays deliberately generic: cross-cutting engagement (comments,
+ * votes) plus a synthetic "Activité" total (see {@link ACTIVITY_KEYS}). The
+ * domain-specific counts live in their dedicated tabs, never duplicated here.
  */
 export const METRIC_GROUPS: Record<Typology, StatEntityKey[]> = {
-  overview: [
-    "features",
-    "journeys",
-    "scenarios",
-    "personas",
-    "applications",
-    "databases",
-    "comments",
-    "votes",
-  ],
+  overview: ["comments", "votes"],
   produit: ["features", "journeys", "scenarios", "personas"],
   technique: ["applications", "databases", "services", "routes"],
 };
+
+/**
+ * The entity-creation metrics summed into the synthetic "Activité" KPI shown on
+ * the overview — every produced artefact, excluding engagement (comments,
+ * votes) which get their own tiles.
+ */
+export const ACTIVITY_KEYS: StatEntityKey[] = [
+  "features",
+  "journeys",
+  "scenarios",
+  "personas",
+  "applications",
+  "databases",
+  "services",
+  "routes",
+];
+
+/** Label for the synthetic overview "Activité" KPI. */
+export const ACTIVITY_LABEL: MessageDescriptor = msg`Activité`;
 
 /** Singular label for the entity a comment or vote points at. */
 export const ENTITY_TYPE_LABELS: Record<EntityType, MessageDescriptor> = {

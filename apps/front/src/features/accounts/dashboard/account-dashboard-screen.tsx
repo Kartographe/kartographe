@@ -6,6 +6,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Alert, Col, DatePicker, Flex, Row, Segmented, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
+import { ActivityFeed } from "@/features/accounts/dashboard/activity-feed";
 import { KpiGrid } from "@/features/accounts/dashboard/kpi-grid";
 import {
   TYPOLOGY_LABELS,
@@ -17,8 +18,6 @@ import {
   type Period,
 } from "@/features/accounts/dashboard/period";
 import { RecentComments } from "@/features/accounts/dashboard/recent-comments";
-import { RecentEntities } from "@/features/accounts/dashboard/recent-entities";
-import { RecentVotes } from "@/features/accounts/dashboard/recent-votes";
 
 const { RangePicker } = DatePicker;
 
@@ -51,20 +50,20 @@ export function AccountDashboardScreen({ accountId }: { accountId: string }) {
 
   return (
     <Flex gap={24} vertical>
-      <Flex align="flex-start" gap={16} justify="space-between" wrap>
-        <Flex gap={12} vertical>
-          <Typography.Title level={2} style={{ margin: 0 }}>
-            {account?.name ?? t`Tableau de bord`}
-          </Typography.Title>
-          <Segmented<Typology>
-            onChange={setTypology}
-            options={TYPOLOGY_ORDER.map((value) => ({
-              value,
-              label: t(TYPOLOGY_LABELS[value]),
-            }))}
-            value={typology}
-          />
-        </Flex>
+      <Typography.Title level={2} style={{ margin: 0 }}>
+        {account?.name ?? t`Tableau de bord`}
+      </Typography.Title>
+
+      <Flex align="center" gap={16} justify="space-between" wrap>
+        <Segmented<Typology>
+          onChange={setTypology}
+          options={TYPOLOGY_ORDER.map((value) => ({
+            value,
+            label: t(TYPOLOGY_LABELS[value]),
+          }))}
+          shape="round"
+          value={typology}
+        />
         <RangePicker
           allowClear={false}
           format="DD/MM/YYYY"
@@ -95,17 +94,18 @@ export function AccountDashboardScreen({ accountId }: { accountId: string }) {
         typology={typology}
       />
 
-      <Row gutter={[SIDE_GAP, SIDE_GAP]}>
-        <Col lg={12} xs={24}>
-          <RecentEntities accountId={accountId} />
-        </Col>
-        <Col lg={12} xs={24}>
-          <Flex gap={SIDE_GAP} vertical>
+      {typology === "overview" ? (
+        <Row gutter={[SIDE_GAP, SIDE_GAP]}>
+          <Col lg={12} xs={24}>
+            <ActivityFeed accountId={accountId} typology={typology} />
+          </Col>
+          <Col lg={12} xs={24}>
             <RecentComments accountId={accountId} />
-            <RecentVotes accountId={accountId} />
-          </Flex>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      ) : (
+        <ActivityFeed accountId={accountId} typology={typology} />
+      )}
     </Flex>
   );
 }
