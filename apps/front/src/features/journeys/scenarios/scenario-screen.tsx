@@ -5,7 +5,16 @@
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { App, Button, Empty, Flex, Space, Tag, Typography } from "antd";
+import {
+  App,
+  Button,
+  Empty,
+  Flex,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
@@ -19,6 +28,9 @@ import { StepDrawer } from "@/features/journeys/steps/step-drawer";
 import { StepFormModal } from "@/features/journeys/steps/step-form-modal";
 import { StepList } from "@/features/journeys/steps/step-list";
 import { usePersonas } from "@/features/journeys/use-personas";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type JourneyScenario = components["schemas"]["JourneyScenarioItem"];
@@ -83,6 +95,19 @@ export function ScenarioScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}",
     { meta: { successMessage: t`Statut mis à jour` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/lock",
+    { meta: { successMessage: t`Scénario verrouillé` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/unlock",
+    { meta: { successMessage: t`Scénario déverrouillé` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const steps = stepsQuery.data?.items ?? [];
   const stepById = new Map(steps.map((step) => [step.id, step]));
@@ -116,6 +141,12 @@ export function ScenarioScreen({
 
   async function changeStatus(status: JourneyScenario["status"]) {
     await statusMutation.mutateAsync({ params: { path }, body: { status } });
+    invalidateScenario();
+  }
+
+  async function toggleLock() {
+    const mutation = scenario.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({ params: { path } });
     invalidateScenario();
   }
 
@@ -165,16 +196,34 @@ export function ScenarioScreen({
   return (
     <Flex gap={16} vertical>
       <Flex align="center" justify="space-between">
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {scenario.title}
-        </Typography.Title>
+        <Flex align="center" gap={8}>
+          <LockIndicator
+            locked={scenario.locked}
+            lockedBy={scenario.lockedBy}
+            lockedDate={scenario.lockedDate}
+          />
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            {scenario.title}
+          </Typography.Title>
+        </Flex>
         <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => setEditScenarioOpen(true)}
-          >
-            {t`Modifier`}
-          </Button>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={scenario.locked}
+              onToggle={toggleLock}
+              pending={lockPending}
+              size="middle"
+            />
+          ) : null}
+          <Tooltip title={scenario.locked ? t`Scénario verrouillé` : ""}>
+            <Button
+              disabled={scenario.locked}
+              icon={<EditOutlined />}
+              onClick={() => setEditScenarioOpen(true)}
+            >
+              {t`Modifier`}
+            </Button>
+          </Tooltip>
           {addButton}
         </Space>
       </Flex>
@@ -182,17 +231,17 @@ export function ScenarioScreen({
       <Flex align="center" gap={8} wrap>
         <ScenarioTypeTag
           loading={typeMutation.isPending}
-          onChange={changeType}
+          onChange={scenario.locked ? undefined : changeType}
           type={scenario.type}
         />
         <ScenarioCriticityTag
           criticity={scenario.criticity}
           loading={criticityMutation.isPending}
-          onChange={changeCriticity}
+          onChange={scenario.locked ? undefined : changeCriticity}
         />
         <ScenarioStatusTag
           loading={statusMutation.isPending}
-          onChange={changeStatus}
+          onChange={scenario.locked ? undefined : changeStatus}
           status={scenario.status}
         />
         {scenario.personasIds.map((id) => (
