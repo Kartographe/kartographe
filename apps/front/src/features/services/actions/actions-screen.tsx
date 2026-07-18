@@ -30,6 +30,9 @@ import {
   tintMethod,
 } from "@/components/method-tag";
 import { RoutePath } from "@/components/route-path";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { ActionCommentsDrawer } from "@/features/services/actions/action-comments-drawer";
 import { ActionFormModal } from "@/features/services/actions/action-form-modal";
 import {
@@ -99,6 +102,19 @@ export function ActionsScreen({
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}",
     { meta: { successMessage: t`Action supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/lock",
+    { meta: { successMessage: t`Action verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/unlock",
+    { meta: { successMessage: t`Action déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const actions = actionsQuery.data?.items ?? [];
 
@@ -141,6 +157,14 @@ export function ActionsScreen({
     });
   }
 
+  async function toggleLock(action: ServiceAction) {
+    const mutation = action.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { ...path, action_id: action.id } },
+    });
+    invalidate();
+  }
+
   const items = actions.map((action) => {
     return {
       key: action.id,
@@ -149,23 +173,41 @@ export function ActionsScreen({
         <Flex align="center" gap={12} style={{ minWidth: 0 }}>
           {action.method ? <MethodTag method={action.method} /> : null}
           {action.path ? <RoutePath path={action.path} /> : null}
-          <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
-            {action.title}
-          </Typography.Text>
+          <Flex align="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
+            <LockIndicator
+              locked={action.locked}
+              lockedBy={action.lockedBy}
+              lockedDate={action.lockedDate}
+            />
+            <Typography.Text ellipsis type="secondary">
+              {action.title}
+            </Typography.Text>
+          </Flex>
           <ActionTypeTag
             loading={typeMutation.isPending}
-            onChange={(next) => changeType(action, next)}
+            onChange={
+              action.locked ? undefined : (next) => changeType(action, next)
+            }
             type={action.type}
           />
           <ActionStatusTag
             loading={statusMutation.isPending}
-            onChange={(next) => changeStatus(action, next)}
+            onChange={
+              action.locked ? undefined : (next) => changeStatus(action, next)
+            }
             status={action.status}
           />
         </Flex>
       ),
       extra: (
         <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={action.locked}
+              onToggle={() => toggleLock(action)}
+              pending={lockPending}
+            />
+          ) : null}
           <Tooltip title={t`Commentaires`}>
             <Button
               icon={<CommentOutlined />}
@@ -173,8 +215,9 @@ export function ActionsScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip title={action.locked ? t`Action verrouillée` : t`Modifier`}>
             <Button
+              disabled={action.locked}
               icon={<EditOutlined />}
               onClick={() => {
                 setEditing(action);
@@ -183,9 +226,10 @@ export function ActionsScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip title={action.locked ? t`Action verrouillée` : t`Supprimer`}>
             <Button
               danger
+              disabled={action.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(action)}
               size="small"

@@ -34,6 +34,9 @@ import { RoutePath } from "@/components/route-path";
 import { ApplicationStatusTag } from "@/features/applications/application-tags";
 import { RouteCommentsDrawer } from "@/features/applications/routes/route-comments-drawer";
 import { RouteFormModal } from "@/features/applications/routes/route-form-modal";
+import { LockIndicator } from "@/features/lock/lock-indicator";
+import { LockToggleButton } from "@/features/lock/lock-toggle-button";
+import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { RichTextView } from "@/lib/rich-text/rich-text-view";
 
 type ApplicationRoute = components["schemas"]["ApplicationRouteItem"];
@@ -88,6 +91,19 @@ export function RoutesScreen({
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}",
     { meta: { successMessage: t`Route supprimée` } }
   );
+  const lockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/lock",
+    { meta: { successMessage: t`Route verrouillée` } }
+  );
+  const unlockMutation = $api.useMutation(
+    "post",
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/unlock",
+    { meta: { successMessage: t`Route déverrouillée` } }
+  );
+
+  const canManageLock = useCanManageLock(accountId);
+  const lockPending = lockMutation.isPending || unlockMutation.isPending;
 
   const routes = routesQuery.data?.items ?? [];
   const guardTitles = new Map(
@@ -128,6 +144,14 @@ export function RoutesScreen({
     });
   }
 
+  async function toggleLock(route: ApplicationRoute) {
+    const mutation = route.locked ? unlockMutation : lockMutation;
+    await mutation.mutateAsync({
+      params: { path: { ...path, route_id: route.id } },
+    });
+    invalidate();
+  }
+
   const items = routes.map((route) => {
     const color = HTTP_METHOD_COLORS[route.method];
     // Dimming tracks "archived" — a draft is neither dimmed nor active.
@@ -145,18 +169,34 @@ export function RoutesScreen({
         <Flex align="center" gap={12} style={{ minWidth: 0 }}>
           <MethodTag method={route.method} />
           <RoutePath path={route.path} />
-          <Typography.Text ellipsis style={{ flex: 1 }} type="secondary">
-            {route.title ?? ""}
-          </Typography.Text>
+          <Flex align="center" gap={6} style={{ flex: 1, minWidth: 0 }}>
+            <LockIndicator
+              locked={route.locked}
+              lockedBy={route.lockedBy}
+              lockedDate={route.lockedDate}
+            />
+            <Typography.Text ellipsis type="secondary">
+              {route.title ?? ""}
+            </Typography.Text>
+          </Flex>
           <ApplicationStatusTag
             loading={statusMutation.isPending}
-            onChange={(next) => changeStatus(route, next)}
+            onChange={
+              route.locked ? undefined : (next) => changeStatus(route, next)
+            }
             status={route.status}
           />
         </Flex>
       ),
       extra: (
         <Flex gap={4} onClick={(event) => event.stopPropagation()}>
+          {canManageLock ? (
+            <LockToggleButton
+              locked={route.locked}
+              onToggle={() => toggleLock(route)}
+              pending={lockPending}
+            />
+          ) : null}
           <Tooltip title={t`Commentaires`}>
             <Button
               icon={<CommentOutlined />}
@@ -164,8 +204,9 @@ export function RoutesScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Modifier`}>
+          <Tooltip title={route.locked ? t`Route verrouillée` : t`Modifier`}>
             <Button
+              disabled={route.locked}
               icon={<EditOutlined />}
               onClick={() => {
                 setEditing(route);
@@ -174,9 +215,10 @@ export function RoutesScreen({
               size="small"
             />
           </Tooltip>
-          <Tooltip title={t`Supprimer`}>
+          <Tooltip title={route.locked ? t`Route verrouillée` : t`Supprimer`}>
             <Button
               danger
+              disabled={route.locked}
               icon={<DeleteOutlined />}
               onClick={() => confirmDelete(route)}
               size="small"
