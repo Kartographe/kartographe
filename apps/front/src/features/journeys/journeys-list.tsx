@@ -36,6 +36,9 @@ type SortOrder = components["schemas"]["SortOrder"];
 
 const LIST_KEY = ["get", "/v1/accounts/{account_id}/journeys"];
 
+/** Roomier than `COL.title` (240) — Titre is fixed while Personas takes the slack. */
+const TITLE_WIDTH = 360;
+
 const SORT_FIELD: Record<string, SortField> = {
   title: "title",
   date: "date",
@@ -190,7 +193,9 @@ export function JourneysList({ accountId }: { accountId: string }) {
       dataIndex: "title",
       sorter: true,
       sortOrder: antdOrder("title"),
-      width: COL.title,
+      // Wider than the shared default: with Personas now the flexible column,
+      // Titre no longer grows with the viewport, so it needs the room upfront.
+      width: TITLE_WIDTH,
       ellipsis: true,
     },
     {
