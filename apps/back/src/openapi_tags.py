@@ -335,6 +335,81 @@ API_TAGS: list[dict[str, str]] = [
         "x-displayName": "OAuth",
         "description": "OAuth 2.1 flow for connected integrations: registration, authorize, token, device, revoke.",
     },
+    {
+        "name": "api.votes",
+        "x-displayName": "Votes",
+        "description": "Account-wide vote listing, and casting a vote on any entity.",
+    },
+    {
+        "name": "api.features.votes",
+        "x-displayName": "Features › Votes",
+        "description": "Votes cast on a feature.",
+    },
+    {
+        "name": "api.applications.votes",
+        "x-displayName": "Applications › Votes",
+        "description": "Votes cast on an application.",
+    },
+    {
+        "name": "api.applications.routes.votes",
+        "x-displayName": "Applications › Route votes",
+        "description": "Votes cast on an application route.",
+    },
+    {
+        "name": "api.journeys.votes",
+        "x-displayName": "Journeys › Votes",
+        "description": "Votes cast on a journey.",
+    },
+    {
+        "name": "api.journeys.scenarios.votes",
+        "x-displayName": "Journeys › Scenario votes",
+        "description": "Votes cast on a scenario.",
+    },
+    {
+        "name": "api.journeys.scenarios.steps.votes",
+        "x-displayName": "Journeys › Step votes",
+        "description": "Votes cast on a scenario step.",
+    },
+    {
+        "name": "api.personas.votes",
+        "x-displayName": "Personas › Votes",
+        "description": "Votes cast on a persona.",
+    },
+    {
+        "name": "api.services.votes",
+        "x-displayName": "Services › Votes",
+        "description": "Votes cast on a service.",
+    },
+    {
+        "name": "api.services.actions.votes",
+        "x-displayName": "Services › Action votes",
+        "description": "Votes cast on a service action.",
+    },
+    {
+        "name": "api.databases.votes",
+        "x-displayName": "Databases › Votes",
+        "description": "Votes cast on a database.",
+    },
+    {
+        "name": "api.databases.versions.tables.votes",
+        "x-displayName": "Databases › Table votes",
+        "description": "Votes cast on a database table.",
+    },
+    {
+        "name": "api.databases.versions.tables.columns.votes",
+        "x-displayName": "Databases › Column votes",
+        "description": "Votes cast on a database column.",
+    },
+    {
+        "name": "api.databases.migrations.votes",
+        "x-displayName": "Databases › Migration votes",
+        "description": "Votes cast on a database migration.",
+    },
+    {
+        "name": "api.databases.migrations.columns.votes",
+        "x-displayName": "Databases › Migration column votes",
+        "description": "Votes cast on a migration column step.",
+    },
 ]
 
 
