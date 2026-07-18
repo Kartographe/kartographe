@@ -316,6 +316,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get account statistics
+         * @description Return the account's dashboard statistics. For every tracked entity type (features, journeys, scenarios, personas, applications, databases, services, routes, comments, votes) it reports the all-time live count (`total`), how many were created in the selected period (`periodCount`), how many in the preceding window of equal length (`previousCount`), the relative change between the two (`delta`, null when there is no baseline), and a per-bucket `series` for a sparkline. Restrict the period with `lbound` / `ubound` (inclusive bounds on the entity's date, ISO-8601); both default sensibly to the last 30 days. Buckets are daily for short periods, weekly beyond a month. Any member may read.
+         */
+        get: operations["api_accounts_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications": {
         parameters: {
             query?: never;
@@ -1870,6 +1890,26 @@ export interface paths {
          * @description Cast or update your vote on a scenario step. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
          */
         post: operations["api_journeys_scenarios_steps_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/scenarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List scenarios
+         * @description List the scenarios of the account across every journey, most recent first. Filter by status, type and/or criticity (repeat the query param for multiple values), sort by date/title/status/type/criticity, and page through results. Filter with `tagIds` (repeat the query param) to keep only the scenarios carrying at least one of those tags, and with `personasIds` to keep only those targeting at least one of those personas. Each scenario carries its parent `journeyId` and `journeyTitle`. Any member may read.
+         */
+        get: operations["api_scenarios_list"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -6510,6 +6550,10 @@ export interface components {
         ItemResponse_ServiceItem_: {
             item: components["schemas"]["ServiceItem"];
         };
+        /** ItemResponse[StatsReport] */
+        ItemResponse_StatsReport_: {
+            item: components["schemas"]["StatsReport"];
+        };
         /** ItemResponse[TagItem] */
         ItemResponse_TagItem_: {
             item: components["schemas"]["TagItem"];
@@ -6682,6 +6726,60 @@ export interface components {
             type: components["schemas"]["JourneyScenarioType"];
         };
         /**
+         * JourneyScenarioListItem
+         * @description A scenario in the account-wide listing, carrying its parent journey.
+         *
+         *     `journeyTitle` is null when the parent journey has since been removed.
+         */
+        JourneyScenarioListItem: {
+            criticity: components["schemas"]["JourneyScenarioCriticity"];
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Personasids */
+            personasIds: string[];
+            status: components["schemas"]["JourneyScenarioStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
+            /** Title */
+            title: string;
+            type: components["schemas"]["JourneyScenarioType"];
+            /**
+             * Journeyid
+             * Format: uuid
+             */
+            journeyId: string;
+            /** Journeytitle */
+            journeyTitle?: string | null;
+        };
+        /**
          * JourneyScenarioPatchForm
          * @description Partial update of a scenario — only the keys sent are applied.
          */
@@ -6700,6 +6798,12 @@ export interface components {
             /** Tagids */
             tagIds?: string[] | null;
         };
+        /**
+         * JourneyScenarioSortField
+         * @description Sortable columns for the account-wide scenarios listing.
+         * @enum {string}
+         */
+        JourneyScenarioSortField: "date" | "title" | "status" | "type" | "criticity";
         /**
          * JourneyScenarioStatus
          * @enum {string}
@@ -7303,6 +7407,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["JourneyScenarioItem"][];
+        };
+        /** ListingResponse[JourneyScenarioListItem] */
+        ListingResponse_JourneyScenarioListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyScenarioListItem"][];
         };
         /** ListingResponse[JourneyScenarioStepAssertionItem] */
         ListingResponse_JourneyScenarioStepAssertionItem_: {
@@ -8224,6 +8338,80 @@ export interface components {
          * @enum {string}
          */
         SortOrder: "asc" | "desc";
+        /**
+         * StatBucket
+         * @description One time bucket of a metric's series: the bucket's start day and the
+         *     number of records created within it.
+         */
+        StatBucket: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Value */
+            value: number;
+        };
+        /**
+         * StatEntityKey
+         * @description The tracked entity a statistics metric counts.
+         * @enum {string}
+         */
+        StatEntityKey: "applications" | "comments" | "databases" | "features" | "journeys" | "personas" | "routes" | "scenarios" | "services" | "votes";
+        /**
+         * StatMetric
+         * @description Counts for a single tracked entity over the selected period.
+         *
+         *     `delta` is the relative change of `periodCount` against `previousCount`
+         *     (`0.33` for +33%); it is null when the previous window is empty (no baseline
+         *     to compare against).
+         */
+        StatMetric: {
+            /** Delta */
+            delta?: number | null;
+            key: components["schemas"]["StatEntityKey"];
+            /** Periodcount */
+            periodCount: number;
+            /** Previouscount */
+            previousCount: number;
+            /** Series */
+            series: components["schemas"]["StatBucket"][];
+            /** Total */
+            total: number;
+        };
+        /**
+         * StatPeriod
+         * @description Inclusive datetime bounds of a comparison window.
+         */
+        StatPeriod: {
+            /**
+             * Lbound
+             * Format: date-time
+             */
+            lbound: string;
+            /**
+             * Ubound
+             * Format: date-time
+             */
+            ubound: string;
+        };
+        /**
+         * StatsGranularity
+         * @description Bucket width of a metric's sparkline series.
+         * @enum {string}
+         */
+        StatsGranularity: "day" | "week";
+        /**
+         * StatsReport
+         * @description Per-entity counts, deltas and sparkline series for the account dashboard.
+         */
+        StatsReport: {
+            granularity: components["schemas"]["StatsGranularity"];
+            /** Metrics */
+            metrics: components["schemas"]["StatMetric"][];
+            period: components["schemas"]["StatPeriod"];
+            previousPeriod: components["schemas"]["StatPeriod"];
+        };
         /**
          * SuccessResponse
          * @description Body of an action endpoint that has nothing to return but success.
@@ -9764,6 +9952,58 @@ export interface operations {
                 };
             };
             /** @description You are not a member of this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_accounts_stats_get: {
+        parameters: {
+            query?: {
+                lbound?: string | null;
+                ubound?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_StatsReport_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -16800,6 +17040,65 @@ export interface operations {
                 };
             };
             /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_scenarios_list: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["JourneyScenarioStatus"][] | null;
+                type?: components["schemas"]["JourneyScenarioType"][] | null;
+                criticity?: components["schemas"]["JourneyScenarioCriticity"][] | null;
+                tagIds?: string[] | null;
+                personasIds?: string[] | null;
+                sortBy?: components["schemas"]["JourneyScenarioSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyScenarioListItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
             404: {
                 headers: {
                     [name: string]: unknown;
