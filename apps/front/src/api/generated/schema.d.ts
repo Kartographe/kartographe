@@ -3587,7 +3587,11 @@ export interface paths {
          */
         get: operations["api_votes_list"];
         put?: never;
-        post?: never;
+        /**
+         * Cast a vote
+         * @description Cast or update your vote on any entity of the account, given its `entityType` and `entityId`. A member holds at most one vote per entity, so voting again replaces it; the vote's role is taken from your voting role. Any member may vote. The mutualized counterpart of the per-entity `.../{entity}/votes` endpoints.
+         */
+        post: operations["api_votes_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5153,6 +5157,7 @@ export interface components {
          * @description An application tracked inside an account.
          */
         ApplicationItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -5444,6 +5449,7 @@ export interface components {
          * @description An HTTP route exposed by an application.
          */
         ApplicationRouteItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /** Acceptedformat */
@@ -6076,6 +6082,7 @@ export interface components {
          * @description A database tracked inside an account.
          */
         DatabaseItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -6179,6 +6186,7 @@ export interface components {
          *     and a migration carries both.
          */
         DatabaseMigrationColumnItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
              * @default 0
@@ -6313,6 +6321,7 @@ export interface components {
          * @description A planned move from a version of one database to a version of another.
          */
         DatabaseMigrationItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
              * @default 0
@@ -6497,6 +6506,7 @@ export interface components {
          * @description A column of a database table.
          */
         DatabaseTableColumnItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /** Color */
@@ -6661,6 +6671,7 @@ export interface components {
          *     and on create/update.
          */
         DatabaseTableItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /** Color */
@@ -6998,6 +7009,7 @@ export interface components {
          * @description A feature tracked at the account level.
          */
         FeatureItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -7442,6 +7454,7 @@ export interface components {
          * @description A user journey tracked inside an account.
          */
         JourneyItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -7557,6 +7570,7 @@ export interface components {
          * @description A scenario inside a journey.
          */
         JourneyScenarioItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -7634,6 +7648,7 @@ export interface components {
          *     `journeyTitle` is null when the parent journey has since been removed.
          */
         JourneyScenarioListItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -7912,6 +7927,7 @@ export interface components {
          * @description A step inside a scenario (nodes form a tree via `parentId`).
          */
         JourneyScenarioStepItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /** Actiontypeid */
@@ -8908,6 +8924,7 @@ export interface components {
          * @description A persona tracked inside an account.
          */
         PersonaItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
             /**
@@ -9221,6 +9238,7 @@ export interface components {
          * @description An action exposed by a service.
          */
         ServiceActionItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
              * @default 0
@@ -9340,6 +9358,7 @@ export interface components {
          * @description A service tracked inside an account.
          */
         ServiceItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
              * @default 0
@@ -9823,6 +9842,25 @@ export interface components {
             detail: string;
             /** Errors */
             errors: components["schemas"]["FieldError"][];
+        };
+        /**
+         * VoteCastForm
+         * @description Cast a vote on any entity through the account-wide endpoint.
+         *
+         *     Same stance-only shape as the per-entity form, plus the polymorphic target
+         *     (`entityType` + `entityId`) — validated server-side against the account.
+         */
+        VoteCastForm: {
+            /** @description The member's stance on the entity. */
+            value: components["schemas"]["VoteValue"];
+            /** @description The kind of entity being voted on. */
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Entityid
+             * Format: uuid
+             * @description The id of the entity being voted on.
+             */
+            entityId: string;
         };
         /**
          * VoteItem
@@ -11239,6 +11277,8 @@ export interface operations {
                 status?: components["schemas"]["ApplicationStatus"][] | null;
                 type?: components["schemas"]["ApplicationType"][] | null;
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["ApplicationSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -13320,6 +13360,8 @@ export interface operations {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
             };
             header?: never;
             path: {
@@ -14825,6 +14867,8 @@ export interface operations {
                 status?: components["schemas"]["FeatureStatus"][] | null;
                 type?: components["schemas"]["FeatureType"][] | null;
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["FeatureSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -15942,6 +15986,8 @@ export interface operations {
                 status?: components["schemas"]["PersonaStatus"][] | null;
                 type?: components["schemas"]["PersonaType"][] | null;
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["PersonaSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -16477,6 +16523,8 @@ export interface operations {
                 type?: components["schemas"]["JourneyType"][] | null;
                 tagIds?: string[] | null;
                 personasIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["JourneySortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -16837,6 +16885,8 @@ export interface operations {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
             };
             header?: never;
             path: {
@@ -17200,6 +17250,8 @@ export interface operations {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
             };
             header?: never;
             path: {
@@ -18976,6 +19028,8 @@ export interface operations {
                 criticity?: components["schemas"]["JourneyScenarioCriticity"][] | null;
                 tagIds?: string[] | null;
                 personasIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["JourneyScenarioSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -19033,6 +19087,8 @@ export interface operations {
                 status?: components["schemas"]["DatabaseStatus"][] | null;
                 type?: components["schemas"]["DatabaseType"][] | null;
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["DatabaseSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -19652,6 +19708,8 @@ export interface operations {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
             };
             header?: never;
             path: {
@@ -20022,6 +20080,8 @@ export interface operations {
         parameters: {
             query?: {
                 tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
             };
             header?: never;
             path: {
@@ -20453,7 +20513,10 @@ export interface operations {
     };
     api_databases_migrations_list: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -21018,7 +21081,10 @@ export interface operations {
     };
     api_databases_migrations_columns_list: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -22437,6 +22503,8 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["ServiceStatus"][] | null;
                 type?: components["schemas"]["ServiceType"][] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
                 sortBy?: components["schemas"]["ServiceSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -22795,7 +22863,10 @@ export interface operations {
     };
     api_services_actions_list: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+            };
             header?: never;
             path: {
                 account_id: string;
@@ -24116,7 +24187,51 @@ export interface operations {
                     "application/json": components["schemas"]["ListingResponse_VoteListItem_"];
                 };
             };
-            /** @description Account not found */
+            /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteCastForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Account or entity not found */
             404: {
                 headers: {
                     [name: string]: unknown;
