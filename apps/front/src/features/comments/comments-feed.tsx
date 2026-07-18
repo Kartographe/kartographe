@@ -44,9 +44,10 @@ function newestFirst(comments: Comment[]): Comment[] {
  * (application, route, …). The caller wires the entity's own endpoints.
  *
  * Comments run newest first, so the latest activity is what greets the reader.
- * The composer closes the list rather than heading it, and stays folded behind
- * a button until the user means to write, so the editor never competes with the
- * thread.
+ * The composer heads the list and stays put — pinned in the drawer, sticky on
+ * the page — so writing a comment never means scrolling past a long thread. It
+ * stays folded behind a button until the user means to write, so the editor
+ * never competes with the thread.
  */
 export function CommentsFeed({
   accountId,
@@ -98,12 +99,70 @@ export function CommentsFeed({
     </>
   );
 
+  const composer = (
+    <Flex gap={12}>
+      <CommentAvatar user={me ? { ...me } : undefined} />
+      <Flex style={{ flex: 1, minWidth: 0 }}>
+        {isComposing ? (
+          <Flex gap={8} style={{ flex: 1, minWidth: 0 }} vertical>
+            <RichTextEditor
+              key={editorKey}
+              onChange={setDraft}
+              placeholder={t`Écrire un commentaire`}
+              value={draft}
+            />
+            <Flex gap={8} justify="flex-end">
+              <Button disabled={isPublishing} onClick={resetComposer}>
+                {t`Annuler`}
+              </Button>
+              <Button
+                disabled={isRichTextEmpty(draft)}
+                loading={isPublishing}
+                onClick={publish}
+                type="primary"
+              >
+                {t`Publier`}
+              </Button>
+            </Flex>
+          </Flex>
+        ) : (
+          <Button
+            block
+            onClick={() => setIsComposing(true)}
+            style={{ justifyContent: "flex-start" }}
+            type="dashed"
+          >
+            {t`Écrire un commentaire`}
+          </Button>
+        )}
+      </Flex>
+    </Flex>
+  );
+
   return (
     <Flex
       gap={20}
       style={fillHeight ? { height: "100%", minHeight: 0 } : undefined}
       vertical
     >
+      {/* Composer at the top: pinned in the drawer, sticky on the page, so it
+          stays reachable however long the thread grows. */}
+      <div
+        style={
+          fillHeight
+            ? { flexShrink: 0 }
+            : {
+                background: "var(--ant-color-bg-layout)",
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+              }
+        }
+      >
+        {composer}
+        <Divider style={{ marginBottom: 0, marginTop: 20 }} />
+      </div>
+
       {/* `minHeight: 0` lets this flex child shrink below its content and scroll. */}
       <div
         style={
@@ -112,46 +171,6 @@ export function CommentsFeed({
       >
         {history}
       </div>
-
-      <Divider style={{ margin: 0 }} />
-
-      <Flex gap={12} style={fillHeight ? { flexShrink: 0 } : undefined}>
-        <CommentAvatar user={me ? { ...me } : undefined} />
-        <Flex style={{ flex: 1, minWidth: 0 }}>
-          {isComposing ? (
-            <Flex gap={8} style={{ flex: 1, minWidth: 0 }} vertical>
-              <RichTextEditor
-                key={editorKey}
-                onChange={setDraft}
-                placeholder={t`Écrire un commentaire`}
-                value={draft}
-              />
-              <Flex gap={8} justify="flex-end">
-                <Button disabled={isPublishing} onClick={resetComposer}>
-                  {t`Annuler`}
-                </Button>
-                <Button
-                  disabled={isRichTextEmpty(draft)}
-                  loading={isPublishing}
-                  onClick={publish}
-                  type="primary"
-                >
-                  {t`Publier`}
-                </Button>
-              </Flex>
-            </Flex>
-          ) : (
-            <Button
-              block
-              onClick={() => setIsComposing(true)}
-              style={{ justifyContent: "flex-start" }}
-              type="dashed"
-            >
-              {t`Écrire un commentaire`}
-            </Button>
-          )}
-        </Flex>
-      </Flex>
     </Flex>
   );
 }
