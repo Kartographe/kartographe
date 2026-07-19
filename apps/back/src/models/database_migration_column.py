@@ -45,11 +45,19 @@ class DatabaseMigrationColumn(LockableMixin, BaseModel, Searchable, table=True):
     source_database_table_column_id: uuid.UUID | None = Field(
         default=None, foreign_key="database_table_column.id", index=True
     )
+    # Optional sub-field endpoints, for mapping into/out of a JSON column. A
+    # sub-field endpoint requires its column endpoint on the same side.
+    source_database_table_column_subfield_id: uuid.UUID | None = Field(
+        default=None, foreign_key="database_table_column_subfield.id", index=True
+    )
     destination_database_table_id: uuid.UUID | None = Field(
         default=None, foreign_key="database_table.id", index=True
     )
     destination_database_table_column_id: uuid.UUID | None = Field(
         default=None, foreign_key="database_table_column.id", index=True
+    )
+    destination_database_table_column_subfield_id: uuid.UUID | None = Field(
+        default=None, foreign_key="database_table_column_subfield.id", index=True
     )
 
     date: datetime

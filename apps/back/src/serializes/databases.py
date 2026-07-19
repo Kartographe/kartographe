@@ -171,6 +171,7 @@ class DatabaseMigrationColumnItem(VotableItem):
     date: datetime
     description: dict | None = None
     destination_database_table_column_id: uuid.UUID | None = None
+    destination_database_table_column_subfield_id: uuid.UUID | None = None
     destination_database_table_id: uuid.UUID | None = None
     id: uuid.UUID
     locked: bool
@@ -180,6 +181,7 @@ class DatabaseMigrationColumnItem(VotableItem):
     owner: OwnerItem
     owner_id: uuid.UUID
     source_database_table_column_id: uuid.UUID | None = None
+    source_database_table_column_subfield_id: uuid.UUID | None = None
     source_database_table_id: uuid.UUID | None = None
     status: DatabaseMigrationColumnStatus
     status_date: datetime

@@ -248,8 +248,10 @@ class DatabaseMigrationColumnCreateForm(CamelBase):
     type: DatabaseMigrationColumnType
     source_database_table_id: uuid.UUID | None = Field(default=None)
     source_database_table_column_id: uuid.UUID | None = Field(default=None)
+    source_database_table_column_subfield_id: uuid.UUID | None = Field(default=None)
     destination_database_table_id: uuid.UUID | None = Field(default=None)
     destination_database_table_column_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_column_subfield_id: uuid.UUID | None = Field(default=None)
     transformation_method: str | None = Field(
         default=None,
         max_length=1024,
@@ -264,7 +266,9 @@ class DatabaseMigrationColumnPatchForm(CamelBase):
     type: DatabaseMigrationColumnType | None = Field(default=None)
     source_database_table_id: uuid.UUID | None = Field(default=None)
     source_database_table_column_id: uuid.UUID | None = Field(default=None)
+    source_database_table_column_subfield_id: uuid.UUID | None = Field(default=None)
     destination_database_table_id: uuid.UUID | None = Field(default=None)
     destination_database_table_column_id: uuid.UUID | None = Field(default=None)
+    destination_database_table_column_subfield_id: uuid.UUID | None = Field(default=None)
     transformation_method: str | None = Field(default=None, max_length=1024)
     description: dict | None = Field(default=None)

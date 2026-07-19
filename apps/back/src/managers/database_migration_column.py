@@ -21,6 +21,7 @@ from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.enum import DatabaseMigrationColumnStatus, DatabaseMigrationColumnType, EntityType
 from src.models.user import User
 from src.utils.datetime import utc_now
@@ -54,6 +55,7 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         *,
         table_id: uuid.UUID | None,
         column_id: uuid.UUID | None,
+        subfield_id: uuid.UUID | None,
         database_version_id: uuid.UUID,
         label: str,
     ) -> None:
@@ -65,18 +67,34 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
                     status.HTTP_404_NOT_FOUND,
                     f"{label} table not found in the {label.lower()} version.",
                 )
-        if column_id is None:
+        if column_id is not None:
+            if table_id is None:
+                raise HTTPException(
+                    status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    f"A {label.lower()} column requires a {label.lower()} table.",
+                )
+            column = self.session.get(DatabaseTableColumn, column_id)
+            if column is None or not column.enabled or column.database_table_id != table_id:
+                raise HTTPException(
+                    status.HTTP_404_NOT_FOUND,
+                    f"{label} column not found in the {label.lower()} table.",
+                )
+        if subfield_id is None:
             return
-        if table_id is None:
+        if column_id is None:
             raise HTTPException(
                 status.HTTP_422_UNPROCESSABLE_CONTENT,
-                f"A {label.lower()} column requires a {label.lower()} table.",
+                f"A {label.lower()} sub-field requires a {label.lower()} column.",
             )
-        column = self.session.get(DatabaseTableColumn, column_id)
-        if column is None or not column.enabled or column.database_table_id != table_id:
+        subfield = self.session.get(DatabaseTableColumnSubfield, subfield_id)
+        if (
+            subfield is None
+            or not subfield.enabled
+            or subfield.database_table_column_id != column_id
+        ):
             raise HTTPException(
                 status.HTTP_404_NOT_FOUND,
-                f"{label} column not found in the {label.lower()} table.",
+                f"{label} sub-field not found in the {label.lower()} column.",
             )
 
     def _validate_refs(
@@ -85,18 +103,22 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         *,
         source_database_table_id: uuid.UUID | None,
         source_database_table_column_id: uuid.UUID | None,
+        source_database_table_column_subfield_id: uuid.UUID | None,
         destination_database_table_id: uuid.UUID | None,
         destination_database_table_column_id: uuid.UUID | None,
+        destination_database_table_column_subfield_id: uuid.UUID | None,
     ) -> None:
         self._validate_side(
             table_id=source_database_table_id,
             column_id=source_database_table_column_id,
+            subfield_id=source_database_table_column_subfield_id,
             database_version_id=migration.source_database_version_id,
             label="Source",
         )
         self._validate_side(
             table_id=destination_database_table_id,
             column_id=destination_database_table_column_id,
+            subfield_id=destination_database_table_column_subfield_id,
             database_version_id=migration.destination_database_version_id,
             label="Destination",
         )
@@ -109,8 +131,10 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         type: DatabaseMigrationColumnType,
         source_database_table_id: uuid.UUID | None,
         source_database_table_column_id: uuid.UUID | None,
+        source_database_table_column_subfield_id: uuid.UUID | None,
         destination_database_table_id: uuid.UUID | None,
         destination_database_table_column_id: uuid.UUID | None,
+        destination_database_table_column_subfield_id: uuid.UUID | None,
         transformation_method: str | None,
         description: dict | None,
     ) -> DatabaseMigrationColumn:
@@ -119,8 +143,10 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
             migration,
             source_database_table_id=source_database_table_id,
             source_database_table_column_id=source_database_table_column_id,
+            source_database_table_column_subfield_id=source_database_table_column_subfield_id,
             destination_database_table_id=destination_database_table_id,
             destination_database_table_column_id=destination_database_table_column_id,
+            destination_database_table_column_subfield_id=destination_database_table_column_subfield_id,
         )
         now = utc_now()
         column = DatabaseMigrationColumn(
@@ -129,8 +155,10 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
             owner_id=user.id,
             source_database_table_id=source_database_table_id,
             source_database_table_column_id=source_database_table_column_id,
+            source_database_table_column_subfield_id=source_database_table_column_subfield_id,
             destination_database_table_id=destination_database_table_id,
             destination_database_table_column_id=destination_database_table_column_id,
+            destination_database_table_column_subfield_id=destination_database_table_column_subfield_id,
             date=now,
             type=type,
             status=DatabaseMigrationColumnStatus.DRAFT,
@@ -147,8 +175,10 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         ref_keys = {
             "source_database_table_id",
             "source_database_table_column_id",
+            "source_database_table_column_subfield_id",
             "destination_database_table_id",
             "destination_database_table_column_id",
+            "destination_database_table_column_subfield_id",
         }
         if ref_keys & fields.keys():
             self._validate_refs(
@@ -159,12 +189,20 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
                 source_database_table_column_id=fields.get(
                     "source_database_table_column_id", column.source_database_table_column_id
                 ),
+                source_database_table_column_subfield_id=fields.get(
+                    "source_database_table_column_subfield_id",
+                    column.source_database_table_column_subfield_id,
+                ),
                 destination_database_table_id=fields.get(
                     "destination_database_table_id", column.destination_database_table_id
                 ),
                 destination_database_table_column_id=fields.get(
                     "destination_database_table_column_id",
                     column.destination_database_table_column_id,
+                ),
+                destination_database_table_column_subfield_id=fields.get(
+                    "destination_database_table_column_subfield_id",
+                    column.destination_database_table_column_subfield_id,
                 ),
             )
         return self.apply_update(column, fields)
