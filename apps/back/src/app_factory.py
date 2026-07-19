@@ -29,6 +29,24 @@ try:
 except ImportError:  # pragma: no cover
     FastApiMCP = None
 
+# Server-level guidance surfaced to the agent in the MCP `initialize` response
+# (the client folds it into the model's prompt). Keep it to the non-obvious
+# operating rules — chiefly the bulk-create convention, which an agent cannot
+# infer from the individual tool schemas.
+_MCP_INSTRUCTIONS = (
+    "When creating several objects of the same kind, call the matching "
+    "`*_bulk_create` tool once with an `items` array (1 to 50) instead of "
+    "calling the single-item `*_create` tool in a loop — it is dramatically "
+    "faster and lighter on the server. Bulk creation is best-effort: the call "
+    "always returns HTTP 207 with a `results` array giving each item's outcome "
+    "(`created` or `error`, with its 0-based `index`) plus `created` / `failed` "
+    "counts. Read it to know exactly which inputs to resend, rather than "
+    "assuming all-or-nothing. One caveat: a schema-invalid item (wrong type, "
+    "missing required field) is rejected up front and fails the whole batch "
+    "with a 422 whose error path points at the offending item index — fix that "
+    "item and resend."
+)
+
 # The Enterprise Edition (`ee/`, Elastic-2.0) is optional and absent from any
 # AGPL-only build, so its import is guarded the same way. This is the single
 # seam between the two licences: `ee` depends on `src`, never the reverse, and
@@ -170,7 +188,11 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
         mcp = FastApiMCP(
             app,
             name=f"{settings.app_name} MCP",
-            description="MCP server exposing the Kartographe platform as tools for AI agents.",
+            description=(
+                "MCP server exposing the Kartographe platform as tools for AI agents. "
+                "Every creating tool has a `*_bulk_create` sibling — prefer it when "
+                "adding many objects at once."
+            ),
             http_client=mcp_http_client,
             # Keep the ops probe, the unversioned auth/me surfaces and the
             # OAuth/discovery endpoints out of the agent-callable tool set.
@@ -185,6 +207,11 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
             ],
         )
         mcp.mount_http(mount_path=settings.mcp_mount_path)
+        # Ship the operating guidance in the `initialize` response so the agent
+        # gets the bulk-create convention as part of its prompt, not just buried
+        # in per-tool descriptions. `mcp.server` is the low-level MCP server
+        # built during construction; `create_initialization_options` reads this.
+        mcp.server.instructions = _MCP_INSTRUCTIONS
         # Expose to the lifespan closure so the StreamableHTTP session
         # manager is started during FastAPI startup rather than racing the
         # first MCP request.
