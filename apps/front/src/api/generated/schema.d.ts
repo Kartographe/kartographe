@@ -28,6 +28,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several accounts at once
+         * @description Create 1 to 50 accounts in a single call — prefer this over calling `api_accounts_create` in a loop when adding many. Best-effort: each account is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. The caller automatically becomes the owner of each created account.
+         */
+        post: operations["api_accounts_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}": {
         parameters: {
             query?: never;
@@ -400,6 +420,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several applications at once
+         * @description Create 1 to 50 applications in a single call — prefer this over calling `api_applications_create` in a loop when adding many. Best-effort: each application is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Owners/administrators only.
+         */
+        post: operations["api_applications_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}": {
         parameters: {
             query?: never;
@@ -492,6 +532,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several environments at once
+         * @description Create 1 to 50 deployment environments in a single call — prefer this over calling `api_applications_environments_create` in a loop when adding many. Best-effort: each environment is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Owners, administrators and lead developers only.
+         */
+        post: operations["api_applications_environments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}": {
         parameters: {
             query?: never;
@@ -544,6 +604,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/versions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several versions at once
+         * @description Create 1 to 50 versions in a single call — prefer this over calling `api_applications_versions_create` in a loop when adding many. Best-effort: each version is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Owners, administrators and lead developers only.
+         */
+        post: operations["api_applications_versions_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/versions/{version_id}": {
         parameters: {
             query?: never;
@@ -590,6 +670,26 @@ export interface paths {
          * @description Record a deployment of a version onto the environment. It starts in the standby state, owned by the caller. Owners, administrators and lead developers only.
          */
         post: operations["api_applications_environmentVersions_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/environments/{environment_id}/versions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deploy several versions at once
+         * @description Record 1 to 50 deployments in a single call — prefer this over calling `api_applications_environmentVersions_create` in a loop when adding many. Best-effort: each deployment is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Owners, administrators and lead developers only.
+         */
+        post: operations["api_applications_environmentVersions_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -708,6 +808,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/features/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several features at once
+         * @description Attach 1 to 50 existing account features in a single call — prefer this over calling `api_applications_features_create` in a loop when adding many. Best-effort: each link is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Each feature must belong to the same account. Every contributing role may attach features.
+         */
+        post: operations["api_applications_features_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/features/{application_feature_id}": {
         parameters: {
             query?: never;
@@ -754,6 +874,26 @@ export interface paths {
          * @description Create an authentication guard. It starts as a draft owned by the caller. Dev roles only.
          */
         post: operations["api_applications_guards_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/guards/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several guards at once
+         * @description Create 1 to 50 authentication guards in a single call — prefer this over calling `api_applications_guards_create` in a loop when adding many. Best-effort: each guard is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_guards_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -812,6 +952,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/roles/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several roles at once
+         * @description Create 1 to 50 authorization roles in a single call — prefer this over calling `api_applications_roles_create` in a loop when adding many. Best-effort: each role is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Contributors only.
+         */
+        post: operations["api_applications_roles_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/roles/{role_id}": {
         parameters: {
             query?: never;
@@ -858,6 +1018,26 @@ export interface paths {
          * @description Create a route. It starts as a draft owned by the caller. Referenced guards, roles and versions must belong to the application. Dev roles only.
          */
         post: operations["api_applications_routes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several routes at once
+         * @description Create 1 to 50 routes in a single call — prefer this over calling `api_applications_routes_create` in a loop when adding many. Best-effort: each route is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Referenced guards, roles and versions must belong to the application. Dev roles only.
+         */
+        post: operations["api_applications_routes_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -956,6 +1136,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several route responses at once
+         * @description Create 1 to 50 documented responses in a single call — prefer this over calling `api_applications_routes_responses_create` in a loop when adding many. Best-effort: each response is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_routes_responses_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/responses/{response_id}": {
         parameters: {
             query?: never;
@@ -1002,6 +1202,26 @@ export interface paths {
          * @description Create a request/response example. The referenced response must belong to the route. Dev roles only.
          */
         post: operations["api_applications_routes_examples_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/examples/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several route examples at once
+         * @description Create 1 to 50 request/response examples in a single call — prefer this over calling `api_applications_routes_examples_create` in a loop when adding many. Best-effort: each example is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. The referenced response must belong to the route. Dev roles only.
+         */
+        post: operations["api_applications_routes_examples_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1060,6 +1280,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/tables/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link several database tables at once
+         * @description Link 1 to 50 database tables in a single call — prefer this over calling `api_applications_routes_tables_create` in a loop when adding many. Best-effort: each link is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_routes_tables_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/tables/{route_table_id}": {
         parameters: {
             query?: never;
@@ -1112,6 +1352,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on an application at once
+         * @description Post 1 to 50 comments on an application in a single call — prefer this over calling `api_applications_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_applications_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/comments": {
         parameters: {
             query?: never;
@@ -1130,6 +1390,26 @@ export interface paths {
          * @description Post a comment on an application route. Any member may post.
          */
         post: operations["api_applications_routes_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a route at once
+         * @description Post 1 to 50 comments on an application route in a single call — prefer this over calling `api_applications_routes_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_applications_routes_comments_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1202,6 +1482,26 @@ export interface paths {
          * @description Create a feature. It starts as a draft owned by the caller. Every contributing role may create features.
          */
         post: operations["api_features_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several features at once
+         * @description Create 1 to 50 features in a single call — prefer this over calling `api_features_create` in a loop when adding many. Best-effort: each feature is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Every contributing role may create features.
+         */
+        post: operations["api_features_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1392,6 +1692,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/journeys/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link several journeys at once
+         * @description Link 1 to 50 account journeys to the feature in a single call — prefer this over calling `api_features_journeys_create` in a loop when adding many. Best-effort: each link is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Editing roles only.
+         */
+        post: operations["api_features_journeys_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features/{feature_id}/journeys/{feature_journey_id}": {
         parameters: {
             query?: never;
@@ -1440,6 +1760,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a feature at once
+         * @description Post 1 to 50 comments on a feature in a single call — prefer this over calling `api_features_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_features_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features/{feature_id}/votes": {
         parameters: {
             query?: never;
@@ -1482,6 +1822,26 @@ export interface paths {
          * @description Create a persona. It starts as a draft. Editing roles only.
          */
         post: operations["api_personas_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several personas at once
+         * @description Create 1 to 50 personas in a single call — prefer this over calling `api_personas_create` in a loop when adding many. Best-effort: each persona is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Editing roles only.
+         */
+        post: operations["api_personas_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1580,6 +1940,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/personas/{persona_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a persona at once
+         * @description Post 1 to 50 comments on a persona in a single call — prefer this over calling `api_personas_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_personas_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/personas/{persona_id}/votes": {
         parameters: {
             query?: never;
@@ -1622,6 +2002,26 @@ export interface paths {
          * @description Create a journey. It starts as a draft owned by the caller. Any referenced persona must belong to the account. Editing roles only.
          */
         post: operations["api_journeys_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several journeys at once
+         * @description Create 1 to 50 journeys in a single call — prefer this over calling `api_journeys_create` in a loop when adding many. Best-effort: each journey is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Any referenced persona must belong to the account. Editing roles only.
+         */
+        post: operations["api_journeys_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1720,6 +2120,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several scenarios at once
+         * @description Create 1 to 50 scenarios in a single call — prefer this over calling `api_journeys_scenarios_create` in a loop when adding many. Best-effort: each scenario is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Any referenced persona must belong to the account. Editing roles only.
+         */
+        post: operations["api_journeys_scenarios_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}": {
         parameters: {
             query?: never;
@@ -1806,6 +2226,26 @@ export interface paths {
          * @description Insert a step in the scenario. A parent step (if any) must belong to the same scenario, and `parameters` must match the action type's schema. The step is inserted rather than appended: whatever already hung under the same parent is re-parented onto the new step, so it lands right after its parent (or at the head of the scenario when no parent is given). Editing roles only.
          */
         post: operations["api_journeys_scenarios_steps_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several steps at once
+         * @description Insert 1 to 50 steps in the scenario in a single call — prefer this over calling `api_journeys_scenarios_steps_create` in a loop when adding many. Best-effort: each step is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create; a parent step must belong to the same scenario and `parameters` must match the action type's schema. Editing roles only.
+         */
+        post: operations["api_journeys_scenarios_steps_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1996,6 +2436,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several assertions at once
+         * @description Attach 1 to 50 assertions to the step in a single call — prefer this over calling `api_journeys_scenarios_steps_assertions_create` in a loop when adding many. Best-effort: each assertion is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create; `parameters` must match the assertion type's schema. Editing roles only.
+         */
+        post: operations["api_journeys_scenarios_steps_assertions_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/assertions/{assertion_id}": {
         parameters: {
             query?: never;
@@ -2042,6 +2502,26 @@ export interface paths {
          * @description Link the step to an application route. The application must belong to the account and the route to that application. Dev roles only.
          */
         post: operations["api_journeys_scenarios_steps_routes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/routes/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link several application routes at once
+         * @description Link 1 to 50 application routes to the step in a single call — prefer this over calling `api_journeys_scenarios_steps_routes_create` in a loop when adding many. Best-effort: each link is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create; the application must belong to the account and the route to that application. Dev roles only.
+         */
+        post: operations["api_journeys_scenarios_steps_routes_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2096,6 +2576,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a journey at once
+         * @description Post 1 to 50 comments on a journey in a single call — prefer this over calling `api_journeys_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_journeys_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/comments": {
         parameters: {
             query?: never;
@@ -2120,6 +2620,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a scenario at once
+         * @description Post 1 to 50 comments on a journey scenario in a single call — prefer this over calling `api_journeys_scenarios_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_journeys_scenarios_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/comments": {
         parameters: {
             query?: never;
@@ -2138,6 +2658,26 @@ export interface paths {
          * @description Post a comment on a scenario step. Any member may post.
          */
         post: operations["api_journeys_scenarios_steps_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a step at once
+         * @description Post 1 to 50 comments on a scenario step in a single call — prefer this over calling `api_journeys_scenarios_steps_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_journeys_scenarios_steps_comments_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2260,6 +2800,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several databases at once
+         * @description Create 1 to 50 databases in a single call — prefer this over calling `api_databases_create` in a loop when adding many. Best-effort: each database is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Owners, administrators, lead developers and data analysts only.
+         */
+        post: operations["api_databases_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}": {
         parameters: {
             query?: never;
@@ -2352,6 +2912,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several database versions at once
+         * @description Create 1 to 50 database versions in a single call — prefer this over calling `api_databases_versions_create` in a loop when adding many. Best-effort: each version is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles only.
+         */
+        post: operations["api_databases_versions_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}": {
         parameters: {
             query?: never;
@@ -2400,6 +2980,26 @@ export interface paths {
          * @description Create a table, optionally with its columns in one call. Each column references a catalogued column type and may model a foreign key. Data roles only.
          */
         post: operations["api_databases_versions_tables_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several tables at once
+         * @description Create 1 to 50 tables in a single call — prefer this over calling `api_databases_versions_tables_create` in a loop when adding many. Best-effort: each table is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create, columns included. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2492,6 +3092,26 @@ export interface paths {
          * @description Create a column on the table. It references a catalogued column type and may model a foreign key to another table of the account. Data roles only.
          */
         post: operations["api_databases_versions_tables_columns_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several columns at once
+         * @description Create 1 to 50 columns in a single call — prefer this over calling `api_databases_versions_tables_columns_create` in a loop when adding many. Best-effort: each column is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_columns_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2604,6 +3224,26 @@ export interface paths {
          * @description Plan a migration leaving a version of this database towards a version of any database of the account. It starts as a draft. Data roles only.
          */
         post: operations["api_databases_migrations_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several database migrations at once
+         * @description Create 1 to 50 database migrations in a single call — prefer this over calling `api_databases_migrations_create` in a loop when adding many. Best-effort: each migration is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles only.
+         */
+        post: operations["api_databases_migrations_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2782,6 +3422,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several migration columns at once
+         * @description Create 1 to 50 migration column steps in a single call — prefer this over calling `api_databases_migrations_columns_create` in a loop when adding many. Best-effort: each step is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles and developers only.
+         */
+        post: operations["api_databases_migrations_columns_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}": {
         parameters: {
             query?: never;
@@ -2934,6 +3594,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a database at once
+         * @description Post 1 to 50 comments on a database in a single call — prefer this over calling `api_databases_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_databases_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments": {
         parameters: {
             query?: never;
@@ -2952,6 +3632,26 @@ export interface paths {
          * @description Post a comment on a database table. Any member may post.
          */
         post: operations["api_databases_versions_tables_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a table at once
+         * @description Post 1 to 50 comments on a database table in a single call — prefer this over calling `api_databases_versions_tables_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_databases_versions_tables_comments_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2982,6 +3682,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a column at once
+         * @description Post 1 to 50 comments on a database column in a single call — prefer this over calling `api_databases_versions_tables_columns_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_databases_versions_tables_columns_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/comments": {
         parameters: {
             query?: never;
@@ -3006,6 +3726,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a migration at once
+         * @description Post 1 to 50 comments on a database migration in a single call — prefer this over calling `api_databases_migrations_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_databases_migrations_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/comments": {
         parameters: {
             query?: never;
@@ -3024,6 +3764,26 @@ export interface paths {
          * @description Post a comment on a migration column step. Any member may post.
          */
         post: operations["api_databases_migrations_columns_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a migration column at once
+         * @description Post 1 to 50 comments on a migration column step in a single call — prefer this over calling `api_databases_migrations_columns_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_databases_migrations_columns_comments_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3174,6 +3934,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several services at once
+         * @description Create 1 to 50 services in a single call — prefer this over calling `api_services_create` in a loop when adding many. Best-effort: each service is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_services_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services/{service_id}": {
         parameters: {
             query?: never;
@@ -3260,6 +4040,26 @@ export interface paths {
          * @description Create an action. It starts as a draft owned by the caller. Dev roles only.
          */
         post: operations["api_services_actions_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several service actions at once
+         * @description Create 1 to 50 actions in a single call — prefer this over calling `api_services_actions_create` in a loop when adding many. Best-effort: each action is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_services_actions_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3358,6 +4158,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/{service_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a service at once
+         * @description Post 1 to 50 comments on a service in a single call — prefer this over calling `api_services_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_services_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/comments": {
         parameters: {
             query?: never;
@@ -3376,6 +4196,26 @@ export interface paths {
          * @description Post a comment on a service action. Any member may post.
          */
         post: operations["api_services_actions_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a service action at once
+         * @description Post 1 to 50 comments on a service action in a single call — prefer this over calling `api_services_actions_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_services_actions_comments_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3448,6 +4288,26 @@ export interface paths {
          * @description Create a tag for a given entity type. Any member may create.
          */
         post: operations["api_tags_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/tags/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several tags at once
+         * @description Create 1 to 50 tags in a single call — prefer this over calling `api_tags_create` in a loop when adding many. Best-effort: each tag is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Any member may create.
+         */
+        post: operations["api_tags_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3568,6 +4428,26 @@ export interface paths {
          * @description Post a reply to a comment. Any member may reply.
          */
         post: operations["api_comments_replies_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/comments/{comment_id}/replies/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several replies to a comment at once
+         * @description Post 1 to 50 replies to a comment in a single call — prefer this over calling `api_comments_replies_create` in a loop. Best-effort: each reply is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may reply.
+         */
+        post: operations["api_comments_replies_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5905,6 +6785,884 @@ export interface components {
             device_code?: string | null;
             /** Refresh Token */
             refresh_token?: string | null;
+        };
+        /** BulkCreateRequest[AccountCreateForm] */
+        BulkCreateRequest_AccountCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["AccountCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationCreateForm] */
+        BulkCreateRequest_ApplicationCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationEnvironmentCreateForm] */
+        BulkCreateRequest_ApplicationEnvironmentCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationEnvironmentCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationEnvironmentVersionCreateForm] */
+        BulkCreateRequest_ApplicationEnvironmentVersionCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationEnvironmentVersionCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationFeatureCreateForm] */
+        BulkCreateRequest_ApplicationFeatureCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationFeatureCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationGuardCreateForm] */
+        BulkCreateRequest_ApplicationGuardCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationGuardCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationRoleCreateForm] */
+        BulkCreateRequest_ApplicationRoleCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationRoleCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationRouteCreateForm] */
+        BulkCreateRequest_ApplicationRouteCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationRouteCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationRouteExampleCreateForm] */
+        BulkCreateRequest_ApplicationRouteExampleCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationRouteExampleCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationRouteResponseCreateForm] */
+        BulkCreateRequest_ApplicationRouteResponseCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationRouteResponseCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationRouteTableCreateForm] */
+        BulkCreateRequest_ApplicationRouteTableCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationRouteTableCreateForm"][];
+        };
+        /** BulkCreateRequest[ApplicationVersionCreateForm] */
+        BulkCreateRequest_ApplicationVersionCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationVersionCreateForm"][];
+        };
+        /** BulkCreateRequest[CommentCreateForm] */
+        BulkCreateRequest_CommentCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["CommentCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseCreateForm] */
+        BulkCreateRequest_DatabaseCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseMigrationColumnCreateForm] */
+        BulkCreateRequest_DatabaseMigrationColumnCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseMigrationColumnCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseMigrationCreateForm] */
+        BulkCreateRequest_DatabaseMigrationCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseMigrationCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseTableColumnCreateForm] */
+        BulkCreateRequest_DatabaseTableColumnCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseTableColumnCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseTableCreateForm] */
+        BulkCreateRequest_DatabaseTableCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseTableCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseVersionCreateForm] */
+        BulkCreateRequest_DatabaseVersionCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseVersionCreateForm"][];
+        };
+        /** BulkCreateRequest[FeatureCreateForm] */
+        BulkCreateRequest_FeatureCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["FeatureCreateForm"][];
+        };
+        /** BulkCreateRequest[FeatureJourneyCreateForm] */
+        BulkCreateRequest_FeatureJourneyCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["FeatureJourneyCreateForm"][];
+        };
+        /** BulkCreateRequest[JourneyCreateForm] */
+        BulkCreateRequest_JourneyCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["JourneyCreateForm"][];
+        };
+        /** BulkCreateRequest[JourneyScenarioCreateForm] */
+        BulkCreateRequest_JourneyScenarioCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["JourneyScenarioCreateForm"][];
+        };
+        /** BulkCreateRequest[JourneyScenarioStepAssertionCreateForm] */
+        BulkCreateRequest_JourneyScenarioStepAssertionCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["JourneyScenarioStepAssertionCreateForm"][];
+        };
+        /** BulkCreateRequest[JourneyScenarioStepCreateForm] */
+        BulkCreateRequest_JourneyScenarioStepCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["JourneyScenarioStepCreateForm"][];
+        };
+        /** BulkCreateRequest[JourneyScenarioStepRouteCreateForm] */
+        BulkCreateRequest_JourneyScenarioStepRouteCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["JourneyScenarioStepRouteCreateForm"][];
+        };
+        /** BulkCreateRequest[PersonaCreateForm] */
+        BulkCreateRequest_PersonaCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["PersonaCreateForm"][];
+        };
+        /** BulkCreateRequest[ServiceActionCreateForm] */
+        BulkCreateRequest_ServiceActionCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ServiceActionCreateForm"][];
+        };
+        /** BulkCreateRequest[ServiceCreateForm] */
+        BulkCreateRequest_ServiceCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ServiceCreateForm"][];
+        };
+        /** BulkCreateRequest[TagCreateForm] */
+        BulkCreateRequest_TagCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["TagCreateForm"][];
+        };
+        /** BulkCreateResponse[AccountItem] */
+        BulkCreateResponse_AccountItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_AccountItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationEnvironmentItem] */
+        BulkCreateResponse_ApplicationEnvironmentItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationEnvironmentItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationEnvironmentVersionItem] */
+        BulkCreateResponse_ApplicationEnvironmentVersionItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationEnvironmentVersionItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationFeatureItem] */
+        BulkCreateResponse_ApplicationFeatureItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationFeatureItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationGuardItem] */
+        BulkCreateResponse_ApplicationGuardItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationGuardItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationItem] */
+        BulkCreateResponse_ApplicationItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationRoleItem] */
+        BulkCreateResponse_ApplicationRoleItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationRoleItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationRouteExampleItem] */
+        BulkCreateResponse_ApplicationRouteExampleItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationRouteExampleItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationRouteItem] */
+        BulkCreateResponse_ApplicationRouteItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationRouteItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationRouteResponseItem] */
+        BulkCreateResponse_ApplicationRouteResponseItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationRouteResponseItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationRouteTableItem] */
+        BulkCreateResponse_ApplicationRouteTableItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationRouteTableItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationVersionItem] */
+        BulkCreateResponse_ApplicationVersionItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationVersionItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[CommentItem] */
+        BulkCreateResponse_CommentItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_CommentItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseItem] */
+        BulkCreateResponse_DatabaseItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseMigrationColumnItem] */
+        BulkCreateResponse_DatabaseMigrationColumnItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseMigrationColumnItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseMigrationItem] */
+        BulkCreateResponse_DatabaseMigrationItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseMigrationItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseTableColumnItem] */
+        BulkCreateResponse_DatabaseTableColumnItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseTableColumnItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseTableItem] */
+        BulkCreateResponse_DatabaseTableItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseTableItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseVersionItem] */
+        BulkCreateResponse_DatabaseVersionItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseVersionItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[FeatureItem] */
+        BulkCreateResponse_FeatureItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_FeatureItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[FeatureJourneyItem] */
+        BulkCreateResponse_FeatureJourneyItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_FeatureJourneyItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[JourneyItem] */
+        BulkCreateResponse_JourneyItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_JourneyItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[JourneyScenarioItem] */
+        BulkCreateResponse_JourneyScenarioItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_JourneyScenarioItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[JourneyScenarioStepAssertionItem] */
+        BulkCreateResponse_JourneyScenarioStepAssertionItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_JourneyScenarioStepAssertionItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[JourneyScenarioStepItem] */
+        BulkCreateResponse_JourneyScenarioStepItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_JourneyScenarioStepItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[JourneyScenarioStepRouteItem] */
+        BulkCreateResponse_JourneyScenarioStepRouteItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_JourneyScenarioStepRouteItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[PersonaItem] */
+        BulkCreateResponse_PersonaItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_PersonaItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ServiceActionItem] */
+        BulkCreateResponse_ServiceActionItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ServiceActionItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ServiceItem] */
+        BulkCreateResponse_ServiceItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ServiceItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[TagItem] */
+        BulkCreateResponse_TagItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_TagItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /**
+         * BulkItemError
+         * @description Why a single item failed to be created.
+         */
+        BulkItemError: {
+            /** Detail */
+            detail: string;
+        };
+        /** BulkItemResult[AccountItem] */
+        BulkItemResult_AccountItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["AccountItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationEnvironmentItem] */
+        BulkItemResult_ApplicationEnvironmentItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationEnvironmentItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationEnvironmentVersionItem] */
+        BulkItemResult_ApplicationEnvironmentVersionItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationEnvironmentVersionItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationFeatureItem] */
+        BulkItemResult_ApplicationFeatureItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationFeatureItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationGuardItem] */
+        BulkItemResult_ApplicationGuardItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationGuardItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationItem] */
+        BulkItemResult_ApplicationItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationRoleItem] */
+        BulkItemResult_ApplicationRoleItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationRoleItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationRouteExampleItem] */
+        BulkItemResult_ApplicationRouteExampleItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationRouteExampleItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationRouteItem] */
+        BulkItemResult_ApplicationRouteItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationRouteItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationRouteResponseItem] */
+        BulkItemResult_ApplicationRouteResponseItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationRouteResponseItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationRouteTableItem] */
+        BulkItemResult_ApplicationRouteTableItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationRouteTableItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationVersionItem] */
+        BulkItemResult_ApplicationVersionItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationVersionItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[CommentItem] */
+        BulkItemResult_CommentItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["CommentItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseItem] */
+        BulkItemResult_DatabaseItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseMigrationColumnItem] */
+        BulkItemResult_DatabaseMigrationColumnItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseMigrationColumnItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseMigrationItem] */
+        BulkItemResult_DatabaseMigrationItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseMigrationItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseTableColumnItem] */
+        BulkItemResult_DatabaseTableColumnItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseTableColumnItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseTableItem] */
+        BulkItemResult_DatabaseTableItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseTableItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseVersionItem] */
+        BulkItemResult_DatabaseVersionItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseVersionItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[FeatureItem] */
+        BulkItemResult_FeatureItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["FeatureItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[FeatureJourneyItem] */
+        BulkItemResult_FeatureJourneyItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["FeatureJourneyItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[JourneyItem] */
+        BulkItemResult_JourneyItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["JourneyItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[JourneyScenarioItem] */
+        BulkItemResult_JourneyScenarioItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["JourneyScenarioItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[JourneyScenarioStepAssertionItem] */
+        BulkItemResult_JourneyScenarioStepAssertionItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["JourneyScenarioStepAssertionItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[JourneyScenarioStepItem] */
+        BulkItemResult_JourneyScenarioStepItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["JourneyScenarioStepItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[JourneyScenarioStepRouteItem] */
+        BulkItemResult_JourneyScenarioStepRouteItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["JourneyScenarioStepRouteItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[PersonaItem] */
+        BulkItemResult_PersonaItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["PersonaItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ServiceActionItem] */
+        BulkItemResult_ServiceActionItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ServiceActionItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ServiceItem] */
+        BulkItemResult_ServiceItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ServiceItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[TagItem] */
+        BulkItemResult_TagItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["TagItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
         };
         /**
          * CommentCreateForm
@@ -10041,6 +11799,39 @@ export interface operations {
             };
         };
     };
+    api_accounts_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_AccountCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_AccountItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_accounts_get: {
         parameters: {
             query?: never;
@@ -11383,6 +13174,59 @@ export interface operations {
             };
         };
     };
+    api_applications_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_get: {
         parameters: {
             query?: never;
@@ -11739,6 +13583,60 @@ export interface operations {
             };
         };
     };
+    api_applications_environments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationEnvironmentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationEnvironmentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or environment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_environments_get: {
         parameters: {
             query?: never;
@@ -11967,6 +13865,60 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ApplicationVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_versions_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationVersionCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationVersionItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -12228,6 +14180,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ApplicationEnvironmentVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Environment, version or deployment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_environmentVersions_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+                environment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationEnvironmentVersionCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationEnvironmentVersionItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -12681,6 +14688,60 @@ export interface operations {
             };
         };
     };
+    api_applications_features_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationFeatureCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_features_get: {
         parameters: {
             query?: never;
@@ -12911,6 +14972,60 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ApplicationGuardItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or guard not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_guards_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationGuardCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationGuardItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -13201,6 +15316,60 @@ export interface operations {
             };
         };
     };
+    api_applications_roles_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationRoleCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationRoleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or role not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_roles_get: {
         parameters: {
             query?: never;
@@ -13433,6 +15602,60 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ApplicationRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, route, guard, role or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationRouteCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationRouteItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -13827,6 +16050,61 @@ export interface operations {
             };
         };
     };
+    api_applications_routes_responses_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationRouteResponseCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationRouteResponseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_responses_get: {
         parameters: {
             query?: never;
@@ -14060,6 +16338,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ApplicationRouteExampleItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, example or response not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_examples_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationRouteExampleCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationRouteExampleItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -14355,6 +16688,61 @@ export interface operations {
             };
         };
     };
+    api_applications_routes_tables_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                route_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationRouteTableCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationRouteTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Route, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_tables_get: {
         parameters: {
             query?: never;
@@ -14599,6 +16987,51 @@ export interface operations {
             };
         };
     };
+    api_applications_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_comments_list: {
         parameters: {
             query?: never;
@@ -14665,6 +17098,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Application or route not found */
@@ -14942,6 +17421,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_FeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_FeatureCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_FeatureItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -15708,6 +18240,60 @@ export interface operations {
             };
         };
     };
+    api_features_journeys_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_FeatureJourneyCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_FeatureJourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Feature, journey or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_features_journeys_get: {
         parameters: {
             query?: never;
@@ -15872,6 +18458,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Feature not found */
@@ -16061,6 +18692,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_PersonaItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_PersonaCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_PersonaItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -16430,6 +19114,51 @@ export interface operations {
             };
         };
     };
+    api_personas_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_personas_votes_list: {
         parameters: {
             query?: never;
@@ -16598,6 +19327,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_JourneyItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, journey or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_JourneyCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_JourneyItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -16989,6 +19771,60 @@ export interface operations {
             };
         };
     };
+    api_journeys_scenarios_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_JourneyScenarioCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_JourneyScenarioItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_get: {
         parameters: {
             query?: never;
@@ -17325,6 +20161,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_JourneyScenarioStepItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Scenario, step or action type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the action schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_JourneyScenarioStepCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_JourneyScenarioStepItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -18119,6 +21010,62 @@ export interface operations {
             };
         };
     };
+    api_journeys_scenarios_steps_assertions_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_JourneyScenarioStepAssertionCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_JourneyScenarioStepAssertionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, assertion or assertion type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Parameters do not match the assertion schema */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_steps_assertions_get: {
         parameters: {
             query?: never;
@@ -18388,6 +21335,62 @@ export interface operations {
             };
         };
     };
+    api_journeys_scenarios_steps_routes_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_JourneyScenarioStepRouteCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_JourneyScenarioStepRouteItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Step, link, application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_steps_routes_get: {
         parameters: {
             query?: never;
@@ -18578,6 +21581,51 @@ export interface operations {
             };
         };
     };
+    api_journeys_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_comments_list: {
         parameters: {
             query?: never;
@@ -18644,6 +21692,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Journey or scenario not found */
@@ -18734,6 +21828,53 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Journey, scenario or step not found */
@@ -19193,6 +22334,59 @@ export interface operations {
             };
         };
     };
+    api_databases_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_get: {
         parameters: {
             query?: never;
@@ -19549,6 +22743,60 @@ export interface operations {
             };
         };
     };
+    api_databases_versions_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseVersionCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseVersionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database or version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_get: {
         parameters: {
             query?: never;
@@ -19783,6 +23031,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_DatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Version, table or column type not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseTableCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseTableItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -20157,6 +23460,62 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, column, column type or reference not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseTableColumnCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseTableColumnItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -20587,6 +23946,60 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_DatabaseMigrationItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Database, version or migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseMigrationCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseMigrationItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -21188,6 +24601,61 @@ export interface operations {
             };
         };
     };
+    api_databases_migrations_columns_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_migration_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseMigrationColumnCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseMigrationColumnItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Migration, step, table or column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_migrations_columns_get: {
         parameters: {
             query?: never;
@@ -21692,6 +25160,51 @@ export interface operations {
             };
         };
     };
+    api_databases_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_tables_comments_list: {
         parameters: {
             query?: never;
@@ -21760,6 +25273,53 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Table not found */
@@ -21874,6 +25434,54 @@ export interface operations {
             };
         };
     };
+    api_databases_versions_tables_columns_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_migrations_comments_list: {
         parameters: {
             query?: never;
@@ -21940,6 +25548,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Migration not found */
@@ -22030,6 +25684,53 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Migration column not found */
@@ -22609,6 +26310,59 @@ export interface operations {
             };
         };
     };
+    api_services_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ServiceCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ServiceItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_get: {
         parameters: {
             query?: never;
@@ -22937,6 +26691,60 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_ServiceActionItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ServiceActionCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ServiceActionItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -23311,6 +27119,51 @@ export interface operations {
             };
         };
     };
+    api_services_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_actions_comments_list: {
         parameters: {
             query?: never;
@@ -23377,6 +27230,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Service or action not found */
@@ -23646,6 +27545,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_TagItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_tags_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_TagCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_TagItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
@@ -24135,6 +28087,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Account or comment not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_comments_replies_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                comment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
                 };
             };
             /** @description Account or comment not found */
