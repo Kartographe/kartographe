@@ -281,12 +281,19 @@ class DatabaseMigrationColumnPatchForm(CamelBase):
 
 
 class DatabaseTableIndexCreateForm(CamelBase):
-    """Create an index on a table. `columnIds` must reference columns of the table."""
+    """Create an index on a table.
+
+    Key on columns (`columnIds`, referencing columns of the table) or on an
+    `expression` (a functional/expression index, e.g. `(aem_file ->> 'fileId')`);
+    at least one is required. An expression index may still list the involved
+    columns in `columnIds` to keep the ER graph linked.
+    """
 
     name: str = Field(min_length=1, max_length=255)
     type: IndexType = Field(default=IndexType.BTREE)
     unique: bool = Field(default=False)
     column_ids: list[uuid.UUID] = Field(default_factory=list)
+    expression: str | None = Field(default=None, max_length=4096)
     where_clause: str | None = Field(default=None, max_length=2048)
     rank: int = Field(default=0, ge=0)
     description: dict | None = Field(default=None)
@@ -299,6 +306,7 @@ class DatabaseTableIndexPatchForm(CamelBase):
     type: IndexType | None = Field(default=None)
     unique: bool | None = Field(default=None)
     column_ids: list[uuid.UUID] | None = Field(default=None)
+    expression: str | None = Field(default=None, max_length=4096)
     where_clause: str | None = Field(default=None, max_length=2048)
     rank: int | None = Field(default=None, ge=0)
     description: dict | None = Field(default=None)

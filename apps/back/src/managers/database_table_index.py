@@ -35,22 +35,27 @@ class DatabaseTableIndexManager(BaseEntityManager):
             ).all()
         )
 
-    def _validate_columns(self, table: DatabaseTable, column_ids: list[uuid.UUID]) -> None:
-        if not column_ids:
+    def _validate(
+        self, table: DatabaseTable, *, column_ids: list[uuid.UUID], expression: str | None
+    ) -> None:
+        # An index keys on columns or on an expression — it needs at least one.
+        if not column_ids and not expression:
             raise HTTPException(
-                status.HTTP_422_UNPROCESSABLE_CONTENT, "An index needs at least one column."
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                "An index needs at least one column or an expression.",
             )
-        found = self.session.exec(
-            select(DatabaseTableColumn.id).where(
-                col(DatabaseTableColumn.id).in_(column_ids),
-                DatabaseTableColumn.database_table_id == table.id,
-                DatabaseTableColumn.enabled.is_(True),
-            )
-        ).all()
-        if set(column_ids) - set(found):
-            raise HTTPException(
-                status.HTTP_404_NOT_FOUND, "A referenced column was not found in this table."
-            )
+        if column_ids:
+            found = self.session.exec(
+                select(DatabaseTableColumn.id).where(
+                    col(DatabaseTableColumn.id).in_(column_ids),
+                    DatabaseTableColumn.database_table_id == table.id,
+                    DatabaseTableColumn.enabled.is_(True),
+                )
+            ).all()
+            if set(column_ids) - set(found):
+                raise HTTPException(
+                    status.HTTP_404_NOT_FOUND, "A referenced column was not found in this table."
+                )
 
     def create(
         self,
@@ -60,12 +65,13 @@ class DatabaseTableIndexManager(BaseEntityManager):
         type: IndexType,
         unique: bool,
         column_ids: list[uuid.UUID],
+        expression: str | None,
         where_clause: str | None,
         rank: int,
         description: dict | None,
     ) -> DatabaseTableIndex:
-        """Create an index on `table` after validating its columns."""
-        self._validate_columns(table, column_ids)
+        """Create an index on `table` after validating its columns/expression."""
+        self._validate(table, column_ids=column_ids, expression=expression)
         index = DatabaseTableIndex(
             account_id=table.account_id,
             database_table_id=table.id,
@@ -73,6 +79,7 @@ class DatabaseTableIndexManager(BaseEntityManager):
             type=type,
             unique=unique,
             column_ids=column_ids,
+            expression=expression,
             where_clause=where_clause,
             rank=rank,
             description=description,
@@ -82,9 +89,13 @@ class DatabaseTableIndexManager(BaseEntityManager):
     def update(
         self, table: DatabaseTable, index: DatabaseTableIndex, fields: dict
     ) -> DatabaseTableIndex:
-        """Apply a partial update, re-validating columns when they change."""
-        if "column_ids" in fields:
-            self._validate_columns(table, fields["column_ids"])
+        """Apply a partial update, re-validating columns/expression when they change."""
+        if "column_ids" in fields or "expression" in fields:
+            self._validate(
+                table,
+                column_ids=fields.get("column_ids", index.column_ids),
+                expression=fields.get("expression", index.expression),
+            )
         return self.apply_update(index, fields)
 
     def soft_delete(self, index: DatabaseTableIndex) -> None:

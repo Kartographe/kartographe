@@ -4,9 +4,11 @@
 
 """The `database_table_index` table — an index declared on a database table.
 
-An index covers one or more columns of its table (`column_ids`, ordered), with
-an access method (`type`), an optional uniqueness flag and an optional partial
-predicate (`where_clause`).
+An index keys on one or more columns of its table (`column_ids`, ordered) OR on
+an `expression` (a functional/expression index such as `(aem_file ->> 'fileId')`
+or `lower(email)`). It has an access method (`type`), an optional uniqueness flag
+and an optional partial predicate (`where_clause`). For an expression index,
+`column_ids` may still list the involved columns to keep the ER graph linked.
 
 Kept deliberately light: no lock, no search, no comments/votes/tags.
 """
@@ -29,8 +31,12 @@ class DatabaseTableIndex(BaseModel, table=True):
     name: str = Field(index=True)
     type: IndexType = Field(default=IndexType.BTREE, index=True)
     unique: bool = Field(default=False)
-    # Ordered columns covered by the index (references `database_table_column.id`).
+    # Ordered columns keyed by the index (references `database_table_column.id`).
+    # For an expression index these may be empty, or list the involved columns.
     column_ids: list[uuid.UUID] = Field(default_factory=list, sa_type=ARRAY(Uuid))
+    # Key expression of a functional/expression index (raw SQL), e.g.
+    # `(aem_file ->> 'fileId')`; unset for a plain column index.
+    expression: str | None = Field(default=None)
     # Predicate of a partial index (raw SQL), unset for a full index.
     where_clause: str | None = Field(default=None)
     # Display/sort order among the table's indexes.

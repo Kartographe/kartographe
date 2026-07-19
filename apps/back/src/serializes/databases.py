@@ -144,6 +144,7 @@ class DatabaseTableIndexItem(CamelBase):
     column_ids: list[uuid.UUID]
     database_table_id: uuid.UUID
     description: dict | None = None
+    expression: str | None = None
     id: uuid.UUID
     name: str
     rank: int
