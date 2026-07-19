@@ -88,6 +88,7 @@ class DatabaseTableManager(BaseEntityManager):
                 foreign_key_database_table_column_id=column_form.foreign_key_database_table_column_id,
                 nullable=column_form.nullable,
                 unique=column_form.unique,
+                primary_key=column_form.primary_key,
                 system_field=column_form.system_field,
                 rank=column_form.rank,
                 default_value=column_form.default_value,

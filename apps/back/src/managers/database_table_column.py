@@ -116,6 +116,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
         foreign_key_database_table_column_id: uuid.UUID | None,
         nullable: bool,
         unique: bool,
+        primary_key: bool = False,
         system_field: bool,
         rank: int,
         default_value: str,
@@ -128,7 +129,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
         """Create a column on `table` after validating its references.
 
         `commit=False` lets a caller (a table create/update) batch several
-        columns and commit once.
+        columns and commit once. A primary-key column is forced non-nullable.
         """
         self._validate_refs(
             table,
@@ -136,6 +137,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
             foreign_key_database_table_id=foreign_key_database_table_id,
             foreign_key_database_table_column_id=foreign_key_database_table_column_id,
         )
+        if primary_key:
+            nullable = False
         column = DatabaseTableColumn(
             account_id=table.account_id,
             database_table_id=table.id,
@@ -146,6 +149,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
             date=utc_now(),
             nullable=nullable,
             unique=unique,
+            primary_key=primary_key,
             system_field=system_field,
             rank=rank,
             default_value=default_value,
@@ -183,6 +187,10 @@ class DatabaseTableColumnManager(BaseEntityManager):
                     column.foreign_key_database_table_column_id,
                 ),
             )
+        # A primary-key column is never nullable, whether the flag is being set
+        # now or was already set.
+        if fields.get("primary_key", column.primary_key):
+            fields["nullable"] = False
         return self.apply_update(column, fields)
 
     def reorder(

@@ -46,6 +46,9 @@ class DatabaseTableColumn(LockableMixin, BaseModel, Searchable, table=True):
     date: datetime
     nullable: bool = Field(default=False)
     unique: bool = Field(default=False)
+    # Part of the table's primary key. A primary-key column is never nullable
+    # (enforced by the manager). This flag is the source of truth for the ER view.
+    primary_key: bool = Field(default=False)
     # Whether the column is a framework/system field (e.g. id, timestamps).
     system_field: bool = Field(default=False)
     # Display/sort order of the column within its table.

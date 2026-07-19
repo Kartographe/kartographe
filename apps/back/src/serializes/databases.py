@@ -83,6 +83,7 @@ class DatabaseTableColumnItem(TaggableItem, VotableItem):
     nullable: bool
     owner: OwnerItem
     owner_id: uuid.UUID
+    primary_key: bool
     rank: int
     system_field: bool
     tag_ids: list[uuid.UUID]
