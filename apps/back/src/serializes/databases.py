@@ -10,6 +10,7 @@ from datetime import datetime
 from pydantic import Field
 
 from src.models.enum import (
+    ConstraintType,
     DatabaseMigrationColumnStatus,
     DatabaseMigrationColumnType,
     DatabaseMigrationStatus,
@@ -19,6 +20,8 @@ from src.models.enum import (
     DatabaseTableType,
     DatabaseType,
     DatabaseVersionStatus,
+    IndexType,
+    ReferentialAction,
     VoteRole,
     VoteValue,
 )
@@ -133,6 +136,37 @@ class DatabaseTableItem(TaggableItem, VotableItem):
     tag_ids: list[uuid.UUID]
     tags: list[TagItem] = []
     type: DatabaseTableType
+
+
+class DatabaseTableIndexItem(CamelBase):
+    """An index declared on a database table."""
+
+    column_ids: list[uuid.UUID]
+    database_table_id: uuid.UUID
+    description: dict | None = None
+    id: uuid.UUID
+    name: str
+    rank: int
+    type: IndexType
+    unique: bool
+    where_clause: str | None = None
+
+
+class DatabaseTableConstraintItem(CamelBase):
+    """A constraint declared on a database table."""
+
+    check_expression: str | None = None
+    column_ids: list[uuid.UUID]
+    database_table_id: uuid.UUID
+    description: dict | None = None
+    foreign_key_column_ids: list[uuid.UUID]
+    foreign_key_database_table_id: uuid.UUID | None = None
+    id: uuid.UUID
+    name: str
+    on_delete: ReferentialAction | None = None
+    on_update: ReferentialAction | None = None
+    rank: int
+    type: ConstraintType
 
 
 class DatabaseMigrationItem(VotableItem):

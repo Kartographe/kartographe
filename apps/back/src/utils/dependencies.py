@@ -43,6 +43,8 @@ from src.managers.database_migration_column import DatabaseMigrationColumnManage
 from src.managers.database_table import DatabaseTableManager
 from src.managers.database_table_column import DatabaseTableColumnManager
 from src.managers.database_table_column_subfield import DatabaseTableColumnSubfieldManager
+from src.managers.database_table_constraint import DatabaseTableConstraintManager
+from src.managers.database_table_index import DatabaseTableIndexManager
 from src.managers.database_version import DatabaseVersionManager
 from src.managers.feature import FeatureManager
 from src.managers.feature_file import FeatureFileManager
@@ -91,6 +93,8 @@ from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
+from src.models.database_table_constraint import DatabaseTableConstraint
+from src.models.database_table_index import DatabaseTableIndex
 from src.models.database_version import DatabaseVersion
 from src.models.enum import AccountUserRole, UserStatus
 from src.models.feature import Feature
@@ -825,6 +829,54 @@ def get_current_database_table_column_subfield(
 
 CurrentDatabaseTableColumnSubfieldDep = Annotated[
     DatabaseTableColumnSubfield, Depends(get_current_database_table_column_subfield)
+]
+
+
+def get_database_table_index_manager(session: SessionDep) -> DatabaseTableIndexManager:
+    return DatabaseTableIndexManager(session)
+
+
+DatabaseTableIndexManagerDep = Annotated[
+    DatabaseTableIndexManager, Depends(get_database_table_index_manager)
+]
+
+
+def get_current_database_table_index(
+    database_table_index_id: uuid.UUID, table: CurrentDatabaseTableDep, session: SessionDep
+) -> DatabaseTableIndex:
+    index = session.get(DatabaseTableIndex, database_table_index_id)
+    if index is None or not index.enabled or index.database_table_id != table.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Index not found.")
+    return index
+
+
+CurrentDatabaseTableIndexDep = Annotated[
+    DatabaseTableIndex, Depends(get_current_database_table_index)
+]
+
+
+def get_database_table_constraint_manager(
+    session: SessionDep,
+) -> DatabaseTableConstraintManager:
+    return DatabaseTableConstraintManager(session)
+
+
+DatabaseTableConstraintManagerDep = Annotated[
+    DatabaseTableConstraintManager, Depends(get_database_table_constraint_manager)
+]
+
+
+def get_current_database_table_constraint(
+    database_table_constraint_id: uuid.UUID, table: CurrentDatabaseTableDep, session: SessionDep
+) -> DatabaseTableConstraint:
+    constraint = session.get(DatabaseTableConstraint, database_table_constraint_id)
+    if constraint is None or not constraint.enabled or constraint.database_table_id != table.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Constraint not found.")
+    return constraint
+
+
+CurrentDatabaseTableConstraintDep = Annotated[
+    DatabaseTableConstraint, Depends(get_current_database_table_constraint)
 ]
 
 

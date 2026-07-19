@@ -387,6 +387,36 @@ class DatabaseTableStatus(str, Enum):
     ARCHIVED = "archived"
 
 
+class IndexType(str, Enum):
+    """Access method of a table index (Postgres index types)."""
+
+    BTREE = "btree"
+    HASH = "hash"
+    GIN = "gin"
+    GIST = "gist"
+    BRIN = "brin"
+
+
+class ConstraintType(str, Enum):
+    """Kind of a table constraint."""
+
+    PRIMARY_KEY = "primary_key"
+    UNIQUE = "unique"
+    FOREIGN_KEY = "foreign_key"
+    CHECK = "check"
+    NOT_NULL = "not_null"
+
+
+class ReferentialAction(str, Enum):
+    """`ON DELETE` / `ON UPDATE` action of a foreign-key constraint."""
+
+    NO_ACTION = "no_action"
+    RESTRICT = "restrict"
+    CASCADE = "cascade"
+    SET_NULL = "set_null"
+    SET_DEFAULT = "set_default"
+
+
 class ApplicationGuardType(str, Enum):
     HEADER_BEARER = "header_bearer"
     HEADER_BASIC = "header_basic"

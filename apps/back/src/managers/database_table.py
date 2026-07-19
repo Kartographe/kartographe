@@ -21,6 +21,8 @@ from src.managers.tagging import tag_overlap
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
 from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
+from src.models.database_table_constraint import DatabaseTableConstraint
+from src.models.database_table_index import DatabaseTableIndex
 from src.models.database_version import DatabaseVersion
 from src.models.enum import DatabaseTableStatus, DatabaseTableType, EntityType
 from src.models.user import User
@@ -184,5 +186,11 @@ class DatabaseTableManager(BaseEntityManager):
         self._disable_table_subfields(table, now)
         self._bulk_disable(
             DatabaseTableColumn, DatabaseTableColumn.database_table_id == table.id, now=now
+        )
+        self._bulk_disable(
+            DatabaseTableIndex, DatabaseTableIndex.database_table_id == table.id, now=now
+        )
+        self._bulk_disable(
+            DatabaseTableConstraint, DatabaseTableConstraint.database_table_id == table.id, now=now
         )
         self.session.commit()

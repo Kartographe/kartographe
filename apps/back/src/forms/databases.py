@@ -11,6 +11,7 @@ from pydantic import Field, model_validator
 
 from src.forms._base import CamelBase
 from src.models.enum import (
+    ConstraintType,
     DatabaseMigrationColumnType,
     DatabaseMigrationType,
     DatabaseStatus,
@@ -18,6 +19,8 @@ from src.models.enum import (
     DatabaseTableType,
     DatabaseType,
     DatabaseVersionStatus,
+    IndexType,
+    ReferentialAction,
 )
 
 # A `#rgb` or `#rrggbb` color. `None` clears the color; the field is optional.
@@ -271,4 +274,69 @@ class DatabaseMigrationColumnPatchForm(CamelBase):
     destination_database_table_column_id: uuid.UUID | None = Field(default=None)
     destination_database_table_column_subfield_id: uuid.UUID | None = Field(default=None)
     transformation_method: str | None = Field(default=None, max_length=1024)
+    description: dict | None = Field(default=None)
+
+
+# --- DatabaseTableIndex --------------------------------------------------
+
+
+class DatabaseTableIndexCreateForm(CamelBase):
+    """Create an index on a table. `columnIds` must reference columns of the table."""
+
+    name: str = Field(min_length=1, max_length=255)
+    type: IndexType = Field(default=IndexType.BTREE)
+    unique: bool = Field(default=False)
+    column_ids: list[uuid.UUID] = Field(default_factory=list)
+    where_clause: str | None = Field(default=None, max_length=2048)
+    rank: int = Field(default=0, ge=0)
+    description: dict | None = Field(default=None)
+
+
+class DatabaseTableIndexPatchForm(CamelBase):
+    """Partial update of an index — only the keys sent are applied."""
+
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    type: IndexType | None = Field(default=None)
+    unique: bool | None = Field(default=None)
+    column_ids: list[uuid.UUID] | None = Field(default=None)
+    where_clause: str | None = Field(default=None, max_length=2048)
+    rank: int | None = Field(default=None, ge=0)
+    description: dict | None = Field(default=None)
+
+
+# --- DatabaseTableConstraint ---------------------------------------------
+
+
+class DatabaseTableConstraintCreateForm(CamelBase):
+    """Create a constraint on a table.
+
+    `columnIds` must reference columns of the table. A `foreign_key` constraint
+    also needs `foreignKeyDatabaseTableId` and `foreignKeyColumnIds` (columns of
+    that table). A `check` constraint may be table-level (no columns).
+    """
+
+    name: str = Field(min_length=1, max_length=255)
+    type: ConstraintType
+    column_ids: list[uuid.UUID] = Field(default_factory=list)
+    check_expression: str | None = Field(default=None, max_length=4096)
+    foreign_key_database_table_id: uuid.UUID | None = Field(default=None)
+    foreign_key_column_ids: list[uuid.UUID] = Field(default_factory=list)
+    on_delete: ReferentialAction | None = Field(default=None)
+    on_update: ReferentialAction | None = Field(default=None)
+    rank: int = Field(default=0, ge=0)
+    description: dict | None = Field(default=None)
+
+
+class DatabaseTableConstraintPatchForm(CamelBase):
+    """Partial update of a constraint — only the keys sent are applied."""
+
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    type: ConstraintType | None = Field(default=None)
+    column_ids: list[uuid.UUID] | None = Field(default=None)
+    check_expression: str | None = Field(default=None, max_length=4096)
+    foreign_key_database_table_id: uuid.UUID | None = Field(default=None)
+    foreign_key_column_ids: list[uuid.UUID] | None = Field(default=None)
+    on_delete: ReferentialAction | None = Field(default=None)
+    on_update: ReferentialAction | None = Field(default=None)
+    rank: int | None = Field(default=None, ge=0)
     description: dict | None = Field(default=None)

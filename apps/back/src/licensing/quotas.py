@@ -53,6 +53,8 @@ class QuotaKey(str, Enum):
     DATABASE_TABLE = "databaseTable"
     DATABASE_TABLE_COLUMN = "databaseTableColumn"
     DATABASE_TABLE_COLUMN_SUBFIELD = "databaseTableColumnSubfield"
+    DATABASE_TABLE_INDEX = "databaseTableIndex"
+    DATABASE_TABLE_CONSTRAINT = "databaseTableConstraint"
     DATABASE_MIGRATION = "databaseMigration"
     DATABASE_MIGRATION_COLUMN = "databaseMigrationColumn"
 

@@ -321,6 +321,16 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Nested JSON sub-fields of a database column.",
     },
     {
+        "name": "api.databases.versions.tables.indexes",
+        "x-displayName": "Databases › Indexes",
+        "description": "Indexes declared on a database table.",
+    },
+    {
+        "name": "api.databases.versions.tables.constraints",
+        "x-displayName": "Databases › Constraints",
+        "description": "Constraints declared on a database table.",
+    },
+    {
         "name": "api.databases.migrations",
         "x-displayName": "Databases › Migrations",
         "description": "Planned moves from a version of a database to a version of another.",
