@@ -13,7 +13,14 @@ export interface ColumnTypeLookup {
   options: { value: string; label: string }[];
   /** `databaseColumnTypeId` → its human label; falls back to the raw id. */
   label: (id: string) => string;
+  /** Whether the type is a JSON-family type (`json`, `jsonb`, …). */
+  isJson: (id: string) => boolean;
   isLoading: boolean;
+}
+
+/** A type whose label or slug mentions "json" carries sub-fields. */
+function labelIsJson(label: string | undefined): boolean {
+  return !!label && label.toLowerCase().includes("json");
 }
 
 /**
@@ -26,10 +33,16 @@ export function useColumnTypes(databaseType: DatabaseType): ColumnTypeLookup {
   const all: ColumnType[] = query.data?.items ?? [];
   const forEngine = all.filter((type) => type.databaseType === databaseType);
   const labels = new Map(all.map((type) => [type.id, type.label]));
+  const jsonIds = new Set(
+    all
+      .filter((type) => labelIsJson(type.label) || labelIsJson(type.slug))
+      .map((type) => type.id)
+  );
 
   return {
     options: forEngine.map((type) => ({ value: type.id, label: type.label })),
     label: (id) => labels.get(id) ?? id,
+    isJson: (id) => jsonIds.has(id),
     isLoading: query.isLoading,
   };
 }

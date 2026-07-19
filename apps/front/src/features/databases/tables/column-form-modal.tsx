@@ -81,6 +81,7 @@ export function ColumnFormModal({
       defaultValue: column?.defaultValue ?? "",
       nullable: column?.nullable ?? true,
       unique: column?.unique ?? false,
+      primaryKey: column?.primaryKey ?? false,
       systemField: column?.systemField ?? false,
       foreignKeyDatabaseTableId: column?.foreignKeyDatabaseTableId ?? NO_FK,
       foreignKeyDatabaseTableColumnId:
@@ -103,6 +104,7 @@ export function ColumnFormModal({
         defaultValue: z.string(),
         nullable: z.boolean(),
         unique: z.boolean(),
+        primaryKey: z.boolean(),
         systemField: z.boolean(),
         foreignKeyDatabaseTableId: z.string(),
         foreignKeyDatabaseTableColumnId: z.string(),
@@ -119,6 +121,7 @@ export function ColumnFormModal({
         defaultValue: value.defaultValue,
         nullable: value.nullable,
         unique: value.unique,
+        primaryKey: value.primaryKey,
         systemField: value.systemField,
         // A target column without its table would dangle — drop both together.
         foreignKeyDatabaseTableId: fkTable,
@@ -213,6 +216,11 @@ export function ColumnFormModal({
           </form.AppField>
           <form.AppField name="unique">
             {(field) => <field.CheckboxField>{t`Unique`}</field.CheckboxField>}
+          </form.AppField>
+          <form.AppField name="primaryKey">
+            {(field) => (
+              <field.CheckboxField>{t`Clé primaire`}</field.CheckboxField>
+            )}
           </form.AppField>
           <form.AppField name="systemField">
             {(field) => (

@@ -17,7 +17,9 @@ import { OverviewHeader } from "@/components/overview/overview-header";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import { ServiceFormModal } from "@/features/services/service-form-modal";
+import { ServicePicture } from "@/features/services/service-picture";
 import {
+  ServiceCategoryTag,
   ServiceStatusTag,
   ServiceTypeTag,
 } from "@/features/services/service-tags";
@@ -53,6 +55,11 @@ export function ServiceOverview({
     "patch",
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Type mis à jour` } }
+  );
+  const categoryMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
+    { meta: { successMessage: t`Catégorie mise à jour` } }
   );
   const lockMutation = $api.useMutation(
     "post",
@@ -107,6 +114,19 @@ export function ServiceOverview({
     });
   }
 
+  async function changeCategory(category: Service["category"]) {
+    await categoryMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { category },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services/{service_id}"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get", "/v1/accounts/{account_id}/services"],
+    });
+  }
+
   return (
     <Flex gap={16} vertical>
       <OverviewHeader
@@ -146,6 +166,13 @@ export function ServiceOverview({
             type={service.type}
           />
         </OverviewField>
+        <OverviewField label={t`Catégorie`}>
+          <ServiceCategoryTag
+            category={service.category}
+            loading={categoryMutation.isPending}
+            onChange={service.locked ? undefined : changeCategory}
+          />
+        </OverviewField>
         <OverviewField label={t`Statut`}>
           <ServiceStatusTag
             loading={statusMutation.isPending}
@@ -163,6 +190,8 @@ export function ServiceOverview({
           <RichTextView value={service.description} />
         </OverviewField>
       </OverviewFields>
+
+      <ServicePicture accountId={accountId} service={service} />
 
       <ServiceFormModal
         accountId={accountId}

@@ -34,6 +34,7 @@ import { SchemaGraph } from "@/features/databases/tables/schema-graph";
 import { TableColumns } from "@/features/databases/tables/table-columns";
 import { TableCommentsDrawer } from "@/features/databases/tables/table-comments-drawer";
 import { TableFormModal } from "@/features/databases/tables/table-form-modal";
+import { TableIndexesConstraints } from "@/features/databases/tables/table-indexes-constraints";
 import { useColumnTypes } from "@/features/databases/use-column-types";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
@@ -307,6 +308,14 @@ export function TablesScreen({
           onDelete={(column) => confirmDeleteColumn(table, column)}
           onEdit={(column) => setColumnForm({ table, column })}
           table={table}
+          versionId={selectedId}
+        />
+
+        <TableIndexesConstraints
+          accountId={accountId}
+          databaseId={database.id}
+          table={table}
+          tables={tables}
           versionId={selectedId}
         />
       </Flex>

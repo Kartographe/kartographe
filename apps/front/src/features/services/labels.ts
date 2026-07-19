@@ -57,6 +57,57 @@ export const SERVICE_TYPE_COLORS: Record<S["ServiceType"], string> = {
   other: "default",
 };
 
+export const SERVICE_CATEGORY_LABELS: Record<
+  S["ServiceCategory"],
+  MessageDescriptor
+> = {
+  payment: msg`Paiement`,
+  communication: msg`Communication`,
+  automation: msg`Automatisation`,
+  contractualization: msg`Contractualisation`,
+  authentication: msg`Authentification`,
+  storage: msg`Stockage`,
+  analytics: msg`Analytics`,
+  messaging: msg`Messagerie`,
+  monitoring: msg`Supervision`,
+  hosting: msg`Hébergement`,
+  database: msg`Base de données`,
+  other: msg`Autre`,
+};
+
+export const SERVICE_CATEGORY_DESCRIPTIONS: Record<
+  S["ServiceCategory"],
+  MessageDescriptor
+> = {
+  payment: msg`Encaissement, facturation ou traitement des paiements.`,
+  communication: msg`Envoi d'e-mails, de SMS ou de notifications.`,
+  automation: msg`Orchestration de tâches et de workflows.`,
+  contractualization: msg`Signature électronique et gestion de contrats.`,
+  authentication: msg`Identité, connexion et gestion des accès.`,
+  storage: msg`Stockage de fichiers ou d'objets.`,
+  analytics: msg`Mesure d'audience et analyse de données.`,
+  messaging: msg`Messagerie instantanée ou bus d'événements.`,
+  monitoring: msg`Supervision, journalisation et alertes.`,
+  hosting: msg`Hébergement d'applications ou d'infrastructure.`,
+  database: msg`Base de données ou service de persistance.`,
+  other: msg`Ne correspond à aucune des catégories ci-dessus.`,
+};
+
+export const SERVICE_CATEGORY_COLORS: Record<S["ServiceCategory"], string> = {
+  payment: "green",
+  communication: "blue",
+  automation: "geekblue",
+  contractualization: "gold",
+  authentication: "red",
+  storage: "cyan",
+  analytics: "magenta",
+  messaging: "purple",
+  monitoring: "volcano",
+  hosting: "lime",
+  database: "orange",
+  other: "default",
+};
+
 export const ACTION_STATUS_LABELS: Record<
   S["ServiceActionStatus"],
   MessageDescriptor

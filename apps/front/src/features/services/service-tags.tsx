@@ -11,6 +11,9 @@ import {
   ACTION_TYPE_COLORS,
   ACTION_TYPE_DESCRIPTIONS,
   ACTION_TYPE_LABELS,
+  SERVICE_CATEGORY_COLORS,
+  SERVICE_CATEGORY_DESCRIPTIONS,
+  SERVICE_CATEGORY_LABELS,
   SERVICE_STATUS_COLORS,
   SERVICE_STATUS_DESCRIPTIONS,
   SERVICE_STATUS_LABELS,
@@ -59,6 +62,27 @@ export function ServiceTypeTag({
       loading={loading}
       onChange={onChange}
       value={type}
+    />
+  );
+}
+
+export function ServiceCategoryTag({
+  category,
+  onChange,
+  loading,
+}: {
+  category: S["ServiceCategory"];
+  onChange?: (category: S["ServiceCategory"]) => void;
+  loading?: boolean;
+}) {
+  return (
+    <EnumTag
+      colors={SERVICE_CATEGORY_COLORS}
+      descriptions={SERVICE_CATEGORY_DESCRIPTIONS}
+      labels={SERVICE_CATEGORY_LABELS}
+      loading={loading}
+      onChange={onChange}
+      value={category}
     />
   );
 }

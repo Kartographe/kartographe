@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
+import { KeyOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import {
   Background,
@@ -26,6 +27,32 @@ import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
 
 type DatabaseTable = components["schemas"]["DatabaseTableItem"];
 type Column = components["schemas"]["DatabaseTableColumnItem"];
+type Subfield = components["schemas"]["DatabaseTableColumnSubfieldItem"];
+
+/** Flatten a column's sub-fields into rank-ordered rows carrying their depth. */
+function flattenSubfields(
+  subfields: Subfield[]
+): { item: Subfield; depth: number }[] {
+  const byParent = new Map<string | null, Subfield[]>();
+  for (const subfield of subfields) {
+    const key = subfield.parentSubfieldId ?? null;
+    const list = byParent.get(key) ?? [];
+    list.push(subfield);
+    byParent.set(key, list);
+  }
+  const rows: { item: Subfield; depth: number }[] = [];
+  const walk = (parentId: string | null, depth: number) => {
+    const list = [...(byParent.get(parentId) ?? [])].sort(
+      (a, b) => a.rank - b.rank
+    );
+    for (const item of list) {
+      rows.push({ item, depth });
+      walk(item.id, depth + 1);
+    }
+  };
+  walk(null, 0);
+  return rows;
+}
 
 interface TableNodeData extends Record<string, unknown> {
   table: DatabaseTable;
@@ -67,36 +94,66 @@ function TableNode({ data }: NodeProps) {
       </Flex>
 
       {columns.map((column) => (
-        <Flex
-          align="center"
-          gap={6}
-          key={column.id}
-          style={{ fontSize: 11, height: 26, padding: "0 12px" }}
-        >
-          <ColorSwatch color={column.color} size={8} />
-          <Typography.Text ellipsis style={{ flex: 1, fontSize: 11 }}>
-            {column.name}
-          </Typography.Text>
-          <Typography.Text style={{ fontSize: 10 }} type="secondary">
-            {typeLabel(column.databaseColumnTypeId)}
-          </Typography.Text>
-          {column.foreignKeyDatabaseTableId ? (
-            <Tag
-              color="blue"
-              style={{ fontSize: 9, lineHeight: "14px", margin: 0 }}
+        <div key={column.id}>
+          <Flex
+            align="center"
+            gap={6}
+            style={{ fontSize: 11, height: 26, padding: "0 12px" }}
+          >
+            <ColorSwatch color={column.color} size={8} />
+            <Typography.Text ellipsis style={{ flex: 1, fontSize: 11 }}>
+              {column.name}
+            </Typography.Text>
+            <Typography.Text style={{ fontSize: 10 }} type="secondary">
+              {typeLabel(column.databaseColumnTypeId)}
+            </Typography.Text>
+            {column.primaryKey ? (
+              <KeyOutlined
+                style={{ color: "var(--ant-gold-6)", fontSize: 10 }}
+              />
+            ) : null}
+            {column.foreignKeyDatabaseTableId ? (
+              <Tag
+                color="blue"
+                style={{ fontSize: 9, lineHeight: "14px", margin: 0 }}
+              >
+                FK
+              </Tag>
+            ) : null}
+            {column.unique ? (
+              <Tag
+                color="gold"
+                style={{ fontSize: 9, lineHeight: "14px", margin: 0 }}
+              >
+                UQ
+              </Tag>
+            ) : null}
+          </Flex>
+          {flattenSubfields(column.subfields ?? []).map(({ item, depth }) => (
+            <Flex
+              align="center"
+              gap={6}
+              key={item.id}
+              style={{
+                fontSize: 10,
+                height: 22,
+                padding: "0 12px",
+                paddingInlineStart: 24 + depth * 12,
+              }}
             >
-              FK
-            </Tag>
-          ) : null}
-          {column.unique ? (
-            <Tag
-              color="gold"
-              style={{ fontSize: 9, lineHeight: "14px", margin: 0 }}
-            >
-              UQ
-            </Tag>
-          ) : null}
-        </Flex>
+              <Typography.Text
+                ellipsis
+                style={{ flex: 1, fontSize: 10 }}
+                type="secondary"
+              >
+                {item.name}
+              </Typography.Text>
+              <Typography.Text style={{ fontSize: 9 }} type="secondary">
+                {typeLabel(item.databaseColumnTypeId)}
+              </Typography.Text>
+            </Flex>
+          ))}
+        </div>
       ))}
     </div>
   );

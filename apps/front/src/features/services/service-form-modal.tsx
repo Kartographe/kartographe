@@ -9,7 +9,10 @@ import { z } from "zod";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
-import { SERVICE_TYPE_LABELS } from "@/features/services/labels";
+import {
+  SERVICE_CATEGORY_LABELS,
+  SERVICE_TYPE_LABELS,
+} from "@/features/services/labels";
 import type { RichTextDocument } from "@/lib/rich-text/rich-text";
 import { asRichText, isRichTextEmpty } from "@/lib/rich-text/rich-text";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
@@ -17,6 +20,7 @@ import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
 type Service = components["schemas"]["ServiceItem"];
 type ServiceType = components["schemas"]["ServiceType"];
+type ServiceCategory = components["schemas"]["ServiceCategory"];
 
 interface ServiceFormModalProps {
   accountId: string;
@@ -50,6 +54,7 @@ export function ServiceFormModal({
     defaultValues: {
       title: service?.title ?? "",
       type: (service?.type ?? "internal") as ServiceType,
+      category: (service?.category ?? "other") as ServiceCategory,
       url: service?.url ?? "",
       openapiUrl: service?.openapiUrl ?? "",
       description: asRichText(service?.description),
@@ -58,6 +63,7 @@ export function ServiceFormModal({
       onSubmit: z.object({
         title: z.string().min(1, t`Le titre est requis`),
         type: z.enum(dtoEnums.ServiceType),
+        category: z.enum(dtoEnums.ServiceCategory),
         url: z.union([z.literal(""), z.url(t`URL invalide`)]),
         openapiUrl: z.union([z.literal(""), z.url(t`URL invalide`)]),
         description: z.record(z.string(), z.unknown()),
@@ -67,6 +73,7 @@ export function ServiceFormModal({
       const body = {
         title: value.title,
         type: value.type,
+        category: value.category,
         url: value.url || null,
         openapiUrl: value.openapiUrl || null,
         description: isRichTextEmpty(value.description)
@@ -103,6 +110,10 @@ export function ServiceFormModal({
     value,
     label: t(SERVICE_TYPE_LABELS[value]),
   }));
+  const categoryOptions = dtoEnums.ServiceCategory.map((value) => ({
+    value,
+    label: t(SERVICE_CATEGORY_LABELS[value]),
+  }));
 
   return (
     <Modal
@@ -125,6 +136,14 @@ export function ServiceFormModal({
           <form.AppField name="type">
             {(field) => (
               <field.SelectField label={t`Type`} options={typeOptions} />
+            )}
+          </form.AppField>
+          <form.AppField name="category">
+            {(field) => (
+              <field.SelectField
+                label={t`Catégorie`}
+                options={categoryOptions}
+              />
             )}
           </form.AppField>
           <form.AppField name="url">

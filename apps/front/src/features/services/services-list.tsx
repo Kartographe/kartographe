@@ -33,11 +33,13 @@ import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
 import {
+  SERVICE_CATEGORY_LABELS,
   SERVICE_STATUS_LABELS,
   SERVICE_TYPE_LABELS,
 } from "@/features/services/labels";
 import { ServiceFormModal } from "@/features/services/service-form-modal";
 import {
+  ServiceCategoryTag,
   ServiceStatusTag,
   ServiceTypeTag,
 } from "@/features/services/service-tags";
@@ -46,6 +48,7 @@ import { votesColumn } from "@/features/votes/votes-column";
 type Service = components["schemas"]["ServiceItem"];
 type Status = components["schemas"]["ServiceStatus"];
 type Type = components["schemas"]["ServiceType"];
+type Category = components["schemas"]["ServiceCategory"];
 type SortField = components["schemas"]["ServiceSortField"];
 type SortOrder = components["schemas"]["SortOrder"];
 
@@ -54,6 +57,7 @@ const SORT_FIELD: Record<string, SortField> = {
   date: "date",
   status: "status",
   type: "type",
+  category: "category",
 };
 
 export function ServicesList({ accountId }: { accountId: string }) {
@@ -69,6 +73,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [myVote, setMyVote] = useState<string | null>(null);
 
   const servicesQuery = $api.useQuery(
@@ -84,6 +89,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
           sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
+          ...(categories.length ? { category: categories } : {}),
           ...(myVote ? { myVote } : {}),
         },
       },
@@ -99,6 +105,11 @@ export function ServicesList({ accountId }: { accountId: string }) {
     "patch",
     "/v1/accounts/{account_id}/services/{service_id}",
     { meta: { successMessage: t`Type mis à jour` } }
+  );
+  const categoryMutation = $api.useMutation(
+    "patch",
+    "/v1/accounts/{account_id}/services/{service_id}",
+    { meta: { successMessage: t`Catégorie mise à jour` } }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -121,7 +132,8 @@ export function ServicesList({ accountId }: { accountId: string }) {
 
   const services = servicesQuery.data?.items ?? [];
   const total = servicesQuery.data?.count ?? 0;
-  const hasFilters = statuses.length > 0 || types.length > 0;
+  const hasFilters =
+    statuses.length > 0 || types.length > 0 || categories.length > 0;
 
   function invalidate() {
     queryClient.invalidateQueries({
@@ -151,6 +163,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
     await typeMutation.mutateAsync({
       params: { path: { account_id: accountId, service_id: service.id } },
       body: { type },
+    });
+    invalidate();
+  }
+
+  async function changeCategory(service: Service, category: Category) {
+    await categoryMutation.mutateAsync({
+      params: { path: { account_id: accountId, service_id: service.id } },
+      body: { category },
     });
     invalidate();
   }
@@ -195,6 +215,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
     setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
     setStatuses((filters.status as Status[] | null) ?? []);
     setTypes((filters.type as Type[] | null) ?? []);
+    setCategories((filters.category as Category[] | null) ?? []);
     setMyVote((filters.votes as string[] | null)?.[0] ?? null);
     const single = Array.isArray(sorter) ? sorter[0] : sorter;
     if (single?.order && single.columnKey) {
@@ -258,6 +279,28 @@ export function ServicesList({ accountId }: { accountId: string }) {
             service.locked ? undefined : (next) => changeType(service, next)
           }
           type={type}
+        />
+      ),
+    },
+    {
+      title: t`Catégorie`,
+      key: "category",
+      dataIndex: "category",
+      sorter: true,
+      sortOrder: antdOrder("category"),
+      width: COL.type,
+      filters: dtoEnums.ServiceCategory.map((value) => ({
+        text: t(SERVICE_CATEGORY_LABELS[value]),
+        value,
+      })),
+      filteredValue: categories.length ? categories : null,
+      render: (category: Category, service) => (
+        <ServiceCategoryTag
+          category={category}
+          loading={categoryMutation.isPending}
+          onChange={
+            service.locked ? undefined : (next) => changeCategory(service, next)
+          }
         />
       ),
     },

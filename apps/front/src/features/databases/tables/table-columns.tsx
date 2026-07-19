@@ -6,9 +6,12 @@ import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
+  DownOutlined,
   EditOutlined,
   HolderOutlined,
+  KeyOutlined,
   PlusOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import {
   closestCenter,
@@ -49,6 +52,7 @@ import {
   stripNonIdentifier,
 } from "@/features/databases/identifier";
 import { ColorSwatch } from "@/features/databases/tables/color-swatch";
+import { ColumnSubfields } from "@/features/databases/tables/column-subfields";
 import type { ColumnTypeLookup } from "@/features/databases/use-column-types";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
@@ -69,6 +73,7 @@ interface Draft {
   databaseColumnTypeId: string;
   nullable: boolean;
   unique: boolean;
+  primaryKey: boolean;
   systemField: boolean;
 }
 
@@ -77,6 +82,7 @@ const EMPTY_DRAFT: Draft = {
   databaseColumnTypeId: "",
   nullable: true,
   unique: false,
+  primaryKey: false,
   systemField: false,
 };
 
@@ -141,6 +147,15 @@ function DraftFields({
         {t`Unique`}
       </Checkbox>
       <Checkbox
+        checked={draft.primaryKey}
+        disabled={disabled}
+        onChange={(event) =>
+          onChange({ ...draft, primaryKey: event.target.checked })
+        }
+      >
+        {t`Clé primaire`}
+      </Checkbox>
+      <Checkbox
         checked={draft.systemField}
         disabled={disabled}
         onChange={(event) =>
@@ -158,6 +173,9 @@ interface ColumnRowProps {
   columnTypes: ColumnTypeLookup;
   canManageLock: boolean;
   lockPending: boolean;
+  isJson: boolean;
+  subfieldsOpen: boolean;
+  onToggleSubfields: () => void;
   onComment: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -173,6 +191,9 @@ function ColumnRow({
   columnTypes,
   canManageLock,
   lockPending,
+  isJson,
+  subfieldsOpen,
+  onToggleSubfields,
   onComment,
   onEdit,
   onDelete,
@@ -224,10 +245,28 @@ function ColumnRow({
       <Typography.Text style={{ flex: 1 }} type="secondary">
         {columnTypes.label(column.databaseColumnTypeId)}
       </Typography.Text>
+      {column.primaryKey ? (
+        <Tooltip title={t`Clé primaire`}>
+          <KeyOutlined style={{ color: "var(--ant-gold-6)" }} />
+        </Tooltip>
+      ) : null}
       {column.foreignKeyDatabaseTableId ? <Tag color="blue">FK</Tag> : null}
       {column.unique ? <Tag color="gold">{t`Unique`}</Tag> : null}
       {column.nullable ? <Tag>{t`Nullable`}</Tag> : null}
       {column.systemField ? <Tag>{t`Système`}</Tag> : null}
+      {isJson ? (
+        <Tooltip
+          title={subfieldsOpen ? t`Masquer les sous-champs` : t`Sous-champs`}
+        >
+          <Button
+            icon={subfieldsOpen ? <DownOutlined /> : <RightOutlined />}
+            onClick={onToggleSubfields}
+            size="small"
+          >
+            {t`JSON`}
+          </Button>
+        </Tooltip>
+      ) : null}
 
       <VotesCell
         countsByRoleValue={column.votesCountsByRoleValue}
@@ -294,6 +333,20 @@ export function TableColumns({
   const [draft, setDraft] = useState<Draft | null>(null);
   // The order shown while the server catches up; cleared once it agrees.
   const [pendingOrder, setPendingOrder] = useState<Column[] | null>(null);
+  // JSON columns whose sub-field panel is expanded.
+  const [openSubfields, setOpenSubfields] = useState<Set<string>>(new Set());
+
+  function toggleSubfields(columnId: string) {
+    setOpenSubfields((current) => {
+      const next = new Set(current);
+      if (next.has(columnId)) {
+        next.delete(columnId);
+      } else {
+        next.add(columnId);
+      }
+      return next;
+    });
+  }
 
   const sensors = useSensors(
     // A few pixels of travel before a drag starts, so the handle stays clickable.
@@ -421,19 +474,37 @@ export function TableColumns({
           strategy={verticalListSortingStrategy}
         >
           <Flex gap={8} vertical>
-            {columns.map((column) => (
-              <ColumnRow
-                canManageLock={canManageLock}
-                column={column}
-                columnTypes={columnTypes}
-                key={column.id}
-                lockPending={lockPending}
-                onComment={() => onComment(column)}
-                onDelete={() => onDelete(column)}
-                onEdit={() => onEdit(column)}
-                onToggleLock={() => toggleColumnLock(column)}
-              />
-            ))}
+            {columns.map((column) => {
+              const isJson = columnTypes.isJson(column.databaseColumnTypeId);
+              const subfieldsOpen = openSubfields.has(column.id);
+              return (
+                <div key={column.id}>
+                  <ColumnRow
+                    canManageLock={canManageLock}
+                    column={column}
+                    columnTypes={columnTypes}
+                    isJson={isJson}
+                    lockPending={lockPending}
+                    onComment={() => onComment(column)}
+                    onDelete={() => onDelete(column)}
+                    onEdit={() => onEdit(column)}
+                    onToggleLock={() => toggleColumnLock(column)}
+                    onToggleSubfields={() => toggleSubfields(column.id)}
+                    subfieldsOpen={subfieldsOpen}
+                  />
+                  {isJson && subfieldsOpen ? (
+                    <ColumnSubfields
+                      accountId={accountId}
+                      column={column}
+                      columnTypes={columnTypes}
+                      databaseId={databaseId}
+                      tableId={table.id}
+                      versionId={versionId}
+                    />
+                  ) : null}
+                </div>
+              );
+            })}
           </Flex>
         </SortableContext>
       </DndContext>
