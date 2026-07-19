@@ -8994,7 +8994,12 @@ export interface components {
         };
         /**
          * DatabaseTableIndexCreateForm
-         * @description Create an index on a table. `columnIds` must reference columns of the table.
+         * @description Create an index on a table.
+         *
+         *     Key on columns (`columnIds`, referencing columns of the table) or on an
+         *     `expression` (a functional/expression index, e.g. `(aem_file ->> 'fileId')`);
+         *     at least one is required. An expression index may still list the involved
+         *     columns in `columnIds` to keep the ER graph linked.
          */
         DatabaseTableIndexCreateForm: {
             /** Name */
@@ -9008,6 +9013,8 @@ export interface components {
             unique: boolean;
             /** Columnids */
             columnIds?: string[];
+            /** Expression */
+            expression?: string | null;
             /** Whereclause */
             whereClause?: string | null;
             /**
@@ -9036,6 +9043,8 @@ export interface components {
             description?: {
                 [key: string]: unknown;
             } | null;
+            /** Expression */
+            expression?: string | null;
             /**
              * Id
              * Format: uuid
@@ -9063,6 +9072,8 @@ export interface components {
             unique?: boolean | null;
             /** Columnids */
             columnIds?: string[] | null;
+            /** Expression */
+            expression?: string | null;
             /** Whereclause */
             whereClause?: string | null;
             /** Rank */
