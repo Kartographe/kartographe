@@ -47,8 +47,3 @@ class DatabaseTableColumnSubfield(BaseModel, table=True):
     description: dict | None = Field(default=None, sa_type=JSON)
 
     column_type: "DatabaseColumnType" = Relationship()
-
-    # Self-referential relationship: children point back at their parent.
-    parent: "DatabaseTableColumnSubfield | None" = Relationship(
-        sa_relationship_kwargs={"remote_side": "DatabaseTableColumnSubfield.id"}
-    )
