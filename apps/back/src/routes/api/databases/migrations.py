@@ -14,12 +14,15 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import DatabaseMigrationCreateForm, DatabaseMigrationPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, DatabaseMigrationStatus, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseMigrationItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseDep,
@@ -100,6 +103,44 @@ def create_migration(
         destination_database_version_id=form.destination_database_version_id,
     )
     return ItemResponse(item=DatabaseMigrationItem.model_validate(migration))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_migrations_bulk_create",
+    summary="Create several database migrations at once",
+    description=(
+        "Create 1 to 50 database migrations in a single call — prefer this over calling "
+        "`api_databases_migrations_create` in a loop when adding many. Best-effort: each migration "
+        "is created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Data roles only."
+    ),
+    response_model=BulkCreateResponse[DatabaseMigrationItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_migrations(
+    body: BulkCreateRequest[DatabaseMigrationCreateForm],
+    database: CurrentDatabaseDep,
+    manager: DatabaseMigrationManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA)],
+) -> BulkCreateResponse[DatabaseMigrationItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            database,
+            type=form.type,
+            title=form.title,
+            description=form.description,
+            source_database_version_id=form.source_database_version_id,
+            destination_database_id=form.destination_database_id,
+            destination_database_version_id=form.destination_database_version_id,
+        ),
+        serialize=DatabaseMigrationItem.model_validate,
+    )
 
 
 @router.get(

@@ -15,12 +15,15 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.personas import PersonaSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.personas import PersonaCreateForm, PersonaPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType, PersonaStatus, PersonaType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.personas import PersonaItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -108,6 +111,42 @@ def create_persona(
         account, type=form.type, title=form.title, description=form.description, tag_ids=form.tag_ids
     )
     return ItemResponse(item=PersonaItem.model_validate(persona))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_personas_bulk_create",
+    summary="Create several personas at once",
+    description=(
+        "Create 1 to 50 personas in a single call — prefer this over calling "
+        "`api_personas_create` in a loop when adding many. Best-effort: each persona is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Editing roles only."
+    ),
+    response_model=BulkCreateResponse[PersonaItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_personas(
+    body: BulkCreateRequest[PersonaCreateForm],
+    account: CurrentAccountDep,
+    manager: PersonaManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> BulkCreateResponse[PersonaItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account,
+            type=form.type,
+            title=form.title,
+            description=form.description,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=PersonaItem.model_validate,
+    )
 
 
 @router.get(

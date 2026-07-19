@@ -16,12 +16,15 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRouteItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationRouteManagerDep,
     CurrentAccountUserDep,
@@ -112,6 +115,57 @@ def create_route(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=ApplicationRouteItem.model_validate(route))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_routes_bulk_create",
+    summary="Create several routes at once",
+    description=(
+        "Create 1 to 50 routes in a single call — prefer this over calling "
+        "`api_applications_routes_create` in a loop when adding many. Best-effort: each route is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Referenced guards, roles and versions must belong to the application. "
+        "Dev roles only."
+    ),
+    response_model=BulkCreateResponse[ApplicationRouteItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_routes(
+    body: BulkCreateRequest[ApplicationRouteCreateForm],
+    application: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationRouteManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> BulkCreateResponse[ApplicationRouteItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            application,
+            user,
+            method=form.method,
+            path=form.path,
+            title=form.title,
+            description=form.description,
+            application_guard_ids=form.application_guard_ids,
+            application_role_ids=form.application_role_ids,
+            start_date=form.start_date,
+            start_application_version_id=form.start_application_version_id,
+            end_date=form.end_date,
+            end_application_version_id=form.end_application_version_id,
+            accepted_format=form.accepted_format,
+            query_params_schema=form.query_params_schema,
+            header_schema=form.header_schema,
+            body_schema=form.body_schema,
+            raw_schema=form.raw_schema,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=ApplicationRouteItem.model_validate,
+    )
 
 
 @router.get(

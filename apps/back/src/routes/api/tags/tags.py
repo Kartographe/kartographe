@@ -14,12 +14,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.tags import TagCreateForm, TagPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, TagEntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.tags import TagItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -77,6 +80,42 @@ def create_tag(
         text_color=form.text_color,
     )
     return ItemResponse(item=TagItem.model_validate(tag))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_tags_bulk_create",
+    summary="Create several tags at once",
+    description=(
+        "Create 1 to 50 tags in a single call — prefer this over calling "
+        "`api_tags_create` in a loop when adding many. Best-effort: each tag is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Any member may create."
+    ),
+    response_model=BulkCreateResponse[TagItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_tags(
+    body: BulkCreateRequest[TagCreateForm],
+    account: CurrentAccountDep,
+    _: CurrentAccountUserDep,
+    manager: TagManagerDep,
+) -> BulkCreateResponse[TagItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account,
+            entity_type=form.entity_type,
+            label=form.label,
+            background_color=form.background_color,
+            text_color=form.text_color,
+        ),
+        serialize=TagItem.model_validate,
+    )
 
 
 @router.get(

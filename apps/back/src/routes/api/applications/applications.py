@@ -17,12 +17,15 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.applications import ApplicationSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import ApplicationCreateForm, ApplicationPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, ApplicationStatus, ApplicationType, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationManagerDep,
     CurrentAccountDep,
@@ -104,6 +107,39 @@ def create_application(
         account, user, title=form.title, description=form.description, type=form.type, tag_ids=form.tag_ids
     )
     return ItemResponse(item=ApplicationItem.model_validate(application))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_bulk_create",
+    summary="Create several applications at once",
+    description=(
+        "Create 1 to 50 applications in a single call — prefer this over calling "
+        "`api_applications_create` in a loop when adding many. Best-effort: each application is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Owners/administrators only."
+    ),
+    response_model=BulkCreateResponse[ApplicationItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_applications(
+    body: BulkCreateRequest[ApplicationCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    manager: ApplicationManagerDep,
+    _: Annotated[AccountUser, Depends(_ADMIN)],
+) -> BulkCreateResponse[ApplicationItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account, user, title=form.title, description=form.description, type=form.type, tag_ids=form.tag_ids
+        ),
+        serialize=ApplicationItem.model_validate,
+    )
 
 
 @router.get(

@@ -15,12 +15,15 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.services import ServiceSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.services import ServiceCreateForm, ServicePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType, ServiceStatus, ServiceType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
 from src.serializes.services import ServiceItem
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -111,6 +114,46 @@ def create_service(
         openapi_url=form.openapi_url,
     )
     return ItemResponse(item=ServiceItem.model_validate(service))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_services_bulk_create",
+    summary="Create several services at once",
+    description=(
+        "Create 1 to 50 services in a single call — prefer this over calling "
+        "`api_services_create` in a loop when adding many. Best-effort: each service is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Dev roles only."
+    ),
+    response_model=BulkCreateResponse[ServiceItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_services(
+    body: BulkCreateRequest[ServiceCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    manager: ServiceManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> BulkCreateResponse[ServiceItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account,
+            user,
+            type=form.type,
+            title=form.title,
+            description=form.description,
+            picture_path=form.picture_path,
+            url=form.url,
+            openapi_url=form.openapi_url,
+        ),
+        serialize=ServiceItem.model_validate,
+    )
 
 
 @router.get(

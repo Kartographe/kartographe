@@ -13,12 +13,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import JourneyScenarioStepRouteCreateForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.journeys import JourneyScenarioStepRouteItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentJourneyScenarioStepDep,
@@ -83,6 +86,40 @@ def create_step_route(
     route = manager.resolve_route(step, form.application_id, form.application_route_id)
     link = manager.create(step, user, route)
     return ItemResponse(item=JourneyScenarioStepRouteItem.model_validate(link))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_journeys_scenarios_steps_routes_bulk_create",
+    summary="Link several application routes at once",
+    description=(
+        "Link 1 to 50 application routes to the step in a single call — prefer this over calling "
+        "`api_journeys_scenarios_steps_routes_create` in a loop when adding many. Best-effort: each "
+        "link is created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create; the application must belong to the account and the route to that "
+        "application. Dev roles only."
+    ),
+    response_model=BulkCreateResponse[JourneyScenarioStepRouteItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_step_routes(
+    body: BulkCreateRequest[JourneyScenarioStepRouteCreateForm],
+    step: CurrentJourneyScenarioStepDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioStepRouteManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> BulkCreateResponse[JourneyScenarioStepRouteItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            step, user, manager.resolve_route(step, form.application_id, form.application_route_id)
+        ),
+        serialize=JourneyScenarioStepRouteItem.model_validate,
+    )
 
 
 @router.get(

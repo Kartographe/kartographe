@@ -16,11 +16,14 @@ from fastapi import APIRouter, Query, status
 
 from src.filters._base import SortOrder
 from src.filters.comments import CommentSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.comments import CommentCreateForm, CommentPatchForm
 from src.models.enum import EntityType, CommentStatus
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.comments import CommentItem, CommentListItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CommentManagerDep,
     CurrentAccountDep,
@@ -178,3 +181,34 @@ def create_reply(
 ) -> ItemResponse[CommentItem]:
     reply = manager.create_reply(account, user, comment, value=form.value)
     return ItemResponse(item=CommentItem.model_validate(reply))
+
+
+@router.post(
+    "/{comment_id}/replies/bulk",
+    operation_id="api_comments_replies_bulk_create",
+    summary="Post several replies to a comment at once",
+    description=(
+        "Post 1 to 50 replies to a comment in a single call — prefer this over calling "
+        "`api_comments_replies_create` in a loop. Best-effort: each reply is posted "
+        "independently, so one failing item does not roll back the others. Always returns "
+        "207; read each `results[].status` and the `created` / `failed` counts. Any member "
+        "may reply."
+    ),
+    response_model=BulkCreateResponse[CommentItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_NOT_FOUND},
+)
+def bulk_create_replies(
+    body: BulkCreateRequest[CommentCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    comment: CurrentCommentDep,
+    _: CurrentAccountUserDep,
+    manager: CommentManagerDep,
+) -> BulkCreateResponse[CommentItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create_reply(account, user, comment, value=form.value),
+        serialize=CommentItem.model_validate,
+    )

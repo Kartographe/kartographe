@@ -13,12 +13,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import ApplicationVersionCreateForm, ApplicationVersionPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationVersionItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationVersionManagerDep,
     CurrentAccountUserDep,
@@ -86,6 +89,44 @@ def create_version(
         description=form.description,
     )
     return ItemResponse(item=ApplicationVersionItem.model_validate(version))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_versions_bulk_create",
+    summary="Create several versions at once",
+    description=(
+        "Create 1 to 50 versions in a single call — prefer this over calling "
+        "`api_applications_versions_create` in a loop when adding many. Best-effort: each version "
+        "is created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Owners, administrators and lead developers only."
+    ),
+    response_model=BulkCreateResponse[ApplicationVersionItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_versions(
+    body: BulkCreateRequest[ApplicationVersionCreateForm],
+    application: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationVersionManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
+) -> BulkCreateResponse[ApplicationVersionItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            application,
+            user,
+            type=form.type,
+            title=form.title,
+            version=form.version,
+            description=form.description,
+        ),
+        serialize=ApplicationVersionItem.model_validate,
+    )
 
 
 @router.get(

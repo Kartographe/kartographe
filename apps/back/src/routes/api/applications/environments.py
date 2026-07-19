@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import (
     ApplicationEnvironmentCreateForm,
     ApplicationEnvironmentPatchForm,
@@ -21,7 +22,9 @@ from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationEnvironmentItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationEnvironmentManagerDep,
     CurrentAccountUserDep,
@@ -90,6 +93,45 @@ def create_environment(
         openapi_url=form.openapi_url,
     )
     return ItemResponse(item=ApplicationEnvironmentItem.model_validate(environment))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_environments_bulk_create",
+    summary="Create several environments at once",
+    description=(
+        "Create 1 to 50 deployment environments in a single call — prefer this over calling "
+        "`api_applications_environments_create` in a loop when adding many. Best-effort: each "
+        "environment is created independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Owners, administrators and lead developers only."
+    ),
+    response_model=BulkCreateResponse[ApplicationEnvironmentItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_environments(
+    body: BulkCreateRequest[ApplicationEnvironmentCreateForm],
+    application: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationEnvironmentManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
+) -> BulkCreateResponse[ApplicationEnvironmentItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            application,
+            user,
+            type=form.type,
+            title=form.title,
+            description=form.description,
+            url=form.url,
+            openapi_url=form.openapi_url,
+        ),
+        serialize=ApplicationEnvironmentItem.model_validate,
+    )
 
 
 @router.get(

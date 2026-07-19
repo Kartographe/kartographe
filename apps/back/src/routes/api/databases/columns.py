@@ -15,6 +15,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import (
     DatabaseTableColumnCreateForm,
     DatabaseTableColumnPatchForm,
@@ -23,8 +24,10 @@ from src.forms.databases import (
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseTableColumnItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseTableColumnDep,
@@ -119,6 +122,52 @@ def create_column(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=DatabaseTableColumnItem.model_validate(column))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_versions_tables_columns_bulk_create",
+    summary="Create several columns at once",
+    description=(
+        "Create 1 to 50 columns in a single call — prefer this over calling "
+        "`api_databases_versions_tables_columns_create` in a loop when adding many. Best-effort: "
+        "each column is created independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Data roles only."
+    ),
+    response_model=BulkCreateResponse[DatabaseTableColumnItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_columns(
+    body: BulkCreateRequest[DatabaseTableColumnCreateForm],
+    table: CurrentDatabaseTableDep,
+    user: CurrentUserDep,
+    manager: DatabaseTableColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA)],
+) -> BulkCreateResponse[DatabaseTableColumnItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            table,
+            user,
+            database_column_type_id=form.database_column_type_id,
+            foreign_key_database_table_id=form.foreign_key_database_table_id,
+            foreign_key_database_table_column_id=form.foreign_key_database_table_column_id,
+            nullable=form.nullable,
+            unique=form.unique,
+            system_field=form.system_field,
+            rank=form.rank,
+            default_value=form.default_value,
+            name=form.name,
+            description=form.description,
+            color=form.color,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=DatabaseTableColumnItem.model_validate,
+    )
 
 
 @router.post(

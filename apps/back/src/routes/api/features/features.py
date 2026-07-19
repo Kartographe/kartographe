@@ -16,12 +16,15 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.features import FeatureSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.features import FeatureCreateForm, FeaturePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType, FeatureStatus, FeatureType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.features import FeatureItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -114,6 +117,39 @@ def create_feature(
         account, user, title=form.title, description=form.description, type=form.type, tag_ids=form.tag_ids
     )
     return ItemResponse(item=FeatureItem.model_validate(feature))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_features_bulk_create",
+    summary="Create several features at once",
+    description=(
+        "Create 1 to 50 features in a single call — prefer this over calling "
+        "`api_features_create` in a loop when adding many. Best-effort: each feature is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Every contributing role may create features."
+    ),
+    response_model=BulkCreateResponse[FeatureItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_features(
+    body: BulkCreateRequest[FeatureCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    manager: FeatureManagerDep,
+    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
+) -> BulkCreateResponse[FeatureItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account, user, title=form.title, description=form.description, type=form.type, tag_ids=form.tag_ids
+        ),
+        serialize=FeatureItem.model_validate,
+    )
 
 
 @router.get(

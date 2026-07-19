@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import (
     JourneyScenarioStepAssertionCreateForm,
     JourneyScenarioStepAssertionPatchForm,
@@ -20,8 +21,10 @@ from src.forms.journeys import (
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.journeys import JourneyScenarioStepAssertionItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentJourneyScenarioStepAssertionDep,
@@ -92,6 +95,39 @@ def create_assertion(
         step, user, assertion_type_id=form.assertion_type_id, parameters=form.parameters
     )
     return ItemResponse(item=JourneyScenarioStepAssertionItem.model_validate(assertion))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_journeys_scenarios_steps_assertions_bulk_create",
+    summary="Create several assertions at once",
+    description=(
+        "Attach 1 to 50 assertions to the step in a single call — prefer this over calling "
+        "`api_journeys_scenarios_steps_assertions_create` in a loop when adding many. Best-effort: "
+        "each assertion is created independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create; `parameters` must match the assertion type's schema. Editing roles only."
+    ),
+    response_model=BulkCreateResponse[JourneyScenarioStepAssertionItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND, **_INVALID},
+)
+def bulk_create_assertions(
+    body: BulkCreateRequest[JourneyScenarioStepAssertionCreateForm],
+    step: CurrentJourneyScenarioStepDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioStepAssertionManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> BulkCreateResponse[JourneyScenarioStepAssertionItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            step, user, assertion_type_id=form.assertion_type_id, parameters=form.parameters
+        ),
+        serialize=JourneyScenarioStepAssertionItem.model_validate,
+    )
 
 
 @router.get(

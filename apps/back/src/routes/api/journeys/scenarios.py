@@ -16,12 +16,15 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.journeys import JourneyScenarioItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -107,6 +110,48 @@ def create_scenario(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=JourneyScenarioItem.model_validate(scenario))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_journeys_scenarios_bulk_create",
+    summary="Create several scenarios at once",
+    description=(
+        "Create 1 to 50 scenarios in a single call — prefer this over calling "
+        "`api_journeys_scenarios_create` in a loop when adding many. Best-effort: each scenario is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Any referenced persona must belong to the account. Editing roles only."
+    ),
+    response_model=BulkCreateResponse[JourneyScenarioItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_scenarios(
+    body: BulkCreateRequest[JourneyScenarioCreateForm],
+    account: CurrentAccountDep,
+    journey: CurrentJourneyDep,
+    user: CurrentUserDep,
+    manager: JourneyScenarioManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> BulkCreateResponse[JourneyScenarioItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account,
+            journey,
+            user,
+            type=form.type,
+            personas_ids=form.personas_ids,
+            title=form.title,
+            criticity=form.criticity,
+            description=form.description,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=JourneyScenarioItem.model_validate,
+    )
 
 
 @router.get(

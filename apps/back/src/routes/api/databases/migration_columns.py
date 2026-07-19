@@ -14,6 +14,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import (
     DatabaseMigrationColumnCreateForm,
     DatabaseMigrationColumnPatchForm,
@@ -21,8 +22,10 @@ from src.forms.databases import (
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, DatabaseMigrationColumnStatus, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseMigrationColumnItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseMigrationColumnDep,
@@ -115,6 +118,47 @@ def create_migration_column(
         description=form.description,
     )
     return ItemResponse(item=DatabaseMigrationColumnItem.model_validate(column))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_migrations_columns_bulk_create",
+    summary="Create several migration columns at once",
+    description=(
+        "Create 1 to 50 migration column steps in a single call — prefer this over calling "
+        "`api_databases_migrations_columns_create` in a loop when adding many. Best-effort: each "
+        "step is created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Data roles and developers only."
+    ),
+    response_model=BulkCreateResponse[DatabaseMigrationColumnItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_migration_columns(
+    body: BulkCreateRequest[DatabaseMigrationColumnCreateForm],
+    migration: CurrentDatabaseMigrationDep,
+    user: CurrentUserDep,
+    manager: DatabaseMigrationColumnManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA_DEV)],
+) -> BulkCreateResponse[DatabaseMigrationColumnItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            migration,
+            user,
+            type=form.type,
+            source_database_table_id=form.source_database_table_id,
+            source_database_table_column_id=form.source_database_table_column_id,
+            destination_database_table_id=form.destination_database_table_id,
+            destination_database_table_column_id=form.destination_database_table_column_id,
+            transformation_method=form.transformation_method,
+            description=form.description,
+        ),
+        serialize=DatabaseMigrationColumnItem.model_validate,
+    )
 
 
 @router.get(

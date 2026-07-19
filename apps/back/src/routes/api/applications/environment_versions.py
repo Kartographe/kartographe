@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import (
     ApplicationEnvironmentVersionCreateForm,
     ApplicationEnvironmentVersionErrorForm,
@@ -22,7 +23,9 @@ from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, ApplicationEnvironmentVersionStatus
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationEnvironmentVersionItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationEnvironmentVersionManagerDep,
     CurrentAccountUserDep,
@@ -89,6 +92,40 @@ def create_deployment(
     application_version = manager.resolve_application_version(application, form.application_version_id)
     deployment = manager.create(environment, application_version, user)
     return ItemResponse(item=ApplicationEnvironmentVersionItem.model_validate(deployment))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_environmentVersions_bulk_create",
+    summary="Deploy several versions at once",
+    description=(
+        "Record 1 to 50 deployments in a single call — prefer this over calling "
+        "`api_applications_environmentVersions_create` in a loop when adding many. Best-effort: "
+        "each deployment is created independently, so one failing item does not roll back the "
+        "others. Always returns 207; read each `results[].status` (`created`/`error`) and the "
+        "`created` / `failed` counts rather than the HTTP code. Each item takes the same shape as "
+        "the single create. Owners, administrators and lead developers only."
+    ),
+    response_model=BulkCreateResponse[ApplicationEnvironmentVersionItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_deployments(
+    body: BulkCreateRequest[ApplicationEnvironmentVersionCreateForm],
+    application: CurrentApplicationDep,
+    environment: CurrentApplicationEnvironmentDep,
+    user: CurrentUserDep,
+    manager: ApplicationEnvironmentVersionManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV_LEAD)],
+) -> BulkCreateResponse[ApplicationEnvironmentVersionItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            environment, manager.resolve_application_version(application, form.application_version_id), user
+        ),
+        serialize=ApplicationEnvironmentVersionItem.model_validate,
+    )
 
 
 @router.get(

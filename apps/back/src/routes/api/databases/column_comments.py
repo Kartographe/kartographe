@@ -9,11 +9,14 @@ List and post comments on a database column. Any account member may read and pos
 
 from fastapi import APIRouter, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.comments import CommentCreateForm
 from src.models.enum import EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.comments import CommentItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CommentManagerDep,
     CurrentAccountDep,
@@ -73,3 +76,40 @@ def create_column_comment(
         value=form.value,
     )
     return ItemResponse(item=CommentItem.model_validate(comment))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_versions_tables_columns_comments_bulk_create",
+    summary="Post several comments on a column at once",
+    description=(
+        "Post 1 to 50 comments on a database column in a single call — prefer this over calling "
+        "`api_databases_versions_tables_columns_comments_create` in a loop. Best-effort: each "
+        "comment is posted independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` and the `created` / `failed` counts. "
+        "Any member may post."
+    ),
+    response_model=BulkCreateResponse[CommentItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_NOT_FOUND},
+)
+def bulk_create_column_comments(
+    body: BulkCreateRequest[CommentCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    _: CurrentAccountUserDep,
+    column: CurrentDatabaseTableColumnDep,
+    manager: CommentManagerDep,
+) -> BulkCreateResponse[CommentItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account,
+            user,
+            entity_type=EntityType.DATABASE_TABLE_COLUMN,
+            entity_id=column.id,
+            value=form.value,
+        ),
+        serialize=CommentItem.model_validate,
+    )

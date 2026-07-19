@@ -12,12 +12,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import FeatureJourneyCreateForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.journeys import FeatureJourneyItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -86,6 +89,40 @@ def create_feature_journey(
     journey = manager.resolve_account_journey(account, form.journey_id)
     link = manager.create(feature, journey, user)
     return ItemResponse(item=FeatureJourneyItem.model_validate(link))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_features_journeys_bulk_create",
+    summary="Link several journeys at once",
+    description=(
+        "Link 1 to 50 account journeys to the feature in a single call — prefer this over calling "
+        "`api_features_journeys_create` in a loop when adding many. Best-effort: each link is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Editing roles only."
+    ),
+    response_model=BulkCreateResponse[FeatureJourneyItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_feature_journeys(
+    body: BulkCreateRequest[FeatureJourneyCreateForm],
+    account: CurrentAccountDep,
+    feature: CurrentFeatureDep,
+    user: CurrentUserDep,
+    manager: FeatureJourneyManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> BulkCreateResponse[FeatureJourneyItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            feature, manager.resolve_account_journey(account, form.journey_id), user
+        ),
+        serialize=FeatureJourneyItem.model_validate,
+    )
 
 
 @router.get(

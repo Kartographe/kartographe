@@ -16,12 +16,15 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.databases import DatabaseSortField
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import DatabaseCreateForm, DatabasePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, DatabaseStatus, DatabaseType, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountDep,
     CurrentAccountUserDep,
@@ -111,6 +114,39 @@ def create_database(
         account, user, type=form.type, title=form.title, description=form.description, tag_ids=form.tag_ids
     )
     return ItemResponse(item=DatabaseItem.model_validate(database))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_bulk_create",
+    summary="Create several databases at once",
+    description=(
+        "Create 1 to 50 databases in a single call — prefer this over calling "
+        "`api_databases_create` in a loop when adding many. Best-effort: each database is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Owners, administrators, lead developers and data analysts only."
+    ),
+    response_model=BulkCreateResponse[DatabaseItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_databases(
+    body: BulkCreateRequest[DatabaseCreateForm],
+    account: CurrentAccountDep,
+    user: CurrentUserDep,
+    manager: DatabaseManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA)],
+) -> BulkCreateResponse[DatabaseItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            account, user, type=form.type, title=form.title, description=form.description, tag_ids=form.tag_ids
+        ),
+        serialize=DatabaseItem.model_validate,
+    )
 
 
 @router.get(

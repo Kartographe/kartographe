@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.application_routes import (
     ApplicationRouteTableCreateForm,
     ApplicationRouteTablePatchForm,
@@ -21,7 +22,9 @@ from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRouteTableItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationRouteTableManagerDep,
     CurrentAccountUserDep,
@@ -85,6 +88,38 @@ def create_route_table(
         route, database_table_id=form.database_table_id, type=form.type, action=form.action
     )
     return ItemResponse(item=ApplicationRouteTableItem.model_validate(link))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_routes_tables_bulk_create",
+    summary="Link several database tables at once",
+    description=(
+        "Link 1 to 50 database tables in a single call — prefer this over calling "
+        "`api_applications_routes_tables_create` in a loop when adding many. Best-effort: each "
+        "link is created independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Dev roles only."
+    ),
+    response_model=BulkCreateResponse[ApplicationRouteTableItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_route_tables(
+    body: BulkCreateRequest[ApplicationRouteTableCreateForm],
+    route: CurrentApplicationRouteDep,
+    manager: ApplicationRouteTableManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> BulkCreateResponse[ApplicationRouteTableItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            route, database_table_id=form.database_table_id, type=form.type, action=form.action
+        ),
+        serialize=ApplicationRouteTableItem.model_validate,
+    )
 
 
 @router.get(

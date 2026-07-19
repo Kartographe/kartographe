@@ -13,12 +13,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import DatabaseVersionCreateForm, DatabaseVersionPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseVersionItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseDep,
@@ -77,6 +80,36 @@ def create_version(
 ) -> ItemResponse[DatabaseVersionItem]:
     version = manager.create(database, version=form.version)
     return ItemResponse(item=DatabaseVersionItem.model_validate(version))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_versions_bulk_create",
+    summary="Create several database versions at once",
+    description=(
+        "Create 1 to 50 database versions in a single call — prefer this over calling "
+        "`api_databases_versions_create` in a loop when adding many. Best-effort: each version is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Data roles only."
+    ),
+    response_model=BulkCreateResponse[DatabaseVersionItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_versions(
+    body: BulkCreateRequest[DatabaseVersionCreateForm],
+    database: CurrentDatabaseDep,
+    manager: DatabaseVersionManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA)],
+) -> BulkCreateResponse[DatabaseVersionItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(database, version=form.version),
+        serialize=DatabaseVersionItem.model_validate,
+    )
 
 
 @router.get(

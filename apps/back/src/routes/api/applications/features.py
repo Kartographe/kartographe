@@ -13,12 +13,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import ApplicationFeatureCreateForm, ApplicationFeaturePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.applications import ApplicationFeatureItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationFeatureManagerDep,
     CurrentAccountDep,
@@ -88,6 +91,41 @@ def create_application_feature(
     feature = manager.resolve_account_feature(account, form.feature_id)
     link = manager.create(application, feature, user)
     return ItemResponse(item=ApplicationFeatureItem.model_validate(link))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_features_bulk_create",
+    summary="Attach several features at once",
+    description=(
+        "Attach 1 to 50 existing account features in a single call — prefer this over calling "
+        "`api_applications_features_create` in a loop when adding many. Best-effort: each link is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Each feature must belong to the same account. Every contributing role "
+        "may attach features."
+    ),
+    response_model=BulkCreateResponse[ApplicationFeatureItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_application_features(
+    body: BulkCreateRequest[ApplicationFeatureCreateForm],
+    account: CurrentAccountDep,
+    application: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationFeatureManagerDep,
+    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
+) -> BulkCreateResponse[ApplicationFeatureItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            application, manager.resolve_account_feature(account, form.feature_id), user
+        ),
+        serialize=ApplicationFeatureItem.model_validate,
+    )
 
 
 @router.get(

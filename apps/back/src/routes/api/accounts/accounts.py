@@ -15,12 +15,15 @@ from fastapi import APIRouter, Depends, Query, UploadFile, status
 
 from src.filters.accounts import AccountSortField
 from src.filters._base import PageLimit, SortOrder
+from src.forms._bulk import BulkCreateRequest
 from src.forms.accounts import AccountCreateForm, AccountPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountStatus, AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse, SuccessResponse
 from src.serializes.accounts import AccountItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     AccountManagerDep,
     AccountUsersManagerDep,
@@ -87,6 +90,34 @@ def create_account(
         user, name=form.name, language=form.language, time_zone=form.time_zone
     )
     return ItemResponse(item=manager.to_item(account, membership))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_accounts_bulk_create",
+    summary="Create several accounts at once",
+    description=(
+        "Create 1 to 50 accounts in a single call — prefer this over calling "
+        "`api_accounts_create` in a loop when adding many. Best-effort: each account is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. The caller automatically becomes the owner of each created account."
+    ),
+    response_model=BulkCreateResponse[AccountItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+)
+def bulk_create_accounts(
+    body: BulkCreateRequest[AccountCreateForm], user: CurrentUserDep, manager: AccountManagerDep
+) -> BulkCreateResponse[AccountItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create_account(
+            user, name=form.name, language=form.language, time_zone=form.time_zone
+        ),
+        serialize=lambda result: manager.to_item(*result),
+    )
 
 
 @router.get(

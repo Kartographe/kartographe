@@ -13,6 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.application_routes import (
     ApplicationRouteExampleCreateForm,
     ApplicationRouteExamplePatchForm,
@@ -21,7 +22,9 @@ from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRouteExampleItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationRouteExampleManagerDep,
     CurrentAccountUserDep,
@@ -91,6 +94,44 @@ def create_example(
         response=form.response,
     )
     return ItemResponse(item=ApplicationRouteExampleItem.model_validate(example))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_routes_examples_bulk_create",
+    summary="Create several route examples at once",
+    description=(
+        "Create 1 to 50 request/response examples in a single call — prefer this over calling "
+        "`api_applications_routes_examples_create` in a loop when adding many. Best-effort: each "
+        "example is created independently, so one failing item does not roll back the others. "
+        "Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. The referenced response must belong to the route. Dev roles only."
+    ),
+    response_model=BulkCreateResponse[ApplicationRouteExampleItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_examples(
+    body: BulkCreateRequest[ApplicationRouteExampleCreateForm],
+    route: CurrentApplicationRouteDep,
+    manager: ApplicationRouteExampleManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> BulkCreateResponse[ApplicationRouteExampleItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            route,
+            application_route_response_id=form.application_route_response_id,
+            query_params=form.query_params,
+            headers=form.headers,
+            body=form.body,
+            raw=form.raw,
+            response=form.response,
+        ),
+        serialize=ApplicationRouteExampleItem.model_validate,
+    )
 
 
 @router.get(

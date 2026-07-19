@@ -16,12 +16,15 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import JourneyScenarioStepCreateForm, JourneyScenarioStepPatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.journeys import JourneyScenarioStepItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentJourneyScenarioDep,
@@ -107,6 +110,46 @@ def create_step(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=JourneyScenarioStepItem.model_validate(step))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_journeys_scenarios_steps_bulk_create",
+    summary="Create several steps at once",
+    description=(
+        "Insert 1 to 50 steps in the scenario in a single call — prefer this over calling "
+        "`api_journeys_scenarios_steps_create` in a loop when adding many. Best-effort: each step is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create; a parent step must belong to the same scenario and `parameters` must "
+        "match the action type's schema. Editing roles only."
+    ),
+    response_model=BulkCreateResponse[JourneyScenarioStepItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND, **_INVALID},
+)
+def bulk_create_steps(
+    body: BulkCreateRequest[JourneyScenarioStepCreateForm],
+    scenario: CurrentJourneyScenarioDep,
+    manager: JourneyScenarioStepManagerDep,
+    _: Annotated[AccountUser, Depends(_EDITOR)],
+) -> BulkCreateResponse[JourneyScenarioStepItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            scenario,
+            parent_journey_scenario_step_id=form.parent_journey_scenario_step_id,
+            title=form.title,
+            description=form.description,
+            action_type_id=form.action_type_id,
+            optional=form.optional,
+            parameters=form.parameters,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=JourneyScenarioStepItem.model_validate,
+    )
 
 
 @router.get(

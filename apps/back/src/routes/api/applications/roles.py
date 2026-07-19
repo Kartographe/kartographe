@@ -13,12 +13,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.forms._bulk import BulkCreateRequest
 from src.forms.application_routes import ApplicationRoleCreateForm, ApplicationRolePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.application_routes import ApplicationRoleItem
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     ApplicationRoleManagerDep,
     CurrentAccountUserDep,
@@ -82,6 +85,39 @@ def create_role(
 ) -> ItemResponse[ApplicationRoleItem]:
     role = manager.create(application, user, title=form.title, description=form.description)
     return ItemResponse(item=ApplicationRoleItem.model_validate(role))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_applications_roles_bulk_create",
+    summary="Create several roles at once",
+    description=(
+        "Create 1 to 50 authorization roles in a single call — prefer this over calling "
+        "`api_applications_roles_create` in a loop when adding many. Best-effort: each role is "
+        "created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create. Contributors only."
+    ),
+    response_model=BulkCreateResponse[ApplicationRoleItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_roles(
+    body: BulkCreateRequest[ApplicationRoleCreateForm],
+    application: CurrentApplicationDep,
+    user: CurrentUserDep,
+    manager: ApplicationRoleManagerDep,
+    _: Annotated[AccountUser, Depends(_CONTRIBUTOR)],
+) -> BulkCreateResponse[ApplicationRoleItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            application, user, title=form.title, description=form.description
+        ),
+        serialize=ApplicationRoleItem.model_validate,
+    )
 
 
 @router.get(

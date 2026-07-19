@@ -16,12 +16,15 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from src.filters._base import MyVoteFilter
+from src.forms._bulk import BulkCreateRequest
 from src.forms.databases import DatabaseTableCreateForm, DatabaseTablePatchForm
 from src.models.account_user import AccountUser
 from src.models.enum import AccountUserRole, EntityType
 from src.serializes._base import ItemResponse, ListingResponse
+from src.serializes.bulk import BulkCreateResponse
 from src.serializes.databases import DatabaseTableItem
 from src.serializes.errors import ErrorResponse
+from src.utils.bulk import bulk_create
 from src.utils.dependencies import (
     CurrentAccountUserDep,
     CurrentDatabaseTableDep,
@@ -107,6 +110,47 @@ def create_table(
         tag_ids=form.tag_ids,
     )
     return ItemResponse(item=manager.to_item(table, with_columns=True))
+
+
+@router.post(
+    "/bulk",
+    operation_id="api_databases_versions_tables_bulk_create",
+    summary="Create several tables at once",
+    description=(
+        "Create 1 to 50 tables in a single call — prefer this over calling "
+        "`api_databases_versions_tables_create` in a loop when adding many. Best-effort: each "
+        "table is created independently, so one failing item does not roll back the others. Always "
+        "returns 207; read each `results[].status` (`created`/`error`) and the `created` / "
+        "`failed` counts rather than the HTTP code. Each item takes the same shape as the "
+        "single create, columns included. Data roles only."
+    ),
+    response_model=BulkCreateResponse[DatabaseTableItem],
+    status_code=status.HTTP_207_MULTI_STATUS,
+    responses={**_FORBIDDEN, **_NOT_FOUND},
+)
+def bulk_create_tables(
+    body: BulkCreateRequest[DatabaseTableCreateForm],
+    version: CurrentDatabaseVersionDep,
+    user: CurrentUserDep,
+    manager: DatabaseTableManagerDep,
+    _: Annotated[AccountUser, Depends(_DATA)],
+) -> BulkCreateResponse[DatabaseTableItem]:
+    return bulk_create(
+        manager.session,
+        body.items,
+        create_one=lambda form: manager.create(
+            version,
+            user,
+            type=form.type,
+            schema=form.table_schema,
+            name=form.name,
+            description=form.description,
+            color=form.color,
+            column_forms=form.columns,
+            tag_ids=form.tag_ids,
+        ),
+        serialize=lambda e: manager.to_item(e, with_columns=True),
+    )
 
 
 @router.get(
