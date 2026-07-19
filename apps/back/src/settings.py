@@ -65,6 +65,28 @@ class Settings(BaseSettings):
         default="postgresql+psycopg2://app_user:app_password@localhost:5431/app_db",
     )
 
+    # SQLAlchemy connection pool sizing. The API runs its routes synchronously
+    # in Starlette's anyio threadpool (default 40 threads), so up to ~40
+    # requests can be in flight at once. The SQLAlchemy default pool
+    # (`pool_size=5` + `max_overflow=10` = 15) is far below that: past 15
+    # concurrent DB-touching requests, the rest block in `Session(engine)`
+    # waiting up to `pool_timeout` for a free connection — and the MCP transport
+    # gives up on its in-process callback at 10s first, surfacing as
+    # `CallToolRequest` timeouts. Size the pool to match the threadpool so the
+    # DB, not an arbitrary default, is the real ceiling. `db_pool_max_overflow`
+    # connections are opened on demand above `db_pool_size` and closed when
+    # idle. Total peak connections = size + overflow, per worker — keep it
+    # under Postgres `max_connections`.
+    db_pool_size: int = Field(default=20)
+    db_pool_max_overflow: int = Field(default=20)
+    # Seconds a request waits for a free connection before raising. Kept under
+    # the MCP callback's 10s so a starved request fails fast with a clear
+    # `TimeoutError` instead of hanging.
+    db_pool_timeout: float = Field(default=8.0)
+    # Recycle connections older than this (seconds) to dodge server-side idle
+    # timeouts and stale sockets behind a load balancer / PgBouncer. 30 min.
+    db_pool_recycle: int = Field(default=1800)
+
     # 256-bit (32-byte) minimum for HS256 — `pyjwt` raises
     # `InsecureKeyLengthWarning` below that. The default is an obvious
     # placeholder so real deployments always override it.
@@ -140,6 +162,12 @@ class Settings(BaseSettings):
     # as MCP tools.
     mcp_enabled: bool = Field(default=True)
     mcp_mount_path: str = Field(default="/mcp")
+    # Timeout (seconds) for the in-process httpx callback fastapi-mcp makes to a
+    # `/v1/*` route when serving a tool call. Its library default is 10s, which
+    # kills legitimately slow tools; raise it so only genuinely stuck calls
+    # time out. Stays above `db_pool_timeout` so a starved request surfaces its
+    # own pool `TimeoutError` rather than being cut off here.
+    mcp_http_timeout: float = Field(default=30.0)
 
     # OAuth authorization server TTLs (seconds).
     oauth_device_code_ttl_seconds: int = Field(default=900)  # 15 min

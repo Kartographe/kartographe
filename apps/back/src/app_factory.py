@@ -5,6 +5,7 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import httpx
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -153,10 +154,24 @@ def create_app(router: APIRouter, *, mount_mcp: bool = False) -> FastAPI:
             )
 
     if mount_mcp and FastApiMCP is not None:
+        # fastapi-mcp serves each `CallToolRequest` by calling the target
+        # `/v1/*` route in-process through an httpx ASGI client. Its default
+        # client hardcodes a 10s timeout, which kills any legitimately slow
+        # tool call (report generation, a large listing) and masks DB-pool
+        # contention as a bare timeout. Supply our own client with a higher
+        # ceiling; `base_url` must stay `http://apiserver` (the sentinel host
+        # fastapi-mcp resolves relative paths against) and the transport must
+        # target this same app so the call never leaves the process.
+        mcp_http_client = httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app, raise_app_exceptions=False),
+            base_url="http://apiserver",
+            timeout=settings.mcp_http_timeout,
+        )
         mcp = FastApiMCP(
             app,
             name=f"{settings.app_name} MCP",
             description="MCP server exposing the Kartographe platform as tools for AI agents.",
+            http_client=mcp_http_client,
             # Keep the ops probe, the unversioned auth/me surfaces and the
             # OAuth/discovery endpoints out of the agent-callable tool set.
             exclude_tags=[
