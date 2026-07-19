@@ -61,6 +61,18 @@ class DatabaseVersionItem(CamelBase):
     version: list[int]
 
 
+class DatabaseTableColumnSubfieldItem(CamelBase):
+    """A sub-field of a JSON column. Nesting is read from `parentSubfieldId`."""
+
+    database_column_type_id: uuid.UUID
+    description: dict | None = None
+    id: uuid.UUID
+    name: str
+    nullable: bool
+    parent_subfield_id: uuid.UUID | None = None
+    rank: int
+
+
 class DatabaseTableColumnItem(TaggableItem, VotableItem):
     """A column of a database table."""
 
@@ -85,6 +97,8 @@ class DatabaseTableColumnItem(TaggableItem, VotableItem):
     owner_id: uuid.UUID
     primary_key: bool
     rank: int
+    # `None` means "not resolved" (not "no sub-fields"); resolved on column reads.
+    subfields: list[DatabaseTableColumnSubfieldItem] | None = None
     system_field: bool
     tag_ids: list[uuid.UUID]
     tags: list[TagItem] = []

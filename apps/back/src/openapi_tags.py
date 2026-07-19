@@ -316,6 +316,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Columns of a database table.",
     },
     {
+        "name": "api.databases.versions.tables.columns.subfields",
+        "x-displayName": "Databases › Column sub-fields",
+        "description": "Nested JSON sub-fields of a database column.",
+    },
+    {
         "name": "api.databases.migrations",
         "x-displayName": "Databases › Migrations",
         "description": "Planned moves from a version of a database to a version of another.",

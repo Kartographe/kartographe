@@ -42,6 +42,7 @@ from src.managers.database_migration import DatabaseMigrationManager
 from src.managers.database_migration_column import DatabaseMigrationColumnManager
 from src.managers.database_table import DatabaseTableManager
 from src.managers.database_table_column import DatabaseTableColumnManager
+from src.managers.database_table_column_subfield import DatabaseTableColumnSubfieldManager
 from src.managers.database_version import DatabaseVersionManager
 from src.managers.feature import FeatureManager
 from src.managers.feature_file import FeatureFileManager
@@ -89,6 +90,7 @@ from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.database_version import DatabaseVersion
 from src.models.enum import AccountUserRole, UserStatus
 from src.models.feature import Feature
@@ -792,6 +794,37 @@ def get_current_database_table_column(
 
 CurrentDatabaseTableColumnDep = Annotated[
     DatabaseTableColumn, Depends(get_current_database_table_column)
+]
+
+
+def get_database_table_column_subfield_manager(
+    session: SessionDep,
+) -> DatabaseTableColumnSubfieldManager:
+    return DatabaseTableColumnSubfieldManager(session)
+
+
+DatabaseTableColumnSubfieldManagerDep = Annotated[
+    DatabaseTableColumnSubfieldManager, Depends(get_database_table_column_subfield_manager)
+]
+
+
+def get_current_database_table_column_subfield(
+    database_table_column_subfield_id: uuid.UUID,
+    column: CurrentDatabaseTableColumnDep,
+    session: SessionDep,
+) -> DatabaseTableColumnSubfield:
+    subfield = session.get(DatabaseTableColumnSubfield, database_table_column_subfield_id)
+    if (
+        subfield is None
+        or not subfield.enabled
+        or subfield.database_table_column_id != column.id
+    ):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Sub-field not found.")
+    return subfield
+
+
+CurrentDatabaseTableColumnSubfieldDep = Annotated[
+    DatabaseTableColumnSubfield, Depends(get_current_database_table_column_subfield)
 ]
 
 

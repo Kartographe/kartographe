@@ -42,6 +42,7 @@ from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.database_version import DatabaseVersion
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
@@ -85,6 +86,7 @@ _GROUPS: list[tuple[str, list[tuple[QuotaKey, type[BaseModel], bool]]]] = [
             (QuotaKey.DATABASE_VERSION, DatabaseVersion, False),
             (QuotaKey.DATABASE_TABLE, DatabaseTable, False),
             (QuotaKey.DATABASE_TABLE_COLUMN, DatabaseTableColumn, False),
+            (QuotaKey.DATABASE_TABLE_COLUMN_SUBFIELD, DatabaseTableColumnSubfield, False),
             (QuotaKey.DATABASE_MIGRATION, DatabaseMigration, False),
             (QuotaKey.DATABASE_MIGRATION_COLUMN, DatabaseMigrationColumn, False),
         ],

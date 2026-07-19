@@ -16,17 +16,42 @@ from fastapi import HTTPException, status
 from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
+from src.managers.database_table_column_subfield import DatabaseTableColumnSubfieldManager
 from src.managers.entity_counts import my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.enum import EntityType
 from src.models.user import User
+from src.serializes.databases import DatabaseTableColumnItem, DatabaseTableColumnSubfieldItem
 from src.utils.datetime import utc_now
 
 
 class DatabaseTableColumnManager(BaseEntityManager):
+    def __init__(self, session):
+        super().__init__(session)
+        self._subfields = DatabaseTableColumnSubfieldManager(session)
+
+    def attach_subfields(
+        self, items: list[DatabaseTableColumnItem]
+    ) -> list[DatabaseTableColumnItem]:
+        """Resolve each item's JSON sub-field tree in a single grouped query."""
+        if not items:
+            return items
+        grouped = self._subfields.group_by_column([item.id for item in items])
+        for item in items:
+            item.subfields = [
+                DatabaseTableColumnSubfieldItem.model_validate(subfield)
+                for subfield in grouped.get(item.id, [])
+            ]
+        return items
+
+    def attach_subfields_one(self, item: DatabaseTableColumnItem) -> DatabaseTableColumnItem:
+        self.attach_subfields([item])
+        return item
+
     def list_for_table(
         self,
         table: DatabaseTable,
@@ -124,12 +149,14 @@ class DatabaseTableColumnManager(BaseEntityManager):
         description: dict | None,
         color: str | None = None,
         tag_ids: list[uuid.UUID] | None = None,
+        subfield_forms=None,
         commit: bool = True,
     ) -> DatabaseTableColumn:
         """Create a column on `table` after validating its references.
 
         `commit=False` lets a caller (a table create/update) batch several
         columns and commit once. A primary-key column is forced non-nullable.
+        `subfield_forms` is the column's JSON sub-field tree, created with it.
         """
         self._validate_refs(
             table,
@@ -159,15 +186,26 @@ class DatabaseTableColumnManager(BaseEntityManager):
             tag_ids=tag_ids or [],
         )
         self.session.add(column)
+        if subfield_forms:
+            self._subfields.create_flat(column, subfield_forms, commit=False)
         if commit:
             self.session.commit()
             self.session.refresh(column)
         return column
 
     def update(
-        self, table: DatabaseTable, column: DatabaseTableColumn, fields: dict
+        self,
+        table: DatabaseTable,
+        column: DatabaseTableColumn,
+        fields: dict,
+        *,
+        subfield_forms=None,
     ) -> DatabaseTableColumn:
-        """Apply a partial update, re-validating references when they change."""
+        """Apply a partial update, re-validating references when they change.
+
+        When `subfield_forms` is not None, the column's sub-field tree is fully
+        replaced (`[]` clears it).
+        """
         ref_keys = {
             "database_column_type_id",
             "foreign_key_database_table_id",
@@ -191,6 +229,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
         # now or was already set.
         if fields.get("primary_key", column.primary_key):
             fields["nullable"] = False
+        if subfield_forms is not None:
+            self._subfields.replace_for_column(column, subfield_forms, commit=False)
         return self.apply_update(column, fields)
 
     def reorder(
@@ -243,4 +283,10 @@ class DatabaseTableColumnManager(BaseEntityManager):
         self._guard_unlocked(column)
         now = utc_now()
         self._disable(column, now)
+        # Cascade to the column's JSON sub-fields so none is left orphaned.
+        self._bulk_disable(
+            DatabaseTableColumnSubfield,
+            DatabaseTableColumnSubfield.database_table_column_id == column.id,
+            now=now,
+        )
         self.session.commit()

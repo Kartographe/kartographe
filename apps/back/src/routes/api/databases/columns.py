@@ -83,7 +83,7 @@ def list_columns(
 ) -> ListingResponse[DatabaseTableColumnItem]:
     rows = manager.list_for_table(table, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
     items = tags.enrich(EntityType.DATABASE_TABLE_COLUMN, tags.attach(rows, DatabaseTableColumnItem), user_id=member.user_id)
-    return ListingResponse.single_page(items)
+    return ListingResponse.single_page(manager.attach_subfields(items))
 
 
 @router.post(
@@ -121,8 +121,11 @@ def create_column(
         description=form.description,
         color=form.color,
         tag_ids=form.tag_ids,
+        subfield_forms=form.subfields,
     )
-    return ItemResponse(item=DatabaseTableColumnItem.model_validate(column))
+    return ItemResponse(
+        item=manager.attach_subfields_one(DatabaseTableColumnItem.model_validate(column))
+    )
 
 
 @router.post(
@@ -167,6 +170,7 @@ def bulk_create_columns(
             description=form.description,
             color=form.color,
             tag_ids=form.tag_ids,
+            subfield_forms=form.subfields,
         ),
         serialize=DatabaseTableColumnItem.model_validate,
     )
@@ -208,9 +212,13 @@ def reorder_columns(
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )
 def get_column(
-    _: CurrentAccountUserDep, column: CurrentDatabaseTableColumnDep, tags: TagManagerDep
+    _: CurrentAccountUserDep,
+    column: CurrentDatabaseTableColumnDep,
+    manager: DatabaseTableColumnManagerDep,
+    tags: TagManagerDep,
 ) -> ItemResponse[DatabaseTableColumnItem]:
-    return ItemResponse(item=tags.enrich_one(EntityType.DATABASE_TABLE_COLUMN, tags.attach_one(column, DatabaseTableColumnItem)))
+    item = tags.enrich_one(EntityType.DATABASE_TABLE_COLUMN, tags.attach_one(column, DatabaseTableColumnItem))
+    return ItemResponse(item=manager.attach_subfields_one(item))
 
 
 @router.patch(
@@ -218,8 +226,9 @@ def get_column(
     operation_id="api_databases_versions_tables_columns_update",
     summary="Update a column",
     description=(
-        "Partially update a column (type, foreign key, nullable, unique, default, name, "
-        "description, color, tags). Data roles only."
+        "Partially update a column (type, foreign key, nullable, unique, primary key, default, "
+        "name, description, color, tags). Send `subfields` to replace the column's JSON sub-field "
+        "tree (`[]` clears it). Data roles only."
     ),
     response_model=ItemResponse[DatabaseTableColumnItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -231,8 +240,14 @@ def update_column(
     manager: DatabaseTableColumnManagerDep,
     _: Annotated[AccountUser, Depends(_DATA)],
 ) -> ItemResponse[DatabaseTableColumnItem]:
-    updated = manager.update(table, column, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=DatabaseTableColumnItem.model_validate(updated))
+    fields = form.model_dump(exclude_unset=True)
+    # `subfields` is not a column column — pull it out and pass the typed forms.
+    subfield_forms = form.subfields if "subfields" in fields else None
+    fields.pop("subfields", None)
+    updated = manager.update(table, column, fields, subfield_forms=subfield_forms)
+    return ItemResponse(
+        item=manager.attach_subfields_one(DatabaseTableColumnItem.model_validate(updated))
+    )
 
 
 @router.delete(

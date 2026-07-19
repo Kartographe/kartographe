@@ -23,6 +23,7 @@ from src.routes.api.databases.migration_column_comments import (
 from src.routes.api.databases.migration_columns import router as migration_columns_router
 from src.routes.api.databases.migration_comments import router as migration_comments_router
 from src.routes.api.databases.migrations import router as migrations_router
+from src.routes.api.databases.subfields import router as subfields_router
 from src.routes.api.databases.column_votes import router as column_votes_router
 from src.routes.api.databases.migration_column_votes import (
     router as migration_column_votes_router,
@@ -39,6 +40,7 @@ router.include_router(databases_router)
 router.include_router(versions_router)
 router.include_router(tables_router)
 router.include_router(columns_router)
+router.include_router(subfields_router)
 router.include_router(migrations_router)
 router.include_router(migration_columns_router)
 router.include_router(comments_router)

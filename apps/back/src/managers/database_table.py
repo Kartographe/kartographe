@@ -11,7 +11,7 @@ update that sends `columns`) or individually via the columns routes.
 
 import uuid
 
-from sqlmodel import select
+from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
 from src.managers.database_table_column import DatabaseTableColumnManager
@@ -20,6 +20,7 @@ from src.managers.tag import TagManager
 from src.managers.tagging import tag_overlap
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.database_version import DatabaseVersion
 from src.models.enum import DatabaseTableStatus, DatabaseTableType, EntityType
 from src.models.user import User
@@ -40,7 +41,9 @@ class DatabaseTableManager(BaseEntityManager):
         item = self._tags.serialize(table, DatabaseTableItem, index)
         if with_columns:
             # Left as `None` otherwise — the field means "not resolved", not "empty".
-            item.columns = self._tags.attach(columns, DatabaseTableColumnItem, index)
+            item.columns = self._columns.attach_subfields(
+                self._tags.attach(columns, DatabaseTableColumnItem, index)
+            )
         return item
 
     def to_items(self, tables: list[DatabaseTable]) -> list[DatabaseTableItem]:
@@ -51,7 +54,9 @@ class DatabaseTableManager(BaseEntityManager):
         items = []
         for table in tables:
             item = self._tags.serialize(table, DatabaseTableItem, index)
-            item.columns = self._tags.attach(grouped[table.id], DatabaseTableColumnItem, index)
+            item.columns = self._columns.attach_subfields(
+                self._tags.attach(grouped[table.id], DatabaseTableColumnItem, index)
+            )
             items.append(item)
         return items
 
@@ -96,8 +101,21 @@ class DatabaseTableManager(BaseEntityManager):
                 description=column_form.description,
                 color=column_form.color,
                 tag_ids=column_form.tag_ids,
+                subfield_forms=column_form.subfields,
                 commit=False,
             )
+
+    def _disable_table_subfields(self, table: DatabaseTable, now) -> None:
+        """Disable every JSON sub-field of every column of the table."""
+        self._bulk_disable(
+            DatabaseTableColumnSubfield,
+            col(DatabaseTableColumnSubfield.database_table_column_id).in_(
+                select(DatabaseTableColumn.id).where(
+                    DatabaseTableColumn.database_table_id == table.id
+                )
+            ),
+            now=now,
+        )
 
     def create(
         self,
@@ -141,10 +159,13 @@ class DatabaseTableManager(BaseEntityManager):
     ) -> DatabaseTable:
         """Update scalar fields; if `column_forms` is not None, replace columns."""
         if column_forms is not None:
+            now = utc_now()
+            # Drop the old columns' sub-fields before dropping the columns.
+            self._disable_table_subfields(table, now)
             self._bulk_disable(
                 DatabaseTableColumn,
                 DatabaseTableColumn.database_table_id == table.id,
-                now=utc_now(),
+                now=now,
             )
             self._add_columns(table, user, column_forms)
         for key, value in fields.items():
@@ -160,6 +181,7 @@ class DatabaseTableManager(BaseEntityManager):
         self._guard_unlocked(table)
         now = utc_now()
         self._disable(table, now)
+        self._disable_table_subfields(table, now)
         self._bulk_disable(
             DatabaseTableColumn, DatabaseTableColumn.database_table_id == table.id, now=now
         )

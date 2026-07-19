@@ -64,6 +64,25 @@ class DatabaseVersionPatchForm(CamelBase):
 # --- DatabaseTableColumn -------------------------------------------------
 
 
+class DatabaseTableColumnSubfieldInlineForm(CamelBase):
+    """A sub-field of a JSON column, sent inline with its column.
+
+    Used when sub-fields accompany their column (a column create, or a column
+    update that replaces them), where the ids do not exist yet. Nesting is
+    expressed by `parentIndex` — the 0-based position of the parent within this
+    same list — or `null` for a top-level sub-field. A parent must appear before
+    its children. (A flat list, rather than a recursive tree, keeps the schema
+    non-cyclic so it stays usable as an MCP tool.)
+    """
+
+    database_column_type_id: uuid.UUID
+    parent_index: int | None = Field(default=None, ge=0)
+    name: str = Field(min_length=1, max_length=255)
+    nullable: bool = Field(default=False)
+    rank: int = Field(default=0, ge=0)
+    description: dict | None = Field(default=None)
+
+
 class DatabaseTableColumnCreateForm(CamelBase):
     """Create a column (standalone, or nested in a table create/update)."""
 
@@ -80,6 +99,8 @@ class DatabaseTableColumnCreateForm(CamelBase):
     description: dict | None = Field(default=None)
     color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     tag_ids: list[uuid.UUID] = Field(default_factory=list)
+    # JSON sub-fields, created with the column (flat list, nested via parentIndex).
+    subfields: list[DatabaseTableColumnSubfieldInlineForm] = Field(default_factory=list)
 
 
 class DatabaseTableColumnReorderForm(CamelBase):
@@ -120,6 +141,37 @@ class DatabaseTableColumnPatchForm(CamelBase):
     description: dict | None = Field(default=None)
     color: str | None = Field(default=None, pattern=HEX_COLOR_PATTERN)
     tag_ids: list[uuid.UUID] | None = Field(default=None)
+    # When sent, fully replaces the column's sub-fields (send `[]` to clear).
+    subfields: list[DatabaseTableColumnSubfieldInlineForm] | None = Field(default=None)
+
+
+class DatabaseTableColumnSubfieldCreateForm(CamelBase):
+    """Create a single sub-field via the dedicated sub-field route.
+
+    `parentSubfieldId` nests it under an existing sub-field of the same column;
+    unset means a top-level sub-field.
+    """
+
+    database_column_type_id: uuid.UUID
+    parent_subfield_id: uuid.UUID | None = Field(default=None)
+    name: str = Field(min_length=1, max_length=255)
+    nullable: bool = Field(default=False)
+    rank: int = Field(default=0, ge=0)
+    description: dict | None = Field(default=None)
+
+
+class DatabaseTableColumnSubfieldPatchForm(CamelBase):
+    """Partial update of a sub-field — only the keys sent are applied.
+
+    Send `parentSubfieldId: null` to move a sub-field back to the top level.
+    """
+
+    database_column_type_id: uuid.UUID | None = Field(default=None)
+    parent_subfield_id: uuid.UUID | None = Field(default=None)
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    nullable: bool | None = Field(default=None)
+    rank: int | None = Field(default=None, ge=0)
+    description: dict | None = Field(default=None)
 
 
 # --- DatabaseTable -------------------------------------------------------

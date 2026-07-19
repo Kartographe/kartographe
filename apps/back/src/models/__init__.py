@@ -33,6 +33,7 @@ from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
 from src.models.database_table_column import DatabaseTableColumn
+from src.models.database_table_column_subfield import DatabaseTableColumnSubfield
 from src.models.database_version import DatabaseVersion
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
@@ -82,6 +83,7 @@ __all__ = [
     "DatabaseMigrationColumn",
     "DatabaseTable",
     "DatabaseTableColumn",
+    "DatabaseTableColumnSubfield",
     "DatabaseVersion",
     "Feature",
     "FeatureFile",
