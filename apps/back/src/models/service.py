@@ -14,7 +14,7 @@ from sqlmodel import Field, Relationship
 from src.models._base import BaseModel
 from src.models._lockable import LockableMixin
 from src.models._search import Searchable
-from src.models.enum import SearchEntityType, ServiceStatus, ServiceType
+from src.models.enum import SearchEntityType, ServiceCategory, ServiceStatus, ServiceType
 from src.utils.tiptap import tiptap_to_text
 
 if TYPE_CHECKING:
@@ -31,6 +31,13 @@ class Service(LockableMixin, BaseModel, Searchable, table=True):
 
     date: datetime
     type: ServiceType = Field(index=True)
+    # Functional category (what the service does), orthogonal to `type`.
+    # NOT NULL with a server default so existing rows backfill to `other`.
+    category: ServiceCategory = Field(
+        default=ServiceCategory.OTHER,
+        index=True,
+        sa_column_kwargs={"server_default": ServiceCategory.OTHER.value},
+    )
     status: ServiceStatus = Field(index=True)
     status_date: datetime
     title: str

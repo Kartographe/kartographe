@@ -517,6 +517,28 @@ class ServiceType(str, Enum):
     OTHER = "other"
 
 
+class ServiceCategory(str, Enum):
+    """Functional category of a service, orthogonal to `ServiceType`.
+
+    `type` says where a service comes from (internal/external/…); `category`
+    says what it does. Values are a public contract — never rename a member
+    (issued data references it); add new members instead.
+    """
+
+    PAYMENT = "payment"
+    COMMUNICATION = "communication"
+    AUTOMATION = "automation"
+    CONTRACTUALIZATION = "contractualization"
+    AUTHENTICATION = "authentication"
+    STORAGE = "storage"
+    ANALYTICS = "analytics"
+    MESSAGING = "messaging"
+    MONITORING = "monitoring"
+    HOSTING = "hosting"
+    DATABASE = "database"
+    OTHER = "other"
+
+
 class ServiceStatus(str, Enum):
     DRAFT = "draft"
     ACTIVE = "active"

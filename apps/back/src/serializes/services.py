@@ -11,6 +11,7 @@ from src.models.enum import (
     ServiceActionMethod,
     ServiceActionStatus,
     ServiceActionType,
+    ServiceCategory,
     ServiceStatus,
     ServiceType,
     VoteRole,
@@ -26,6 +27,7 @@ class ServiceItem(VotableItem):
     comment_count: int = 0
     votes_counts_by_value: dict[VoteValue, int] = {}
     votes_counts_by_role_value: dict[VoteRole, dict[VoteValue, int]] = {}
+    category: ServiceCategory
     date: datetime
     description: dict | None = None
     id: uuid.UUID
@@ -36,6 +38,7 @@ class ServiceItem(VotableItem):
     openapi_url: str | None = None
     owner: OwnerItem
     owner_id: uuid.UUID
+    # Resolved public URL (built in `ServiceManager.to_item`), not the raw key.
     picture_path: str | None = None
     status: ServiceStatus
     status_date: datetime

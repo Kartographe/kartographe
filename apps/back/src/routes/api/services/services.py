@@ -11,14 +11,20 @@ soft-delete to its actions.
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, UploadFile, status
 
 from src.filters._base import MyVoteFilter, PageLimit, SortOrder
 from src.filters.services import ServiceSortField
 from src.forms._bulk import BulkCreateRequest
 from src.forms.services import ServiceCreateForm, ServicePatchForm
 from src.models.account_user import AccountUser
-from src.models.enum import AccountUserRole, EntityType, ServiceStatus, ServiceType
+from src.models.enum import (
+    AccountUserRole,
+    EntityType,
+    ServiceCategory,
+    ServiceStatus,
+    ServiceType,
+)
 from src.serializes._base import ItemResponse, ListingResponse
 from src.serializes.bulk import BulkCreateResponse
 from src.serializes.errors import ErrorResponse
@@ -51,9 +57,9 @@ _DEV = require_role(
     operation_id="api_services_list",
     summary="List services",
     description=(
-        "List the services of the account. Filter by status and/or type (repeat the query param "
-        "for multiple values), sort by date/title/status/type, and page through results. "
-        "Any member may read."
+        "List the services of the account. Filter by status, type and/or category (repeat the "
+        "query param for multiple values), sort by date/title/status/type/category, and page "
+        "through results. Any member may read."
     ),
     response_model=ListingResponse[ServiceItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -64,6 +70,7 @@ def list_services(
     manager: ServiceManagerDep,
     service_status: Annotated[list[ServiceStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[ServiceType] | None, Query(alias="type")] = None,
+    category: Annotated[list[ServiceCategory] | None, Query(alias="category")] = None,
     my_vote: MyVoteFilter = None,
     sort_by: Annotated[ServiceSortField, Query(alias="sortBy")] = ServiceSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
@@ -74,6 +81,7 @@ def list_services(
         account,
         statuses=service_status,
         types=type,
+        categories=category,
         my_vote=my_vote,
         user_id=member.user_id,
         sort_by=sort_by,
@@ -82,7 +90,7 @@ def list_services(
         limit=limit.value,
     )
     items = manager.enrich(
-        EntityType.SERVICE, [ServiceItem.model_validate(row) for row in rows], user_id=member.user_id
+        EntityType.SERVICE, [manager.to_item(row) for row in rows], user_id=member.user_id
     )
     return ListingResponse.paginate(items, count=total, page=page, limit=limit.value)
 
@@ -107,13 +115,13 @@ def create_service(
         account,
         user,
         type=form.type,
+        category=form.category,
         title=form.title,
         description=form.description,
-        picture_path=form.picture_path,
         url=form.url,
         openapi_url=form.openapi_url,
     )
-    return ItemResponse(item=ServiceItem.model_validate(service))
+    return ItemResponse(item=manager.to_item(service))
 
 
 @router.post(
@@ -146,13 +154,13 @@ def bulk_create_services(
             account,
             user,
             type=form.type,
+            category=form.category,
             title=form.title,
             description=form.description,
-            picture_path=form.picture_path,
             url=form.url,
             openapi_url=form.openapi_url,
         ),
-        serialize=ServiceItem.model_validate,
+        serialize=manager.to_item,
     )
 
 
@@ -167,7 +175,7 @@ def bulk_create_services(
 def get_service(
     _: CurrentAccountUserDep, service: CurrentServiceDep, manager: ServiceManagerDep
 ) -> ItemResponse[ServiceItem]:
-    return ItemResponse(item=manager.enrich_one(EntityType.SERVICE, ServiceItem.model_validate(service)))
+    return ItemResponse(item=manager.enrich_one(EntityType.SERVICE, manager.to_item(service)))
 
 
 @router.patch(
@@ -175,8 +183,8 @@ def get_service(
     operation_id="api_services_update",
     summary="Update a service",
     description=(
-        "Partially update a service (type, title, description, picture, url, OpenAPI url, status). "
-        "Dev roles only."
+        "Partially update a service (type, category, title, description, url, OpenAPI url, status). "
+        "The picture is set through `api_services_setPicture`, not here. Dev roles only."
     ),
     response_model=ItemResponse[ServiceItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
@@ -188,7 +196,35 @@ def update_service(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ServiceItem]:
     updated = manager.apply_update(service, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ServiceItem.model_validate(updated))
+    return ItemResponse(item=manager.to_item(updated))
+
+
+@router.post(
+    "/{service_id}/picture",
+    operation_id="api_services_setPicture",
+    summary="Upload the service picture",
+    description=(
+        "Upload a square picture for the service (multipart, field `file`). The image is "
+        "center-cropped to a square and resized server-side; the previous picture is replaced. "
+        "Rejected on a locked service. Dev roles only."
+    ),
+    response_model=ItemResponse[ServiceItem],
+    responses={
+        **_FORBIDDEN,
+        **_NOT_FOUND,
+        400: {"model": ErrorResponse, "description": "Unsupported image format"},
+        409: {"model": ErrorResponse, "description": "Service is locked"},
+        413: {"model": ErrorResponse, "description": "Image too large"},
+    },
+)
+def set_service_picture(
+    service: CurrentServiceDep,
+    file: UploadFile,
+    manager: ServiceManagerDep,
+    _: Annotated[AccountUser, Depends(_DEV)],
+) -> ItemResponse[ServiceItem]:
+    updated = manager.set_picture(service, file)
+    return ItemResponse(item=manager.enrich_one(EntityType.SERVICE, manager.to_item(updated)))
 
 
 @router.delete(
@@ -227,7 +263,7 @@ def lock_service(
     manager: ServiceManagerDep,
     _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
 ) -> ItemResponse[ServiceItem]:
-    return ItemResponse(item=ServiceItem.model_validate(manager.lock(entity, user)))
+    return ItemResponse(item=manager.to_item(manager.lock(entity, user)))
 
 
 @router.post(
@@ -243,4 +279,4 @@ def unlock_service(
     manager: ServiceManagerDep,
     _: Annotated[AccountUser, Depends(_LOCK_ADMIN)],
 ) -> ItemResponse[ServiceItem]:
-    return ItemResponse(item=ServiceItem.model_validate(manager.unlock(entity)))
+    return ItemResponse(item=manager.to_item(manager.unlock(entity)))

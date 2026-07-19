@@ -11,6 +11,7 @@ from src.models.enum import (
     ServiceActionMethod,
     ServiceActionStatus,
     ServiceActionType,
+    ServiceCategory,
     ServiceStatus,
     ServiceType,
 )
@@ -22,21 +23,25 @@ class ServiceCreateForm(CamelBase):
     """Create a service. It starts as a draft owned by the caller."""
 
     type: ServiceType
+    category: ServiceCategory = Field(default=ServiceCategory.OTHER)
     title: str = Field(min_length=1, max_length=255)
     description: dict | None = Field(default=None)
-    picture_path: str | None = Field(default=None, max_length=2048)
     url: str | None = Field(default=None, max_length=2048)
     openapi_url: str | None = Field(default=None, max_length=2048)
 
 
 class ServicePatchForm(CamelBase):
-    """Partial update of a service — only the keys sent are applied."""
+    """Partial update of a service — only the keys sent are applied.
+
+    The picture is set through the dedicated multipart upload
+    (`api_services_setPicture`), never through this form.
+    """
 
     status: ServiceStatus | None = Field(default=None)
     type: ServiceType | None = Field(default=None)
+    category: ServiceCategory | None = Field(default=None)
     title: str | None = Field(default=None, min_length=1, max_length=255)
     description: dict | None = Field(default=None)
-    picture_path: str | None = Field(default=None, max_length=2048)
     url: str | None = Field(default=None, max_length=2048)
     openapi_url: str | None = Field(default=None, max_length=2048)
 

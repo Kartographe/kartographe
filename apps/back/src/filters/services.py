@@ -14,3 +14,4 @@ class ServiceSortField(str, Enum):
     TITLE = "title"
     STATUS = "status"
     TYPE = "type"
+    CATEGORY = "category"
