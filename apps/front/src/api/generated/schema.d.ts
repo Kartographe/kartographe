@@ -3161,7 +3161,7 @@ export interface paths {
         head?: never;
         /**
          * Update a column
-         * @description Partially update a column (type, foreign key, nullable, unique, default, name, description, color, tags). Data roles only.
+         * @description Partially update a column (type, foreign key, nullable, unique, primary key, default, name, description, color, tags). Send `subfields` to replace the column's JSON sub-field tree (`[]` clears it). Data roles only.
          */
         patch: operations["api_databases_versions_tables_columns_update"];
         trace?: never;
@@ -3204,6 +3204,222 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/subfields": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List sub-fields
+         * @description List the JSON sub-fields of a column, ordered by rank then insertion. Nesting is read from each item's `parentSubfieldId`. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_columns_subfields_list"];
+        put?: never;
+        /**
+         * Create a sub-field
+         * @description Create a JSON sub-field on the column. It references a catalogued column type and may nest under an existing sub-field of the same column via `parentSubfieldId`. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_columns_subfields_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/subfields/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several sub-fields at once
+         * @description Create 1 to 50 sub-fields in a single call — prefer this over calling `api_databases_versions_tables_columns_subfields_create` in a loop when adding many. Best-effort: each sub-field is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. To nest, create a parent first, then reference its id in a later call. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_columns_subfields_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/subfields/{database_table_column_subfield_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a sub-field
+         * @description Return a single sub-field of the column. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_columns_subfields_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a sub-field
+         * @description Soft-delete a sub-field and every sub-field nested under it. Data roles only.
+         */
+        delete: operations["api_databases_versions_tables_columns_subfields_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a sub-field
+         * @description Partially update a sub-field (type, parent, name, nullable, rank, description). Send `parentSubfieldId: null` to move it back to the top level. Data roles only.
+         */
+        patch: operations["api_databases_versions_tables_columns_subfields_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/indexes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List indexes
+         * @description List the indexes of a table, ordered by rank then insertion. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_indexes_list"];
+        put?: never;
+        /**
+         * Create an index
+         * @description Create an index on the table. `columnIds` (ordered) must reference columns of the table. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_indexes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/indexes/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several indexes at once
+         * @description Create 1 to 50 indexes in a single call — prefer this over calling `api_databases_versions_tables_indexes_create` in a loop when adding many. Best-effort: each index is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_indexes_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/indexes/{database_table_index_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an index
+         * @description Return a single index of the table. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_indexes_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete an index
+         * @description Soft-delete an index. Data roles only.
+         */
+        delete: operations["api_databases_versions_tables_indexes_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update an index
+         * @description Partially update an index (name, type, unique, columns, where clause, rank, description). Data roles only.
+         */
+        patch: operations["api_databases_versions_tables_indexes_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/constraints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List constraints
+         * @description List the constraints of a table, ordered by rank then insertion. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_constraints_list"];
+        put?: never;
+        /**
+         * Create a constraint
+         * @description Create a constraint on the table. `columnIds` must reference columns of the table; a `foreign_key` constraint also needs `foreignKeyDatabaseTableId` and `foreignKeyColumnIds`. A `check` constraint may be table-level (no columns). Data roles only.
+         */
+        post: operations["api_databases_versions_tables_constraints_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/constraints/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several constraints at once
+         * @description Create 1 to 50 constraints in a single call — prefer this over calling `api_databases_versions_tables_constraints_create` in a loop when adding many. Best-effort: each constraint is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Data roles only.
+         */
+        post: operations["api_databases_versions_tables_constraints_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/constraints/{database_table_constraint_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a constraint
+         * @description Return a single constraint of the table. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_constraints_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a constraint
+         * @description Soft-delete a constraint. Data roles only.
+         */
+        delete: operations["api_databases_versions_tables_constraints_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a constraint
+         * @description Partially update a constraint (name, type, columns, check expression, foreign-key target, referential actions, rank, description). Data roles only.
+         */
+        patch: operations["api_databases_versions_tables_constraints_update"];
         trace?: never;
     };
     "/v1/accounts/{account_id}/databases/{database_id}/migrations": {
@@ -3919,7 +4135,7 @@ export interface paths {
         };
         /**
          * List services
-         * @description List the services of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read.
+         * @description List the services of the account. Filter by status, type and/or category (repeat the query param for multiple values), sort by date/title/status/type/category, and page through results. Any member may read.
          */
         get: operations["api_services_list"];
         put?: never;
@@ -3977,9 +4193,29 @@ export interface paths {
         head?: never;
         /**
          * Update a service
-         * @description Partially update a service (type, title, description, picture, url, OpenAPI url, status). Dev roles only.
+         * @description Partially update a service (type, category, title, description, url, OpenAPI url, status). The picture is set through `api_services_setPicture`, not here. Dev roles only.
          */
         patch: operations["api_services_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/picture": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the service picture
+         * @description Upload a square picture for the service (multipart, field `file`). The image is center-cropped to a square and resized server-side; the previous picture is replaced. Rejected on a locked service. Dev roles only.
+         */
+        post: operations["api_services_setPicture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/accounts/{account_id}/services/{service_id}/lock": {
@@ -6786,6 +7022,11 @@ export interface components {
             /** Refresh Token */
             refresh_token?: string | null;
         };
+        /** Body_api_services_setPicture */
+        Body_api_services_setPicture: {
+            /** File */
+            file: string;
+        };
         /** BulkCreateRequest[AccountCreateForm] */
         BulkCreateRequest_AccountCreateForm_: {
             /**
@@ -6922,6 +7163,22 @@ export interface components {
              */
             items: components["schemas"]["DatabaseTableColumnCreateForm"][];
         };
+        /** BulkCreateRequest[DatabaseTableColumnSubfieldCreateForm] */
+        BulkCreateRequest_DatabaseTableColumnSubfieldCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseTableColumnSubfieldCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseTableConstraintCreateForm] */
+        BulkCreateRequest_DatabaseTableConstraintCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseTableConstraintCreateForm"][];
+        };
         /** BulkCreateRequest[DatabaseTableCreateForm] */
         BulkCreateRequest_DatabaseTableCreateForm_: {
             /**
@@ -6929,6 +7186,14 @@ export interface components {
              * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
              */
             items: components["schemas"]["DatabaseTableCreateForm"][];
+        };
+        /** BulkCreateRequest[DatabaseTableIndexCreateForm] */
+        BulkCreateRequest_DatabaseTableIndexCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["DatabaseTableIndexCreateForm"][];
         };
         /** BulkCreateRequest[DatabaseVersionCreateForm] */
         BulkCreateRequest_DatabaseVersionCreateForm_: {
@@ -7174,6 +7439,33 @@ export interface components {
         BulkCreateResponse_DatabaseTableColumnItem_: {
             /** Results */
             results: components["schemas"]["BulkItemResult_DatabaseTableColumnItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseTableColumnSubfieldItem] */
+        BulkCreateResponse_DatabaseTableColumnSubfieldItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseTableColumnSubfieldItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseTableConstraintItem] */
+        BulkCreateResponse_DatabaseTableConstraintItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseTableConstraintItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[DatabaseTableIndexItem] */
+        BulkCreateResponse_DatabaseTableIndexItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_DatabaseTableIndexItem_"][];
             /** Created */
             created: number;
             /** Failed */
@@ -7508,6 +7800,42 @@ export interface components {
             item?: components["schemas"]["DatabaseTableColumnItem"] | null;
             error?: components["schemas"]["BulkItemError"] | null;
         };
+        /** BulkItemResult[DatabaseTableColumnSubfieldItem] */
+        BulkItemResult_DatabaseTableColumnSubfieldItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseTableColumnSubfieldItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseTableConstraintItem] */
+        BulkItemResult_DatabaseTableConstraintItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseTableConstraintItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[DatabaseTableIndexItem] */
+        BulkItemResult_DatabaseTableIndexItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["DatabaseTableIndexItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
         /** BulkItemResult[DatabaseTableItem] */
         BulkItemResult_DatabaseTableItem_: {
             /** Index */
@@ -7786,6 +8114,12 @@ export interface components {
          */
         CommentStatus: "published" | "removed";
         /**
+         * ConstraintType
+         * @description Kind of a table constraint.
+         * @enum {string}
+         */
+        ConstraintType: "primary_key" | "unique" | "foreign_key" | "check" | "not_null";
+        /**
          * CreateAccountInvitationsForm
          * @description Invite one or more emails to the account with a single role.
          *
@@ -7922,10 +8256,14 @@ export interface components {
             sourceDatabaseTableId?: string | null;
             /** Sourcedatabasetablecolumnid */
             sourceDatabaseTableColumnId?: string | null;
+            /** Sourcedatabasetablecolumnsubfieldid */
+            sourceDatabaseTableColumnSubfieldId?: string | null;
             /** Destinationdatabasetableid */
             destinationDatabaseTableId?: string | null;
             /** Destinationdatabasetablecolumnid */
             destinationDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetablecolumnsubfieldid */
+            destinationDatabaseTableColumnSubfieldId?: string | null;
             /**
              * Transformationmethod
              * @description How the value is reshaped on its way across.
@@ -7977,6 +8315,8 @@ export interface components {
             } | null;
             /** Destinationdatabasetablecolumnid */
             destinationDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetablecolumnsubfieldid */
+            destinationDatabaseTableColumnSubfieldId?: string | null;
             /** Destinationdatabasetableid */
             destinationDatabaseTableId?: string | null;
             /**
@@ -7999,6 +8339,8 @@ export interface components {
             ownerId: string;
             /** Sourcedatabasetablecolumnid */
             sourceDatabaseTableColumnId?: string | null;
+            /** Sourcedatabasetablecolumnsubfieldid */
+            sourceDatabaseTableColumnSubfieldId?: string | null;
             /** Sourcedatabasetableid */
             sourceDatabaseTableId?: string | null;
             status: components["schemas"]["DatabaseMigrationColumnStatus"];
@@ -8021,10 +8363,14 @@ export interface components {
             sourceDatabaseTableId?: string | null;
             /** Sourcedatabasetablecolumnid */
             sourceDatabaseTableColumnId?: string | null;
+            /** Sourcedatabasetablecolumnsubfieldid */
+            sourceDatabaseTableColumnSubfieldId?: string | null;
             /** Destinationdatabasetableid */
             destinationDatabaseTableId?: string | null;
             /** Destinationdatabasetablecolumnid */
             destinationDatabaseTableColumnId?: string | null;
+            /** Destinationdatabasetablecolumnsubfieldid */
+            destinationDatabaseTableColumnSubfieldId?: string | null;
             /** Transformationmethod */
             transformationMethod?: string | null;
             /** Description */
@@ -8234,6 +8580,11 @@ export interface components {
              */
             unique: boolean;
             /**
+             * Primarykey
+             * @default false
+             */
+            primaryKey: boolean;
+            /**
              * Systemfield
              * @default false
              */
@@ -8258,6 +8609,8 @@ export interface components {
             color?: string | null;
             /** Tagids */
             tagIds?: string[];
+            /** Subfields */
+            subfields?: components["schemas"]["DatabaseTableColumnSubfieldInlineForm"][];
         };
         /**
          * DatabaseTableColumnItem
@@ -8332,8 +8685,12 @@ export interface components {
              * Format: uuid
              */
             ownerId: string;
+            /** Primarykey */
+            primaryKey: boolean;
             /** Rank */
             rank: number;
+            /** Subfields */
+            subfields?: components["schemas"]["DatabaseTableColumnSubfieldItem"][] | null;
             /** Systemfield */
             systemField: boolean;
             /**
@@ -8361,6 +8718,8 @@ export interface components {
             nullable?: boolean | null;
             /** Unique */
             unique?: boolean | null;
+            /** Primarykey */
+            primaryKey?: boolean | null;
             /** Systemfield */
             systemField?: boolean | null;
             /** Rank */
@@ -8377,6 +8736,8 @@ export interface components {
             color?: string | null;
             /** Tagids */
             tagIds?: string[] | null;
+            /** Subfields */
+            subfields?: components["schemas"]["DatabaseTableColumnSubfieldInlineForm"][] | null;
         };
         /**
          * DatabaseTableColumnReorderForm
@@ -8401,6 +8762,216 @@ export interface components {
             } | null;
         };
         /**
+         * DatabaseTableColumnSubfieldCreateForm
+         * @description Create a single sub-field via the dedicated sub-field route.
+         *
+         *     `parentSubfieldId` nests it under an existing sub-field of the same column;
+         *     unset means a top-level sub-field.
+         */
+        DatabaseTableColumnSubfieldCreateForm: {
+            /**
+             * Databasecolumntypeid
+             * Format: uuid
+             */
+            databaseColumnTypeId: string;
+            /** Parentsubfieldid */
+            parentSubfieldId?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Nullable
+             * @default false
+             */
+            nullable: boolean;
+            /**
+             * Rank
+             * @default 0
+             */
+            rank: number;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableColumnSubfieldInlineForm
+         * @description A sub-field of a JSON column, sent inline with its column.
+         *
+         *     Used when sub-fields accompany their column (a column create, or a column
+         *     update that replaces them), where the ids do not exist yet. Nesting is
+         *     expressed by `parentIndex` — the 0-based position of the parent within this
+         *     same list — or `null` for a top-level sub-field. A parent must appear before
+         *     its children. (A flat list, rather than a recursive tree, keeps the schema
+         *     non-cyclic so it stays usable as an MCP tool.)
+         */
+        DatabaseTableColumnSubfieldInlineForm: {
+            /**
+             * Databasecolumntypeid
+             * Format: uuid
+             */
+            databaseColumnTypeId: string;
+            /** Parentindex */
+            parentIndex?: number | null;
+            /** Name */
+            name: string;
+            /**
+             * Nullable
+             * @default false
+             */
+            nullable: boolean;
+            /**
+             * Rank
+             * @default 0
+             */
+            rank: number;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableColumnSubfieldItem
+         * @description A sub-field of a JSON column. Nesting is read from `parentSubfieldId`.
+         */
+        DatabaseTableColumnSubfieldItem: {
+            /**
+             * Databasecolumntypeid
+             * Format: uuid
+             */
+            databaseColumnTypeId: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Nullable */
+            nullable: boolean;
+            /** Parentsubfieldid */
+            parentSubfieldId?: string | null;
+            /** Rank */
+            rank: number;
+        };
+        /**
+         * DatabaseTableColumnSubfieldPatchForm
+         * @description Partial update of a sub-field — only the keys sent are applied.
+         *
+         *     Send `parentSubfieldId: null` to move a sub-field back to the top level.
+         */
+        DatabaseTableColumnSubfieldPatchForm: {
+            /** Databasecolumntypeid */
+            databaseColumnTypeId?: string | null;
+            /** Parentsubfieldid */
+            parentSubfieldId?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Nullable */
+            nullable?: boolean | null;
+            /** Rank */
+            rank?: number | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableConstraintCreateForm
+         * @description Create a constraint on a table.
+         *
+         *     `columnIds` must reference columns of the table. A `foreign_key` constraint
+         *     also needs `foreignKeyDatabaseTableId` and `foreignKeyColumnIds` (columns of
+         *     that table). A `check` constraint may be table-level (no columns).
+         */
+        DatabaseTableConstraintCreateForm: {
+            /** Name */
+            name: string;
+            type: components["schemas"]["ConstraintType"];
+            /** Columnids */
+            columnIds?: string[];
+            /** Checkexpression */
+            checkExpression?: string | null;
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /** Foreignkeycolumnids */
+            foreignKeyColumnIds?: string[];
+            onDelete?: components["schemas"]["ReferentialAction"] | null;
+            onUpdate?: components["schemas"]["ReferentialAction"] | null;
+            /**
+             * Rank
+             * @default 0
+             */
+            rank: number;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableConstraintItem
+         * @description A constraint declared on a database table.
+         */
+        DatabaseTableConstraintItem: {
+            /** Checkexpression */
+            checkExpression?: string | null;
+            /** Columnids */
+            columnIds: string[];
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Foreignkeycolumnids */
+            foreignKeyColumnIds: string[];
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            onDelete?: components["schemas"]["ReferentialAction"] | null;
+            onUpdate?: components["schemas"]["ReferentialAction"] | null;
+            /** Rank */
+            rank: number;
+            type: components["schemas"]["ConstraintType"];
+        };
+        /**
+         * DatabaseTableConstraintPatchForm
+         * @description Partial update of a constraint — only the keys sent are applied.
+         */
+        DatabaseTableConstraintPatchForm: {
+            /** Name */
+            name?: string | null;
+            type?: components["schemas"]["ConstraintType"] | null;
+            /** Columnids */
+            columnIds?: string[] | null;
+            /** Checkexpression */
+            checkExpression?: string | null;
+            /** Foreignkeydatabasetableid */
+            foreignKeyDatabaseTableId?: string | null;
+            /** Foreignkeycolumnids */
+            foreignKeyColumnIds?: string[] | null;
+            onDelete?: components["schemas"]["ReferentialAction"] | null;
+            onUpdate?: components["schemas"]["ReferentialAction"] | null;
+            /** Rank */
+            rank?: number | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
          * DatabaseTableCreateForm
          * @description Create a table, optionally with its columns in one call.
          */
@@ -8420,6 +8991,86 @@ export interface components {
             columns?: components["schemas"]["DatabaseTableColumnCreateForm"][];
             /** Tagids */
             tagIds?: string[];
+        };
+        /**
+         * DatabaseTableIndexCreateForm
+         * @description Create an index on a table. `columnIds` must reference columns of the table.
+         */
+        DatabaseTableIndexCreateForm: {
+            /** Name */
+            name: string;
+            /** @default btree */
+            type: components["schemas"]["IndexType"];
+            /**
+             * Unique
+             * @default false
+             */
+            unique: boolean;
+            /** Columnids */
+            columnIds?: string[];
+            /** Whereclause */
+            whereClause?: string | null;
+            /**
+             * Rank
+             * @default 0
+             */
+            rank: number;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * DatabaseTableIndexItem
+         * @description An index declared on a database table.
+         */
+        DatabaseTableIndexItem: {
+            /** Columnids */
+            columnIds: string[];
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Rank */
+            rank: number;
+            type: components["schemas"]["IndexType"];
+            /** Unique */
+            unique: boolean;
+            /** Whereclause */
+            whereClause?: string | null;
+        };
+        /**
+         * DatabaseTableIndexPatchForm
+         * @description Partial update of an index — only the keys sent are applied.
+         */
+        DatabaseTableIndexPatchForm: {
+            /** Name */
+            name?: string | null;
+            type?: components["schemas"]["IndexType"] | null;
+            /** Unique */
+            unique?: boolean | null;
+            /** Columnids */
+            columnIds?: string[] | null;
+            /** Whereclause */
+            whereClause?: string | null;
+            /** Rank */
+            rank?: number | null;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
         };
         /**
          * DatabaseTableItem
@@ -8978,6 +9629,12 @@ export interface components {
              */
             environment: string;
         };
+        /**
+         * IndexType
+         * @description Access method of a table index (Postgres index types).
+         * @enum {string}
+         */
+        IndexType: "btree" | "hash" | "gin" | "gist" | "brin";
         /** ItemResponse[AccountInvitationItem] */
         ItemResponse_AccountInvitationItem_: {
             item: components["schemas"]["AccountInvitationItem"];
@@ -9065,6 +9722,18 @@ export interface components {
         /** ItemResponse[DatabaseTableColumnItem] */
         ItemResponse_DatabaseTableColumnItem_: {
             item: components["schemas"]["DatabaseTableColumnItem"];
+        };
+        /** ItemResponse[DatabaseTableColumnSubfieldItem] */
+        ItemResponse_DatabaseTableColumnSubfieldItem_: {
+            item: components["schemas"]["DatabaseTableColumnSubfieldItem"];
+        };
+        /** ItemResponse[DatabaseTableConstraintItem] */
+        ItemResponse_DatabaseTableConstraintItem_: {
+            item: components["schemas"]["DatabaseTableConstraintItem"];
+        };
+        /** ItemResponse[DatabaseTableIndexItem] */
+        ItemResponse_DatabaseTableIndexItem_: {
+            item: components["schemas"]["DatabaseTableIndexItem"];
         };
         /** ItemResponse[DatabaseTableItem] */
         ItemResponse_DatabaseTableItem_: {
@@ -10074,6 +10743,36 @@ export interface components {
             /** Items */
             items: components["schemas"]["DatabaseTableColumnItem"][];
         };
+        /** ListingResponse[DatabaseTableColumnSubfieldItem] */
+        ListingResponse_DatabaseTableColumnSubfieldItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseTableColumnSubfieldItem"][];
+        };
+        /** ListingResponse[DatabaseTableConstraintItem] */
+        ListingResponse_DatabaseTableConstraintItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseTableConstraintItem"][];
+        };
+        /** ListingResponse[DatabaseTableIndexItem] */
+        ListingResponse_DatabaseTableIndexItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["DatabaseTableIndexItem"][];
+        };
         /** ListingResponse[DatabaseTableItem] */
         ListingResponse_DatabaseTableItem_: {
             /** Count */
@@ -10780,6 +11479,12 @@ export interface components {
             codes: string[];
         };
         /**
+         * ReferentialAction
+         * @description `ON DELETE` / `ON UPDATE` action of a foreign-key constraint.
+         * @enum {string}
+         */
+        ReferentialAction: "no_action" | "restrict" | "cascade" | "set_null" | "set_default";
+        /**
          * RefreshTokenForm
          * @description Trade a refresh token for a fresh access token.
          */
@@ -11093,19 +11798,29 @@ export interface components {
          */
         ServiceActionType: "endpoint" | "webhook" | "event" | "job" | "other";
         /**
+         * ServiceCategory
+         * @description Functional category of a service, orthogonal to `ServiceType`.
+         *
+         *     `type` says where a service comes from (internal/external/…); `category`
+         *     says what it does. Values are a public contract — never rename a member
+         *     (issued data references it); add new members instead.
+         * @enum {string}
+         */
+        ServiceCategory: "payment" | "communication" | "automation" | "contractualization" | "authentication" | "storage" | "analytics" | "messaging" | "monitoring" | "hosting" | "database" | "other";
+        /**
          * ServiceCreateForm
          * @description Create a service. It starts as a draft owned by the caller.
          */
         ServiceCreateForm: {
             type: components["schemas"]["ServiceType"];
+            /** @default other */
+            category: components["schemas"]["ServiceCategory"];
             /** Title */
             title: string;
             /** Description */
             description?: {
                 [key: string]: unknown;
             } | null;
-            /** Picturepath */
-            picturePath?: string | null;
             /** Url */
             url?: string | null;
             /** Openapiurl */
@@ -11138,6 +11853,7 @@ export interface components {
                     [key: string]: number;
                 };
             };
+            category: components["schemas"]["ServiceCategory"];
             /**
              * Date
              * Format: date-time
@@ -11184,18 +11900,20 @@ export interface components {
         /**
          * ServicePatchForm
          * @description Partial update of a service — only the keys sent are applied.
+         *
+         *     The picture is set through the dedicated multipart upload
+         *     (`api_services_setPicture`), never through this form.
          */
         ServicePatchForm: {
             status?: components["schemas"]["ServiceStatus"] | null;
             type?: components["schemas"]["ServiceType"] | null;
+            category?: components["schemas"]["ServiceCategory"] | null;
             /** Title */
             title?: string | null;
             /** Description */
             description?: {
                 [key: string]: unknown;
             } | null;
-            /** Picturepath */
-            picturePath?: string | null;
             /** Url */
             url?: string | null;
             /** Openapiurl */
@@ -11206,7 +11924,7 @@ export interface components {
          * @description Sortable columns for the services listing.
          * @enum {string}
          */
-        ServiceSortField: "date" | "title" | "status" | "type";
+        ServiceSortField: "date" | "title" | "status" | "type" | "category";
         /**
          * ServiceStatus
          * @enum {string}
@@ -23870,6 +24588,987 @@ export interface operations {
             };
         };
     };
+    api_databases_versions_tables_columns_subfields_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableColumnSubfieldItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_subfields_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableColumnSubfieldCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnSubfieldItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_subfields_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseTableColumnSubfieldCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseTableColumnSubfieldItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_subfields_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_subfield_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnSubfieldItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_subfields_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_subfield_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_subfields_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+                database_table_column_subfield_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableColumnSubfieldPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableColumnSubfieldItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Column, sub-field, column type or parent not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableIndexItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableIndexCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableIndexItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseTableIndexCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseTableIndexItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_index_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableIndexItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_index_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_indexes_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+                database_table_index_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableIndexPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableIndexItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, index or referenced column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_DatabaseTableConstraintItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableConstraintCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableConstraintItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_DatabaseTableConstraintCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_DatabaseTableConstraintItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_constraint_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableConstraintItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_constraint_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_constraints_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+                account_id: string;
+                database_table_constraint_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DatabaseTableConstraintPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_DatabaseTableConstraintItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Table, constraint or referenced table/column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_migrations_list: {
         parameters: {
             query?: {
@@ -26204,6 +27903,7 @@ export interface operations {
             query?: {
                 status?: components["schemas"]["ServiceStatus"][] | null;
                 type?: components["schemas"]["ServiceType"][] | null;
+                category?: components["schemas"]["ServiceCategory"][] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
                 sortBy?: components["schemas"]["ServiceSortField"];
@@ -26497,6 +28197,87 @@ export interface operations {
             };
             /** @description Account or service not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_setPicture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_api_services_setPicture"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ServiceItem_"];
+                };
+            };
+            /** @description Unsupported image format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account or service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Service is locked */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Image too large */
+            413: {
                 headers: {
                     [name: string]: unknown;
                 };
