@@ -72,18 +72,28 @@ export function IndexFormModal({
       type: (index?.type ?? "btree") as IndexType,
       unique: index?.unique ?? false,
       columnIds: index?.columnIds ?? [],
+      expression: index?.expression ?? "",
       whereClause: index?.whereClause ?? "",
       description: asRichText(index?.description),
     },
     validators: {
-      onSubmit: z.object({
-        name: z.string().min(1, t`Le nom est requis`),
-        type: z.enum(dtoEnums.IndexType),
-        unique: z.boolean(),
-        columnIds: z.array(z.string()),
-        whereClause: z.string(),
-        description: z.record(z.string(), z.unknown()),
-      }),
+      onSubmit: z
+        .object({
+          name: z.string().min(1, t`Le nom est requis`),
+          type: z.enum(dtoEnums.IndexType),
+          unique: z.boolean(),
+          columnIds: z.array(z.string()),
+          expression: z.string(),
+          whereClause: z.string(),
+          description: z.record(z.string(), z.unknown()),
+        })
+        .refine(
+          (value) => value.columnIds.length > 0 || value.expression.trim(),
+          {
+            message: t`Indiquez au moins une colonne ou une expression`,
+            path: ["columnIds"],
+          }
+        ),
     },
     onSubmit: async ({ value, formApi }) => {
       const body = {
@@ -91,6 +101,7 @@ export function IndexFormModal({
         type: value.type,
         unique: value.unique,
         columnIds: value.columnIds,
+        expression: value.expression.trim() || null,
         whereClause: value.whereClause || null,
         rank: index?.rank ?? nextRank,
         description: isRichTextEmpty(value.description)
@@ -152,7 +163,15 @@ export function IndexFormModal({
               <field.MultiSelectField
                 label={t`Colonnes`}
                 options={columnOptions}
-                placeholder={t`Colonnes indexées`}
+                placeholder={t`Colonnes indexées (ou une expression ci-dessous)`}
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="expression">
+            {(field) => (
+              <field.TextField
+                label={t`Expression`}
+                placeholder={t`Index d'expression, ex. (aem_file ->> 'fileId')`}
               />
             )}
           </form.AppField>

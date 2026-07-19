@@ -128,7 +128,12 @@ export function TableIndexesConstraints({
                   {index.name}
                 </Typography.Text>
                 <Typography.Text style={{ flex: 1 }} type="secondary">
-                  {index.columnIds.map(columnName).join(", ")}
+                  {index.columnIds.length > 0
+                    ? index.columnIds.map(columnName).join(", ")
+                    : null}
+                  {index.expression ? (
+                    <Typography.Text code>{index.expression}</Typography.Text>
+                  ) : null}
                 </Typography.Text>
                 {index.unique ? <Tag color="gold">{t`Unique`}</Tag> : null}
                 <Tooltip title={locked ? t`Table verrouillée` : t`Modifier`}>
