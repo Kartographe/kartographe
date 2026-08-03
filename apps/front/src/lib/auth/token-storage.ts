@@ -8,8 +8,13 @@ type TokenItem = components["schemas"]["TokenItem"];
 
 /**
  * The session the app manages itself: bearer access + refresh tokens with
- * absolute (epoch-ms) expiries. Persisted to `localStorage` when the user ticks
- * "remember me", otherwise to `sessionStorage` (cleared when the tab closes).
+ * absolute (epoch-ms) expiries.
+ *
+ * Always persisted to `localStorage`, so every tab of the app shares one
+ * session — `sessionStorage` is per-tab, and a session kept there made any
+ * newly opened tab look signed out. "Remember me" is not a storage choice: the
+ * API already encodes it in the refresh token's lifetime (a day without it, a
+ * week with), which is what actually bounds the session.
  */
 export interface StoredSession {
   accessToken: string;
@@ -24,11 +29,9 @@ const STORAGE_KEY = "kartographe-session";
 // clock skew and in-flight request latency.
 const EXPIRY_SKEW_MS = 30_000;
 
-function storageFor(remember: boolean): Storage {
-  return remember ? window.localStorage : window.sessionStorage;
-}
-
 export function loadSession(): StoredSession | null {
+  // `sessionStorage` is still read so a session written by a previous build
+  // keeps working; it is migrated to `localStorage` on the next save.
   for (const store of [window.localStorage, window.sessionStorage]) {
     const raw = store.getItem(STORAGE_KEY);
     if (!raw) {
@@ -54,9 +57,9 @@ export function saveSession(item: TokenItem, remember: boolean): StoredSession {
       : null,
     remember,
   };
-  // Write to the chosen store, wipe the other so only one copy ever exists.
-  storageFor(!remember).removeItem(STORAGE_KEY);
-  storageFor(remember).setItem(STORAGE_KEY, JSON.stringify(session));
+  // One copy, shared by every tab.
+  window.sessionStorage.removeItem(STORAGE_KEY);
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
   return session;
 }
 
