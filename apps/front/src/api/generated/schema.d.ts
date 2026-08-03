@@ -156,6 +156,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the caller's own membership
+         * @description Return the signed-in user's seat on this account — role, voting role, status and their stored UI preferences for this account.
+         */
+        get: operations["api_accounts_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/me/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set one of the caller's preferences
+         * @description Store a single `key`/`value` pair in the caller's preference map for this account, leaving the other keys untouched. `value` may be any JSON value — the API stores it verbatim. Used by the front to remember per-page view state (filters, sort, pagination). Returns the whole updated map.
+         */
+        post: operations["api_accounts_me_preferences_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/users": {
         parameters: {
             query?: never;
@@ -5845,6 +5885,30 @@ export interface components {
             voteRole: components["schemas"]["VoteRole"];
         };
         /**
+         * AccountUserMeItem
+         * @description The caller's own seat in an account, with their UI preferences.
+         */
+        AccountUserMeItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Preferences
+             * @description Free-form UI preferences of this member on this account, one entry per view (e.g. `{"list:journeys": {"limit": 25, "sortBy": "date"}}`). Opaque to the API.
+             */
+            preferences?: {
+                [key: string]: unknown;
+            };
+            role: components["schemas"]["AccountUserRole"];
+            /** Startdate */
+            startDate?: string | null;
+            status: components["schemas"]["AccountUserStatus"];
+            type: components["schemas"]["AccountUserType"];
+            voteRole: components["schemas"]["VoteRole"];
+        };
+        /**
          * AccountUserPatchForm
          * @description Update a member's account role and/or their voting role.
          *
@@ -5854,6 +5918,35 @@ export interface components {
         AccountUserPatchForm: {
             role?: components["schemas"]["AccountUserRole"] | null;
             voteRole?: components["schemas"]["VoteRole"] | null;
+        };
+        /**
+         * AccountUserPreferenceForm
+         * @description Set one preference entry of the caller's own seat.
+         *
+         *     `value` is stored verbatim (any JSON value) under `key`; the other keys are
+         *     left untouched. Sending `null` stores `null` for that key.
+         */
+        AccountUserPreferenceForm: {
+            /** Key */
+            key: string;
+            /**
+             * Value
+             * @description Any JSON value — stored as-is under `key`.
+             */
+            value?: unknown;
+        };
+        /**
+         * AccountUserPreferencesItem
+         * @description The full preference map of the caller's seat, after an update.
+         */
+        AccountUserPreferencesItem: {
+            /**
+             * Preferences
+             * @description Free-form UI preferences of this member on this account, one entry per view (e.g. `{"list:journeys": {"limit": 25, "sortBy": "date"}}`). Opaque to the API.
+             */
+            preferences?: {
+                [key: string]: unknown;
+            };
         };
         /**
          * AccountUserRole
@@ -9658,6 +9751,14 @@ export interface components {
         ItemResponse_AccountUserItem_: {
             item: components["schemas"]["AccountUserItem"];
         };
+        /** ItemResponse[AccountUserMeItem] */
+        ItemResponse_AccountUserMeItem_: {
+            item: components["schemas"]["AccountUserMeItem"];
+        };
+        /** ItemResponse[AccountUserPreferencesItem] */
+        ItemResponse_AccountUserPreferencesItem_: {
+            item: components["schemas"]["AccountUserPreferencesItem"];
+        };
         /** ItemResponse[ActionTypeItem] */
         ItemResponse_ActionTypeItem_: {
             item: components["schemas"]["ActionTypeItem"];
@@ -12919,6 +13020,117 @@ export interface operations {
             };
             /** @description The account must keep at least one owner */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_accounts_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountUserMeItem_"];
+                };
+            };
+            /** @description You are not a member of this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_accounts_me_preferences_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountUserPreferenceForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_AccountUserPreferencesItem_"];
+                };
+            };
+            /** @description You are not a member of this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Preferences are too large */
+            413: {
                 headers: {
                     [name: string]: unknown;
                 };
