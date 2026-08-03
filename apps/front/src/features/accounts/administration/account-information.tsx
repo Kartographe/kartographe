@@ -12,6 +12,7 @@ import { z } from "zod";
 import { $api } from "@/api/$api";
 import { fetchClient } from "@/api/client";
 import { AccountAvatar } from "@/features/accounts/account-avatar";
+import { AccountComplexityModes } from "@/features/accounts/administration/account-complexity-modes";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
@@ -137,6 +138,8 @@ export function AccountInformation({ accountId }: { accountId: string }) {
           </form.FormRoot>
         </form.AppForm>
       </Card>
+
+      <AccountComplexityModes account={account} />
     </Flex>
   );
 }
