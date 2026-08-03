@@ -9,6 +9,9 @@ seat, only an owner may grant the owner role, and an account must always keep at
 least one active owner.
 """
 
+import json
+from typing import Any
+
 from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
@@ -28,6 +31,10 @@ _VOTE_ROLE_FOR_ACCOUNT_ROLE: dict[AccountUserRole, VoteRole] = {
     AccountUserRole.DEVELOPER: VoteRole.DEVELOPER,
     AccountUserRole.DATA_ANALYST: VoteRole.DATA_ANALYST,
 }
+
+# Preferences are UI state, not storage: cap the whole map so a client cannot
+# turn a seat row into a blob store.
+_PREFERENCES_MAX_BYTES = 64 * 1024
 
 
 def vote_role_for_account_role(role: AccountUserRole) -> VoteRole:
@@ -105,6 +112,27 @@ class AccountUsersManager:
         self.session.commit()
         self.session.refresh(target)
         return target
+
+    def set_preference(self, member: AccountUser, key: str, value: Any) -> dict:
+        """Store `value` under `key` in the member's own preference map.
+
+        Only the caller's seat is ever passed here (route-enforced). The map is
+        rebuilt rather than mutated in place: SQLAlchemy does not track in-place
+        changes to a plain `JSON` column, so a `preferences[key] = …` would
+        never be flushed.
+        """
+        preferences = {**(member.preferences or {}), key: value}
+        if len(json.dumps(preferences).encode()) > _PREFERENCES_MAX_BYTES:
+            raise HTTPException(
+                status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                "Preferences are too large.",
+            )
+        member.preferences = preferences
+        member.updated_at = utc_now()
+        self.session.add(member)
+        self.session.commit()
+        self.session.refresh(member)
+        return member.preferences
 
     def soft_delete(self, target: AccountUser, *, caller: AccountUser) -> None:
         """Hard-remove a member's seat (soft-delete row), keeping owners safe."""

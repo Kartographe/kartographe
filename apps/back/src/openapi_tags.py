@@ -51,6 +51,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Create and manage workspaces the signed-in user belongs to.",
     },
     {
+        "name": "api.accounts.me",
+        "x-displayName": "Accounts › My membership",
+        "description": "The signed-in user's own seat on an account, and their per-account UI preferences.",
+    },
+    {
         "name": "api.accounts.users",
         "x-displayName": "Accounts › Members",
         "description": "List members of an account and manage their roles.",

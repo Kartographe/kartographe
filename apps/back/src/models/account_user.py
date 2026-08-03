@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Index, text
+from sqlalchemy import JSON, Index, text
 from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
@@ -48,6 +48,15 @@ class AccountUser(BaseModel, table=True):
     # cast. Independent of `role`; defaults to `other` and is editable by
     # owners/administrators.
     vote_role: VoteRole = Field(default=VoteRole.OTHER)
+
+    # Free-form UI preferences of this member, scoped to the account: one entry
+    # per view (`{"list:journeys": {"limit": 25, …}}`). Opaque to the backend —
+    # the front owns the shape, the API only stores key/value pairs.
+    preferences: dict = Field(
+        default_factory=dict,
+        sa_type=JSON,
+        sa_column_kwargs={"server_default": text("'{}'"), "nullable": False},
+    )
 
     date: datetime | None = Field(default=None)
     # Validity window of the seat; `end_date` is far in the future while active,
