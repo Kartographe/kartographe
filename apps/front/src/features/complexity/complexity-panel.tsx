@@ -82,6 +82,11 @@ export function ComplexityPanel({
     "/v1/accounts/{account_id}/complexities",
     { meta: { successMessage: t`Estimation enregistrée` } }
   );
+  const withdrawMutation = $api.useMutation(
+    "delete",
+    "/v1/accounts/{account_id}/complexities",
+    { meta: { successMessage: t`Estimation retirée` } }
+  );
 
   const estimates = estimatesQuery.data?.items ?? [];
   const mine = estimates.find((estimate) => estimate.ownerId === me?.id);
@@ -92,11 +97,25 @@ export function ComplexityPanel({
     (entry) => entry.scope === scope
   );
 
-  async function estimate(value: string | null) {
-    await castMutation.mutateAsync({
-      params: { path: { account_id: accountId } },
-      body: { entityType, entityId, value },
-    });
+  /**
+   * Clicking a card estimates; clicking the one already selected withdraws.
+   * Withdrawing differs from picking "?" — that one answers "I cannot estimate
+   * yet" and keeps you among the participants.
+   */
+  async function estimate(value: string | null, active: boolean) {
+    if (active) {
+      await withdrawMutation.mutateAsync({
+        params: {
+          path: { account_id: accountId },
+          query: { entityType, entityId },
+        },
+      });
+    } else {
+      await castMutation.mutateAsync({
+        params: { path: { account_id: accountId } },
+        body: { entityType, entityId, value },
+      });
+    }
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
   }
 
@@ -165,6 +184,11 @@ export function ComplexityPanel({
         vertical
       >
         <Typography.Text strong>{t`Votre estimation`}</Typography.Text>
+        {mine ? (
+          <Typography.Text type="secondary">
+            {t`Cliquez à nouveau sur votre carte pour retirer votre estimation.`}
+          </Typography.Text>
+        ) : null}
         {scalesQuery.isLoading ? (
           <Skeleton active paragraph={{ rows: 1 }} title={false} />
         ) : (
@@ -178,8 +202,9 @@ export function ComplexityPanel({
               return (
                 <Button
                   key={card.key}
-                  loading={castMutation.isPending}
-                  onClick={() => estimate(card.value)}
+                  loading={castMutation.isPending || withdrawMutation.isPending}
+                  onClick={() => estimate(card.value, active)}
+                  title={active ? t`Retirer mon estimation` : undefined}
                   type={active ? "primary" : "default"}
                 >
                   {card.label}
