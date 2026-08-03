@@ -2041,7 +2041,7 @@ export interface paths {
         };
         /**
          * List features
-         * @description List the features of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         * @description List the features of the account. Narrow by title with `q` (case-insensitive contains), filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
          */
         get: operations["api_features_list"];
         put?: never;
@@ -7015,6 +7015,8 @@ export interface components {
          * @description A bounded context of an application.
          */
         ApplicationBoundedContextItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Applicationcomponentids */
             applicationComponentIds: string[];
@@ -7081,6 +7083,8 @@ export interface components {
          *     `applicationTitle` is null when the parent application has since been removed.
          */
         ApplicationBoundedContextListItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Applicationcomponentids */
             applicationComponentIds: string[];
@@ -7276,6 +7280,8 @@ export interface components {
          * @description A building block of an application.
          */
         ApplicationComponentItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -7356,6 +7362,8 @@ export interface components {
          *     `applicationTitle` is null when the parent application has since been removed.
          */
         ApplicationComponentListItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -7797,6 +7805,8 @@ export interface components {
          * @description An application tracked inside an account.
          */
         ApplicationItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -8089,6 +8099,8 @@ export interface components {
          * @description An HTTP route exposed by an application.
          */
         ApplicationRouteItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -9784,6 +9796,16 @@ export interface components {
             readonly scope: components["schemas"]["ComplexityScope"];
         };
         /**
+         * ComplexityLevel
+         * @description How heavy an estimate reads, whatever the scale it was given on.
+         *
+         *     Derived from where the value sits in the account's scale (`level_for` in
+         *     `src/utils/complexity.py`), so a 13 on Fibonacci and an 8 on powers of two
+         *     both read as the same weight to someone who does not know the scale.
+         * @enum {string}
+         */
+        ComplexityLevel: "none" | "low" | "medium" | "high" | "extreme";
+        /**
          * ComplexityListItem
          * @description An estimate enriched with its resolved entity.
          *
@@ -9865,6 +9887,23 @@ export interface components {
          */
         ComplexitySortField: "date" | "value" | "mode";
         /**
+         * ComplexityStatsItem
+         * @description How an entity was estimated, summed up for a listing row.
+         */
+        ComplexityStatsItem: {
+            /** Average */
+            average?: string | null;
+            /**
+             * Count
+             * @default 0
+             */
+            count: number;
+            level?: components["schemas"]["ComplexityLevel"] | null;
+            /** Median */
+            median?: string | null;
+            mode: components["schemas"]["ComplexityMode"];
+        };
+        /**
          * ComplexityUpsertForm
          * @description Give (or update) the caller's complexity estimate on an entity.
          *
@@ -9939,6 +9978,8 @@ export interface components {
          * @description A database tracked inside an account.
          */
         DatabaseItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -10047,6 +10088,8 @@ export interface components {
          *     and a migration carries both.
          */
         DatabaseMigrationColumnItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
@@ -10190,6 +10233,8 @@ export interface components {
          * @description A planned move from a version of one database to a version of another.
          */
         DatabaseMigrationItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
@@ -10382,6 +10427,8 @@ export interface components {
          * @description A column of a database table.
          */
         DatabaseTableColumnItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -10856,6 +10903,8 @@ export interface components {
          *     and on create/update.
          */
         DatabaseTableItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -11194,6 +11243,8 @@ export interface components {
          * @description A feature tracked at the account level.
          */
         FeatureItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -11725,6 +11776,8 @@ export interface components {
          * @description A user journey tracked inside an account.
          */
         JourneyItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -11841,6 +11894,8 @@ export interface components {
          * @description A scenario inside a journey.
          */
         JourneyScenarioItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -11919,6 +11974,8 @@ export interface components {
          *     `journeyTitle` is null when the parent journey has since been removed.
          */
         JourneyScenarioListItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -12198,6 +12255,8 @@ export interface components {
          * @description A step inside a scenario (nodes form a tree via `parentId`).
          */
         JourneyScenarioStepItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -13132,6 +13191,15 @@ export interface components {
             phone?: string | null;
         };
         /**
+         * MyComplexityItem
+         * @description The caller's own estimate. Present means they answered — `value` may
+         *     still be null, which is the explicit "cannot estimate yet" answer.
+         */
+        MyComplexityItem: {
+            /** Value */
+            value?: string | null;
+        };
+        /**
          * OauthAuthorizationFlowType
          * @enum {string}
          */
@@ -13315,6 +13383,8 @@ export interface components {
          * @description A persona tracked inside an account.
          */
         PersonaItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /** Tagids */
             tagIds: string[];
@@ -13635,6 +13705,8 @@ export interface components {
          * @description An action exposed by a service.
          */
         ServiceActionItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
@@ -13765,6 +13837,8 @@ export interface components {
          * @description A service tracked inside an account.
          */
         ServiceItem: {
+            complexity?: components["schemas"]["ComplexityStatsItem"] | null;
+            myComplexity?: components["schemas"]["MyComplexityItem"] | null;
             myVote?: components["schemas"]["VoteValue"] | null;
             /**
              * Commentcount
@@ -15833,6 +15907,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["ApplicationSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -18294,6 +18370,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -20283,6 +20361,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -21349,6 +21429,8 @@ export interface operations {
                 componentIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -22096,8 +22178,12 @@ export interface operations {
                 status?: components["schemas"]["FeatureStatus"][] | null;
                 type?: components["schemas"]["FeatureType"][] | null;
                 tagIds?: string[] | null;
+                /** @description Keep only features whose title contains this text (case-insensitive). */
+                q?: string | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["FeatureSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -23455,6 +23541,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["PersonaSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -24176,6 +24264,8 @@ export interface operations {
                 personasIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["JourneySortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -24591,6 +24681,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -25163,6 +25255,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -27510,6 +27604,8 @@ export interface operations {
                 personasIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["JourneyScenarioSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -27570,6 +27666,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["ApplicationComponentSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -27628,6 +27726,8 @@ export interface operations {
                 componentIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["ApplicationBoundedContextSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -27687,6 +27787,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["DatabaseSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -28415,6 +28517,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -28842,6 +28946,8 @@ export interface operations {
                 tagIds?: string[] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -30313,6 +30419,8 @@ export interface operations {
             query?: {
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -30935,6 +31043,8 @@ export interface operations {
             query?: {
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {
@@ -33091,6 +33201,8 @@ export interface operations {
                 category?: components["schemas"]["ServiceCategory"][] | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
                 sortBy?: components["schemas"]["ServiceSortField"];
                 sortOrder?: components["schemas"]["SortOrder"];
                 page?: number;
@@ -33586,6 +33698,8 @@ export interface operations {
             query?: {
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
+                /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
+                myComplexity?: string | null;
             };
             header?: never;
             path: {

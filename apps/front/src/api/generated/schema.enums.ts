@@ -38,6 +38,7 @@ export const dtoEnums = {
   AssertionTypeCategory: ["browser", "database"] as const satisfies readonly S["AssertionTypeCategory"][],
   CommentSortField: ["date", "status", "status_date"] as const satisfies readonly S["CommentSortField"][],
   CommentStatus: ["published", "removed"] as const satisfies readonly S["CommentStatus"][],
+  ComplexityLevel: ["none", "low", "medium", "high", "extreme"] as const satisfies readonly S["ComplexityLevel"][],
   ComplexityMode: ["fibonacci", "modified_fibonacci", "powers_of_two", "linear"] as const satisfies readonly S["ComplexityMode"][],
   ComplexityScope: ["technical", "product"] as const satisfies readonly S["ComplexityScope"][],
   ComplexitySortField: ["date", "value", "mode"] as const satisfies readonly S["ComplexitySortField"][],
