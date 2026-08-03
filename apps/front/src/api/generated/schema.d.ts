@@ -1828,6 +1828,210 @@ export interface paths {
         patch: operations["api_applications_components_tables_update"];
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List bounded contexts
+         * @description List the bounded contexts of an application, most recent first. Filter with `componentIds` (repeat the query param) to keep only the contexts holding at least one of those components. Any member may read.
+         */
+        get: operations["api_applications_boundedContexts_list"];
+        put?: never;
+        /**
+         * Create a bounded context
+         * @description Create a bounded context owned by the caller. Referenced components must belong to the application. Dev roles only.
+         */
+        post: operations["api_applications_boundedContexts_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several bounded contexts at once
+         * @description Create 1 to 50 bounded contexts in a single call — prefer this over calling `api_applications_boundedContexts_create` in a loop when adding many. Best-effort: each context is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_boundedContexts_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a bounded context
+         * @description Return a single bounded context of the application. Any member may read.
+         */
+        get: operations["api_applications_boundedContexts_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a bounded context
+         * @description Soft-delete a bounded context; the components it held are untouched. Dev roles only; refused while the context is locked.
+         */
+        delete: operations["api_applications_boundedContexts_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a bounded context
+         * @description Partially update a bounded context. Referenced components must belong to the application. Dev roles only; refused while the context is locked.
+         */
+        patch: operations["api_applications_boundedContexts_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a bounded context
+         * @description Freeze the bounded context against edits and deletion; comments, votes and complexity estimates stay available. Owners and administrators only.
+         */
+        post: operations["api_applications_boundedContexts_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a bounded context
+         * @description Lift the freeze on the bounded context. Owners and administrators only.
+         */
+        post: operations["api_applications_boundedContexts_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List bounded context comments
+         * @description List the root comments on an application bounded context, oldest first. Any member may read.
+         */
+        get: operations["api_applications_boundedContexts_comments_list"];
+        put?: never;
+        /**
+         * Comment on a bounded context
+         * @description Post a comment on an application bounded context. Any member may post.
+         */
+        post: operations["api_applications_boundedContexts_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a bounded context at once
+         * @description Post 1 to 50 comments on an application bounded context in a single call — prefer this over calling `api_applications_boundedContexts_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_applications_boundedContexts_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List bounded context votes
+         * @description List the votes on an application bounded context, oldest first. Any member may read.
+         */
+        get: operations["api_applications_boundedContexts_votes_list"];
+        put?: never;
+        /**
+         * Vote on a bounded context
+         * @description Cast or update your vote on an application bounded context. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_applications_boundedContexts_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/bounded-contexts/{bounded_context_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List bounded context complexity estimates
+         * @description List the complexity estimates on an application bounded context, oldest first. Any member may read.
+         */
+        get: operations["api_applications_boundedContexts_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a bounded context
+         * @description Give or update your complexity estimate on an application bounded context. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_applications_boundedContexts_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -3316,6 +3520,26 @@ export interface paths {
          * @description List the components of the account across every application, most recent first. Filter by status and/or type (repeat the query param for multiple values), restrict to given applications with `applicationIds`, sort by date/title/status/type, and page through results. Filter with `tagIds` (repeat the query param) to keep only the components carrying at least one of those tags. Each component carries its parent `applicationId` and `applicationTitle`. Any member may read.
          */
         get: operations["api_components_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/bounded-contexts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List bounded contexts
+         * @description List the bounded contexts of the account across every application, most recent first. Restrict to given applications with `applicationIds`, keep only the contexts holding at least one of given components with `componentIds`, sort by date/title, and page through results. Each context carries its parent `applicationId` and `applicationTitle`. Any member may read.
+         */
+        get: operations["api_boundedContexts_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6767,6 +6991,184 @@ export interface components {
             token: string;
         };
         /**
+         * ApplicationBoundedContextCreateForm
+         * @description Create a bounded context, owned by the caller.
+         */
+        ApplicationBoundedContextCreateForm: {
+            /** Title */
+            title: string;
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document).
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Applicationcomponentids
+             * @description Components inside the boundary. Each must belong to the same application.
+             */
+            applicationComponentIds?: string[];
+        };
+        /**
+         * ApplicationBoundedContextItem
+         * @description A bounded context of an application.
+         */
+        ApplicationBoundedContextItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
+            /** Applicationcomponentids */
+            applicationComponentIds: string[];
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Title */
+            title: string;
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+        };
+        /**
+         * ApplicationBoundedContextListItem
+         * @description A bounded context in the account-wide listing, carrying its application.
+         *
+         *     `applicationTitle` is null when the parent application has since been removed.
+         */
+        ApplicationBoundedContextListItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
+            /** Applicationcomponentids */
+            applicationComponentIds: string[];
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Title */
+            title: string;
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /** Applicationtitle */
+            applicationTitle?: string | null;
+        };
+        /**
+         * ApplicationBoundedContextPatchForm
+         * @description Partial update of a bounded context — only the keys sent are applied.
+         */
+        ApplicationBoundedContextPatchForm: {
+            /** Title */
+            title?: string | null;
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document).
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Applicationcomponentids
+             * @description Components inside the boundary. Each must belong to the same application.
+             */
+            applicationComponentIds?: string[] | null;
+        };
+        /**
+         * ApplicationBoundedContextSortField
+         * @description Sortable columns for the bounded-context listings.
+         * @enum {string}
+         */
+        ApplicationBoundedContextSortField: "date" | "title";
+        /**
          * ApplicationComponentCreateForm
          * @description Create a component. It starts as a draft owned by the caller.
          */
@@ -8147,6 +8549,14 @@ export interface components {
              */
             items: components["schemas"]["AccountCreateForm"][];
         };
+        /** BulkCreateRequest[ApplicationBoundedContextCreateForm] */
+        BulkCreateRequest_ApplicationBoundedContextCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationBoundedContextCreateForm"][];
+        };
         /** BulkCreateRequest[ApplicationComponentCreateForm] */
         BulkCreateRequest_ApplicationComponentCreateForm_: {
             /**
@@ -8423,6 +8833,15 @@ export interface components {
         BulkCreateResponse_AccountItem_: {
             /** Results */
             results: components["schemas"]["BulkItemResult_AccountItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationBoundedContextItem] */
+        BulkCreateResponse_ApplicationBoundedContextItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationBoundedContextItem_"][];
             /** Created */
             created: number;
             /** Failed */
@@ -8752,6 +9171,18 @@ export interface components {
              */
             status: "created" | "error";
             item?: components["schemas"]["AccountItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationBoundedContextItem] */
+        BulkItemResult_ApplicationBoundedContextItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationBoundedContextItem"] | null;
             error?: components["schemas"]["BulkItemError"] | null;
         };
         /** BulkItemResult[ApplicationComponentDatabaseTableItem] */
@@ -10651,7 +11082,7 @@ export interface components {
          *     (`entity_type`).
          * @enum {string}
          */
-        EntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component";
+        EntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component" | "application_bounded_context";
         /**
          * ErrorResponse
          * @description A business error: a single human-readable message.
@@ -10993,6 +11424,10 @@ export interface components {
         /** ItemResponse[ActionTypeItem] */
         ItemResponse_ActionTypeItem_: {
             item: components["schemas"]["ActionTypeItem"];
+        };
+        /** ItemResponse[ApplicationBoundedContextItem] */
+        ItemResponse_ApplicationBoundedContextItem_: {
+            item: components["schemas"]["ApplicationBoundedContextItem"];
         };
         /** ItemResponse[ApplicationComponentDatabaseTableItem] */
         ItemResponse_ApplicationComponentDatabaseTableItem_: {
@@ -11951,6 +12386,26 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["ActionTypeItem"][];
+        };
+        /** ListingResponse[ApplicationBoundedContextItem] */
+        ListingResponse_ApplicationBoundedContextItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationBoundedContextItem"][];
+        };
+        /** ListingResponse[ApplicationBoundedContextListItem] */
+        ListingResponse_ApplicationBoundedContextListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationBoundedContextListItem"][];
         };
         /** ListingResponse[ApplicationComponentDatabaseTableItem] */
         ListingResponse_ApplicationComponentDatabaseTableItem_: {
@@ -13072,7 +13527,7 @@ export interface components {
          *     type (`search_entity_type`).
          * @enum {string}
          */
-        SearchEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component" | "comment";
+        SearchEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component" | "application_bounded_context" | "comment";
         /**
          * SearchResultItem
          * @description One ranked search hit.
@@ -20878,6 +21333,753 @@ export interface operations {
             };
         };
     };
+    api_applications_boundedContexts_list: {
+        parameters: {
+            query?: {
+                componentIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationBoundedContextCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationBoundedContextCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                bounded_context_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Bounded context is locked */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+                bounded_context_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationBoundedContextPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Bounded context is locked */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                bounded_context_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                bounded_context_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationBoundedContextItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application, bounded context or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_comments_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_comments_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_features_list: {
         parameters: {
             query?: {
@@ -26378,6 +27580,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListingResponse_ApplicationComponentListItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_boundedContexts_list: {
+        parameters: {
+            query?: {
+                applicationIds?: string[] | null;
+                componentIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+                sortBy?: components["schemas"]["ApplicationBoundedContextSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationBoundedContextListItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
