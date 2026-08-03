@@ -71,7 +71,7 @@ export interface paths {
         head?: never;
         /**
          * Update an account
-         * @description Partially update a workspace (name, language, time zone). Owners and administrators only.
+         * @description Partially update a workspace (name, language, time zone, and the estimation scales used for technical and product complexity). Owners and administrators only.
          */
         patch: operations["api_accounts_update"];
         trace?: never;
@@ -1504,6 +1504,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List application complexity estimates
+         * @description List the complexity estimates on an application, oldest first. Any member may read.
+         */
+        get: operations["api_applications_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of an application
+         * @description Give or update your complexity estimate on an application. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_applications_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List route complexity estimates
+         * @description List the complexity estimates on a application route, oldest first. Any member may read.
+         */
+        get: operations["api_applications_routes_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a route
+         * @description Give or update your complexity estimate on a application route. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_applications_routes_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -1844,6 +1892,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature complexity estimates
+         * @description List the complexity estimates on a feature, oldest first. Any member may read.
+         */
+        get: operations["api_features_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a feature
+         * @description Give or update your complexity estimate on a feature. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
+         */
+        post: operations["api_features_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/personas": {
         parameters: {
             query?: never;
@@ -2018,6 +2090,30 @@ export interface paths {
          * @description Cast or update your vote on a persona. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
          */
         post: operations["api_personas_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/personas/{persona_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List persona complexity estimates
+         * @description List the complexity estimates on a persona, oldest first. Any member may read.
+         */
+        get: operations["api_personas_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a persona
+         * @description Give or update your complexity estimate on a persona. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
+         */
+        post: operations["api_personas_complexities_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2834,6 +2930,78 @@ export interface paths {
          * @description Cast or update your vote on a scenario step. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
          */
         post: operations["api_journeys_scenarios_steps_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journey complexity estimates
+         * @description List the complexity estimates on a journey, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a journey
+         * @description Give or update your complexity estimate on a journey. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
+         */
+        post: operations["api_journeys_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List scenario complexity estimates
+         * @description List the complexity estimates on a journey scenario, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_scenarios_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a scenario
+         * @description Give or update your complexity estimate on a journey scenario. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
+         */
+        post: operations["api_journeys_scenarios_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List step complexity estimates
+         * @description List the complexity estimates on a scenario step, oldest first. Any member may read.
+         */
+        get: operations["api_journeys_scenarios_steps_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a step
+         * @description Give or update your complexity estimate on a scenario step. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
+         */
+        post: operations["api_journeys_scenarios_steps_complexities_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4210,6 +4378,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database complexity estimates
+         * @description List the complexity estimates on a database, oldest first. Any member may read.
+         */
+        get: operations["api_databases_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a database
+         * @description Give or update your complexity estimate on a database. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_databases_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List table complexity estimates
+         * @description List the complexity estimates on a database table, oldest first. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a table
+         * @description Give or update your complexity estimate on a database table. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_databases_versions_tables_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/columns/{database_table_column_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List column complexity estimates
+         * @description List the complexity estimates on a database column, oldest first. Any member may read.
+         */
+        get: operations["api_databases_versions_tables_columns_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a column
+         * @description Give or update your complexity estimate on a database column. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_databases_versions_tables_columns_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration complexity estimates
+         * @description List the complexity estimates on a database migration, oldest first. Any member may read.
+         */
+        get: operations["api_databases_migrations_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a migration
+         * @description Give or update your complexity estimate on a database migration. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_databases_migrations_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns/{database_migration_column_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List migration column complexity estimates
+         * @description List the complexity estimates on a migration column step, oldest first. Any member may read.
+         */
+        get: operations["api_databases_migrations_columns_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a migration column
+         * @description Give or update your complexity estimate on a migration column step. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_databases_migrations_columns_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services": {
         parameters: {
             query?: never;
@@ -4590,6 +4878,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/{service_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List service complexity estimates
+         * @description List the complexity estimates on a service, oldest first. Any member may read.
+         */
+        get: operations["api_services_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a service
+         * @description Give or update your complexity estimate on a service. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_services_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List service action complexity estimates
+         * @description List the complexity estimates on a service action, oldest first. Any member may read.
+         */
+        get: operations["api_services_actions_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a service action
+         * @description Give or update your complexity estimate on a service action. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_services_actions_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/tags": {
         parameters: {
             query?: never;
@@ -4792,6 +5128,50 @@ export interface paths {
          * @description Cast or update your vote on any entity of the account, given its `entityType` and `entityId`. A member holds at most one vote per entity, so voting again replaces it; the vote's role is taken from your voting role. Any member may vote. The mutualized counterpart of the per-entity `.../{entity}/votes` endpoints.
          */
         post: operations["api_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List complexity estimates
+         * @description List the complexity estimates of the account, most recent first. Filter by entity type, entity id, owner and/or mode (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the estimate's date, ISO-8601), and sort by date/value/mode. Each estimate carries its resolved `entity` — the estimated entity's type, id and label, with its containing entities in `parents` (null when the entity has since been deleted). Any member may read.
+         */
+        get: operations["api_complexities_list"];
+        put?: never;
+        /**
+         * Estimate an entity's complexity
+         * @description Give or update your complexity estimate on any entity of the account, given its `entityType` and `entityId`. A member holds at most one estimate per entity, so estimating again replaces it. The scale is not chosen by the client: it comes from the account's technical or product mode, picked by the entity's kind, and a value outside that scale is refused. Any member may estimate. The mutualized counterpart of the per-entity `.../{entity}/complexities` endpoints.
+         */
+        post: operations["api_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/complexities/scales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the account's complexity scales
+         * @description The two scales the account estimates on — technical (applications, routes, databases, services) and product (features, personas, journeys) — with the mode set on the account and the values it accepts, ascending. `null` is accepted on top of them and means "cannot estimate yet". Any member may read.
+         */
+        get: operations["api_complexities_scales_list"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -5852,9 +6232,11 @@ export interface components {
             name: string;
             /** Pictureprofile */
             pictureProfile?: string | null;
+            productComplexityMode: components["schemas"]["ComplexityMode"];
             status: components["schemas"]["AccountStatus"];
             /** Statusdate */
             statusDate?: string | null;
+            technicalComplexityMode: components["schemas"]["ComplexityMode"];
             /** Timezone */
             timeZone: string;
         };
@@ -5868,6 +6250,10 @@ export interface components {
             language?: components["schemas"]["Language"] | null;
             /** Timezone */
             timeZone?: string | null;
+            /** @description Estimation scale used for technical entities (applications, databases, services). */
+            technicalComplexityMode?: components["schemas"]["ComplexityMode"] | null;
+            /** @description Estimation scale used for product entities (features, personas, journeys). */
+            productComplexityMode?: components["schemas"]["ComplexityMode"] | null;
         };
         /**
          * AccountSortField
@@ -8251,6 +8637,160 @@ export interface components {
          */
         CommentStatus: "published" | "removed";
         /**
+         * ComplexityCastForm
+         * @description Estimate any entity through the account-wide endpoint.
+         *
+         *     Same value-only shape as the per-entity form, plus the polymorphic target
+         *     (`entityType` + `entityId`) — validated server-side against the account.
+         */
+        ComplexityCastForm: {
+            /**
+             * Value
+             * @description The estimate, on the account's scale for this kind of entity — Fibonacci (1, 2, 3, 5, 8, 13, 21, 34, 55, 89), modified Fibonacci (0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100), powers of two (1, 2, 4, 8, 16, 32) or linear (1 to 10). Send `null` for "cannot estimate yet". A value outside the account's scale is refused.
+             */
+            value?: number | string | null;
+            /** @description The kind of entity being estimated. */
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Entityid
+             * Format: uuid
+             * @description The id of the entity being estimated.
+             */
+            entityId: string;
+        };
+        /**
+         * ComplexityItem
+         * @description A member's complexity estimate on an account entity.
+         */
+        ComplexityItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** @description The scale the estimate was given on. */
+            mode: components["schemas"]["ComplexityMode"];
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /**
+             * Value
+             * @description The estimate; null means "cannot estimate yet".
+             */
+            value?: string | null;
+            /** @description Which of the account's two scales this entity is estimated on. */
+            readonly scope: components["schemas"]["ComplexityScope"];
+        };
+        /**
+         * ComplexityListItem
+         * @description An estimate enriched with its resolved entity.
+         *
+         *     `entity` is null when the target has been soft-deleted — the estimate still
+         *     exists, its entity no longer does.
+         */
+        ComplexityListItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** @description The scale the estimate was given on. */
+            mode: components["schemas"]["ComplexityMode"];
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /**
+             * Value
+             * @description The estimate; null means "cannot estimate yet".
+             */
+            value?: string | null;
+            entity?: components["schemas"]["EntityRef"] | null;
+            /** @description Which of the account's two scales this entity is estimated on. */
+            readonly scope: components["schemas"]["ComplexityScope"];
+        };
+        /**
+         * ComplexityMode
+         * @description The estimation scale a complexity is expressed on.
+         *
+         *     Set per account and per scope (`Account.technical_complexity_mode` /
+         *     `product_complexity_mode`), snapshotted onto each estimate so a stored value
+         *     stays readable after the account switches scale. The allowed values of each
+         *     scale live in `src/utils/complexity.py`.
+         * @enum {string}
+         */
+        ComplexityMode: "fibonacci" | "modified_fibonacci" | "powers_of_two" | "linear";
+        /**
+         * ComplexityScaleItem
+         * @description One of the account's two scales, and the values it accepts.
+         */
+        ComplexityScaleItem: {
+            mode: components["schemas"]["ComplexityMode"];
+            scope: components["schemas"]["ComplexityScope"];
+            /**
+             * Values
+             * @description Accepted values, ascending. `null` is accepted on top of them.
+             */
+            values: string[];
+        };
+        /**
+         * ComplexityScope
+         * @description Which of the account's two scales an entity is estimated on.
+         *
+         *     Technical entities (applications, routes, databases, services) are estimated
+         *     by the build side, product entities (features, personas, journeys) by the
+         *     product side — each with its own mode.
+         * @enum {string}
+         */
+        ComplexityScope: "technical" | "product";
+        /**
+         * ComplexitySortField
+         * @description Sortable columns for the complexities listing.
+         * @enum {string}
+         */
+        ComplexitySortField: "date" | "value" | "mode";
+        /**
+         * ComplexityUpsertForm
+         * @description Give (or update) the caller's complexity estimate on an entity.
+         *
+         *     Only the value is provided; the scale (`mode`) is snapshotted server-side
+         *     from the account's setting for the entity's scope.
+         */
+        ComplexityUpsertForm: {
+            /**
+             * Value
+             * @description The estimate, on the account's scale for this kind of entity — Fibonacci (1, 2, 3, 5, 8, 13, 21, 34, 55, 89), modified Fibonacci (0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100), powers of two (1, 2, 4, 8, 16, 32) or linear (1 to 10). Send `null` for "cannot estimate yet". A value outside the account's scale is refused.
+             */
+            value?: number | string | null;
+        };
+        /**
          * ConstraintType
          * @description Kind of a table constraint.
          * @enum {string}
@@ -9859,6 +10399,10 @@ export interface components {
         ItemResponse_CommentItem_: {
             item: components["schemas"]["CommentItem"];
         };
+        /** ItemResponse[ComplexityItem] */
+        ItemResponse_ComplexityItem_: {
+            item: components["schemas"]["ComplexityItem"];
+        };
         /** ItemResponse[DatabaseColumnTypeItem] */
         ItemResponse_DatabaseColumnTypeItem_: {
             item: components["schemas"]["DatabaseColumnTypeItem"];
@@ -10892,6 +11436,36 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["CommentListItem"][];
+        };
+        /** ListingResponse[ComplexityItem] */
+        ListingResponse_ComplexityItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ComplexityItem"][];
+        };
+        /** ListingResponse[ComplexityListItem] */
+        ListingResponse_ComplexityListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ComplexityListItem"][];
+        };
+        /** ListingResponse[ComplexityScaleItem] */
+        ListingResponse_ComplexityScaleItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ComplexityScaleItem"][];
         };
         /** ListingResponse[DatabaseColumnTypeItem] */
         ListingResponse_DatabaseColumnTypeItem_: {
@@ -18379,6 +18953,180 @@ export interface operations {
             };
         };
     };
+    api_applications_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_applications_routes_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_routes_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_features_list: {
         parameters: {
             query?: {
@@ -19650,6 +20398,92 @@ export interface operations {
             };
         };
     };
+    api_features_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_personas_list: {
         parameters: {
             query?: {
@@ -20280,6 +21114,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_personas_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };
@@ -23349,6 +24269,270 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };
@@ -28372,6 +29556,452 @@ export interface operations {
             };
         };
     };
+    api_databases_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_columns_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_services_list: {
         parameters: {
             query?: {
@@ -29727,6 +31357,180 @@ export interface operations {
             };
         };
     };
+    api_services_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_services_actions_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_actions_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_tags_list: {
         parameters: {
             query?: {
@@ -30481,6 +32285,139 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_complexities_list: {
+        parameters: {
+            query?: {
+                entityType?: components["schemas"]["EntityType"][] | null;
+                entityId?: string[] | null;
+                ownerId?: string[] | null;
+                mode?: components["schemas"]["ComplexityMode"][] | null;
+                lbound?: string | null;
+                ubound?: string | null;
+                sortBy?: components["schemas"]["ComplexitySortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityListItem_"];
+                };
+            };
+            /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityCastForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_complexities_scales_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityScaleItem_"];
                 };
             };
             /** @description Account or entity not found */
