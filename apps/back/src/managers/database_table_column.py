@@ -17,7 +17,7 @@ from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
 from src.managers.database_table_column_subfield import DatabaseTableColumnSubfieldManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_table import DatabaseTable
@@ -58,6 +58,7 @@ class DatabaseTableColumnManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[DatabaseTableColumn]:
         """Every enabled column of the table, ordered by rank then insertion.
@@ -69,6 +70,8 @@ class DatabaseTableColumnManager(BaseEntityManager):
             conditions.append(tag_overlap(DatabaseTableColumn, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(DatabaseTableColumn, EntityType.DATABASE_TABLE_COLUMN, user_id, my_vote))
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(DatabaseTableColumn, EntityType.DATABASE_TABLE_COLUMN, user_id, my_complexity))
         return list(
             self.session.exec(
                 select(DatabaseTableColumn).where(*conditions).order_by(DatabaseTableColumn.rank.asc(), DatabaseTableColumn.created_at.asc())

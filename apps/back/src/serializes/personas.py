@@ -8,12 +8,12 @@ import uuid
 from datetime import datetime
 
 from src.models.enum import PersonaStatus, PersonaType, VoteRole, VoteValue
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.users import OwnerItem
 from src.serializes.tags import TagItem
 
 
-class PersonaItem(TaggableItem, VotableItem):
+class PersonaItem(TaggableItem, VotableItem, EstimableItem):
     """A persona tracked inside an account."""
 
     comment_count: int = 0

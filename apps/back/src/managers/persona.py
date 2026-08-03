@@ -12,7 +12,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.personas import PersonaSortField
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.enum import EntityType, PersonaStatus, PersonaType
@@ -58,6 +58,7 @@ class PersonaManager(BaseEntityManager):
         types: list[PersonaType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: PersonaSortField = PersonaSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -74,6 +75,9 @@ class PersonaManager(BaseEntityManager):
             conditions.append(tag_overlap(Persona, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Persona, EntityType.PERSONA, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(Persona, EntityType.PERSONA, user_id, my_complexity))
 
         base = select(Persona).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

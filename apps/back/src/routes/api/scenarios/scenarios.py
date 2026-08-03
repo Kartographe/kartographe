@@ -13,7 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Query
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.journey_scenarios import JourneyScenarioSortField
 from src.models.enum import (
     EntityType,
@@ -63,6 +63,7 @@ def list_scenarios(
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     persona_ids: Annotated[list[uuid.UUID] | None, Query(alias="personasIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[JourneyScenarioSortField, Query(alias="sortBy")] = JourneyScenarioSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -76,6 +77,7 @@ def list_scenarios(
         tag_ids=tag_ids,
         persona_ids=persona_ids,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

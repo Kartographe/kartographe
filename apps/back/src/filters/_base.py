@@ -29,6 +29,21 @@ MyVoteFilter = Annotated[
 ]
 
 
+# Shared `myComplexity` listing filter: whether the caller has estimated the
+# entity. Binary on purpose — an estimate's number means nothing across scales,
+# and "cannot estimate" is itself an answer, so there is no value to match on.
+MyComplexityFilter = Annotated[
+    str | None,
+    Query(
+        alias="myComplexity",
+        pattern="^(estimated|none)$",
+        description=(
+            "Keep only entities the caller has estimated (`estimated`) or has not (`none`)."
+        ),
+    ),
+]
+
+
 class SortOrder(str, Enum):
     ASC = "asc"
     DESC = "desc"

@@ -18,7 +18,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.application_components import ApplicationComponentSortField
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application import Application
@@ -49,6 +49,7 @@ class ApplicationComponentManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[ApplicationComponent]:
         """Every enabled component of the application, most recent first.
@@ -65,6 +66,12 @@ class ApplicationComponentManager(BaseEntityManager):
             conditions.append(
                 my_vote_filter(
                     ApplicationComponent, EntityType.APPLICATION_COMPONENT, user_id, my_vote
+                )
+            )
+        if my_complexity and user_id:
+            conditions.append(
+                my_complexity_filter(
+                    ApplicationComponent, EntityType.APPLICATION_COMPONENT, user_id, my_complexity
                 )
             )
         return list(
@@ -84,6 +91,7 @@ class ApplicationComponentManager(BaseEntityManager):
         application_ids: list[uuid.UUID] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: ApplicationComponentSortField = ApplicationComponentSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -112,6 +120,13 @@ class ApplicationComponentManager(BaseEntityManager):
             conditions.append(
                 my_vote_filter(
                     ApplicationComponent, EntityType.APPLICATION_COMPONENT, user_id, my_vote
+                )
+            )
+
+        if my_complexity and user_id:
+            conditions.append(
+                my_complexity_filter(
+                    ApplicationComponent, EntityType.APPLICATION_COMPONENT, user_id, my_complexity
                 )
             )
 

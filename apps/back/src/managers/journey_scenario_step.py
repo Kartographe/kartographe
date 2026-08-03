@@ -18,7 +18,7 @@ from sqlalchemy import update
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager, validate_parameters
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.action_type import ActionType
 from src.models.enum import EntityType
@@ -37,6 +37,7 @@ class JourneyScenarioStepManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[JourneyScenarioStep]:
         """Every enabled step of the scenario, in insertion order.
@@ -48,6 +49,8 @@ class JourneyScenarioStepManager(BaseEntityManager):
             conditions.append(tag_overlap(JourneyScenarioStep, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(JourneyScenarioStep, EntityType.JOURNEY_SCENARIO_STEP, user_id, my_vote))
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(JourneyScenarioStep, EntityType.JOURNEY_SCENARIO_STEP, user_id, my_complexity))
         return list(
             self.session.exec(
                 select(JourneyScenarioStep).where(*conditions).order_by(JourneyScenarioStep.created_at.asc())

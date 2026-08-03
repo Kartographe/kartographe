@@ -14,7 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter
+from src.filters._base import MyComplexityFilter, MyVoteFilter
 from src.forms._bulk import BulkCreateRequest
 from src.forms.application_components import (
     ApplicationComponentCreateForm,
@@ -72,9 +72,10 @@ def list_components(
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
 ) -> ListingResponse[ApplicationComponentItem]:
     rows = manager.list_for_application(
-        application, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id
+        application, tag_ids=tag_ids, my_vote=my_vote, my_complexity=my_complexity, user_id=member.user_id
     )
     items = tags.enrich(
         EntityType.APPLICATION_COMPONENT,

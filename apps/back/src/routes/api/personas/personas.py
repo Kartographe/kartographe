@@ -13,7 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.personas import PersonaSortField
 from src.forms._bulk import BulkCreateRequest
 from src.forms.personas import PersonaCreateForm, PersonaPatchForm
@@ -71,6 +71,7 @@ def list_personas(
     type: Annotated[list[PersonaType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[PersonaSortField, Query(alias="sortBy")] = PersonaSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -82,6 +83,7 @@ def list_personas(
         types=type,
         tag_ids=tag_ids,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

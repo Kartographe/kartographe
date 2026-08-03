@@ -20,7 +20,7 @@ from src.filters._base import SortOrder
 from src.filters.application_bounded_contexts import ApplicationBoundedContextSortField
 from src.managers._base import BaseEntityManager
 from src.managers._arrays import uuid_array_overlap
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.models.account import Account
 from src.models.application import Application
 from src.models.application_bounded_context import ApplicationBoundedContext
@@ -42,6 +42,7 @@ class ApplicationBoundedContextManager(BaseEntityManager):
         *,
         component_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[ApplicationBoundedContext]:
         """Every enabled bounded context of the application, most recent first.
@@ -68,6 +69,15 @@ class ApplicationBoundedContextManager(BaseEntityManager):
                     my_vote,
                 )
             )
+        if my_complexity and user_id:
+            conditions.append(
+                my_complexity_filter(
+                    ApplicationBoundedContext,
+                    EntityType.APPLICATION_BOUNDED_CONTEXT,
+                    user_id,
+                    my_complexity,
+                )
+            )
         return list(
             self.session.exec(
                 select(ApplicationBoundedContext)
@@ -83,6 +93,7 @@ class ApplicationBoundedContextManager(BaseEntityManager):
         application_ids: list[uuid.UUID] | None = None,
         component_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: ApplicationBoundedContextSortField = ApplicationBoundedContextSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -114,6 +125,16 @@ class ApplicationBoundedContextManager(BaseEntityManager):
                     EntityType.APPLICATION_BOUNDED_CONTEXT,
                     user_id,
                     my_vote,
+                )
+            )
+
+        if my_complexity and user_id:
+            conditions.append(
+                my_complexity_filter(
+                    ApplicationBoundedContext,
+                    EntityType.APPLICATION_BOUNDED_CONTEXT,
+                    user_id,
+                    my_complexity,
                 )
             )
 

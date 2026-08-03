@@ -17,12 +17,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class ApplicationItem(TaggableItem, VotableItem):
+class ApplicationItem(TaggableItem, VotableItem, EstimableItem):
     """An application tracked inside an account."""
 
     comment_count: int = 0

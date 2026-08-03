@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.applications import ApplicationSortField
 from src.forms._bulk import BulkCreateRequest
 from src.forms.applications import ApplicationCreateForm, ApplicationPatchForm
@@ -66,6 +66,7 @@ def list_applications(
     type: Annotated[list[ApplicationType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[ApplicationSortField, Query(alias="sortBy")] = ApplicationSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -77,6 +78,7 @@ def list_applications(
         types=type,
         tag_ids=tag_ids,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

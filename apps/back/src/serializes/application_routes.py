@@ -22,7 +22,7 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
@@ -58,7 +58,7 @@ class ApplicationRoleItem(CamelBase):
     title: str
 
 
-class ApplicationRouteItem(TaggableItem, VotableItem):
+class ApplicationRouteItem(TaggableItem, VotableItem, EstimableItem):
     """An HTTP route exposed by an application."""
 
     accepted_format: list[str]

@@ -13,7 +13,7 @@ from src.filters._base import SortOrder
 from src.filters.journey_scenarios import JourneyScenarioSortField
 from src.managers._arrays import uuid_array_overlap
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.managers.persona import assert_personas_in_account
 from src.models.account import Account
@@ -52,6 +52,7 @@ class JourneyScenarioManager(BaseEntityManager):
         tag_ids: list[uuid.UUID] | None = None,
         persona_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: JourneyScenarioSortField = JourneyScenarioSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -80,6 +81,9 @@ class JourneyScenarioManager(BaseEntityManager):
             conditions.append(uuid_array_overlap(JourneyScenario.personas_ids, persona_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_complexity))
 
         base = select(JourneyScenario).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()
@@ -111,6 +115,7 @@ class JourneyScenarioManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[JourneyScenario]:
         """Every enabled scenario of the journey, most recent first.
@@ -122,6 +127,8 @@ class JourneyScenarioManager(BaseEntityManager):
             conditions.append(tag_overlap(JourneyScenario, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_vote))
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(JourneyScenario, EntityType.JOURNEY_SCENARIO, user_id, my_complexity))
         return list(
             self.session.exec(
                 select(JourneyScenario).where(*conditions).order_by(JourneyScenario.date.desc())

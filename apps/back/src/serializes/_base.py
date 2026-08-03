@@ -18,7 +18,9 @@ from typing import Generic, TypeVar
 from pydantic import BaseModel, ConfigDict, computed_field
 from pydantic.alias_generators import to_camel
 
-from src.models.enum import VoteValue
+from decimal import Decimal
+
+from src.models.enum import ComplexityLevel, ComplexityMode, VoteValue
 
 T = TypeVar("T")
 
@@ -59,6 +61,35 @@ class VotableItem(CamelBase):
     """
 
     my_vote: VoteValue | None = None
+
+
+class ComplexityStatsItem(CamelBase):
+    """How an entity was estimated, summed up for a listing row."""
+
+    average: Decimal | None = None
+    count: int = 0
+    level: ComplexityLevel | None = None
+    median: Decimal | None = None
+    mode: ComplexityMode
+
+
+class MyComplexityItem(CamelBase):
+    """The caller's own estimate. Present means they answered — `value` may
+    still be null, which is the explicit "cannot estimate yet" answer."""
+
+    value: Decimal | None = None
+
+
+class EstimableItem(CamelBase):
+    """Base for estimable items — carries the entity's complexity summary.
+
+    `complexity` is null when nobody estimated; `my_complexity` is null when the
+    caller has not, or when it isn't resolved (single-entity reads don't fill
+    it — the entity's Complexity tab shows it there).
+    """
+
+    complexity: ComplexityStatsItem | None = None
+    my_complexity: MyComplexityItem | None = None
 
 
 class ItemResponse(CamelBase, Generic[T]):

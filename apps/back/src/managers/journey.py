@@ -13,7 +13,7 @@ from src.filters._base import SortOrder
 from src.filters.journeys import JourneySortField
 from src.managers._arrays import uuid_array_overlap
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.persona import assert_personas_in_account
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
@@ -46,6 +46,7 @@ class JourneyManager(BaseEntityManager):
         tag_ids: list[uuid.UUID] | None = None,
         persona_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: JourneySortField = JourneySortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -68,6 +69,9 @@ class JourneyManager(BaseEntityManager):
             conditions.append(uuid_array_overlap(Journey.personas_ids, persona_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Journey, EntityType.JOURNEY, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(Journey, EntityType.JOURNEY, user_id, my_complexity))
 
         base = select(Journey).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

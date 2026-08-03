@@ -25,12 +25,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class DatabaseItem(TaggableItem, VotableItem):
+class DatabaseItem(TaggableItem, VotableItem, EstimableItem):
     """A database tracked inside an account."""
 
     comment_count: int = 0
@@ -76,7 +76,7 @@ class DatabaseTableColumnSubfieldItem(CamelBase):
     rank: int
 
 
-class DatabaseTableColumnItem(TaggableItem, VotableItem):
+class DatabaseTableColumnItem(TaggableItem, VotableItem, EstimableItem):
     """A column of a database table."""
 
     color: str | None = None
@@ -108,7 +108,7 @@ class DatabaseTableColumnItem(TaggableItem, VotableItem):
     unique: bool
 
 
-class DatabaseTableItem(TaggableItem, VotableItem):
+class DatabaseTableItem(TaggableItem, VotableItem, EstimableItem):
     """A table within a database version.
 
     `columns` is resolved by the manager on every table read (listing included)
@@ -170,7 +170,7 @@ class DatabaseTableConstraintItem(CamelBase):
     type: ConstraintType
 
 
-class DatabaseMigrationItem(VotableItem):
+class DatabaseMigrationItem(VotableItem, EstimableItem):
     """A planned move from a version of one database to a version of another."""
 
     comment_count: int = 0
@@ -193,7 +193,7 @@ class DatabaseMigrationItem(VotableItem):
     type: DatabaseMigrationType
 
 
-class DatabaseMigrationColumnItem(VotableItem):
+class DatabaseMigrationColumnItem(VotableItem, EstimableItem):
     """One column-level step of a migration.
 
     A creation only carries destination endpoints, a deletion only source ones,

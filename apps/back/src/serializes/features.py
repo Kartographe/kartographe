@@ -15,12 +15,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class FeatureItem(TaggableItem, VotableItem):
+class FeatureItem(TaggableItem, VotableItem, EstimableItem):
     """A feature tracked at the account level."""
 
     comment_count: int = 0

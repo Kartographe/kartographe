@@ -14,7 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Query
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.application_components import ApplicationComponentSortField
 from src.models.enum import (
     ApplicationComponentStatus,
@@ -62,6 +62,7 @@ def list_components(
     application_ids: Annotated[list[uuid.UUID] | None, Query(alias="applicationIds")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[
         ApplicationComponentSortField, Query(alias="sortBy")
     ] = ApplicationComponentSortField.DATE,
@@ -76,6 +77,7 @@ def list_components(
         application_ids=application_ids,
         tag_ids=tag_ids,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

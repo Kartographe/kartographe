@@ -17,7 +17,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.models.database import Database
 from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
@@ -32,6 +32,7 @@ class DatabaseMigrationManager(BaseEntityManager):
         database: Database,
         *,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[DatabaseMigration]:
         """Every enabled migration leaving this database, most recent first."""
@@ -42,6 +43,10 @@ class DatabaseMigrationManager(BaseEntityManager):
         if my_vote and user_id:
             query = query.where(
                 my_vote_filter(DatabaseMigration, EntityType.DATABASE_MIGRATION, user_id, my_vote)
+            )
+        if my_complexity and user_id:
+            query = query.where(
+                my_complexity_filter(DatabaseMigration, EntityType.DATABASE_MIGRATION, user_id, my_complexity)
             )
         return list(
             self.session.exec(query.order_by(DatabaseMigration.date.desc())).all()

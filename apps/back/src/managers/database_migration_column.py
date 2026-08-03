@@ -16,7 +16,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.models.database_migration import DatabaseMigration
 from src.models.database_migration_column import DatabaseMigrationColumn
 from src.models.database_table import DatabaseTable
@@ -33,6 +33,7 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
         migration: DatabaseMigration,
         *,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[DatabaseMigrationColumn]:
         """Every enabled column step of the migration, in insertion order."""
@@ -44,6 +45,12 @@ class DatabaseMigrationColumnManager(BaseEntityManager):
             query = query.where(
                 my_vote_filter(
                     DatabaseMigrationColumn, EntityType.DATABASE_MIGRATION_COLUMN, user_id, my_vote
+                )
+            )
+        if my_complexity and user_id:
+            query = query.where(
+                my_complexity_filter(
+                    DatabaseMigrationColumn, EntityType.DATABASE_MIGRATION_COLUMN, user_id, my_complexity
                 )
             )
         return list(

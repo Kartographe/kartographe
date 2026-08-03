@@ -15,7 +15,7 @@ from sqlmodel import col, select
 
 from src.managers._base import BaseEntityManager
 from src.managers.database_table_column import DatabaseTableColumnManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tag import TagManager
 from src.managers.tagging import tag_overlap
 from src.models.database_table import DatabaseTable
@@ -68,6 +68,7 @@ class DatabaseTableManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[DatabaseTable]:
         """Every enabled table of the version, most recent first.
@@ -79,6 +80,8 @@ class DatabaseTableManager(BaseEntityManager):
             conditions.append(tag_overlap(DatabaseTable, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(DatabaseTable, EntityType.DATABASE_TABLE, user_id, my_vote))
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(DatabaseTable, EntityType.DATABASE_TABLE, user_id, my_complexity))
         return list(
             self.session.exec(
                 select(DatabaseTable).where(*conditions).order_by(DatabaseTable.date.desc())

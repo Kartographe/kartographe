@@ -13,7 +13,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.services import ServiceSortField
 from src.forms._bulk import BulkCreateRequest
 from src.forms.services import ServiceCreateForm, ServicePatchForm
@@ -72,6 +72,7 @@ def list_services(
     type: Annotated[list[ServiceType] | None, Query(alias="type")] = None,
     category: Annotated[list[ServiceCategory] | None, Query(alias="category")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[ServiceSortField, Query(alias="sortBy")] = ServiceSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -83,6 +84,7 @@ def list_services(
         types=type,
         categories=category,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

@@ -9,7 +9,7 @@ import uuid
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.models.enum import EntityType, ServiceActionMethod, ServiceActionStatus, ServiceActionType
 from src.models.service import Service
 from src.models.service_action import ServiceAction
@@ -23,6 +23,7 @@ class ServiceActionManager(BaseEntityManager):
         service: Service,
         *,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[ServiceAction]:
         """Every enabled action of the service, most recent first."""
@@ -33,6 +34,10 @@ class ServiceActionManager(BaseEntityManager):
         if my_vote and user_id:
             query = query.where(
                 my_vote_filter(ServiceAction, EntityType.SERVICE_ACTION, user_id, my_vote)
+            )
+        if my_complexity and user_id:
+            query = query.where(
+                my_complexity_filter(ServiceAction, EntityType.SERVICE_ACTION, user_id, my_complexity)
             )
         return list(
             self.session.exec(query.order_by(ServiceAction.date.desc())).all()

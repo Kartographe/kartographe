@@ -8,11 +8,11 @@ import uuid
 from datetime import datetime
 
 from src.models.enum import VoteRole, VoteValue
-from src.serializes._base import VotableItem
+from src.serializes._base import EstimableItem, VotableItem
 from src.serializes.users import OwnerItem
 
 
-class ApplicationBoundedContextItem(VotableItem):
+class ApplicationBoundedContextItem(VotableItem, EstimableItem):
     """A bounded context of an application."""
 
     application_component_ids: list[uuid.UUID]

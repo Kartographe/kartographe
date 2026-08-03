@@ -17,11 +17,11 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, VotableItem
 from src.serializes.users import OwnerItem
 
 
-class ServiceItem(VotableItem):
+class ServiceItem(VotableItem, EstimableItem):
     """A service tracked inside an account."""
 
     comment_count: int = 0
@@ -47,7 +47,7 @@ class ServiceItem(VotableItem):
     url: str | None = None
 
 
-class ServiceActionItem(VotableItem):
+class ServiceActionItem(VotableItem, EstimableItem):
     """An action exposed by a service."""
 
     comment_count: int = 0

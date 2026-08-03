@@ -12,7 +12,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.services import ServiceSortField
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.files import FileManager
 from src.models.account import Account
 from src.models.enum import EntityType, ServiceCategory, ServiceStatus, ServiceType
@@ -57,6 +57,7 @@ class ServiceManager(BaseEntityManager):
         types: list[ServiceType] | None = None,
         categories: list[ServiceCategory] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: ServiceSortField = ServiceSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -73,6 +74,9 @@ class ServiceManager(BaseEntityManager):
             conditions.append(Service.category.in_(categories))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Service, EntityType.SERVICE, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(Service, EntityType.SERVICE, user_id, my_complexity))
 
         base = select(Service).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

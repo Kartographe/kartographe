@@ -14,12 +14,18 @@ from decimal import Decimal
 
 import pytest
 
-from src.models.enum import ComplexityMode, ComplexityScope, EntityType
+from src.models.enum import (
+    ComplexityLevel,
+    ComplexityMode,
+    ComplexityScope,
+    EntityType,
+)
 from src.utils.complexity import (
     COMPLEXITY_SCALES,
     COMPLEXITY_SCOPES,
     allowed_values,
     is_allowed,
+    level_for,
     scope_for,
 )
 
@@ -73,3 +79,27 @@ def test_scope_split():
     assert scope_for(EntityType.FEATURE) == ComplexityScope.PRODUCT
     assert scope_for(EntityType.PERSONA) == ComplexityScope.PRODUCT
     assert scope_for(EntityType.JOURNEY_SCENARIO_STEP) == ComplexityScope.PRODUCT
+
+
+@pytest.mark.parametrize(
+    ("mode", "value", "expected"),
+    [
+        # The weight comes from the position in the scale, not from the number:
+        # a 13 on Fibonacci and an 8 on powers of two read the same.
+        (ComplexityMode.FIBONACCI, Decimal(1), ComplexityLevel.NONE),
+        (ComplexityMode.FIBONACCI, Decimal(8), ComplexityLevel.MEDIUM),
+        (ComplexityMode.FIBONACCI, Decimal(89), ComplexityLevel.EXTREME),
+        (ComplexityMode.POWERS_OF_TWO, Decimal(8), ComplexityLevel.MEDIUM),
+        (ComplexityMode.POWERS_OF_TWO, Decimal(32), ComplexityLevel.EXTREME),
+        (ComplexityMode.LINEAR, Decimal(1), ComplexityLevel.NONE),
+        (ComplexityMode.LINEAR, Decimal(10), ComplexityLevel.EXTREME),
+        (ComplexityMode.MODIFIED_FIBONACCI, Decimal("0.5"), ComplexityLevel.NONE),
+        # An average lands between two cards — it takes the nearest one.
+        (ComplexityMode.FIBONACCI, Decimal("7.5"), ComplexityLevel.MEDIUM),
+        (ComplexityMode.FIBONACCI, Decimal("120"), ComplexityLevel.EXTREME),
+        # "Cannot estimate yet" is not a weight.
+        (ComplexityMode.FIBONACCI, None, None),
+    ],
+)
+def test_level_for(mode, value, expected):
+    assert level_for(mode, value) is expected

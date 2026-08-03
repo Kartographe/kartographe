@@ -11,7 +11,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.features import FeatureSortField
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application_feature import ApplicationFeature
@@ -37,7 +37,9 @@ class FeatureManager(BaseEntityManager):
         statuses: list[FeatureStatus] | None = None,
         types: list[FeatureType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
+        query: str | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: FeatureSortField = FeatureSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -52,8 +54,17 @@ class FeatureManager(BaseEntityManager):
             conditions.append(Feature.type.in_(types))
         if tag_ids:
             conditions.append(tag_overlap(Feature, tag_ids))
+        if query and (needle := query.strip()):
+            # Deliberately a title match, not the full-text index: this serves
+            # the pickers, where the user types the name they already know and
+            # expects the list to narrow as they type — including on a prefix
+            # the stemmer would not match.
+            conditions.append(Feature.title.ilike(f"%{needle}%"))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Feature, EntityType.FEATURE, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(Feature, EntityType.FEATURE, user_id, my_complexity))
 
         base = select(Feature).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

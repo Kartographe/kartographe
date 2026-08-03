@@ -4,7 +4,7 @@
 
 """Enrich serialized entity items with their polymorphic aggregate counts.
 
-Comments and votes attach to an entity by (`entity_type`, `entity_id`) rather
+Comments, votes and complexity estimates attach to an entity by (`entity_type`, `entity_id`) rather
 than a foreign key, so an entity's "how many comments / votes" is a grouped
 count over those tables. `enrich_items` computes them for a whole page in a
 fixed number of queries (no N+1) and writes them onto the already-serialized
@@ -17,12 +17,17 @@ serializers having to agree on a shared base.
 
 import uuid
 from collections.abc import Sequence
+from decimal import Decimal
+from statistics import fmean, median
 
 from sqlmodel import Session, func, select
 
 from src.models.comment import Comment
-from src.models.enum import EntityType, VoteRole, VoteValue
+from src.models.complexity import Complexity
+from src.models.enum import ComplexityMode, EntityType, VoteRole, VoteValue
 from src.models.vote import Vote
+from src.serializes._base import ComplexityStatsItem, MyComplexityItem
+from src.utils.complexity import level_for
 
 # Per-entity vote tallies: {value: n} and {role: {value: n}}.
 VotesByValue = dict[VoteValue, int]
@@ -97,6 +102,79 @@ def my_votes(
     return {entity_id: value for entity_id, value in rows}
 
 
+def complexity_stats(
+    session: Session, entity_type: EntityType, entity_ids: Sequence[uuid.UUID]
+) -> dict[uuid.UUID, dict]:
+    """Per-entity estimate summary: participants, average, median and weight.
+
+    One query for the page, aggregated in Python rather than in SQL — the median
+    is not portable across engines, and a page holds a handful of estimates per
+    entity at most.
+
+    `count` counts every member who answered, including those who answered "I
+    cannot estimate" (a null value); the average and the median are computed on
+    the numbers alone, and are null when nobody put one down. The `mode` kept is
+    the most recent one seen, so an account that switched scales reports the
+    weight on the scale it works with now.
+    """
+    if not entity_ids:
+        return {}
+    rows = session.exec(
+        select(
+            Complexity.entity_id,
+            Complexity.value,
+            Complexity.mode,
+            Complexity.date,
+        ).where(
+            Complexity.entity_type == entity_type,
+            Complexity.entity_id.in_(entity_ids),
+            Complexity.enabled.is_(True),
+        )
+    ).all()
+
+    grouped: dict[uuid.UUID, list[tuple[Decimal | None, ComplexityMode, object]]] = {}
+    for entity_id, value, mode, date in rows:
+        grouped.setdefault(entity_id, []).append((value, mode, date))
+
+    stats: dict[uuid.UUID, dict] = {}
+    for entity_id, entries in grouped.items():
+        values = [value for value, _, _ in entries if value is not None]
+        mode = max(entries, key=lambda entry: entry[2])[1]
+        average = Decimal(str(fmean(values))) if values else None
+        stats[entity_id] = {
+            "average": average,
+            "count": len(entries),
+            "level": level_for(mode, average),
+            "median": Decimal(str(median(values))) if values else None,
+            "mode": mode,
+        }
+    return stats
+
+
+def my_complexities(
+    session: Session,
+    entity_type: EntityType,
+    entity_ids: Sequence[uuid.UUID],
+    user_id: uuid.UUID,
+) -> dict[uuid.UUID, Decimal | None]:
+    """The caller's own live estimate per entity.
+
+    The value may legitimately be `None` ("cannot estimate yet"), so membership
+    in the map — not the value — is what says whether they answered.
+    """
+    if not entity_ids:
+        return {}
+    rows = session.exec(
+        select(Complexity.entity_id, Complexity.value).where(
+            Complexity.entity_type == entity_type,
+            Complexity.entity_id.in_(entity_ids),
+            Complexity.owner_id == user_id,
+            Complexity.enabled.is_(True),
+        )
+    ).all()
+    return {entity_id: value for entity_id, value in rows}
+
+
 def enrich_items(
     session: Session,
     entity_type: EntityType,
@@ -118,6 +196,10 @@ def enrich_items(
     comments = comment_counts(session, entity_type, entity_ids)
     votes_by_value, votes_by_role_value = vote_counts(session, entity_type, entity_ids)
     mine = my_votes(session, entity_type, entity_ids, user_id) if user_id else {}
+    complexities = complexity_stats(session, entity_type, entity_ids)
+    my_estimates = (
+        my_complexities(session, entity_type, entity_ids, user_id) if user_id else {}
+    )
 
     for item in items:
         fields = type(item).model_fields
@@ -129,12 +211,21 @@ def enrich_items(
             item.votes_counts_by_role_value = votes_by_role_value.get(item.id, {})
         if "my_vote" in fields:
             item.my_vote = mine.get(item.id)
+        if "complexity" in fields:
+            stats = complexities.get(item.id)
+            item.complexity = ComplexityStatsItem(**stats) if stats else None
+        if "my_complexity" in fields and item.id in my_estimates:
+            item.my_complexity = MyComplexityItem(value=my_estimates[item.id])
 
     return items
 
 
 # Sentinel for the "not voted by me" filter value.
 NOT_VOTED = "none"
+
+# Filter values for the caller's own estimate.
+NOT_ESTIMATED = "none"
+ESTIMATED = "estimated"
 
 
 def my_vote_filter(model: type, entity_type: EntityType, user_id: uuid.UUID, my_vote: str):
@@ -152,3 +243,23 @@ def my_vote_filter(model: type, entity_type: EntityType, user_id: uuid.UUID, my_
     if my_vote == NOT_VOTED:
         return model.id.not_in(voted)
     return model.id.in_(voted.where(Vote.value == my_vote))
+
+
+def my_complexity_filter(
+    model: type, entity_type: EntityType, user_id: uuid.UUID, my_complexity: str
+):
+    """A listing condition on whether the caller estimated the entity.
+
+    Unlike votes there is nothing to match on — an estimate's value carries no
+    meaning across scales, and "I cannot estimate" is itself an answer. So the
+    filter is binary: entities the caller has weighed in on (`ESTIMATED`), or
+    those they have not (`NOT_ESTIMATED`).
+    """
+    estimated = select(Complexity.entity_id).where(
+        Complexity.entity_type == entity_type,
+        Complexity.owner_id == user_id,
+        Complexity.enabled.is_(True),
+    )
+    if my_complexity == NOT_ESTIMATED:
+        return model.id.not_in(estimated)
+    return model.id.in_(estimated)

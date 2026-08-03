@@ -12,7 +12,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from src.filters._base import MyVoteFilter
+from src.filters._base import MyComplexityFilter, MyVoteFilter
 from src.forms._bulk import BulkCreateRequest
 from src.forms.services import ServiceActionCreateForm, ServiceActionPatchForm
 from src.models.account_user import AccountUser
@@ -60,12 +60,13 @@ def list_actions(
     service: CurrentServiceDep,
     manager: ServiceActionManagerDep,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
 ) -> ListingResponse[ServiceActionItem]:
     items = manager.enrich(
         EntityType.SERVICE_ACTION,
         [
             ServiceActionItem.model_validate(row)
-            for row in manager.list_for_service(service, my_vote=my_vote, user_id=member.user_id)
+            for row in manager.list_for_service(service, my_vote=my_vote, my_complexity=my_complexity, user_id=member.user_id)
         ],
         user_id=member.user_id,
     )

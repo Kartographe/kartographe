@@ -15,7 +15,7 @@ Pure data + lookups: no FastAPI, no session. Two things live here —
 
 from decimal import Decimal
 
-from src.models.enum import ComplexityMode, ComplexityScope, EntityType
+from src.models.enum import ComplexityLevel, ComplexityMode, ComplexityScope, EntityType
 
 # The values each scale accepts, ascending. `None` is always allowed on top of
 # these — it is the "cannot estimate yet" card, not a scale value.
@@ -81,3 +81,30 @@ def format_scale(mode: ComplexityMode) -> str:
     """The scale as a human-readable list, for error messages and docs."""
     values = ", ".join(format(value.normalize(), "f") for value in COMPLEXITY_SCALES[mode])
     return f"{values} or null"
+
+
+# The five weights a value can read as, in ascending order.
+_LEVELS = (
+    ComplexityLevel.NONE,
+    ComplexityLevel.LOW,
+    ComplexityLevel.MEDIUM,
+    ComplexityLevel.HIGH,
+    ComplexityLevel.EXTREME,
+)
+
+
+def level_for(mode: ComplexityMode, value: Decimal | None) -> ComplexityLevel | None:
+    """Where `value` sits on the scale, as one of five weights.
+
+    Scales have different lengths and wildly different top values (89 on
+    Fibonacci, 32 on powers of two), so the weight comes from the value's
+    *position* in its scale rather than from the number itself — the only
+    comparison that survives an account switching scales. A value between two
+    cards (an average, typically) takes the nearest one. `None` in, `None` out:
+    "cannot estimate yet" is not a weight.
+    """
+    if value is None:
+        return None
+    scale = COMPLEXITY_SCALES[mode]
+    nearest = min(range(len(scale)), key=lambda index: abs(scale[index] - value))
+    return _LEVELS[min(nearest * len(_LEVELS) // len(scale), len(_LEVELS) - 1)]

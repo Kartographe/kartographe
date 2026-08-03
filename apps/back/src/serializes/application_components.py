@@ -13,12 +13,12 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import CamelBase, TaggableItem, VotableItem
+from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
-class ApplicationComponentItem(TaggableItem, VotableItem):
+class ApplicationComponentItem(TaggableItem, VotableItem, EstimableItem):
     """A building block of an application."""
 
     application_id: uuid.UUID

@@ -664,6 +664,21 @@ class ComplexityMode(str, Enum):
     LINEAR = "linear"
 
 
+class ComplexityLevel(str, Enum):
+    """How heavy an estimate reads, whatever the scale it was given on.
+
+    Derived from where the value sits in the account's scale (`level_for` in
+    `src/utils/complexity.py`), so a 13 on Fibonacci and an 8 on powers of two
+    both read as the same weight to someone who does not know the scale.
+    """
+
+    NONE = "none"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    EXTREME = "extreme"
+
+
 class ComplexityScope(str, Enum):
     """Which of the account's two scales an entity is estimated on.
 

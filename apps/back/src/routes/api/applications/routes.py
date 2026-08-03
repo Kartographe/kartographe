@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter
+from src.filters._base import MyComplexityFilter, MyVoteFilter
 from src.forms._bulk import BulkCreateRequest
 from src.forms.application_routes import ApplicationRouteCreateForm, ApplicationRoutePatchForm
 from src.models.account_user import AccountUser
@@ -69,8 +69,9 @@ def list_routes(
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
 ) -> ListingResponse[ApplicationRouteItem]:
-    rows = manager.list_for_application(application, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+    rows = manager.list_for_application(application, tag_ids=tag_ids, my_vote=my_vote, my_complexity=my_complexity, user_id=member.user_id)
     items = tags.enrich(EntityType.APPLICATION_ROUTE, tags.attach(rows, ApplicationRouteItem), user_id=member.user_id)
     return ListingResponse.single_page(items)
 

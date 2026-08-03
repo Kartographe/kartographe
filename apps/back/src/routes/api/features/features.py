@@ -14,7 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.features import FeatureSortField
 from src.forms._bulk import BulkCreateRequest
 from src.forms.features import FeatureCreateForm, FeaturePatchForm
@@ -56,7 +56,8 @@ _CONTRIBUTOR = require_role(
     operation_id="api_features_list",
     summary="List features",
     description=(
-        "List the features of the account. Filter by status and/or type (repeat the query param "
+        "List the features of the account. Narrow by title with `q` (case-insensitive "
+        "contains), filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read. "
         "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
@@ -72,7 +73,12 @@ def list_features(
     feature_status: Annotated[list[FeatureStatus] | None, Query(alias="status")] = None,
     type: Annotated[list[FeatureType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+    q: Annotated[
+        str | None,
+        Query(description="Keep only features whose title contains this text (case-insensitive)."),
+    ] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[FeatureSortField, Query(alias="sortBy")] = FeatureSortField.DATE,
     sort_order: Annotated[SortOrder, Query(alias="sortOrder")] = SortOrder.DESC,
     page: Annotated[int, Query(ge=1)] = 1,
@@ -83,7 +89,9 @@ def list_features(
         statuses=feature_status,
         types=type,
         tag_ids=tag_ids,
+        query=q,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

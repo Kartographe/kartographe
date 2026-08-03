@@ -14,7 +14,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Query
 
-from src.filters._base import MyVoteFilter, PageLimit, SortOrder
+from src.filters._base import MyComplexityFilter, MyVoteFilter, PageLimit, SortOrder
 from src.filters.application_bounded_contexts import ApplicationBoundedContextSortField
 from src.models.enum import EntityType
 from src.serializes._base import ListingResponse
@@ -55,6 +55,7 @@ def list_bounded_contexts(
     application_ids: Annotated[list[uuid.UUID] | None, Query(alias="applicationIds")] = None,
     component_ids: Annotated[list[uuid.UUID] | None, Query(alias="componentIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[
         ApplicationBoundedContextSortField, Query(alias="sortBy")
     ] = ApplicationBoundedContextSortField.DATE,
@@ -67,6 +68,7 @@ def list_bounded_contexts(
         application_ids=application_ids,
         component_ids=component_ids,
         my_vote=my_vote,
+        my_complexity=my_complexity,
         user_id=member.user_id,
         sort_by=sort_by,
         sort_order=sort_order,

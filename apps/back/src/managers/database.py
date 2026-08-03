@@ -11,7 +11,7 @@ from sqlmodel import func, select
 from src.filters._base import SortOrder
 from src.filters.databases import DatabaseSortField
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.database import Database
@@ -39,6 +39,7 @@ class DatabaseManager(BaseEntityManager):
         types: list[DatabaseType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
         sort_by: DatabaseSortField = DatabaseSortField.DATE,
         sort_order: SortOrder = SortOrder.DESC,
@@ -55,6 +56,9 @@ class DatabaseManager(BaseEntityManager):
             conditions.append(tag_overlap(Database, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Database, EntityType.DATABASE, user_id, my_vote))
+
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(Database, EntityType.DATABASE, user_id, my_complexity))
 
         base = select(Database).where(*conditions)
         total = self.session.exec(select(func.count()).select_from(base.subquery())).one()

@@ -11,7 +11,7 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.managers._base import BaseEntityManager
-from src.managers.entity_counts import my_vote_filter
+from src.managers.entity_counts import my_complexity_filter, my_vote_filter
 from src.managers.tagging import tag_overlap
 from src.models.application import Application
 from src.models.application_guard import ApplicationGuard
@@ -34,6 +34,7 @@ class ApplicationRouteManager(BaseEntityManager):
         *,
         tag_ids: list[uuid.UUID] | None = None,
         my_vote: str | None = None,
+        my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
     ) -> list[ApplicationRoute]:
         """Every enabled route of the application, most recent first.
@@ -45,6 +46,8 @@ class ApplicationRouteManager(BaseEntityManager):
             conditions.append(tag_overlap(ApplicationRoute, tag_ids))
         if my_vote and user_id:
             conditions.append(my_vote_filter(ApplicationRoute, EntityType.APPLICATION_ROUTE, user_id, my_vote))
+        if my_complexity and user_id:
+            conditions.append(my_complexity_filter(ApplicationRoute, EntityType.APPLICATION_ROUTE, user_id, my_complexity))
         return list(
             self.session.exec(
                 select(ApplicationRoute).where(*conditions).order_by(ApplicationRoute.date.desc())

@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter
+from src.filters._base import MyComplexityFilter, MyVoteFilter
 from src.forms._bulk import BulkCreateRequest
 from src.forms.journeys import JourneyScenarioCreateForm, JourneyScenarioPatchForm
 from src.models.account_user import AccountUser
@@ -72,8 +72,9 @@ def list_scenarios(
     tags: TagManagerDep,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
 ) -> ListingResponse[JourneyScenarioItem]:
-    rows = manager.list_for_journey(journey, tag_ids=tag_ids, my_vote=my_vote, user_id=member.user_id)
+    rows = manager.list_for_journey(journey, tag_ids=tag_ids, my_vote=my_vote, my_complexity=my_complexity, user_id=member.user_id)
     items = tags.enrich(EntityType.JOURNEY_SCENARIO, tags.attach(rows, JourneyScenarioItem), user_id=member.user_id)
     return ListingResponse.single_page(items)
 

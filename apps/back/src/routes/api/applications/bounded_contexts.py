@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.filters._base import MyVoteFilter
+from src.filters._base import MyComplexityFilter, MyVoteFilter
 from src.forms._bulk import BulkCreateRequest
 from src.forms.application_bounded_contexts import (
     ApplicationBoundedContextCreateForm,
@@ -74,9 +74,10 @@ def list_bounded_contexts(
     manager: ApplicationBoundedContextManagerDep,
     component_ids: Annotated[list[uuid.UUID] | None, Query(alias="componentIds")] = None,
     my_vote: MyVoteFilter = None,
+    my_complexity: MyComplexityFilter = None,
 ) -> ListingResponse[ApplicationBoundedContextItem]:
     rows = manager.list_for_application(
-        application, component_ids=component_ids, my_vote=my_vote, user_id=member.user_id
+        application, component_ids=component_ids, my_vote=my_vote, my_complexity=my_complexity, user_id=member.user_id
     )
     items = [ApplicationBoundedContextItem.model_validate(row) for row in rows]
     manager.enrich(
