@@ -32,6 +32,26 @@ class FeatureJourneyManager(BaseEntityManager):
             ).all()
         )
 
+    def list_for_journey(self, journey: Journey) -> list[FeatureJourney]:
+        """Every enabled feature link of the journey, most recent first."""
+        return list(
+            self.session.exec(
+                select(FeatureJourney)
+                .where(
+                    FeatureJourney.journey_id == journey.id,
+                    FeatureJourney.enabled.is_(True),
+                )
+                .order_by(FeatureJourney.date.desc())
+            ).all()
+        )
+
+    def resolve_account_feature(self, account: Account, feature_id: uuid.UUID) -> Feature:
+        """Load the feature to attach, ensuring it belongs to the account."""
+        feature = self.session.get(Feature, feature_id)
+        if feature is None or not feature.enabled or feature.account_id != account.id:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "Feature not found in this account.")
+        return feature
+
     def resolve_account_journey(self, account: Account, journey_id: uuid.UUID) -> Journey:
         """Load the journey to attach, ensuring it belongs to the account."""
         journey = self.session.get(Journey, journey_id)

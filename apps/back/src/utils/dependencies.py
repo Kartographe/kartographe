@@ -1083,6 +1083,20 @@ def get_current_feature_journey(
 CurrentFeatureJourneyDep = Annotated[FeatureJourney, Depends(get_current_feature_journey)]
 
 
+def get_current_journey_feature(
+    feature_journey_id: uuid.UUID, journey: CurrentJourneyDep, session: SessionDep
+) -> FeatureJourney:
+    """The same link row as `get_current_feature_journey`, scoped from the
+    journey side of the pair."""
+    link = session.get(FeatureJourney, feature_journey_id)
+    if link is None or not link.enabled or link.journey_id != journey.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Journey feature not found.")
+    return link
+
+
+CurrentJourneyFeatureDep = Annotated[FeatureJourney, Depends(get_current_journey_feature)]
+
+
 def get_journey_scenario_step_route_manager(
     session: SessionDep,
 ) -> JourneyScenarioStepRouteManager:

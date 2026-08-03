@@ -134,6 +134,13 @@ class FeatureJourneyCreateForm(CamelBase):
     journey_id: uuid.UUID = Field(description="An existing journey of the same account.")
 
 
+class JourneyFeatureCreateForm(CamelBase):
+    """Link an existing account feature to a journey — the same link, seen from
+    the journey."""
+
+    feature_id: uuid.UUID = Field(description="An existing feature of the same account.")
+
+
 class JourneyScenarioStepRouteCreateForm(CamelBase):
     """Link a scenario step to an application route of the same account."""
 

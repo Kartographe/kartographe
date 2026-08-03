@@ -149,6 +149,16 @@ class FeatureJourneyItem(CamelBase):
     owner_id: uuid.UUID
 
 
+class JourneyFeatureItem(CamelBase):
+    """A feature linked to a journey — the same link row, seen from the journey."""
+
+    date: datetime
+    feature_id: uuid.UUID
+    id: uuid.UUID
+    owner: OwnerItem
+    owner_id: uuid.UUID
+
+
 class JourneyScenarioStepRouteItem(CamelBase):
     """An application route linked to a scenario step."""
 

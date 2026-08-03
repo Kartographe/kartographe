@@ -14,6 +14,7 @@ URL.
 from fastapi import APIRouter
 
 from src.routes.api.journeys.comments import router as comments_router
+from src.routes.api.journeys.features import router as features_router
 from src.routes.api.journeys.journeys import router as journeys_router
 from src.routes.api.journeys.scenario_comments import router as scenario_comments_router
 from src.routes.api.journeys.scenarios import router as scenarios_router
@@ -29,6 +30,7 @@ from src.routes.api.journeys.votes import router as votes_router
 router = APIRouter()
 router.include_router(journeys_router)
 router.include_router(scenarios_router)
+router.include_router(features_router)
 router.include_router(steps_router)
 router.include_router(step_files_router)
 router.include_router(step_assertions_router)

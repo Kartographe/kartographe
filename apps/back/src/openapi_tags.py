@@ -166,6 +166,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Create and manage user journeys (parcours) of an account.",
     },
     {
+        "name": "api.journeys.features",
+        "x-displayName": "Journeys › Features",
+        "description": "Features linked to a journey — the journey side of the feature ↔ journey pair.",
+    },
+    {
         "name": "api.journeys.scenarios",
         "x-displayName": "Journeys › Scenarios",
         "description": "Scenarios inside a journey.",
