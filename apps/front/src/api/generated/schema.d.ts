@@ -7208,6 +7208,10 @@ export interface components {
         /**
          * ApplicationComponentDatabaseTableItem
          * @description A link between a component and a database table.
+         *
+         *     The table's own coordinates ride along: a table is only reachable through
+         *     its database *and* version, so an id alone leaves a client unable to name
+         *     what it points at. Null when the table has since been deleted.
          */
         ApplicationComponentDatabaseTableItem: {
             /**
@@ -7220,11 +7224,17 @@ export interface components {
              * Format: uuid
              */
             applicationId: string;
+            /** Databaseid */
+            databaseId?: string | null;
             /**
              * Databasetableid
              * Format: uuid
              */
             databaseTableId: string;
+            /** Databasetablename */
+            databaseTableName?: string | null;
+            /** Databaseversionid */
+            databaseVersionId?: string | null;
             /**
              * Date
              * Format: date-time
