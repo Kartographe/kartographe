@@ -29,6 +29,7 @@ import { usePersonas } from "@/features/journeys/use-personas";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { votesColumn } from "@/features/votes/votes-column";
@@ -37,7 +38,6 @@ type Journey = components["schemas"]["JourneyItem"];
 type Status = components["schemas"]["JourneyStatus"];
 type Type = components["schemas"]["JourneyType"];
 type SortField = components["schemas"]["JourneySortField"];
-type SortOrder = components["schemas"]["SortOrder"];
 
 const LIST_KEY = ["get", "/v1/accounts/{account_id}/journeys"];
 
@@ -57,15 +57,18 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const personas = usePersonas(accountId);
 
   const [formOpen, setFormOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
-  const [sortBy, setSortBy] = useState<SortField>("date");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [personasIds, setPersonasIds] = useState<string[]>([]);
-  const [myVote, setMyVote] = useState<string | null>(null);
+
+  const view = useListView<Journey, SortField>(
+    accountId,
+    "journeys",
+    { filters: {}, limit: 25, page: 1, sortBy: "date", sortOrder: "desc" },
+    SORT_FIELD
+  );
+  const statuses = (view.filterValue("status") ?? []) as Status[];
+  const types = (view.filterValue("type") ?? []) as Type[];
+  const tagIds = view.filterValue("tags") ?? [];
+  const personasIds = view.filterValue("personasIds") ?? [];
+  const myVote = view.firstFilterValue("votes");
 
   const tagFilters = useTagFilters(accountId, "journey");
 
@@ -76,10 +79,10 @@ export function JourneysList({ accountId }: { accountId: string }) {
       params: {
         path: { account_id: accountId },
         query: {
-          page,
-          limit,
-          sortBy,
-          sortOrder,
+          page: view.page,
+          limit: view.limit,
+          sortBy: view.sortBy,
+          sortOrder: view.sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
@@ -87,7 +90,8 @@ export function JourneysList({ accountId }: { accountId: string }) {
           ...(myVote ? { myVote } : {}),
         },
       },
-    }
+    },
+    { enabled: view.ready }
   );
 
   const statusMutation = $api.useMutation(
@@ -126,11 +130,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
 
   const journeys = journeysQuery.data?.items ?? [];
   const total = journeysQuery.data?.count ?? 0;
-  const hasFilters =
-    statuses.length > 0 ||
-    types.length > 0 ||
-    tagIds.length > 0 ||
-    personasIds.length > 0;
+  const loading = !view.ready || journeysQuery.isLoading;
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -180,32 +180,6 @@ export function JourneysList({ accountId }: { accountId: string }) {
     invalidate();
   }
 
-  const antdOrder = (field: SortField): "ascend" | "descend" | null => {
-    if (sortBy !== field) {
-      return null;
-    }
-    return sortOrder === "asc" ? "ascend" : "descend";
-  };
-
-  const onChange: TableProps<Journey>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
-    setPage(pagination.current ?? 1);
-    setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
-    setStatuses((filters.status as Status[] | null) ?? []);
-    setTypes((filters.type as Type[] | null) ?? []);
-    setTagIds((filters.tags as string[] | null) ?? []);
-    setPersonasIds((filters.personasIds as string[] | null) ?? []);
-    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
-    const single = Array.isArray(sorter) ? sorter[0] : sorter;
-    if (single?.order && single.columnKey) {
-      setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
-      setSortOrder(single.order === "ascend" ? "asc" : "desc");
-    }
-  };
-
   const formModal = (
     <JourneyFormModal
       accountId={accountId}
@@ -221,7 +195,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "title",
       dataIndex: "title",
       sorter: true,
-      sortOrder: antdOrder("title"),
+      sortOrder: view.sortOrderFor("title"),
       // Wider than the shared default: with Personas now the flexible column,
       // Titre no longer grows with the viewport, so it needs the room upfront.
       width: TITLE_WIDTH,
@@ -242,13 +216,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "type",
       dataIndex: "type",
       sorter: true,
-      sortOrder: antdOrder("type"),
+      sortOrder: view.sortOrderFor("type"),
       width: COL.type,
       filters: dtoEnums.JourneyType.map((value) => ({
         text: t(JOURNEY_TYPE_LABELS[value]),
         value,
       })),
-      filteredValue: types.length ? types : null,
+      filteredValue: view.filterValue("type"),
       render: (type: Type, journey) => (
         <JourneyTypeTag
           loading={typeMutation.isPending}
@@ -264,13 +238,13 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "status",
       dataIndex: "status",
       sorter: true,
-      sortOrder: antdOrder("status"),
+      sortOrder: view.sortOrderFor("status"),
       width: COL.status,
       filters: dtoEnums.JourneyStatus.map((value) => ({
         text: t(JOURNEY_STATUS_LABELS[value]),
         value,
       })),
-      filteredValue: statuses.length ? statuses : null,
+      filteredValue: view.filterValue("status"),
       render: (status: Status, journey) => (
         <JourneyStatusTag
           loading={statusMutation.isPending}
@@ -289,7 +263,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "personasIds",
       dataIndex: "personasIds",
       filters: personas.filters,
-      filteredValue: personasIds.length ? personasIds : null,
+      filteredValue: view.filterValue("personasIds"),
       render: (_ids: string[], journey) => (
         <EditablePersonasCell
           accountId={accountId}
@@ -307,7 +281,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       dataIndex: "tags",
       width: COL.tags,
       filters: tagFilters,
-      filteredValue: tagIds.length ? tagIds : null,
+      filteredValue: view.filterValue("tags"),
       render: (tags: Journey["tags"], journey) => (
         <EditableTagsCell
           accountId={accountId}
@@ -326,7 +300,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
       key: "date",
       dataIndex: "date",
       sorter: true,
-      sortOrder: antdOrder("date"),
+      sortOrder: view.sortOrderFor("date"),
       width: COL.date,
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
@@ -370,7 +344,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
     },
   ];
 
-  if (total === 0 && !hasFilters && !journeysQuery.isLoading) {
+  if (total === 0 && !(view.hasFilters || loading)) {
     return (
       <Flex gap={16} vertical>
         <Typography.Title level={3} style={{ margin: 0 }}>
@@ -402,14 +376,14 @@ export function JourneysList({ accountId }: { accountId: string }) {
       <Table<Journey>
         columns={columns}
         dataSource={journeys}
-        loading={journeysQuery.isLoading}
-        onChange={onChange}
+        loading={loading}
+        onChange={view.onTableChange}
         pagination={{
-          current: page,
-          pageSize: limit,
+          current: view.page,
+          pageSize: view.limit,
           total,
           showSizeChanger: true,
-          pageSizeOptions: [10, 25, 50, 100],
+          pageSizeOptions: PAGE_SIZES,
         }}
         rowKey="id"
         scroll={scrollX(columns, COL.tags)}

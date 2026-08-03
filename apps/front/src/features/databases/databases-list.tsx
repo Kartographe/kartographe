@@ -41,6 +41,7 @@ import {
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { votesColumn } from "@/features/votes/votes-column";
@@ -49,7 +50,6 @@ type Database = components["schemas"]["DatabaseItem"];
 type Status = components["schemas"]["DatabaseStatus"];
 type Type = components["schemas"]["DatabaseType"];
 type SortField = components["schemas"]["DatabaseSortField"];
-type SortOrder = components["schemas"]["SortOrder"];
 
 const SORT_FIELD: Record<string, SortField> = {
   title: "title",
@@ -65,14 +65,16 @@ export function DatabasesList({ accountId }: { accountId: string }) {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Database | undefined>(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
-  const [sortBy, setSortBy] = useState<SortField>("date");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [myVote, setMyVote] = useState<string | null>(null);
+  const view = useListView<Database, SortField>(
+    accountId,
+    "databases",
+    { filters: {}, limit: 25, page: 1, sortBy: "date", sortOrder: "desc" },
+    SORT_FIELD
+  );
+  const statuses = (view.filterValue("status") ?? []) as Status[];
+  const types = (view.filterValue("type") ?? []) as Type[];
+  const tagIds = view.filterValue("tags") ?? [];
+  const myVote = view.firstFilterValue("votes");
 
   const tagFilters = useTagFilters(accountId, "database");
 
@@ -83,17 +85,18 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       params: {
         path: { account_id: accountId },
         query: {
-          page,
-          limit,
-          sortBy,
-          sortOrder,
+          page: view.page,
+          limit: view.limit,
+          sortBy: view.sortBy,
+          sortOrder: view.sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
         },
       },
-    }
+    },
+    { enabled: view.ready }
   );
 
   const statusMutation = $api.useMutation(
@@ -132,8 +135,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
 
   const databases = databasesQuery.data?.items ?? [];
   const total = databasesQuery.data?.count ?? 0;
-  const hasFilters =
-    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
+  const loading = !view.ready || databasesQuery.isLoading;
 
   function invalidate() {
     queryClient.invalidateQueries({
@@ -199,31 +201,6 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     });
   }
 
-  const antdOrder = (field: SortField): "ascend" | "descend" | null => {
-    if (sortBy !== field) {
-      return null;
-    }
-    return sortOrder === "asc" ? "ascend" : "descend";
-  };
-
-  const onChange: TableProps<Database>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
-    setPage(pagination.current ?? 1);
-    setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
-    setStatuses((filters.status as Status[] | null) ?? []);
-    setTypes((filters.type as Type[] | null) ?? []);
-    setTagIds((filters.tags as string[] | null) ?? []);
-    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
-    const single = Array.isArray(sorter) ? sorter[0] : sorter;
-    if (single?.order && single.columnKey) {
-      setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
-      setSortOrder(single.order === "ascend" ? "asc" : "desc");
-    }
-  };
-
   const formModal = (
     <DatabaseFormModal
       accountId={accountId}
@@ -240,7 +217,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "title",
       dataIndex: "title",
       sorter: true,
-      sortOrder: antdOrder("title"),
+      sortOrder: view.sortOrderFor("title"),
       width: COL.title,
       ellipsis: true,
       render: (title: string, database) => (
@@ -259,13 +236,13 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "type",
       dataIndex: "type",
       sorter: true,
-      sortOrder: antdOrder("type"),
+      sortOrder: view.sortOrderFor("type"),
       width: COL.type,
       filters: dtoEnums.DatabaseType.map((value) => ({
         text: t(DATABASE_TYPE_LABELS[value]),
         value,
       })),
-      filteredValue: types.length ? types : null,
+      filteredValue: view.filterValue("type"),
       render: (type: Type, database) => (
         <DatabaseTypeTag
           loading={typeMutation.isPending}
@@ -281,13 +258,13 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "status",
       dataIndex: "status",
       sorter: true,
-      sortOrder: antdOrder("status"),
+      sortOrder: view.sortOrderFor("status"),
       width: COL.status,
       filters: dtoEnums.DatabaseStatus.map((value) => ({
         text: t(DATABASE_STATUS_LABELS[value]),
         value,
       })),
-      filteredValue: statuses.length ? statuses : null,
+      filteredValue: view.filterValue("status"),
       render: (status: Status, database) => (
         <DatabaseStatusTag
           loading={statusMutation.isPending}
@@ -304,7 +281,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       dataIndex: "tags",
       width: COL.tags,
       filters: tagFilters,
-      filteredValue: tagIds.length ? tagIds : null,
+      filteredValue: view.filterValue("tags"),
       render: (tags: Database["tags"], database) => (
         <EditableTagsCell
           accountId={accountId}
@@ -323,7 +300,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       key: "date",
       dataIndex: "date",
       sorter: true,
-      sortOrder: antdOrder("date"),
+      sortOrder: view.sortOrderFor("date"),
       width: COL.date,
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
@@ -392,7 +369,7 @@ export function DatabasesList({ accountId }: { accountId: string }) {
     },
   ];
 
-  if (total === 0 && !hasFilters && !databasesQuery.isLoading) {
+  if (total === 0 && !(view.hasFilters || loading)) {
     return (
       <Flex gap={16} vertical>
         <Typography.Title level={3} style={{ margin: 0 }}>
@@ -422,14 +399,14 @@ export function DatabasesList({ accountId }: { accountId: string }) {
       <Table<Database>
         columns={columns}
         dataSource={databases}
-        loading={databasesQuery.isLoading}
-        onChange={onChange}
+        loading={loading}
+        onChange={view.onTableChange}
         pagination={{
-          current: page,
-          pageSize: limit,
+          current: view.page,
+          pageSize: view.limit,
           total,
           showSizeChanger: true,
-          pageSizeOptions: [10, 25, 50, 100],
+          pageSizeOptions: PAGE_SIZES,
         }}
         rowKey="id"
         scroll={scrollX(columns)}

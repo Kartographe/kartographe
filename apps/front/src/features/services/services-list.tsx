@@ -32,6 +32,7 @@ import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import {
   SERVICE_CATEGORY_LABELS,
   SERVICE_STATUS_LABELS,
@@ -50,7 +51,6 @@ type Status = components["schemas"]["ServiceStatus"];
 type Type = components["schemas"]["ServiceType"];
 type Category = components["schemas"]["ServiceCategory"];
 type SortField = components["schemas"]["ServiceSortField"];
-type SortOrder = components["schemas"]["SortOrder"];
 
 const SORT_FIELD: Record<string, SortField> = {
   title: "title",
@@ -67,14 +67,16 @@ export function ServicesList({ accountId }: { accountId: string }) {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Service | undefined>(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
-  const [sortBy, setSortBy] = useState<SortField>("date");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [myVote, setMyVote] = useState<string | null>(null);
+  const view = useListView<Service, SortField>(
+    accountId,
+    "services",
+    { filters: {}, limit: 25, page: 1, sortBy: "date", sortOrder: "desc" },
+    SORT_FIELD
+  );
+  const statuses = (view.filterValue("status") ?? []) as Status[];
+  const types = (view.filterValue("type") ?? []) as Type[];
+  const categories = (view.filterValue("category") ?? []) as Category[];
+  const myVote = view.firstFilterValue("votes");
 
   const servicesQuery = $api.useQuery(
     "get",
@@ -83,17 +85,18 @@ export function ServicesList({ accountId }: { accountId: string }) {
       params: {
         path: { account_id: accountId },
         query: {
-          page,
-          limit,
-          sortBy,
-          sortOrder,
+          page: view.page,
+          limit: view.limit,
+          sortBy: view.sortBy,
+          sortOrder: view.sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(categories.length ? { category: categories } : {}),
           ...(myVote ? { myVote } : {}),
         },
       },
-    }
+    },
+    { enabled: view.ready }
   );
 
   const statusMutation = $api.useMutation(
@@ -132,8 +135,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
 
   const services = servicesQuery.data?.items ?? [];
   const total = servicesQuery.data?.count ?? 0;
-  const hasFilters =
-    statuses.length > 0 || types.length > 0 || categories.length > 0;
+  const loading = !view.ready || servicesQuery.isLoading;
 
   function invalidate() {
     queryClient.invalidateQueries({
@@ -199,31 +201,6 @@ export function ServicesList({ accountId }: { accountId: string }) {
     });
   }
 
-  const antdOrder = (field: SortField): "ascend" | "descend" | null => {
-    if (sortBy !== field) {
-      return null;
-    }
-    return sortOrder === "asc" ? "ascend" : "descend";
-  };
-
-  const onChange: TableProps<Service>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
-    setPage(pagination.current ?? 1);
-    setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
-    setStatuses((filters.status as Status[] | null) ?? []);
-    setTypes((filters.type as Type[] | null) ?? []);
-    setCategories((filters.category as Category[] | null) ?? []);
-    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
-    const single = Array.isArray(sorter) ? sorter[0] : sorter;
-    if (single?.order && single.columnKey) {
-      setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
-      setSortOrder(single.order === "ascend" ? "asc" : "desc");
-    }
-  };
-
   const formModal = (
     <ServiceFormModal
       accountId={accountId}
@@ -240,7 +217,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "title",
       dataIndex: "title",
       sorter: true,
-      sortOrder: antdOrder("title"),
+      sortOrder: view.sortOrderFor("title"),
       width: COL.title,
       render: (title: string, service) => (
         <Flex vertical>
@@ -265,13 +242,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "type",
       dataIndex: "type",
       sorter: true,
-      sortOrder: antdOrder("type"),
+      sortOrder: view.sortOrderFor("type"),
       width: COL.type,
       filters: dtoEnums.ServiceType.map((value) => ({
         text: t(SERVICE_TYPE_LABELS[value]),
         value,
       })),
-      filteredValue: types.length ? types : null,
+      filteredValue: view.filterValue("type"),
       render: (type: Type, service) => (
         <ServiceTypeTag
           loading={typeMutation.isPending}
@@ -287,13 +264,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "category",
       dataIndex: "category",
       sorter: true,
-      sortOrder: antdOrder("category"),
+      sortOrder: view.sortOrderFor("category"),
       width: COL.type,
       filters: dtoEnums.ServiceCategory.map((value) => ({
         text: t(SERVICE_CATEGORY_LABELS[value]),
         value,
       })),
-      filteredValue: categories.length ? categories : null,
+      filteredValue: view.filterValue("category"),
       render: (category: Category, service) => (
         <ServiceCategoryTag
           category={category}
@@ -309,13 +286,13 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "status",
       dataIndex: "status",
       sorter: true,
-      sortOrder: antdOrder("status"),
+      sortOrder: view.sortOrderFor("status"),
       width: COL.status,
       filters: dtoEnums.ServiceStatus.map((value) => ({
         text: t(SERVICE_STATUS_LABELS[value]),
         value,
       })),
-      filteredValue: statuses.length ? statuses : null,
+      filteredValue: view.filterValue("status"),
       render: (status: Status, service) => (
         <ServiceStatusTag
           loading={statusMutation.isPending}
@@ -332,7 +309,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
       key: "date",
       dataIndex: "date",
       sorter: true,
-      sortOrder: antdOrder("date"),
+      sortOrder: view.sortOrderFor("date"),
       width: COL.date,
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
@@ -395,7 +372,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
     },
   ];
 
-  if (total === 0 && !hasFilters && !servicesQuery.isLoading) {
+  if (total === 0 && !(view.hasFilters || loading)) {
     return (
       <Flex gap={16} vertical>
         <Typography.Title level={3} style={{ margin: 0 }}>
@@ -425,14 +402,14 @@ export function ServicesList({ accountId }: { accountId: string }) {
       <Table<Service>
         columns={columns}
         dataSource={services}
-        loading={servicesQuery.isLoading}
-        onChange={onChange}
+        loading={loading}
+        onChange={view.onTableChange}
         pagination={{
-          current: page,
-          pageSize: limit,
+          current: view.page,
+          pageSize: view.limit,
           total,
           showSizeChanger: true,
-          pageSizeOptions: [10, 25, 50, 100],
+          pageSizeOptions: PAGE_SIZES,
         }}
         rowKey="id"
         scroll={scrollX(columns)}

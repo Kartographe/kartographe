@@ -41,6 +41,7 @@ import { CommentCountButton } from "@/features/comments/comment-count-button";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
+import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { votesColumn } from "@/features/votes/votes-column";
@@ -49,7 +50,6 @@ type Application = components["schemas"]["ApplicationItem"];
 type Status = components["schemas"]["ApplicationStatus"];
 type Type = components["schemas"]["ApplicationType"];
 type SortField = components["schemas"]["ApplicationSortField"];
-type SortOrder = components["schemas"]["SortOrder"];
 
 const SORT_FIELD: Record<string, SortField> = {
   title: "title",
@@ -65,14 +65,16 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Application | undefined>(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
-  const [sortBy, setSortBy] = useState<SortField>("date");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [myVote, setMyVote] = useState<string | null>(null);
+  const view = useListView<Application, SortField>(
+    accountId,
+    "applications",
+    { filters: {}, limit: 25, page: 1, sortBy: "date", sortOrder: "desc" },
+    SORT_FIELD
+  );
+  const statuses = (view.filterValue("status") ?? []) as Status[];
+  const types = (view.filterValue("type") ?? []) as Type[];
+  const tagIds = view.filterValue("tags") ?? [];
+  const myVote = view.firstFilterValue("votes");
 
   const tagFilters = useTagFilters(accountId, "application");
 
@@ -83,17 +85,18 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       params: {
         path: { account_id: accountId },
         query: {
-          page,
-          limit,
-          sortBy,
-          sortOrder,
+          page: view.page,
+          limit: view.limit,
+          sortBy: view.sortBy,
+          sortOrder: view.sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
         },
       },
-    }
+    },
+    { enabled: view.ready }
   );
 
   const statusMutation = $api.useMutation(
@@ -132,8 +135,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
 
   const applications = applicationsQuery.data?.items ?? [];
   const total = applicationsQuery.data?.count ?? 0;
-  const hasFilters =
-    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
+  const loading = !view.ready || applicationsQuery.isLoading;
 
   function invalidate() {
     queryClient.invalidateQueries({
@@ -209,31 +211,6 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     });
   }
 
-  const antdOrder = (field: SortField): "ascend" | "descend" | null => {
-    if (sortBy !== field) {
-      return null;
-    }
-    return sortOrder === "asc" ? "ascend" : "descend";
-  };
-
-  const onChange: TableProps<Application>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
-    setPage(pagination.current ?? 1);
-    setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
-    setStatuses((filters.status as Status[] | null) ?? []);
-    setTypes((filters.type as Type[] | null) ?? []);
-    setTagIds((filters.tags as string[] | null) ?? []);
-    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
-    const single = Array.isArray(sorter) ? sorter[0] : sorter;
-    if (single?.order && single.columnKey) {
-      setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
-      setSortOrder(single.order === "ascend" ? "asc" : "desc");
-    }
-  };
-
   const formModal = (
     <ApplicationFormModal
       accountId={accountId}
@@ -250,7 +227,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "title",
       dataIndex: "title",
       sorter: true,
-      sortOrder: antdOrder("title"),
+      sortOrder: view.sortOrderFor("title"),
       width: COL.title,
       render: (title: string, application) => (
         <Flex vertical>
@@ -275,13 +252,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "type",
       dataIndex: "type",
       sorter: true,
-      sortOrder: antdOrder("type"),
+      sortOrder: view.sortOrderFor("type"),
       width: COL.type,
       filters: dtoEnums.ApplicationType.map((value) => ({
         text: t(APPLICATION_TYPE_LABELS[value]),
         value,
       })),
-      filteredValue: types.length ? types : null,
+      filteredValue: view.filterValue("type"),
       render: (type: Type, application) => (
         <ApplicationTypeTag
           loading={typeMutation.isPending}
@@ -299,13 +276,13 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "status",
       dataIndex: "status",
       sorter: true,
-      sortOrder: antdOrder("status"),
+      sortOrder: view.sortOrderFor("status"),
       width: COL.status,
       filters: dtoEnums.ApplicationStatus.map((value) => ({
         text: t(APPLICATION_STATUS_LABELS[value]),
         value,
       })),
-      filteredValue: statuses.length ? statuses : null,
+      filteredValue: view.filterValue("status"),
       render: (status: Status, application) => (
         <ApplicationStatusTag
           loading={statusMutation.isPending}
@@ -324,7 +301,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       dataIndex: "tags",
       width: COL.tags,
       filters: tagFilters,
-      filteredValue: tagIds.length ? tagIds : null,
+      filteredValue: view.filterValue("tags"),
       render: (tags: Application["tags"], application) => (
         <EditableTagsCell
           accountId={accountId}
@@ -343,7 +320,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       key: "date",
       dataIndex: "date",
       sorter: true,
-      sortOrder: antdOrder("date"),
+      sortOrder: view.sortOrderFor("date"),
       width: COL.date,
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
@@ -412,7 +389,7 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
     },
   ];
 
-  if (total === 0 && !hasFilters && !applicationsQuery.isLoading) {
+  if (total === 0 && !(view.hasFilters || loading)) {
     return (
       <Flex gap={16} vertical>
         <Typography.Title level={3} style={{ margin: 0 }}>
@@ -442,14 +419,14 @@ export function ApplicationsList({ accountId }: { accountId: string }) {
       <Table<Application>
         columns={columns}
         dataSource={applications}
-        loading={applicationsQuery.isLoading}
-        onChange={onChange}
+        loading={loading}
+        onChange={view.onTableChange}
         pagination={{
-          current: page,
-          pageSize: limit,
+          current: view.page,
+          pageSize: view.limit,
           total,
           showSizeChanger: true,
-          pageSizeOptions: [10, 25, 50, 100],
+          pageSizeOptions: PAGE_SIZES,
         }}
         rowKey="id"
         scroll={scrollX(columns)}

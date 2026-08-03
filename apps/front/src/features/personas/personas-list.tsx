@@ -41,6 +41,7 @@ import {
   PersonaStatusTag,
   PersonaTypeTag,
 } from "@/features/personas/persona-tags";
+import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
 import { useTagFilters } from "@/features/tags/use-tag-filters";
 import { votesColumn } from "@/features/votes/votes-column";
@@ -51,7 +52,6 @@ type Persona = components["schemas"]["PersonaItem"];
 type Status = components["schemas"]["PersonaStatus"];
 type Type = components["schemas"]["PersonaType"];
 type SortField = components["schemas"]["PersonaSortField"];
-type SortOrder = components["schemas"]["SortOrder"];
 
 const LIST_KEY = ["get", "/v1/accounts/{account_id}/personas"];
 
@@ -70,14 +70,16 @@ export function PersonasList({ accountId }: { accountId: string }) {
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Persona | undefined>(undefined);
   const [commented, setCommented] = useState<Persona | undefined>(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState<10 | 25 | 50 | 100>(25);
-  const [sortBy, setSortBy] = useState<SortField>("date");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [statuses, setStatuses] = useState<Status[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [myVote, setMyVote] = useState<string | null>(null);
+  const view = useListView<Persona, SortField>(
+    accountId,
+    "personas",
+    { filters: {}, limit: 25, page: 1, sortBy: "date", sortOrder: "desc" },
+    SORT_FIELD
+  );
+  const statuses = (view.filterValue("status") ?? []) as Status[];
+  const types = (view.filterValue("type") ?? []) as Type[];
+  const tagIds = view.filterValue("tags") ?? [];
+  const myVote = view.firstFilterValue("votes");
 
   const tagFilters = useTagFilters(accountId, "persona");
 
@@ -88,17 +90,18 @@ export function PersonasList({ accountId }: { accountId: string }) {
       params: {
         path: { account_id: accountId },
         query: {
-          page,
-          limit,
-          sortBy,
-          sortOrder,
+          page: view.page,
+          limit: view.limit,
+          sortBy: view.sortBy,
+          sortOrder: view.sortOrder,
           ...(statuses.length ? { status: statuses } : {}),
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
         },
       },
-    }
+    },
+    { enabled: view.ready }
   );
 
   const statusMutation = $api.useMutation(
@@ -137,8 +140,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
 
   const personas = personasQuery.data?.items ?? [];
   const total = personasQuery.data?.count ?? 0;
-  const hasFilters =
-    statuses.length > 0 || types.length > 0 || tagIds.length > 0;
+  const loading = !view.ready || personasQuery.isLoading;
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -202,31 +204,6 @@ export function PersonasList({ accountId }: { accountId: string }) {
     });
   }
 
-  const antdOrder = (field: SortField): "ascend" | "descend" | null => {
-    if (sortBy !== field) {
-      return null;
-    }
-    return sortOrder === "asc" ? "ascend" : "descend";
-  };
-
-  const onChange: TableProps<Persona>["onChange"] = (
-    pagination,
-    filters,
-    sorter
-  ) => {
-    setPage(pagination.current ?? 1);
-    setLimit((pagination.pageSize as 10 | 25 | 50 | 100) ?? 25);
-    setStatuses((filters.status as Status[] | null) ?? []);
-    setTypes((filters.type as Type[] | null) ?? []);
-    setTagIds((filters.tags as string[] | null) ?? []);
-    setMyVote((filters.votes as string[] | null)?.[0] ?? null);
-    const single = Array.isArray(sorter) ? sorter[0] : sorter;
-    if (single?.order && single.columnKey) {
-      setSortBy(SORT_FIELD[String(single.columnKey)] ?? "date");
-      setSortOrder(single.order === "ascend" ? "asc" : "desc");
-    }
-  };
-
   const formModal = (
     <PersonaFormModal
       accountId={accountId}
@@ -243,7 +220,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "title",
       dataIndex: "title",
       sorter: true,
-      sortOrder: antdOrder("title"),
+      sortOrder: view.sortOrderFor("title"),
       width: COL.title,
       ellipsis: true,
       render: (title: string, persona) => (
@@ -262,13 +239,13 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "type",
       dataIndex: "type",
       sorter: true,
-      sortOrder: antdOrder("type"),
+      sortOrder: view.sortOrderFor("type"),
       width: COL.type,
       filters: dtoEnums.PersonaType.map((value) => ({
         text: t(PERSONA_TYPE_LABELS[value]),
         value,
       })),
-      filteredValue: types.length ? types : null,
+      filteredValue: view.filterValue("type"),
       render: (type: Type, persona) => (
         <PersonaTypeTag
           loading={typeMutation.isPending}
@@ -284,13 +261,13 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "status",
       dataIndex: "status",
       sorter: true,
-      sortOrder: antdOrder("status"),
+      sortOrder: view.sortOrderFor("status"),
       width: COL.status,
       filters: dtoEnums.PersonaStatus.map((value) => ({
         text: t(PERSONA_STATUS_LABELS[value]),
         value,
       })),
-      filteredValue: statuses.length ? statuses : null,
+      filteredValue: view.filterValue("status"),
       render: (status: Status, persona) => (
         <PersonaStatusTag
           loading={statusMutation.isPending}
@@ -307,7 +284,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       dataIndex: "tags",
       width: COL.tags,
       filters: tagFilters,
-      filteredValue: tagIds.length ? tagIds : null,
+      filteredValue: view.filterValue("tags"),
       render: (tags: Persona["tags"], persona) => (
         <EditableTagsCell
           accountId={accountId}
@@ -326,7 +303,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
       key: "date",
       dataIndex: "date",
       sorter: true,
-      sortOrder: antdOrder("date"),
+      sortOrder: view.sortOrderFor("date"),
       width: COL.date,
       render: (value: string | null) =>
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
@@ -375,7 +352,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
     },
   ];
 
-  if (total === 0 && !hasFilters && !personasQuery.isLoading) {
+  if (total === 0 && !(view.hasFilters || loading)) {
     return (
       <Flex gap={16} vertical>
         <Typography.Title level={3} style={{ margin: 0 }}>
@@ -415,14 +392,14 @@ export function PersonasList({ accountId }: { accountId: string }) {
           ),
           rowExpandable: (persona) => !isRichTextEmpty(persona.description),
         }}
-        loading={personasQuery.isLoading}
-        onChange={onChange}
+        loading={loading}
+        onChange={view.onTableChange}
         pagination={{
-          current: page,
-          pageSize: limit,
+          current: view.page,
+          pageSize: view.limit,
           total,
           showSizeChanger: true,
-          pageSizeOptions: [10, 25, 50, 100],
+          pageSizeOptions: PAGE_SIZES,
         }}
         rowKey="id"
         scroll={scrollX(columns, EXPAND_COLUMN_WIDTH)}
