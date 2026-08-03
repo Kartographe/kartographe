@@ -4,6 +4,7 @@
 
 import {
   AppstoreOutlined,
+  BlockOutlined,
   BranchesOutlined,
   BulbOutlined,
   CloudServerOutlined,
@@ -188,6 +189,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
           params,
           label: t`Applications`,
           icon: <AppstoreOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/applications/components",
+          params,
+          label: t`Composants`,
+          icon: <BlockOutlined />,
         },
         {
           to: "/accounts/$accountId/services",

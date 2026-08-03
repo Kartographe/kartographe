@@ -4,6 +4,7 @@
 
 import {
   ApartmentOutlined,
+  BlockOutlined,
   BranchesOutlined,
   CloudServerOutlined,
   CommentOutlined,
@@ -97,6 +98,11 @@ export function ApplicationSideNav({
     { to: `${BASE}/roles`, label: t`Rôles`, icon: <TeamOutlined /> },
     { to: `${BASE}/versions`, label: t`Versions`, icon: <BranchesOutlined /> },
     { to: `${BASE}/routes`, label: t`Routes`, icon: <ApartmentOutlined /> },
+    {
+      to: `${BASE}/components`,
+      label: t`Composants`,
+      icon: <BlockOutlined />,
+    },
     {
       to: `${BASE}/comments`,
       label: t`Commentaires`,

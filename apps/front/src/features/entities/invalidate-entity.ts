@@ -27,6 +27,11 @@ const ENTITY_QUERY_PATHS: Record<EntityType, string[]> = {
   application_route: [
     "/v1/accounts/{account_id}/applications/{application_id}/routes",
   ],
+  application_component: [
+    "/v1/accounts/{account_id}/applications/{application_id}/components",
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}",
+    "/v1/accounts/{account_id}/components",
+  ],
   journey: [
     "/v1/accounts/{account_id}/journeys",
     "/v1/accounts/{account_id}/journeys/{journey_id}",

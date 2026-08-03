@@ -44,3 +44,29 @@ export const COMPLEXITY_SCOPE_DESCRIPTIONS: Record<
   technical: msg`Applications, routes, bases de données et services.`,
   product: msg`Fonctionnalités, personas et parcours utilisateurs.`,
 };
+
+/**
+ * Which of the account's two scales estimates a given kind of entity — the
+ * mirror of the backend's `COMPLEXITY_SCOPES`. Exhaustive by type, so a new
+ * entity type fails the build here rather than silently landing on a default.
+ */
+export const COMPLEXITY_SCOPE_BY_ENTITY: Record<
+  S["EntityType"],
+  S["ComplexityScope"]
+> = {
+  application: "technical",
+  application_component: "technical",
+  application_route: "technical",
+  database: "technical",
+  database_migration: "technical",
+  database_migration_column: "technical",
+  database_table: "technical",
+  database_table_column: "technical",
+  service: "technical",
+  service_action: "technical",
+  feature: "product",
+  journey: "product",
+  journey_scenario: "product",
+  journey_scenario_step: "product",
+  persona: "product",
+};

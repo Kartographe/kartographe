@@ -14,6 +14,7 @@ export const TAG_ENTITY_TYPE_LABELS: Record<TagEntityType, MessageDescriptor> =
     application: msg`Applications`,
     application_route: msg`Routes`,
     application_guard: msg`Guards`,
+    application_component: msg`Composants`,
     feature: msg`Fonctionnalités`,
     journey: msg`Parcours`,
     journey_scenario: msg`Scénarios`,
