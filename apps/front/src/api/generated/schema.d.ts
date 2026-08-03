@@ -2248,6 +2248,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journey features
+         * @description List the features linked to a journey, most recent first. Any member may read.
+         */
+        get: operations["api_journeys_features_list"];
+        put?: never;
+        /**
+         * Link a feature
+         * @description Link an existing account feature to the journey. The feature must belong to the same account. Editing roles only.
+         */
+        post: operations["api_journeys_features_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/features/{feature_journey_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Unlink a feature
+         * @description Soft-delete a feature link. Editing roles only.
+         */
+        delete: operations["api_journeys_features_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps": {
         parameters: {
             query?: never;
@@ -9871,6 +9915,10 @@ export interface components {
         ItemResponse_FeatureJourneyItem_: {
             item: components["schemas"]["FeatureJourneyItem"];
         };
+        /** ItemResponse[JourneyFeatureItem] */
+        ItemResponse_JourneyFeatureItem_: {
+            item: components["schemas"]["JourneyFeatureItem"];
+        };
         /** ItemResponse[JourneyItem] */
         ItemResponse_JourneyItem_: {
             item: components["schemas"]["JourneyItem"];
@@ -9987,6 +10035,46 @@ export interface components {
             personasIds?: string[];
             /** Tagids */
             tagIds?: string[];
+        };
+        /**
+         * JourneyFeatureCreateForm
+         * @description Link an existing account feature to a journey — the same link, seen from
+         *     the journey.
+         */
+        JourneyFeatureCreateForm: {
+            /**
+             * Featureid
+             * Format: uuid
+             * @description An existing feature of the same account.
+             */
+            featureId: string;
+        };
+        /**
+         * JourneyFeatureItem
+         * @description A feature linked to a journey — the same link row, seen from the journey.
+         */
+        JourneyFeatureItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /**
+             * Featureid
+             * Format: uuid
+             */
+            featureId: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
         };
         /**
          * JourneyItem
@@ -10934,6 +11022,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["FeatureJourneyItem"][];
+        };
+        /** ListingResponse[JourneyFeatureItem] */
+        ListingResponse_JourneyFeatureItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["JourneyFeatureItem"][];
         };
         /** ListingResponse[JourneyItem] */
         ListingResponse_JourneyItem_: {
@@ -21004,6 +21102,159 @@ export interface operations {
                 };
             };
             /** @description Journey, scenario or persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_features_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_JourneyFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_features_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyFeatureCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_JourneyFeatureItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, feature or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_features_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                feature_journey_id: string;
+                journey_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Journey, feature or link not found */
             404: {
                 headers: {
                     [name: string]: unknown;
