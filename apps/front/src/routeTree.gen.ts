@@ -64,6 +64,7 @@ import { Route as AppAccountsAccountIdServicesServiceIdVotesRouteImport } from '
 import { Route as AppAccountsAccountIdServicesServiceIdCommentsRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/comments'
 import { Route as AppAccountsAccountIdServicesServiceIdActionsRouteImport } from './routes/_app/accounts/$accountId/services/$serviceId/actions'
 import { Route as AppAccountsAccountIdJourneysJourneyIdVotesRouteImport } from './routes/_app/accounts/$accountId/journeys/$journeyId/votes'
+import { Route as AppAccountsAccountIdJourneysJourneyIdFeaturesRouteImport } from './routes/_app/accounts/$accountId/journeys/$journeyId/features'
 import { Route as AppAccountsAccountIdJourneysJourneyIdCommentsRouteImport } from './routes/_app/accounts/$accountId/journeys/$journeyId/comments'
 import { Route as AppAccountsAccountIdFeaturesFeatureIdVotesRouteImport } from './routes/_app/accounts/$accountId/features/$featureId/votes'
 import { Route as AppAccountsAccountIdFeaturesFeatureIdJourneysRouteImport } from './routes/_app/accounts/$accountId/features/$featureId/journeys'
@@ -393,6 +394,12 @@ const AppAccountsAccountIdJourneysJourneyIdVotesRoute =
     path: '/votes',
     getParentRoute: () => AppAccountsAccountIdJourneysJourneyIdRouteRoute,
   } as any)
+const AppAccountsAccountIdJourneysJourneyIdFeaturesRoute =
+  AppAccountsAccountIdJourneysJourneyIdFeaturesRouteImport.update({
+    id: '/features',
+    path: '/features',
+    getParentRoute: () => AppAccountsAccountIdJourneysJourneyIdRouteRoute,
+  } as any)
 const AppAccountsAccountIdJourneysJourneyIdCommentsRoute =
   AppAccountsAccountIdJourneysJourneyIdCommentsRouteImport.update({
     id: '/comments',
@@ -591,6 +598,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/features/$featureId/journeys': typeof AppAccountsAccountIdFeaturesFeatureIdJourneysRoute
   '/accounts/$accountId/features/$featureId/votes': typeof AppAccountsAccountIdFeaturesFeatureIdVotesRoute
   '/accounts/$accountId/journeys/$journeyId/comments': typeof AppAccountsAccountIdJourneysJourneyIdCommentsRoute
+  '/accounts/$accountId/journeys/$journeyId/features': typeof AppAccountsAccountIdJourneysJourneyIdFeaturesRoute
   '/accounts/$accountId/journeys/$journeyId/votes': typeof AppAccountsAccountIdJourneysJourneyIdVotesRoute
   '/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
   '/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
@@ -660,6 +668,7 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/features/$featureId/journeys': typeof AppAccountsAccountIdFeaturesFeatureIdJourneysRoute
   '/accounts/$accountId/features/$featureId/votes': typeof AppAccountsAccountIdFeaturesFeatureIdVotesRoute
   '/accounts/$accountId/journeys/$journeyId/comments': typeof AppAccountsAccountIdJourneysJourneyIdCommentsRoute
+  '/accounts/$accountId/journeys/$journeyId/features': typeof AppAccountsAccountIdJourneysJourneyIdFeaturesRoute
   '/accounts/$accountId/journeys/$journeyId/votes': typeof AppAccountsAccountIdJourneysJourneyIdVotesRoute
   '/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
   '/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
@@ -739,6 +748,7 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/features/$featureId/journeys': typeof AppAccountsAccountIdFeaturesFeatureIdJourneysRoute
   '/_app/accounts/$accountId/features/$featureId/votes': typeof AppAccountsAccountIdFeaturesFeatureIdVotesRoute
   '/_app/accounts/$accountId/journeys/$journeyId/comments': typeof AppAccountsAccountIdJourneysJourneyIdCommentsRoute
+  '/_app/accounts/$accountId/journeys/$journeyId/features': typeof AppAccountsAccountIdJourneysJourneyIdFeaturesRoute
   '/_app/accounts/$accountId/journeys/$journeyId/votes': typeof AppAccountsAccountIdJourneysJourneyIdVotesRoute
   '/_app/accounts/$accountId/services/$serviceId/actions': typeof AppAccountsAccountIdServicesServiceIdActionsRoute
   '/_app/accounts/$accountId/services/$serviceId/comments': typeof AppAccountsAccountIdServicesServiceIdCommentsRoute
@@ -818,6 +828,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/features/$featureId/journeys'
     | '/accounts/$accountId/features/$featureId/votes'
     | '/accounts/$accountId/journeys/$journeyId/comments'
+    | '/accounts/$accountId/journeys/$journeyId/features'
     | '/accounts/$accountId/journeys/$journeyId/votes'
     | '/accounts/$accountId/services/$serviceId/actions'
     | '/accounts/$accountId/services/$serviceId/comments'
@@ -887,6 +898,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/features/$featureId/journeys'
     | '/accounts/$accountId/features/$featureId/votes'
     | '/accounts/$accountId/journeys/$journeyId/comments'
+    | '/accounts/$accountId/journeys/$journeyId/features'
     | '/accounts/$accountId/journeys/$journeyId/votes'
     | '/accounts/$accountId/services/$serviceId/actions'
     | '/accounts/$accountId/services/$serviceId/comments'
@@ -965,6 +977,7 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/features/$featureId/journeys'
     | '/_app/accounts/$accountId/features/$featureId/votes'
     | '/_app/accounts/$accountId/journeys/$journeyId/comments'
+    | '/_app/accounts/$accountId/journeys/$journeyId/features'
     | '/_app/accounts/$accountId/journeys/$journeyId/votes'
     | '/_app/accounts/$accountId/services/$serviceId/actions'
     | '/_app/accounts/$accountId/services/$serviceId/comments'
@@ -1377,6 +1390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountsAccountIdJourneysJourneyIdVotesRouteImport
       parentRoute: typeof AppAccountsAccountIdJourneysJourneyIdRouteRoute
     }
+    '/_app/accounts/$accountId/journeys/$journeyId/features': {
+      id: '/_app/accounts/$accountId/journeys/$journeyId/features'
+      path: '/features'
+      fullPath: '/accounts/$accountId/journeys/$journeyId/features'
+      preLoaderRoute: typeof AppAccountsAccountIdJourneysJourneyIdFeaturesRouteImport
+      parentRoute: typeof AppAccountsAccountIdJourneysJourneyIdRouteRoute
+    }
     '/_app/accounts/$accountId/journeys/$journeyId/comments': {
       id: '/_app/accounts/$accountId/journeys/$journeyId/comments'
       path: '/comments'
@@ -1713,6 +1733,7 @@ const AppAccountsAccountIdFeaturesFeatureIdRouteRouteWithChildren =
 
 interface AppAccountsAccountIdJourneysJourneyIdRouteRouteChildren {
   AppAccountsAccountIdJourneysJourneyIdCommentsRoute: typeof AppAccountsAccountIdJourneysJourneyIdCommentsRoute
+  AppAccountsAccountIdJourneysJourneyIdFeaturesRoute: typeof AppAccountsAccountIdJourneysJourneyIdFeaturesRoute
   AppAccountsAccountIdJourneysJourneyIdVotesRoute: typeof AppAccountsAccountIdJourneysJourneyIdVotesRoute
   AppAccountsAccountIdJourneysJourneyIdIndexRoute: typeof AppAccountsAccountIdJourneysJourneyIdIndexRoute
   AppAccountsAccountIdJourneysJourneyIdScenariosScenarioIdRoute: typeof AppAccountsAccountIdJourneysJourneyIdScenariosScenarioIdRoute
@@ -1723,6 +1744,8 @@ const AppAccountsAccountIdJourneysJourneyIdRouteRouteChildren: AppAccountsAccoun
   {
     AppAccountsAccountIdJourneysJourneyIdCommentsRoute:
       AppAccountsAccountIdJourneysJourneyIdCommentsRoute,
+    AppAccountsAccountIdJourneysJourneyIdFeaturesRoute:
+      AppAccountsAccountIdJourneysJourneyIdFeaturesRoute,
     AppAccountsAccountIdJourneysJourneyIdVotesRoute:
       AppAccountsAccountIdJourneysJourneyIdVotesRoute,
     AppAccountsAccountIdJourneysJourneyIdIndexRoute:

@@ -4,6 +4,7 @@
 
 import {
   ApartmentOutlined,
+  BulbOutlined,
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
@@ -154,6 +155,11 @@ export function JourneySideNav({
     icon: <ApartmentOutlined />,
     exact: true,
   };
+  const featuresItem: NavItem = {
+    to: `${BASE}/features`,
+    label: t`Fonctionnalités`,
+    icon: <BulbOutlined />,
+  };
   const comments: NavItem = {
     to: `${BASE}/comments`,
     label: t`Commentaires`,
@@ -199,6 +205,12 @@ export function JourneySideNav({
         </Flex>
       ) : null}
 
+      <NavLink
+        accountId={accountId}
+        item={featuresItem}
+        journeyId={journeyId}
+        pathname={pathname}
+      />
       <NavLink
         accountId={accountId}
         item={comments}
