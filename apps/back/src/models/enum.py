@@ -530,6 +530,7 @@ class EntityType(str, Enum):
     JOURNEY_SCENARIO = "journey_scenario"
     JOURNEY_SCENARIO_STEP = "journey_scenario_step"
     APPLICATION_COMPONENT = "application_component"
+    APPLICATION_BOUNDED_CONTEXT = "application_bounded_context"
 
 
 class SearchEntityType(str, Enum):
@@ -559,6 +560,7 @@ class SearchEntityType(str, Enum):
     JOURNEY_SCENARIO = "journey_scenario"
     JOURNEY_SCENARIO_STEP = "journey_scenario_step"
     APPLICATION_COMPONENT = "application_component"
+    APPLICATION_BOUNDED_CONTEXT = "application_bounded_context"
     COMMENT = "comment"
 
 

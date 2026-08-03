@@ -48,6 +48,7 @@ class QuotaKey(str, Enum):
     APPLICATION_ROUTE_TABLE = "applicationRouteTable"
     APPLICATION_COMPONENT = "applicationComponent"
     APPLICATION_COMPONENT_DATABASE_TABLE = "applicationComponentDatabaseTable"
+    APPLICATION_BOUNDED_CONTEXT = "applicationBoundedContext"
 
     # databases
     DATABASE = "database"

@@ -18,6 +18,7 @@ from src.routes.api.applications import router as applications_router
 from src.routes.api.auth import router as auth_router
 from src.routes.api.comments import router as comments_router
 from src.routes.api.complexities import router as complexities_router
+from src.routes.api.bounded_contexts import router as bounded_contexts_router
 from src.routes.api.components import router as components_router
 from src.routes.api.core import router as core_router
 from src.routes.api.databases import router as databases_router
@@ -43,6 +44,7 @@ v1_router.include_router(personas_router)  # account personas
 v1_router.include_router(journeys_router)  # journeys, scenarios, steps, files, assertions
 v1_router.include_router(scenarios_router)  # account-wide scenario listing (across journeys)
 v1_router.include_router(components_router)  # account-wide component listing (across applications)
+v1_router.include_router(bounded_contexts_router)  # account-wide bounded-context listing
 v1_router.include_router(databases_router)  # databases, versions, tables, columns
 v1_router.include_router(services_router)  # services & their actions
 v1_router.include_router(tags_router)  # account tags

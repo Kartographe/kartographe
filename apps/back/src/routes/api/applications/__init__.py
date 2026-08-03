@@ -24,6 +24,16 @@ from src.routes.api.applications.route_comments import router as route_comments_
 from src.routes.api.applications.route_examples import router as route_examples_router
 from src.routes.api.applications.route_responses import router as route_responses_router
 from src.routes.api.applications.route_tables import router as route_tables_router
+from src.routes.api.applications.bounded_context_comments import (
+    router as bounded_context_comments_router,
+)
+from src.routes.api.applications.bounded_context_complexities import (
+    router as bounded_context_complexities_router,
+)
+from src.routes.api.applications.bounded_context_votes import (
+    router as bounded_context_votes_router,
+)
+from src.routes.api.applications.bounded_contexts import router as bounded_contexts_router
 from src.routes.api.applications.complexities import router as complexities_router
 from src.routes.api.applications.component_comments import router as component_comments_router
 from src.routes.api.applications.component_complexities import router as component_complexities_router
@@ -59,3 +69,7 @@ router.include_router(component_comments_router)
 router.include_router(component_votes_router)
 router.include_router(component_complexities_router)
 router.include_router(component_tables_router)
+router.include_router(bounded_contexts_router)
+router.include_router(bounded_context_comments_router)
+router.include_router(bounded_context_votes_router)
+router.include_router(bounded_context_complexities_router)

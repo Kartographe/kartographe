@@ -186,6 +186,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Account-wide component listing across every application.",
     },
     {
+        "name": "api.boundedContexts",
+        "x-displayName": "Bounded contexts",
+        "description": "Account-wide bounded-context listing across every application.",
+    },
+    {
         "name": "api.journeys.scenarios.steps",
         "x-displayName": "Journeys › Steps",
         "description": "Steps inside a scenario (a tree of actions).",
@@ -429,6 +434,26 @@ API_TAGS: list[dict[str, str]] = [
         "name": "api.applications.components.complexities",
         "x-displayName": "Applications › Component complexity",
         "description": "Complexity estimates on an application component.",
+    },
+    {
+        "name": "api.applications.boundedContexts",
+        "x-displayName": "Applications › Bounded contexts",
+        "description": "Named areas of an application's domain and the components inside them.",
+    },
+    {
+        "name": "api.applications.boundedContexts.comments",
+        "x-displayName": "Applications › Bounded context comments",
+        "description": "Comments on an application bounded context.",
+    },
+    {
+        "name": "api.applications.boundedContexts.votes",
+        "x-displayName": "Applications › Bounded context votes",
+        "description": "Votes on an application bounded context.",
+    },
+    {
+        "name": "api.applications.boundedContexts.complexities",
+        "x-displayName": "Applications › Bounded context complexity",
+        "description": "Complexity estimates on an application bounded context.",
     },
     {
         "name": "api.journeys.votes",

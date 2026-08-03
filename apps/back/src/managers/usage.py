@@ -26,6 +26,7 @@ from src.models._base import BaseModel
 from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.application import Application
+from src.models.application_bounded_context import ApplicationBoundedContext
 from src.models.application_component import ApplicationComponent
 from src.models.application_component_database_table import (
     ApplicationComponentDatabaseTable,
@@ -84,6 +85,7 @@ _GROUPS: list[tuple[str, list[tuple[QuotaKey, type[BaseModel], bool]]]] = [
             (QuotaKey.APPLICATION_ROUTE_RESPONSE, ApplicationRouteResponse, False),
             (QuotaKey.APPLICATION_ROUTE_TABLE, ApplicationRouteTable, False),
             (QuotaKey.APPLICATION_COMPONENT, ApplicationComponent, False),
+            (QuotaKey.APPLICATION_BOUNDED_CONTEXT, ApplicationBoundedContext, False),
             (
                 QuotaKey.APPLICATION_COMPONENT_DATABASE_TABLE,
                 ApplicationComponentDatabaseTable,

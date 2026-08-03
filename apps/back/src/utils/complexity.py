@@ -38,6 +38,7 @@ COMPLEXITY_SCOPES: dict[EntityType, ComplexityScope] = {
     EntityType.APPLICATION: ComplexityScope.TECHNICAL,
     EntityType.APPLICATION_ROUTE: ComplexityScope.TECHNICAL,
     EntityType.APPLICATION_COMPONENT: ComplexityScope.TECHNICAL,
+    EntityType.APPLICATION_BOUNDED_CONTEXT: ComplexityScope.TECHNICAL,
     EntityType.DATABASE: ComplexityScope.TECHNICAL,
     EntityType.DATABASE_TABLE: ComplexityScope.TECHNICAL,
     EntityType.DATABASE_TABLE_COLUMN: ComplexityScope.TECHNICAL,

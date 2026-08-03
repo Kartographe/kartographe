@@ -24,6 +24,7 @@ from src.managers.account import AccountManager
 from src.managers.account_invitations import AccountInvitationsManager
 from src.managers.account_users import AccountUsersManager
 from src.managers.application import ApplicationManager
+from src.managers.application_bounded_context import ApplicationBoundedContextManager
 from src.managers.application_component import ApplicationComponentManager
 from src.managers.application_component_database_table import (
     ApplicationComponentDatabaseTableManager,
@@ -78,6 +79,7 @@ from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
 from src.models.application import Application
+from src.models.application_bounded_context import ApplicationBoundedContext
 from src.models.application_component import ApplicationComponent
 from src.models.application_component_database_table import (
     ApplicationComponentDatabaseTable,
@@ -556,6 +558,17 @@ def get_application_route_manager(session: SessionDep) -> ApplicationRouteManage
 ApplicationRouteManagerDep = Annotated[ApplicationRouteManager, Depends(get_application_route_manager)]
 
 
+def get_application_bounded_context_manager(
+    session: SessionDep,
+) -> ApplicationBoundedContextManager:
+    return ApplicationBoundedContextManager(session)
+
+
+ApplicationBoundedContextManagerDep = Annotated[
+    ApplicationBoundedContextManager, Depends(get_application_bounded_context_manager)
+]
+
+
 def get_application_component_manager(session: SessionDep) -> ApplicationComponentManager:
     return ApplicationComponentManager(session)
 
@@ -638,6 +651,20 @@ def get_current_application_route(
 
 
 CurrentApplicationRouteDep = Annotated[ApplicationRoute, Depends(get_current_application_route)]
+
+
+def get_current_application_bounded_context(
+    bounded_context_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationBoundedContext:
+    context = session.get(ApplicationBoundedContext, bounded_context_id)
+    if context is None or not context.enabled or context.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Bounded context not found.")
+    return context
+
+
+CurrentApplicationBoundedContextDep = Annotated[
+    ApplicationBoundedContext, Depends(get_current_application_bounded_context)
+]
 
 
 def get_current_application_component(
