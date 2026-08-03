@@ -4,6 +4,7 @@
 
 import {
   BranchesOutlined,
+  CalculatorOutlined,
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
@@ -255,6 +256,11 @@ export function DatabaseSideNav({
     label: t`Votes`,
     icon: <LikeOutlined />,
   };
+  const complexity: NavItem = {
+    to: `${BASE}/complexity`,
+    label: t`Complexité`,
+    icon: <CalculatorOutlined />,
+  };
 
   return (
     <nav
@@ -322,6 +328,12 @@ export function DatabaseSideNav({
         accountId={accountId}
         databaseId={databaseId}
         item={votes}
+        pathname={pathname}
+      />
+      <NavLink
+        accountId={accountId}
+        databaseId={databaseId}
+        item={complexity}
         pathname={pathname}
       />
     </nav>

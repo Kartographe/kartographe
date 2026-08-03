@@ -5,6 +5,7 @@
 import {
   ApartmentOutlined,
   BulbOutlined,
+  CalculatorOutlined,
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
@@ -170,6 +171,11 @@ export function JourneySideNav({
     label: t`Votes`,
     icon: <LikeOutlined />,
   };
+  const complexity: NavItem = {
+    to: `${BASE}/complexity`,
+    label: t`Complexité`,
+    icon: <CalculatorOutlined />,
+  };
 
   return (
     <nav
@@ -220,6 +226,12 @@ export function JourneySideNav({
       <NavLink
         accountId={accountId}
         item={votes}
+        journeyId={journeyId}
+        pathname={pathname}
+      />
+      <NavLink
+        accountId={accountId}
+        item={complexity}
         journeyId={journeyId}
         pathname={pathname}
       />

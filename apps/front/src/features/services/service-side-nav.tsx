@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import {
+  CalculatorOutlined,
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
@@ -85,6 +86,11 @@ export function ServiceSideNav({
       icon: <CommentOutlined />,
     },
     { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
+    {
+      to: `${BASE}/complexity`,
+      label: t`Complexité`,
+      icon: <CalculatorOutlined />,
+    },
   ];
 
   return (

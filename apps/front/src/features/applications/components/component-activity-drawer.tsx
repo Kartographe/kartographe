@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Divider, Drawer, Flex, Typography } from "antd";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
+import { ComponentTablesPanel } from "@/features/applications/components/component-tables-panel";
 import { CommentsFeed } from "@/features/comments/comments-feed";
 import { ComplexityPanel } from "@/features/complexity/complexity-panel";
 import { invalidateEntityQueries } from "@/features/entities/invalidate-entity";
@@ -27,9 +28,9 @@ interface ComponentActivityDrawerProps {
 }
 
 /**
- * Everything that happens *around* a component — votes, complexity estimates
- * and the comment thread — in one drawer, since a component has no page of its
- * own.
+ * Everything that hangs off a component — the database tables it works with,
+ * votes, complexity estimates and the comment thread — in one drawer, since a
+ * component has no page of its own.
  */
 export function ComponentActivityDrawer({
   accountId,
@@ -76,6 +77,13 @@ export function ComponentActivityDrawer({
     >
       {component ? (
         <Flex gap={16} vertical>
+          <ComponentTablesPanel
+            accountId={accountId}
+            applicationId={applicationId}
+            componentId={component.id}
+            readOnly={component.locked}
+          />
+          <Divider style={{ margin: 0 }} />
           <VotesPanel
             accountId={accountId}
             entityId={component.id}

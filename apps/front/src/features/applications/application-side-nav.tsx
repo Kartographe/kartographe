@@ -6,6 +6,7 @@ import {
   ApartmentOutlined,
   BlockOutlined,
   BranchesOutlined,
+  CalculatorOutlined,
   CloudServerOutlined,
   CommentOutlined,
   InfoCircleOutlined,
@@ -115,6 +116,11 @@ export function ApplicationSideNav({
       icon: <CommentOutlined />,
     },
     { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
+    {
+      to: `${BASE}/complexity`,
+      label: t`Complexité`,
+      icon: <CalculatorOutlined />,
+    },
   ];
 
   return (
