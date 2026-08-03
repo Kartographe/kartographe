@@ -55,6 +55,7 @@ export const COMPLEXITY_SCOPE_BY_ENTITY: Record<
   S["ComplexityScope"]
 > = {
   application: "technical",
+  application_bounded_context: "technical",
   application_component: "technical",
   application_route: "technical",
   database: "technical",

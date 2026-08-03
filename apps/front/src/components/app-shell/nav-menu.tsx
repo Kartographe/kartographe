@@ -12,6 +12,7 @@ import {
   DatabaseOutlined,
   HomeOutlined,
   NodeIndexOutlined,
+  PartitionOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -195,6 +196,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
           params,
           label: t`Composants`,
           icon: <BlockOutlined />,
+        },
+        {
+          to: "/accounts/$accountId/applications/bounded-contexts",
+          params,
+          label: t`Contextes bornés`,
+          icon: <PartitionOutlined />,
         },
         {
           to: "/accounts/$accountId/services",

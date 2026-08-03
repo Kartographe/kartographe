@@ -68,6 +68,7 @@ export const ACTIVITY_LABEL: MessageDescriptor = msg`Activité`;
 /** Singular label for the entity a comment or vote points at. */
 export const ENTITY_TYPE_LABELS: Record<EntityType, MessageDescriptor> = {
   application: msg`Application`,
+  application_bounded_context: msg`Contexte borné`,
   application_component: msg`Composant`,
   application_route: msg`Route`,
   database: msg`Base de données`,

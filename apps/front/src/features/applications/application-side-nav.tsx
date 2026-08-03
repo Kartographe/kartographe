@@ -10,6 +10,7 @@ import {
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
+  PartitionOutlined,
   RocketOutlined,
   SafetyOutlined,
   TeamOutlined,
@@ -102,6 +103,11 @@ export function ApplicationSideNav({
       to: `${BASE}/components`,
       label: t`Composants`,
       icon: <BlockOutlined />,
+    },
+    {
+      to: `${BASE}/bounded-contexts`,
+      label: t`Contextes bornés`,
+      icon: <PartitionOutlined />,
     },
     {
       to: `${BASE}/comments`,
