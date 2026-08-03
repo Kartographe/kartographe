@@ -23,3 +23,7 @@ pillow
 boto3
 scalar-fastapi
 fastapi-mcp
+# Pinned: fastapi-mcp 0.4.0 builds its server with `Server(name, description)`,
+# a signature mcp 2.0 dropped — an unpinned install breaks `create_app()` at
+# import time. Lift the ceiling only with a fastapi-mcp release that supports it.
+mcp>=1.28,<2

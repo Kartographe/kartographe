@@ -29,6 +29,8 @@ pillow = "*"
 boto3 = "*"
 scalar-fastapi = "*"
 fastapi-mcp = "*"
+# See requirements.txt: fastapi-mcp 0.4.0 is incompatible with mcp 2.0.
+mcp = ">=1.28,<2"
 
 [dev-packages]
 pytest = "*"
