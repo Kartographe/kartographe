@@ -5,10 +5,10 @@
 """Component lifecycle: creation, listing inside an application or across the
 account, and soft-delete.
 
-Updates, status flips and lock/unlock come from `BaseEntityManager` — a
-component has no children to cascade to, so deleting one only disables its own
-row (its comments, votes and estimates keep pointing at a target the resolvers
-drop silently, as everywhere else).
+Updates, status flips and lock/unlock come from `BaseEntityManager`. Deleting a
+component takes its database-table links with it; its comments, votes and
+estimates keep pointing at a target the resolvers drop silently, as everywhere
+else.
 """
 
 import uuid
@@ -23,6 +23,9 @@ from src.managers.tagging import tag_overlap
 from src.models.account import Account
 from src.models.application import Application
 from src.models.application_component import ApplicationComponent
+from src.models.application_component_database_table import (
+    ApplicationComponentDatabaseTable,
+)
 from src.models.enum import (
     ApplicationComponentStatus,
     ApplicationComponentType,
@@ -163,6 +166,13 @@ class ApplicationComponentManager(BaseEntityManager):
         return self._persist(component)
 
     def soft_delete(self, component: ApplicationComponent) -> None:
+        """Soft-delete the component and its database-table links."""
         self._guard_unlocked(component)
-        self._disable(component, utc_now())
+        now = utc_now()
+        self._disable(component, now)
+        self._bulk_disable(
+            ApplicationComponentDatabaseTable,
+            ApplicationComponentDatabaseTable.application_component_id == component.id,
+            now=now,
+        )
         self.session.commit()

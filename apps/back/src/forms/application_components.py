@@ -29,3 +29,19 @@ class ApplicationComponentPatchForm(CamelBase):
     status: ApplicationComponentStatus | None = Field(default=None)
     description: dict | None = Field(default=None, description="Rich text (Tiptap JSON document).")
     tag_ids: list[uuid.UUID] | None = Field(default=None)
+
+
+class ApplicationComponentDatabaseTableCreateForm(CamelBase):
+    """Link a component to a database table. The table must belong to the account."""
+
+    database_table_id: uuid.UUID
+    description: dict | None = Field(
+        default=None, description="Rich text (Tiptap JSON document) — what the component does with the table."
+    )
+
+
+class ApplicationComponentDatabaseTablePatchForm(CamelBase):
+    """Partial update of a component/table link — only the keys sent are applied."""
+
+    database_table_id: uuid.UUID | None = Field(default=None)
+    description: dict | None = Field(default=None, description="Rich text (Tiptap JSON document).")

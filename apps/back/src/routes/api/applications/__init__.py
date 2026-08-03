@@ -27,6 +27,7 @@ from src.routes.api.applications.route_tables import router as route_tables_rout
 from src.routes.api.applications.complexities import router as complexities_router
 from src.routes.api.applications.component_comments import router as component_comments_router
 from src.routes.api.applications.component_complexities import router as component_complexities_router
+from src.routes.api.applications.component_tables import router as component_tables_router
 from src.routes.api.applications.component_votes import router as component_votes_router
 from src.routes.api.applications.components import router as components_router
 from src.routes.api.applications.route_complexities import router as route_complexities_router
@@ -57,3 +58,4 @@ router.include_router(components_router)
 router.include_router(component_comments_router)
 router.include_router(component_votes_router)
 router.include_router(component_complexities_router)
+router.include_router(component_tables_router)

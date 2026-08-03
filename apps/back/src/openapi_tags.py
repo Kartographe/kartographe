@@ -411,6 +411,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Building blocks an application is made of (front, back, library, worker, integration).",
     },
     {
+        "name": "api.applications.components.tables",
+        "x-displayName": "Applications › Component tables",
+        "description": "Database tables an application component works with.",
+    },
+    {
         "name": "api.applications.components.comments",
         "x-displayName": "Applications › Component comments",
         "description": "Comments on an application component.",

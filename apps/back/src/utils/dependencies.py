@@ -25,6 +25,9 @@ from src.managers.account_invitations import AccountInvitationsManager
 from src.managers.account_users import AccountUsersManager
 from src.managers.application import ApplicationManager
 from src.managers.application_component import ApplicationComponentManager
+from src.managers.application_component_database_table import (
+    ApplicationComponentDatabaseTableManager,
+)
 from src.managers.application_environment import ApplicationEnvironmentManager
 from src.managers.application_environment_version import ApplicationEnvironmentVersionManager
 from src.managers.application_feature import ApplicationFeatureManager
@@ -76,6 +79,9 @@ from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
 from src.models.application import Application
 from src.models.application_component import ApplicationComponent
+from src.models.application_component_database_table import (
+    ApplicationComponentDatabaseTable,
+)
 from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
@@ -559,6 +565,18 @@ ApplicationComponentManagerDep = Annotated[
 ]
 
 
+def get_application_component_database_table_manager(
+    session: SessionDep,
+) -> ApplicationComponentDatabaseTableManager:
+    return ApplicationComponentDatabaseTableManager(session)
+
+
+ApplicationComponentDatabaseTableManagerDep = Annotated[
+    ApplicationComponentDatabaseTableManager,
+    Depends(get_application_component_database_table_manager),
+]
+
+
 def get_application_route_response_manager(session: SessionDep) -> ApplicationRouteResponseManager:
     return ApplicationRouteResponseManager(session)
 
@@ -633,6 +651,23 @@ def get_current_application_component(
 
 CurrentApplicationComponentDep = Annotated[
     ApplicationComponent, Depends(get_current_application_component)
+]
+
+
+def get_current_application_component_database_table(
+    component_table_id: uuid.UUID,
+    component: CurrentApplicationComponentDep,
+    session: SessionDep,
+) -> ApplicationComponentDatabaseTable:
+    link = session.get(ApplicationComponentDatabaseTable, component_table_id)
+    if link is None or not link.enabled or link.application_component_id != component.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Component table not found.")
+    return link
+
+
+CurrentApplicationComponentDatabaseTableDep = Annotated[
+    ApplicationComponentDatabaseTable,
+    Depends(get_current_application_component_database_table),
 ]
 
 

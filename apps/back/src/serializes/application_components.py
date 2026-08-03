@@ -13,7 +13,7 @@ from src.models.enum import (
     VoteRole,
     VoteValue,
 )
-from src.serializes._base import TaggableItem, VotableItem
+from src.serializes._base import CamelBase, TaggableItem, VotableItem
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
@@ -49,3 +49,16 @@ class ApplicationComponentListItem(ApplicationComponentItem):
     """
 
     application_title: str | None = None
+
+
+class ApplicationComponentDatabaseTableItem(CamelBase):
+    """A link between a component and a database table."""
+
+    application_component_id: uuid.UUID
+    application_id: uuid.UUID
+    database_table_id: uuid.UUID
+    date: datetime
+    description: dict | None = None
+    id: uuid.UUID
+    owner: OwnerItem
+    owner_id: uuid.UUID
