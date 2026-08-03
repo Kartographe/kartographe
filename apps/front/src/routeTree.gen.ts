@@ -43,6 +43,7 @@ import { Route as AppAccountsAccountIdFeaturesIndexRouteImport } from './routes/
 import { Route as AppAccountsAccountIdDatabasesIndexRouteImport } from './routes/_app/accounts/$accountId/databases/index'
 import { Route as AppAccountsAccountIdApplicationsIndexRouteImport } from './routes/_app/accounts/$accountId/applications/index'
 import { Route as AppAccountsAccountIdAdministrationIndexRouteImport } from './routes/_app/accounts/$accountId/administration/index'
+import { Route as AppAccountsAccountIdJourneysScenariosRouteImport } from './routes/_app/accounts/$accountId/journeys/scenarios'
 import { Route as AppAccountsAccountIdAdministrationUsageRouteImport } from './routes/_app/accounts/$accountId/administration/usage'
 import { Route as AppAccountsAccountIdAdministrationTagsRouteImport } from './routes/_app/accounts/$accountId/administration/tags'
 import { Route as AppAccountsAccountIdAdministrationMembersRouteImport } from './routes/_app/accounts/$accountId/administration/members'
@@ -264,6 +265,12 @@ const AppAccountsAccountIdAdministrationIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AppAccountsAccountIdAdministrationRouteRoute,
+  } as any)
+const AppAccountsAccountIdJourneysScenariosRoute =
+  AppAccountsAccountIdJourneysScenariosRouteImport.update({
+    id: '/journeys/scenarios',
+    path: '/journeys/scenarios',
+    getParentRoute: () => AppAccountsAccountIdRouteRoute,
   } as any)
 const AppAccountsAccountIdAdministrationUsageRoute =
   AppAccountsAccountIdAdministrationUsageRouteImport.update({
@@ -562,6 +569,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
+  '/accounts/$accountId/journeys/scenarios': typeof AppAccountsAccountIdJourneysScenariosRoute
   '/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -630,6 +638,7 @@ export interface FileRoutesByTo {
   '/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
+  '/accounts/$accountId/journeys/scenarios': typeof AppAccountsAccountIdJourneysScenariosRoute
   '/accounts/$accountId/administration': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/accounts/$accountId/applications': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/accounts/$accountId/databases': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -708,6 +717,7 @@ export interface FileRoutesById {
   '/_app/accounts/$accountId/administration/members': typeof AppAccountsAccountIdAdministrationMembersRoute
   '/_app/accounts/$accountId/administration/tags': typeof AppAccountsAccountIdAdministrationTagsRoute
   '/_app/accounts/$accountId/administration/usage': typeof AppAccountsAccountIdAdministrationUsageRoute
+  '/_app/accounts/$accountId/journeys/scenarios': typeof AppAccountsAccountIdJourneysScenariosRoute
   '/_app/accounts/$accountId/administration/': typeof AppAccountsAccountIdAdministrationIndexRoute
   '/_app/accounts/$accountId/applications/': typeof AppAccountsAccountIdApplicationsIndexRoute
   '/_app/accounts/$accountId/databases/': typeof AppAccountsAccountIdDatabasesIndexRoute
@@ -786,6 +796,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/tags'
     | '/accounts/$accountId/administration/usage'
+    | '/accounts/$accountId/journeys/scenarios'
     | '/accounts/$accountId/administration/'
     | '/accounts/$accountId/applications/'
     | '/accounts/$accountId/databases/'
@@ -854,6 +865,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId/administration/members'
     | '/accounts/$accountId/administration/tags'
     | '/accounts/$accountId/administration/usage'
+    | '/accounts/$accountId/journeys/scenarios'
     | '/accounts/$accountId/administration'
     | '/accounts/$accountId/applications'
     | '/accounts/$accountId/databases'
@@ -931,6 +943,7 @@ export interface FileRouteTypes {
     | '/_app/accounts/$accountId/administration/members'
     | '/_app/accounts/$accountId/administration/tags'
     | '/_app/accounts/$accountId/administration/usage'
+    | '/_app/accounts/$accountId/journeys/scenarios'
     | '/_app/accounts/$accountId/administration/'
     | '/_app/accounts/$accountId/applications/'
     | '/_app/accounts/$accountId/databases/'
@@ -1216,6 +1229,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/accounts/$accountId/administration/'
       preLoaderRoute: typeof AppAccountsAccountIdAdministrationIndexRouteImport
       parentRoute: typeof AppAccountsAccountIdAdministrationRouteRoute
+    }
+    '/_app/accounts/$accountId/journeys/scenarios': {
+      id: '/_app/accounts/$accountId/journeys/scenarios'
+      path: '/journeys/scenarios'
+      fullPath: '/accounts/$accountId/journeys/scenarios'
+      preLoaderRoute: typeof AppAccountsAccountIdJourneysScenariosRouteImport
+      parentRoute: typeof AppAccountsAccountIdRouteRoute
     }
     '/_app/accounts/$accountId/administration/usage': {
       id: '/_app/accounts/$accountId/administration/usage'
@@ -1752,6 +1772,7 @@ interface AppAccountsAccountIdRouteRouteChildren {
   AppAccountsAccountIdFeaturesFeatureIdRouteRoute: typeof AppAccountsAccountIdFeaturesFeatureIdRouteRouteWithChildren
   AppAccountsAccountIdJourneysJourneyIdRouteRoute: typeof AppAccountsAccountIdJourneysJourneyIdRouteRouteWithChildren
   AppAccountsAccountIdServicesServiceIdRouteRoute: typeof AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren
+  AppAccountsAccountIdJourneysScenariosRoute: typeof AppAccountsAccountIdJourneysScenariosRoute
   AppAccountsAccountIdApplicationsIndexRoute: typeof AppAccountsAccountIdApplicationsIndexRoute
   AppAccountsAccountIdDatabasesIndexRoute: typeof AppAccountsAccountIdDatabasesIndexRoute
   AppAccountsAccountIdFeaturesIndexRoute: typeof AppAccountsAccountIdFeaturesIndexRoute
@@ -1776,6 +1797,8 @@ const AppAccountsAccountIdRouteRouteChildren: AppAccountsAccountIdRouteRouteChil
       AppAccountsAccountIdJourneysJourneyIdRouteRouteWithChildren,
     AppAccountsAccountIdServicesServiceIdRouteRoute:
       AppAccountsAccountIdServicesServiceIdRouteRouteWithChildren,
+    AppAccountsAccountIdJourneysScenariosRoute:
+      AppAccountsAccountIdJourneysScenariosRoute,
     AppAccountsAccountIdApplicationsIndexRoute:
       AppAccountsAccountIdApplicationsIndexRoute,
     AppAccountsAccountIdDatabasesIndexRoute:

@@ -4,6 +4,7 @@
 
 import {
   AppstoreOutlined,
+  BranchesOutlined,
   BulbOutlined,
   CloudServerOutlined,
   ControlOutlined,
@@ -34,29 +35,49 @@ interface NavSection {
   items: NavItem[];
 }
 
-function isActive(item: NavItem, resolved: string, pathname: string): boolean {
+function resolvePath(item: NavItem): string {
+  return item.params
+    ? Object.entries(item.params).reduce(
+        (path, [key, value]) => path.replace(`$${key}`, value),
+        item.to
+      )
+    : item.to;
+}
+
+function isActive(
+  item: NavItem,
+  resolved: string,
+  pathname: string,
+  allPaths: string[]
+): boolean {
   if (item.exact) {
     return pathname === resolved;
   }
-  return pathname === resolved || pathname.startsWith(`${resolved}/`);
+  if (!(pathname === resolved || pathname.startsWith(`${resolved}/`))) {
+    return false;
+  }
+  // A deeper entry that also matches wins: on `/journeys/scenarios`, only
+  // "Scénarios" lights up — not the "Parcours utilisateurs" it nests under.
+  return !allPaths.some(
+    (other) =>
+      other.startsWith(`${resolved}/`) &&
+      (pathname === other || pathname.startsWith(`${other}/`))
+  );
 }
 
 function NavLink({
   item,
   pathname,
   collapsed,
+  allPaths,
 }: {
   item: NavItem;
   pathname: string;
   collapsed: boolean;
+  allPaths: string[];
 }) {
-  const resolved = item.params
-    ? Object.entries(item.params).reduce(
-        (path, [key, value]) => path.replace(`$${key}`, value),
-        item.to
-      )
-    : item.to;
-  const active = isActive(item, resolved, pathname);
+  const resolved = resolvePath(item);
+  const active = isActive(item, resolved, pathname, allPaths);
   const link = (
     <Link
       params={item.params}
@@ -139,6 +160,12 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
           icon: <NodeIndexOutlined />,
         },
         {
+          to: "/accounts/$accountId/journeys/scenarios",
+          params,
+          label: t`Scénarios`,
+          icon: <BranchesOutlined />,
+        },
+        {
           to: "/accounts/$accountId/personas",
           params,
           label: t`Personas`,
@@ -183,6 +210,11 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
       ]
     : [];
 
+  const allPaths = [
+    ...sections.flatMap((section) => section.items),
+    ...bottomItems,
+  ].map(resolvePath);
+
   return (
     <nav
       style={{
@@ -218,6 +250,7 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
           ) : null}
           {section.items.map((item) => (
             <NavLink
+              allPaths={allPaths}
               collapsed={collapsed}
               item={item}
               key={item.to}
@@ -238,6 +271,7 @@ export function NavMenu({ collapsed }: { collapsed: boolean }) {
         >
           {bottomItems.map((item) => (
             <NavLink
+              allPaths={allPaths}
               collapsed={collapsed}
               item={item}
               key={item.to}
