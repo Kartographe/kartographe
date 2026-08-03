@@ -24,6 +24,7 @@ from src.managers.account import AccountManager
 from src.managers.account_invitations import AccountInvitationsManager
 from src.managers.account_users import AccountUsersManager
 from src.managers.application import ApplicationManager
+from src.managers.application_component import ApplicationComponentManager
 from src.managers.application_environment import ApplicationEnvironmentManager
 from src.managers.application_environment_version import ApplicationEnvironmentVersionManager
 from src.managers.application_feature import ApplicationFeatureManager
@@ -74,6 +75,7 @@ from src.models.account import Account
 from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
 from src.models.application import Application
+from src.models.application_component import ApplicationComponent
 from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
@@ -548,6 +550,15 @@ def get_application_route_manager(session: SessionDep) -> ApplicationRouteManage
 ApplicationRouteManagerDep = Annotated[ApplicationRouteManager, Depends(get_application_route_manager)]
 
 
+def get_application_component_manager(session: SessionDep) -> ApplicationComponentManager:
+    return ApplicationComponentManager(session)
+
+
+ApplicationComponentManagerDep = Annotated[
+    ApplicationComponentManager, Depends(get_application_component_manager)
+]
+
+
 def get_application_route_response_manager(session: SessionDep) -> ApplicationRouteResponseManager:
     return ApplicationRouteResponseManager(session)
 
@@ -609,6 +620,20 @@ def get_current_application_route(
 
 
 CurrentApplicationRouteDep = Annotated[ApplicationRoute, Depends(get_current_application_route)]
+
+
+def get_current_application_component(
+    component_id: uuid.UUID, application: CurrentApplicationDep, session: SessionDep
+) -> ApplicationComponent:
+    component = session.get(ApplicationComponent, component_id)
+    if component is None or not component.enabled or component.application_id != application.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Component not found.")
+    return component
+
+
+CurrentApplicationComponentDep = Annotated[
+    ApplicationComponent, Depends(get_current_application_component)
+]
 
 
 def get_current_application_route_response(

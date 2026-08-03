@@ -15,6 +15,7 @@ from src.models.account_user import AccountUser
 from src.models.account_user_invitation import AccountUserInvitation
 from src.models.action_type import ActionType
 from src.models.application import Application
+from src.models.application_component import ApplicationComponent
 from src.models.application_environment import ApplicationEnvironment
 from src.models.application_environment_version import ApplicationEnvironmentVersion
 from src.models.application_feature import ApplicationFeature
@@ -67,6 +68,7 @@ __all__ = [
     "AccountUserInvitation",
     "ActionType",
     "Application",
+    "ApplicationComponent",
     "ApplicationEnvironment",
     "ApplicationEnvironmentVersion",
     "ApplicationFeature",

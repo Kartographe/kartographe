@@ -15,6 +15,7 @@ from sqlalchemy.sql.elements import ColumnElement
 
 from src.managers._arrays import uuid_array_overlap
 from src.models.application import Application
+from src.models.application_component import ApplicationComponent
 from src.models.application_guard import ApplicationGuard
 from src.models.application_route import ApplicationRoute
 from src.models.database import Database
@@ -34,6 +35,7 @@ TAGGED_MODEL: dict[TagEntityType, type] = {
     TagEntityType.APPLICATION: Application,
     TagEntityType.APPLICATION_ROUTE: ApplicationRoute,
     TagEntityType.APPLICATION_GUARD: ApplicationGuard,
+    TagEntityType.APPLICATION_COMPONENT: ApplicationComponent,
     TagEntityType.FEATURE: Feature,
     TagEntityType.JOURNEY: Journey,
     TagEntityType.JOURNEY_SCENARIO: JourneyScenario,

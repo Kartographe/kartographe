@@ -181,6 +181,11 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Account-wide scenario listing across every journey.",
     },
     {
+        "name": "api.components",
+        "x-displayName": "Components",
+        "description": "Account-wide component listing across every application.",
+    },
+    {
         "name": "api.journeys.scenarios.steps",
         "x-displayName": "Journeys › Steps",
         "description": "Steps inside a scenario (a tree of actions).",
@@ -399,6 +404,26 @@ API_TAGS: list[dict[str, str]] = [
         "name": "api.applications.routes.complexities",
         "x-displayName": "Applications › Route complexity",
         "description": "Complexity estimates on an application route.",
+    },
+    {
+        "name": "api.applications.components",
+        "x-displayName": "Applications › Components",
+        "description": "Building blocks an application is made of (front, back, library, worker, integration).",
+    },
+    {
+        "name": "api.applications.components.comments",
+        "x-displayName": "Applications › Component comments",
+        "description": "Comments on an application component.",
+    },
+    {
+        "name": "api.applications.components.votes",
+        "x-displayName": "Applications › Component votes",
+        "description": "Votes on an application component.",
+    },
+    {
+        "name": "api.applications.components.complexities",
+        "x-displayName": "Applications › Component complexity",
+        "description": "Complexity estimates on an application component.",
     },
     {
         "name": "api.journeys.votes",

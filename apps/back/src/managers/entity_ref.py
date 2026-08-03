@@ -20,6 +20,7 @@ from typing import Any, Protocol
 from sqlmodel import Session, select
 
 from src.models.application import Application
+from src.models.application_component import ApplicationComponent
 from src.models.application_route import ApplicationRoute
 from src.models.database import Database
 from src.models.database_migration import DatabaseMigration
@@ -90,6 +91,9 @@ _SPECS: dict[EntityType, _EntitySpec] = {
     EntityType.APPLICATION: _EntitySpec(Application, _title),
     EntityType.APPLICATION_ROUTE: _EntitySpec(
         ApplicationRoute, _route_label, EntityType.APPLICATION, "application_id"
+    ),
+    EntityType.APPLICATION_COMPONENT: _EntitySpec(
+        ApplicationComponent, _title, EntityType.APPLICATION, "application_id"
     ),
     EntityType.JOURNEY: _EntitySpec(Journey, _title),
     EntityType.JOURNEY_SCENARIO: _EntitySpec(

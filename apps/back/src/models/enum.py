@@ -447,6 +447,28 @@ class ApplicationRoleStatus(str, Enum):
     ARCHIVED = "archived"
 
 
+class ApplicationComponentType(str, Enum):
+    """The kind of building block a component is.
+
+    Architectural rather than visual: a component is a piece the application is
+    built from — its front, its back, a shared library, an async worker, a
+    third-party integration.
+    """
+
+    FRONTEND = "frontend"
+    BACKEND = "backend"
+    LIBRARY = "library"
+    WORKER = "worker"
+    INTEGRATION = "integration"
+    OTHER = "other"
+
+
+class ApplicationComponentStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
 class ApplicationRouteStatus(str, Enum):
     DRAFT = "draft"
     ACTIVE = "active"
@@ -507,6 +529,7 @@ class EntityType(str, Enum):
     SERVICE_ACTION = "service_action"
     JOURNEY_SCENARIO = "journey_scenario"
     JOURNEY_SCENARIO_STEP = "journey_scenario_step"
+    APPLICATION_COMPONENT = "application_component"
 
 
 class SearchEntityType(str, Enum):
@@ -535,6 +558,7 @@ class SearchEntityType(str, Enum):
     SERVICE_ACTION = "service_action"
     JOURNEY_SCENARIO = "journey_scenario"
     JOURNEY_SCENARIO_STEP = "journey_scenario_step"
+    APPLICATION_COMPONENT = "application_component"
     COMMENT = "comment"
 
 
@@ -669,6 +693,7 @@ class TagEntityType(str, Enum):
     APPLICATION = "application"
     APPLICATION_ROUTE = "application_route"
     APPLICATION_GUARD = "application_guard"
+    APPLICATION_COMPONENT = "application_component"
     FEATURE = "feature"
     JOURNEY = "journey"
     JOURNEY_SCENARIO = "journey_scenario"
