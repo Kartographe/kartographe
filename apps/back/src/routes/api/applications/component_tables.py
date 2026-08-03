@@ -66,11 +66,9 @@ def list_component_tables(
     component: CurrentApplicationComponentDep,
     manager: ApplicationComponentDatabaseTableManagerDep,
 ) -> ListingResponse[ApplicationComponentDatabaseTableItem]:
-    items = [
-        ApplicationComponentDatabaseTableItem.model_validate(row)
-        for row in manager.list_for_component(component)
-    ]
-    return ListingResponse.single_page(items)
+    return ListingResponse.single_page(
+        manager.to_items(manager.list_for_component(component))
+    )
 
 
 @router.post(
@@ -98,7 +96,7 @@ def create_component_table(
         database_table_id=form.database_table_id,
         description=form.description,
     )
-    return ItemResponse(item=ApplicationComponentDatabaseTableItem.model_validate(link))
+    return ItemResponse(item=manager.to_item(link))
 
 
 @router.post(
@@ -133,7 +131,7 @@ def bulk_create_component_tables(
             database_table_id=form.database_table_id,
             description=form.description,
         ),
-        serialize=ApplicationComponentDatabaseTableItem.model_validate,
+        serialize=manager.to_item,
     )
 
 
@@ -148,7 +146,7 @@ def bulk_create_component_tables(
 def get_component_table(
     _: CurrentAccountUserDep, link: CurrentApplicationComponentDatabaseTableDep
 ) -> ItemResponse[ApplicationComponentDatabaseTableItem]:
-    return ItemResponse(item=ApplicationComponentDatabaseTableItem.model_validate(link))
+    return ItemResponse(item=manager.to_item(link))
 
 
 @router.patch(
@@ -170,7 +168,7 @@ def update_component_table(
     _: Annotated[AccountUser, Depends(_DEV)],
 ) -> ItemResponse[ApplicationComponentDatabaseTableItem]:
     updated = manager.update(component, link, form.model_dump(exclude_unset=True))
-    return ItemResponse(item=ApplicationComponentDatabaseTableItem.model_validate(updated))
+    return ItemResponse(item=manager.to_item(updated))
 
 
 @router.delete(

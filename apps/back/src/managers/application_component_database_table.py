@@ -3,7 +3,12 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 """Component/table link lifecycle: creation and update with table validation,
-listing, delete."""
+listing, delete.
+
+Listings resolve the linked tables in one batched query: a link stores only a
+`database_table_id`, and a table is reachable only through its database and its
+version, so a client given the bare id could not name what the link points at.
+"""
 
 import uuid
 
@@ -17,6 +22,7 @@ from src.models.application_component_database_table import (
 )
 from src.models.database_table import DatabaseTable
 from src.models.user import User
+from src.serializes.application_components import ApplicationComponentDatabaseTableItem
 from src.utils.datetime import utc_now
 
 
@@ -35,6 +41,47 @@ class ApplicationComponentDatabaseTableManager(BaseEntityManager):
                 .order_by(ApplicationComponentDatabaseTable.created_at.asc())
             ).all()
         )
+
+    def to_items(
+        self, links: list[ApplicationComponentDatabaseTable]
+    ) -> list[ApplicationComponentDatabaseTableItem]:
+        """Serialize links with their table's name, database and version filled in."""
+        tables = self._tables_for(links)
+        items = []
+        for link in links:
+            table = tables.get(link.database_table_id)
+            items.append(
+                ApplicationComponentDatabaseTableItem.model_validate(link).model_copy(
+                    update={
+                        "database_id": table[0] if table else None,
+                        "database_version_id": table[1] if table else None,
+                        "database_table_name": table[2] if table else None,
+                    }
+                )
+            )
+        return items
+
+    def to_item(
+        self, link: ApplicationComponentDatabaseTable
+    ) -> ApplicationComponentDatabaseTableItem:
+        return self.to_items([link])[0]
+
+    def _tables_for(
+        self, links: list[ApplicationComponentDatabaseTable]
+    ) -> dict[uuid.UUID, tuple[uuid.UUID, uuid.UUID, str]]:
+        """`(database_id, database_version_id, name)` per linked table id."""
+        table_ids = {link.database_table_id for link in links}
+        if not table_ids:
+            return {}
+        rows = self.session.exec(
+            select(
+                DatabaseTable.id,
+                DatabaseTable.database_id,
+                DatabaseTable.database_version_id,
+                DatabaseTable.name,
+            ).where(DatabaseTable.id.in_(table_ids), DatabaseTable.enabled.is_(True))
+        ).all()
+        return {row[0]: (row[1], row[2], row[3]) for row in rows}
 
     def _assert_table_in_account(
         self, component: ApplicationComponent, database_table_id: uuid.UUID

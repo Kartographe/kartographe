@@ -52,11 +52,19 @@ class ApplicationComponentListItem(ApplicationComponentItem):
 
 
 class ApplicationComponentDatabaseTableItem(CamelBase):
-    """A link between a component and a database table."""
+    """A link between a component and a database table.
+
+    The table's own coordinates ride along: a table is only reachable through
+    its database *and* version, so an id alone leaves a client unable to name
+    what it points at. Null when the table has since been deleted.
+    """
 
     application_component_id: uuid.UUID
     application_id: uuid.UUID
+    database_id: uuid.UUID | None = None
     database_table_id: uuid.UUID
+    database_table_name: str | None = None
+    database_version_id: uuid.UUID | None = None
     date: datetime
     description: dict | None = None
     id: uuid.UUID
