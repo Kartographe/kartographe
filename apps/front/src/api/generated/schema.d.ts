@@ -1522,7 +1522,11 @@ export interface paths {
          * @description Give or update your complexity estimate on an application. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_applications_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on an application
+         * @description Withdraw your complexity estimate on an application. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_applications_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1546,7 +1550,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a application route. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_applications_routes_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a route
+         * @description Withdraw your complexity estimate on a route. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_applications_routes_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1750,7 +1758,11 @@ export interface paths {
          * @description Give or update your complexity estimate on an application component. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_applications_components_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a component
+         * @description Withdraw your complexity estimate on a component. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_applications_components_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2026,7 +2038,11 @@ export interface paths {
          * @description Give or update your complexity estimate on an application bounded context. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_applications_boundedContexts_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a bounded context
+         * @description Withdraw your complexity estimate on a bounded context. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_applications_boundedContexts_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2390,7 +2406,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a feature. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
          */
         post: operations["api_features_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a feature
+         * @description Withdraw your complexity estimate on a feature. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_features_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2594,7 +2614,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a persona. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
          */
         post: operations["api_personas_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a persona
+         * @description Withdraw your complexity estimate on a persona. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_personas_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3434,7 +3458,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a journey. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
          */
         post: operations["api_journeys_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a journey
+         * @description Withdraw your complexity estimate on a journey. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_journeys_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3458,7 +3486,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a journey scenario. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
          */
         post: operations["api_journeys_scenarios_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a scenario
+         * @description Withdraw your complexity estimate on a scenario. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_journeys_scenarios_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -3482,7 +3514,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a scenario step. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's product complexity mode; a value outside it is refused.
          */
         post: operations["api_journeys_scenarios_steps_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a step
+         * @description Withdraw your complexity estimate on a step. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_journeys_scenarios_steps_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4916,7 +4952,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a database. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_databases_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a database
+         * @description Withdraw your complexity estimate on a database. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_databases_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4940,7 +4980,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a database table. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_databases_versions_tables_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a table
+         * @description Withdraw your complexity estimate on a table. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_databases_versions_tables_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4964,7 +5008,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a database column. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_databases_versions_tables_columns_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a column
+         * @description Withdraw your complexity estimate on a column. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_databases_versions_tables_columns_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4988,7 +5036,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a database migration. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_databases_migrations_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a migration
+         * @description Withdraw your complexity estimate on a migration. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_databases_migrations_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -5012,7 +5064,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a migration column step. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_databases_migrations_columns_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a migration column
+         * @description Withdraw your complexity estimate on a migration column. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_databases_migrations_columns_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -5416,7 +5472,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a service. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_services_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a service
+         * @description Withdraw your complexity estimate on a service. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_services_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -5440,7 +5500,11 @@ export interface paths {
          * @description Give or update your complexity estimate on a service action. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
          */
         post: operations["api_services_actions_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate on a service action
+         * @description Withdraw your complexity estimate on a service action. Estimating `null` says "I cannot estimate yet" and keeps you among the participants; withdrawing removes you from them. 404 when you have not estimated it.
+         */
+        delete: operations["api_services_actions_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -5672,7 +5736,11 @@ export interface paths {
          * @description Give or update your complexity estimate on any entity of the account, given its `entityType` and `entityId`. A member holds at most one estimate per entity, so estimating again replaces it. The scale is not chosen by the client: it comes from the account's technical or product mode, picked by the entity's kind, and a value outside that scale is refused. Any member may estimate. The mutualized counterpart of the per-entity `.../{entity}/complexities` endpoints.
          */
         post: operations["api_complexities_create"];
-        delete?: never;
+        /**
+         * Withdraw your estimate
+         * @description Withdraw your complexity estimate on any entity of the account, given its `entityType` and `entityId`. Withdrawing is not the same as estimating `null`: `null` says "I cannot estimate yet" and keeps you among the participants, withdrawing removes you from them. 404 when you have not estimated the entity. The mutualized counterpart of the per-entity `.../{entity}/complexities` endpoints.
+         */
+        delete: operations["api_complexities_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -20267,6 +20335,45 @@ export interface operations {
             };
         };
     };
+    api_applications_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_complexities_list: {
         parameters: {
             query?: never;
@@ -20351,6 +20458,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_applications_routes_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                route_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Application or route not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -21100,6 +21247,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_applications_components_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -22168,6 +22355,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_applications_boundedContexts_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                bounded_context_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Application or bounded context not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -23533,6 +23760,45 @@ export interface operations {
             };
         };
     };
+    api_features_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_personas_list: {
         parameters: {
             query?: {
@@ -24251,6 +24517,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_personas_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                persona_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Persona not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -27416,6 +27721,45 @@ export interface operations {
             };
         };
     };
+    api_journeys_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_journeys_scenarios_complexities_list: {
         parameters: {
             query?: never;
@@ -27500,6 +27844,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey or scenario not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -27590,6 +27974,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_journeys_scenarios_steps_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                step_id: string;
+                scenario_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey, scenario or step not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -32833,6 +33258,45 @@ export interface operations {
             };
         };
     };
+    api_databases_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_tables_complexities_list: {
         parameters: {
             query?: never;
@@ -32919,6 +33383,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_versions_tables_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -33015,6 +33520,48 @@ export interface operations {
             };
         };
     };
+    api_databases_versions_tables_columns_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_table_column_id: string;
+                database_table_id: string;
+                database_version_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_migrations_complexities_list: {
         parameters: {
             query?: never;
@@ -33099,6 +33646,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Migration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -33189,6 +33776,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_databases_migrations_columns_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_migration_column_id: string;
+                database_migration_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Migration column not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -34638,6 +35266,45 @@ export interface operations {
             };
         };
     };
+    api_services_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_actions_complexities_list: {
         parameters: {
             query?: never;
@@ -34722,6 +35389,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_services_actions_complexities_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                action_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service or action not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -35591,6 +36298,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_complexities_delete: {
+        parameters: {
+            query: {
+                entityType: components["schemas"]["EntityType"];
+                entityId: string;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
