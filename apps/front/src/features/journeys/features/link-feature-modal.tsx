@@ -5,20 +5,20 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Modal } from "antd";
+import { useState } from "react";
 import { z } from "zod";
 import { $api } from "@/api/$api";
-import type { components } from "@/api/generated/schema";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
-type Feature = components["schemas"]["FeatureItem"];
+/** One page is plenty next to a search box; the query narrows, not the page. */
+const SEARCH_LIMIT = 25;
 
 interface LinkFeatureModalProps {
   accountId: string;
   journeyId: string;
-  /** The account's features not already linked to this journey. */
-  features: Feature[];
-  isLoading: boolean;
+  /** Already-linked ids, filtered out of whatever the search brings back. */
+  linkedIds: Set<string>;
   open: boolean;
   onClose: () => void;
 }
@@ -26,13 +26,27 @@ interface LinkFeatureModalProps {
 export function LinkFeatureModal({
   accountId,
   journeyId,
-  features,
-  isLoading,
+  linkedIds,
   open,
   onClose,
 }: LinkFeatureModalProps) {
   const { t } = useLingui();
   const queryClient = useQueryClient();
+  const [search, setSearch] = useState("");
+
+  // Searching server-side rather than filtering a first page client-side: an
+  // account past the page size would otherwise have features the picker can
+  // never reach.
+  const featuresQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/features",
+    {
+      params: {
+        path: { account_id: accountId },
+        query: { limit: SEARCH_LIMIT, ...(search ? { q: search } : {}) },
+      },
+    }
+  );
 
   const createMutation = $api.useMutation(
     "post",
@@ -67,10 +81,9 @@ export function LinkFeatureModal({
     },
   });
 
-  const options = features.map((feature) => ({
-    value: feature.id,
-    label: feature.title,
-  }));
+  const options = (featuresQuery.data?.items ?? [])
+    .filter((feature) => !linkedIds.has(feature.id))
+    .map((feature) => ({ value: feature.id, label: feature.title }));
 
   return (
     <Modal
@@ -86,13 +99,10 @@ export function LinkFeatureModal({
             {(field) => (
               <field.SelectField
                 label={t`Fonctionnalité`}
-                loading={isLoading}
+                loading={featuresQuery.isLoading}
+                onSearch={setSearch}
                 options={options}
-                placeholder={
-                  options.length
-                    ? t`Choisir une fonctionnalité`
-                    : t`Toutes les fonctionnalités sont déjà liées`
-                }
+                placeholder={t`Rechercher une fonctionnalité`}
               />
             )}
           </form.AppField>

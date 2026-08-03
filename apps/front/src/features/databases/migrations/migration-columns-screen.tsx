@@ -27,6 +27,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import {
   MigrationColumnStatusTag,
   MigrationColumnTypeTag,
@@ -132,6 +133,7 @@ export function MigrationColumnsScreen({
     MigrationColumn | undefined
   >(undefined);
   const [myVote, setMyVote] = useState<string | null>(null);
+  const [myComplexity, setMyComplexity] = useState<string | null>(null);
 
   const path = {
     account_id: accountId,
@@ -142,7 +144,15 @@ export function MigrationColumnsScreen({
   const columnsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/migrations/{database_migration_id}/columns",
-    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
+    {
+      params: {
+        path,
+        query: {
+          ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
+        },
+      },
+    }
   );
   const sourceTablesQuery = $api.useQuery(
     "get",
@@ -341,6 +351,7 @@ export function MigrationColumnsScreen({
     filters
   ) => {
     setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+    setMyComplexity((filters.complexity as string[] | null)?.[0] ?? null);
   };
 
   const formModal =
@@ -490,6 +501,7 @@ export function MigrationColumnsScreen({
       ),
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

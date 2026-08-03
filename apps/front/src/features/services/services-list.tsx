@@ -29,6 +29,7 @@ import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -77,6 +78,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
   const types = (view.filterValue("type") ?? []) as Type[];
   const categories = (view.filterValue("category") ?? []) as Category[];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const servicesQuery = $api.useQuery(
     "get",
@@ -93,6 +95,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
           ...(types.length ? { type: types } : {}),
           ...(categories.length ? { category: categories } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -315,6 +318,7 @@ export function ServicesList({ accountId }: { accountId: string }) {
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

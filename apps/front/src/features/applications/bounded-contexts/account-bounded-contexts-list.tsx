@@ -10,6 +10,7 @@ import { Button, Empty, Flex, Table, Tag, Typography } from "antd";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { votesColumn } from "@/features/votes/votes-column";
@@ -42,6 +43,7 @@ export function AccountBoundedContextsList({
     SORT_FIELD
   );
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const contextsQuery = $api.useQuery(
     "get",
@@ -55,6 +57,7 @@ export function AccountBoundedContextsList({
           sortBy: view.sortBy,
           sortOrder: view.sortOrder,
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -115,6 +118,7 @@ export function AccountBoundedContextsList({
       render: (ids: string[]) => <Tag>{ids.length}</Tag>,
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

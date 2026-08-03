@@ -13,6 +13,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import {
   ScenarioCriticityTag,
   ScenarioStatusTag,
@@ -40,13 +41,22 @@ export function ScenariosScreen({
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<JourneyScenario | undefined | null>(null);
   const [myVote, setMyVote] = useState<string | null>(null);
+  const [myComplexity, setMyComplexity] = useState<string | null>(null);
 
   const path = { account_id: accountId, journey_id: journeyId };
 
   const scenariosQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios",
-    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
+    {
+      params: {
+        path,
+        query: {
+          ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
+        },
+      },
+    }
   );
   const statusMutation = $api.useMutation(
     "patch",
@@ -108,6 +118,7 @@ export function ScenariosScreen({
     filters
   ) => {
     setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+    setMyComplexity((filters.complexity as string[] | null)?.[0] ?? null);
   };
 
   const formModal =
@@ -181,6 +192,7 @@ export function ScenariosScreen({
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

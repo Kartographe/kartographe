@@ -13,6 +13,7 @@ import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { EditablePersonasCell } from "@/features/journeys/editable-personas-cell";
 import {
   ScenarioCriticityTag,
@@ -69,6 +70,7 @@ export function AccountScenariosList({ accountId }: { accountId: string }) {
   const tagIds = view.filterValue("tags") ?? [];
   const personasIds = view.filterValue("personasIds") ?? [];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const tagFilters = useTagFilters(accountId, "journey_scenario");
 
@@ -89,6 +91,7 @@ export function AccountScenariosList({ accountId }: { accountId: string }) {
           ...(tagIds.length ? { tagIds } : {}),
           ...(personasIds.length ? { personasIds } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -281,6 +284,7 @@ export function AccountScenariosList({ accountId }: { accountId: string }) {
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

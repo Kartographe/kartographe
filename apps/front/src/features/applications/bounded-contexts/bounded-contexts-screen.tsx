@@ -24,6 +24,7 @@ import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { BoundedContextActivityDrawer } from "@/features/applications/bounded-contexts/bounded-context-activity-drawer";
 import { BoundedContextFormModal } from "@/features/applications/bounded-contexts/bounded-context-form-modal";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -52,10 +53,13 @@ export function BoundedContextsScreen({
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<BoundedContext | undefined>(undefined);
   const [opened, setOpened] = useState<BoundedContext | undefined>(undefined);
+  const [myComplexity, setMyComplexity] = useState<string | null>(null);
 
   const path = { account_id: accountId, application_id: applicationId };
 
-  const contextsQuery = $api.useQuery("get", LIST_PATH, { params: { path } });
+  const contextsQuery = $api.useQuery("get", LIST_PATH, {
+    params: { path, query: myComplexity ? { myComplexity } : {} },
+  });
   // The context stores component ids; their titles come from the application's
   // own component listing.
   const componentsQuery = $api.useQuery("get", COMPONENTS_PATH, {
@@ -116,6 +120,13 @@ export function BoundedContextsScreen({
     });
   }
 
+  const onChange: TableProps<BoundedContext>["onChange"] = (
+    _pagination,
+    filters
+  ) => {
+    setMyComplexity((filters.complexity as string[] | null)?.[0] ?? null);
+  };
+
   function openCreate() {
     setEditing(undefined);
     setFormOpen(true);
@@ -160,6 +171,7 @@ export function BoundedContextsScreen({
         ),
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote: null }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",
@@ -219,7 +231,7 @@ export function BoundedContextsScreen({
         </Button>
       </Flex>
 
-      {contexts.length === 0 && !contextsQuery.isLoading ? (
+      {contexts.length === 0 && !(contextsQuery.isLoading || myComplexity) ? (
         <Empty
           description={t`Aucun contexte borné. Délimitez les zones du domaine de cette application.`}
         >
@@ -232,6 +244,7 @@ export function BoundedContextsScreen({
           columns={columns}
           dataSource={contexts}
           loading={contextsQuery.isLoading}
+          onChange={onChange}
           pagination={{ hideOnSinglePage: true, pageSize: 25 }}
           rowKey="id"
           scroll={scrollX(columns)}

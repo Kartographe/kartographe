@@ -20,6 +20,7 @@ import {
   COMPONENT_STATUS_LABELS,
   COMPONENT_TYPE_LABELS,
 } from "@/features/applications/components/labels";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { PAGE_SIZES, useListView } from "@/features/preferences/use-list-view";
 import { EditableTagsCell } from "@/features/tags/editable-tags-cell";
@@ -59,6 +60,7 @@ export function AccountComponentsList({ accountId }: { accountId: string }) {
   const types = (view.filterValue("type") ?? []) as Type[];
   const tagIds = view.filterValue("tags") ?? [];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const tagFilters = useTagFilters(accountId, "application_component");
 
@@ -77,6 +79,7 @@ export function AccountComponentsList({ accountId }: { accountId: string }) {
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -195,6 +198,7 @@ export function AccountComponentsList({ accountId }: { accountId: string }) {
       ),
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

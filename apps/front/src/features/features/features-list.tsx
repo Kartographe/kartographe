@@ -15,6 +15,7 @@ import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { FeatureFormModal } from "@/features/features/feature-form-modal";
 import {
   FeatureStatusTag,
@@ -61,6 +62,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
   const types = (view.filterValue("type") ?? []) as Type[];
   const tagIds = view.filterValue("tags") ?? [];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const tagFilters = useTagFilters(accountId, "feature");
 
@@ -79,6 +81,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -262,6 +265,7 @@ export function FeaturesList({ accountId }: { accountId: string }) {
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

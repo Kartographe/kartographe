@@ -27,6 +27,7 @@ import {
   ComponentTypeTag,
 } from "@/features/applications/components/component-tags";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -56,12 +57,19 @@ export function ComponentsScreen({
   const [editing, setEditing] = useState<Component | undefined>(undefined);
   const [opened, setOpened] = useState<Component | undefined>(undefined);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [myComplexity, setMyComplexity] = useState<string | null>(null);
 
   const tagFilters = useTagFilters(accountId, "application_component");
   const path = { account_id: accountId, application_id: applicationId };
 
   const componentsQuery = $api.useQuery("get", LIST_PATH, {
-    params: { path, query: tagIds.length ? { tagIds } : {} },
+    params: {
+      path,
+      query: {
+        ...(tagIds.length ? { tagIds } : {}),
+        ...(myComplexity ? { myComplexity } : {}),
+      },
+    },
   });
   const statusMutation = $api.useMutation("patch", ITEM_PATH, {
     meta: { successMessage: t`Statut mis à jour` },
@@ -102,6 +110,7 @@ export function ComponentsScreen({
     filters
   ) => {
     setTagIds((filters.tags as string[] | null) ?? []);
+    setMyComplexity((filters.complexity as string[] | null)?.[0] ?? null);
   };
 
   async function changeStatus(
@@ -232,6 +241,7 @@ export function ComponentsScreen({
       ),
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote: null }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",
@@ -292,7 +302,7 @@ export function ComponentsScreen({
       </Flex>
 
       {components.length === 0 &&
-      !(componentsQuery.isLoading || tagIds.length) ? (
+      !(componentsQuery.isLoading || tagIds.length || myComplexity) ? (
         <Empty
           description={t`Aucun composant. Décrivez les briques dont cette application est faite.`}
         >

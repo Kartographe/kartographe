@@ -15,6 +15,7 @@ import type { components } from "@/api/generated/schema";
 import { dtoEnums } from "@/api/generated/schema.enums";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { EditablePersonasCell } from "@/features/journeys/editable-personas-cell";
 import { JourneyFormModal } from "@/features/journeys/journey-form-modal";
 import {
@@ -69,6 +70,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
   const tagIds = view.filterValue("tags") ?? [];
   const personasIds = view.filterValue("personasIds") ?? [];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const tagFilters = useTagFilters(accountId, "journey");
 
@@ -88,6 +90,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
           ...(tagIds.length ? { tagIds } : {}),
           ...(personasIds.length ? { personasIds } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -306,6 +309,7 @@ export function JourneysList({ accountId }: { accountId: string }) {
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

@@ -18,6 +18,14 @@ interface SelectFieldProps {
   disabled?: boolean;
   /** For options fetched asynchronously. */
   loading?: boolean;
+  /** Type-to-filter. Local by default; pass `onSearch` to query the server. */
+  showSearch?: boolean;
+  /**
+   * Fired on each keystroke when searching. Given it, the field stops filtering
+   * locally — the caller's query is the filter, and re-filtering its answer
+   * would hide options the server deliberately returned.
+   */
+  onSearch?: (value: string) => void;
   /**
    * Fired after the field took the new value. For the one thing the field
    * cannot do itself: clearing another field whose options depend on this one.
@@ -31,6 +39,8 @@ export function SelectField({
   options,
   disabled,
   loading,
+  showSearch,
+  onSearch,
   onChange,
 }: SelectFieldProps) {
   const field = useFieldContext<string>();
@@ -46,6 +56,7 @@ export function SelectField({
     >
       <Select
         disabled={disabled}
+        filterOption={onSearch ? false : undefined}
         id={field.name}
         loading={loading}
         onBlur={field.handleBlur}
@@ -53,8 +64,10 @@ export function SelectField({
           field.handleChange(value);
           onChange?.(value);
         }}
+        onSearch={onSearch}
         options={options}
         placeholder={placeholder}
+        showSearch={showSearch || !!onSearch}
         value={field.state.value || undefined}
       />
     </Form.Item>

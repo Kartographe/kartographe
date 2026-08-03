@@ -71,3 +71,35 @@ export const COMPLEXITY_SCOPE_BY_ENTITY: Record<
   journey_scenario_step: "product",
   persona: "product",
 };
+
+export const COMPLEXITY_LEVEL_LABELS: Record<
+  S["ComplexityLevel"],
+  MessageDescriptor
+> = {
+  none: msg`Aucune`,
+  low: msg`Faible`,
+  medium: msg`Moyenne`,
+  high: msg`Forte`,
+  extreme: msg`Extrême`,
+};
+
+/**
+ * Green → black as the weight climbs. Hex rather than antd presets: the five
+ * steps must read as one gradient, and the presets have no black.
+ */
+export const COMPLEXITY_LEVEL_COLORS: Record<S["ComplexityLevel"], string> = {
+  none: "#52c41a",
+  low: "#fadb14",
+  medium: "#fa8c16",
+  high: "#f5222d",
+  extreme: "#262626",
+};
+
+/** Ascending, so pickers and legends always read light → heavy. */
+export const COMPLEXITY_LEVEL_ORDER: S["ComplexityLevel"][] = [
+  "none",
+  "low",
+  "medium",
+  "high",
+  "extreme",
+];

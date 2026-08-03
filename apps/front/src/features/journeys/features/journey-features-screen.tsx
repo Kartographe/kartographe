@@ -97,7 +97,6 @@ export function JourneyFeaturesScreen({
   const features = featuresQuery.data?.items ?? [];
   const featureById = new Map(features.map((feature) => [feature.id, feature]));
   const linkedIds = new Set(links.map((link) => link.featureId));
-  const linkable = features.filter((feature) => !linkedIds.has(feature.id));
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -151,10 +150,9 @@ export function JourneyFeaturesScreen({
   const linkModal = (
     <LinkFeatureModal
       accountId={accountId}
-      features={linkable}
-      isLoading={featuresQuery.isLoading}
       journeyId={journeyId}
       key={linkOpen ? "open" : "closed"}
+      linkedIds={linkedIds}
       onClose={() => setLinkOpen(false)}
       open={linkOpen}
     />

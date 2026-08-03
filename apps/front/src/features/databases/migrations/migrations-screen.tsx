@@ -27,6 +27,7 @@ import { useState } from "react";
 import { $api } from "@/api/$api";
 import type { components } from "@/api/generated/schema";
 import { actionsWidth, COL, scrollX } from "@/components/table/columns";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import {
   MigrationStatusTag,
   MigrationTypeTag,
@@ -59,13 +60,22 @@ export function MigrationsScreen({
   // `null` = closed, `undefined` = open in create mode.
   const [form, setForm] = useState<DatabaseMigration | undefined | null>(null);
   const [myVote, setMyVote] = useState<string | null>(null);
+  const [myComplexity, setMyComplexity] = useState<string | null>(null);
 
   const path = { account_id: accountId, database_id: databaseId };
 
   const migrationsQuery = $api.useQuery(
     "get",
     "/v1/accounts/{account_id}/databases/{database_id}/migrations",
-    { params: { path, query: { ...(myVote ? { myVote } : {}) } } }
+    {
+      params: {
+        path,
+        query: {
+          ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
+        },
+      },
+    }
   );
   const deleteMutation = $api.useMutation(
     "delete",
@@ -124,6 +134,7 @@ export function MigrationsScreen({
     filters
   ) => {
     setMyVote((filters.votes as string[] | null)?.[0] ?? null);
+    setMyComplexity((filters.complexity as string[] | null)?.[0] ?? null);
   };
 
   const formModal =
@@ -196,6 +207,7 @@ export function MigrationsScreen({
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",

@@ -28,6 +28,7 @@ import {
   scrollX,
 } from "@/components/table/columns";
 import { CommentCountButton } from "@/features/comments/comment-count-button";
+import { complexityColumn } from "@/features/complexity/complexity-column";
 import { LockIndicator } from "@/features/lock/lock-indicator";
 import { LockToggleButton } from "@/features/lock/lock-toggle-button";
 import { useCanManageLock } from "@/features/lock/use-can-manage-lock";
@@ -80,6 +81,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
   const types = (view.filterValue("type") ?? []) as Type[];
   const tagIds = view.filterValue("tags") ?? [];
   const myVote = view.firstFilterValue("votes");
+  const myComplexity = view.firstFilterValue("complexity");
 
   const tagFilters = useTagFilters(accountId, "persona");
 
@@ -98,6 +100,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
           ...(types.length ? { type: types } : {}),
           ...(tagIds.length ? { tagIds } : {}),
           ...(myVote ? { myVote } : {}),
+          ...(myComplexity ? { myComplexity } : {}),
         },
       },
     },
@@ -309,6 +312,7 @@ export function PersonasList({ accountId }: { accountId: string }) {
         value ? dayjs(value).format("DD/MM/YYYY") : "—",
     },
     votesColumn({ t, notVotedLabel: t`Pas encore voté`, myVote }),
+    complexityColumn({ t, myComplexity }),
     {
       title: "",
       key: "actions",
