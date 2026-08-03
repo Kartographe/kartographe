@@ -7,7 +7,7 @@
 List and give complexity estimates on a feature. Any account member may read and estimate.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from src.forms.complexities import ComplexityUpsertForm
 from src.models.enum import EntityType
@@ -69,3 +69,26 @@ def create_feature_complexity(
         account, member, entity_type=EntityType.FEATURE, entity_id=feature.id, value=form.value
     )
     return ItemResponse(item=ComplexityItem.model_validate(complexity))
+
+
+@router.delete(
+    "",
+    operation_id="api_features_complexities_delete",
+    summary="Withdraw your estimate on a feature",
+    description=(
+        "Withdraw your complexity estimate on a feature. Estimating `null` says \"I cannot "
+        "estimate yet\" and keeps you among the participants; withdrawing removes you from them. "
+        "404 when you have not estimated it."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**_NOT_FOUND},
+)
+def delete_feature_complexity(
+    account: CurrentAccountDep,
+    member: CurrentAccountUserDep,
+    feature: CurrentFeatureDep,
+    manager: ComplexityManagerDep,
+) -> None:
+    manager.remove(
+        account, member, entity_type=EntityType.FEATURE, entity_id=feature.id
+    )

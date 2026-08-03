@@ -7,7 +7,7 @@
 List and give complexity estimates on an application. Any account member may read and estimate.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from src.forms.complexities import ComplexityUpsertForm
 from src.models.enum import EntityType
@@ -69,3 +69,26 @@ def create_application_complexity(
         account, member, entity_type=EntityType.APPLICATION, entity_id=application.id, value=form.value
     )
     return ItemResponse(item=ComplexityItem.model_validate(complexity))
+
+
+@router.delete(
+    "",
+    operation_id="api_applications_complexities_delete",
+    summary="Withdraw your estimate on an application",
+    description=(
+        "Withdraw your complexity estimate on an application. Estimating `null` says \"I cannot "
+        "estimate yet\" and keeps you among the participants; withdrawing removes you from them. "
+        "404 when you have not estimated it."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**_NOT_FOUND},
+)
+def delete_application_complexity(
+    account: CurrentAccountDep,
+    member: CurrentAccountUserDep,
+    application: CurrentApplicationDep,
+    manager: ComplexityManagerDep,
+) -> None:
+    manager.remove(
+        account, member, entity_type=EntityType.APPLICATION, entity_id=application.id
+    )

@@ -145,3 +145,27 @@ def create_complexity(
         value=form.value,
     )
     return ItemResponse(item=ComplexityItem.model_validate(complexity))
+
+
+@router.delete(
+    "",
+    operation_id="api_complexities_delete",
+    summary="Withdraw your estimate",
+    description=(
+        "Withdraw your complexity estimate on any entity of the account, given its `entityType` "
+        "and `entityId`. Withdrawing is not the same as estimating `null`: `null` says \"I cannot "
+        "estimate yet\" and keeps you among the participants, withdrawing removes you from them. "
+        "404 when you have not estimated the entity. The mutualized counterpart of the per-entity "
+        "`.../{entity}/complexities` endpoints."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**_NOT_FOUND},
+)
+def delete_complexity(
+    account: CurrentAccountDep,
+    member: CurrentAccountUserDep,
+    manager: ComplexityManagerDep,
+    entity_type: Annotated[EntityType, Query(alias="entityType")],
+    entity_id: Annotated[uuid.UUID, Query(alias="entityId")],
+) -> None:
+    manager.remove(account, member, entity_type=entity_type, entity_id=entity_id)

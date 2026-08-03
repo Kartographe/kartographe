@@ -7,7 +7,7 @@
 List and give complexity estimates on a journey. Any account member may read and estimate.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from src.forms.complexities import ComplexityUpsertForm
 from src.models.enum import EntityType
@@ -69,3 +69,26 @@ def create_journey_complexity(
         account, member, entity_type=EntityType.JOURNEY, entity_id=journey.id, value=form.value
     )
     return ItemResponse(item=ComplexityItem.model_validate(complexity))
+
+
+@router.delete(
+    "",
+    operation_id="api_journeys_complexities_delete",
+    summary="Withdraw your estimate on a journey",
+    description=(
+        "Withdraw your complexity estimate on a journey. Estimating `null` says \"I cannot "
+        "estimate yet\" and keeps you among the participants; withdrawing removes you from them. "
+        "404 when you have not estimated it."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**_NOT_FOUND},
+)
+def delete_journey_complexity(
+    account: CurrentAccountDep,
+    member: CurrentAccountUserDep,
+    journey: CurrentJourneyDep,
+    manager: ComplexityManagerDep,
+) -> None:
+    manager.remove(
+        account, member, entity_type=EntityType.JOURNEY, entity_id=journey.id
+    )

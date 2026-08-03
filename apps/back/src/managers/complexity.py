@@ -150,6 +150,33 @@ class ComplexityManager(BaseEntityManager):
             )
         ).first()
 
+    def remove(
+        self,
+        account: Account,
+        member: AccountUser,
+        *,
+        entity_type: EntityType,
+        entity_id: uuid.UUID,
+    ) -> None:
+        """Withdraw the member's estimate on an entity.
+
+        Withdrawing is not the same as answering "cannot estimate yet": one
+        leaves no row and no participant, the other leaves a row with a null
+        value. 404 when there is nothing to withdraw, so a double click cannot
+        read as a success.
+        """
+        existing = self._live_estimate(account, member.user_id, entity_type, entity_id)
+        if existing is None:
+            raise HTTPException(
+                status.HTTP_404_NOT_FOUND, "You have not estimated this entity."
+            )
+        now = utc_now()
+        existing.enabled = False
+        existing.deleted_at = now
+        existing.updated_at = now
+        self.session.add(existing)
+        self.session.commit()
+
     def upsert(
         self,
         account: Account,
