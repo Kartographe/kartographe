@@ -1756,6 +1756,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/tables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List component tables
+         * @description List the database-table links of a component, in insertion order. Any member may read.
+         */
+        get: operations["api_applications_components_tables_list"];
+        put?: never;
+        /**
+         * Link a database table
+         * @description Link the component to a database table of the account, with an optional rich-text note on what the component does with it. Dev roles only.
+         */
+        post: operations["api_applications_components_tables_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/tables/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link several database tables at once
+         * @description Link 1 to 50 database tables in a single call — prefer this over calling `api_applications_components_tables_create` in a loop when adding many. Best-effort: each link is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_components_tables_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/tables/{component_table_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a component table link
+         * @description Return a single database-table link of the component. Any member may read.
+         */
+        get: operations["api_applications_components_tables_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a component table link
+         * @description Soft-delete a database-table link. Dev roles only.
+         */
+        delete: operations["api_applications_components_tables_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a component table link
+         * @description Partially update a link (database table, description). A changed table must belong to the account. Dev roles only.
+         */
+        patch: operations["api_applications_components_tables_update"];
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -6714,6 +6786,80 @@ export interface components {
             tagIds?: string[];
         };
         /**
+         * ApplicationComponentDatabaseTableCreateForm
+         * @description Link a component to a database table. The table must belong to the account.
+         */
+        ApplicationComponentDatabaseTableCreateForm: {
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document) — what the component does with the table.
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * ApplicationComponentDatabaseTableItem
+         * @description A link between a component and a database table.
+         */
+        ApplicationComponentDatabaseTableItem: {
+            /**
+             * Applicationcomponentid
+             * Format: uuid
+             */
+            applicationComponentId: string;
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Databasetableid
+             * Format: uuid
+             */
+            databaseTableId: string;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+        };
+        /**
+         * ApplicationComponentDatabaseTablePatchForm
+         * @description Partial update of a component/table link — only the keys sent are applied.
+         */
+        ApplicationComponentDatabaseTablePatchForm: {
+            /** Databasetableid */
+            databaseTableId?: string | null;
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document).
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
          * ApplicationComponentItem
          * @description A building block of an application.
          */
@@ -8009,6 +8155,14 @@ export interface components {
              */
             items: components["schemas"]["ApplicationComponentCreateForm"][];
         };
+        /** BulkCreateRequest[ApplicationComponentDatabaseTableCreateForm] */
+        BulkCreateRequest_ApplicationComponentDatabaseTableCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationComponentDatabaseTableCreateForm"][];
+        };
         /** BulkCreateRequest[ApplicationCreateForm] */
         BulkCreateRequest_ApplicationCreateForm_: {
             /**
@@ -8269,6 +8423,15 @@ export interface components {
         BulkCreateResponse_AccountItem_: {
             /** Results */
             results: components["schemas"]["BulkItemResult_AccountItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationComponentDatabaseTableItem] */
+        BulkCreateResponse_ApplicationComponentDatabaseTableItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationComponentDatabaseTableItem_"][];
             /** Created */
             created: number;
             /** Failed */
@@ -8589,6 +8752,18 @@ export interface components {
              */
             status: "created" | "error";
             item?: components["schemas"]["AccountItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationComponentDatabaseTableItem] */
+        BulkItemResult_ApplicationComponentDatabaseTableItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationComponentDatabaseTableItem"] | null;
             error?: components["schemas"]["BulkItemError"] | null;
         };
         /** BulkItemResult[ApplicationComponentItem] */
@@ -10819,6 +10994,10 @@ export interface components {
         ItemResponse_ActionTypeItem_: {
             item: components["schemas"]["ActionTypeItem"];
         };
+        /** ItemResponse[ApplicationComponentDatabaseTableItem] */
+        ItemResponse_ApplicationComponentDatabaseTableItem_: {
+            item: components["schemas"]["ApplicationComponentDatabaseTableItem"];
+        };
         /** ItemResponse[ApplicationComponentItem] */
         ItemResponse_ApplicationComponentItem_: {
             item: components["schemas"]["ApplicationComponentItem"];
@@ -11772,6 +11951,16 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["ActionTypeItem"][];
+        };
+        /** ListingResponse[ApplicationComponentDatabaseTableItem] */
+        ListingResponse_ApplicationComponentDatabaseTableItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationComponentDatabaseTableItem"][];
         };
         /** ListingResponse[ApplicationComponentItem] */
         ListingResponse_ApplicationComponentItem_: {
@@ -20366,6 +20555,325 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationComponentDatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationComponentDatabaseTableCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentDatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationComponentDatabaseTableCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationComponentDatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_table_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentDatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_table_id: string;
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_tables_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+                component_table_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationComponentDatabaseTablePatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentDatabaseTableItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component, link or database table not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
