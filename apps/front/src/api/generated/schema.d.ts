@@ -1552,6 +1552,210 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/components": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List components
+         * @description List the components of an application, most recent first. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags.
+         */
+        get: operations["api_applications_components_list"];
+        put?: never;
+        /**
+         * Create a component
+         * @description Create a component. It starts as a draft owned by the caller. Dev roles only.
+         */
+        post: operations["api_applications_components_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create several components at once
+         * @description Create 1 to 50 components in a single call — prefer this over calling `api_applications_components_create` in a loop when adding many. Best-effort: each component is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` (`created`/`error`) and the `created` / `failed` counts rather than the HTTP code. Each item takes the same shape as the single create. Dev roles only.
+         */
+        post: operations["api_applications_components_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a component
+         * @description Return a single component of the application. Any member may read.
+         */
+        get: operations["api_applications_components_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a component
+         * @description Soft-delete a component. Dev roles only; refused while the component is locked.
+         */
+        delete: operations["api_applications_components_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a component
+         * @description Partially update a component. Dev roles only; refused while the component is locked.
+         */
+        patch: operations["api_applications_components_update"];
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Lock a component
+         * @description Freeze the component against edits and deletion; comments, votes and complexity estimates stay available. Owners and administrators only.
+         */
+        post: operations["api_applications_components_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unlock a component
+         * @description Lift the freeze on the component. Owners and administrators only.
+         */
+        post: operations["api_applications_components_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List component comments
+         * @description List the root comments on an application component, oldest first. Any member may read.
+         */
+        get: operations["api_applications_components_comments_list"];
+        put?: never;
+        /**
+         * Comment on a component
+         * @description Post a comment on an application component. Any member may post.
+         */
+        post: operations["api_applications_components_comments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/comments/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post several comments on a component at once
+         * @description Post 1 to 50 comments on an application component in a single call — prefer this over calling `api_applications_components_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
+         */
+        post: operations["api_applications_components_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/votes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List component votes
+         * @description List the votes on an application component, oldest first. Any member may read.
+         */
+        get: operations["api_applications_components_votes_list"];
+        put?: never;
+        /**
+         * Vote on a component
+         * @description Cast or update your vote on an application component. Any member may vote; a member holds at most one vote per entity, so voting again replaces it. The vote's role is taken from your voting role.
+         */
+        post: operations["api_applications_components_votes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/components/{component_id}/complexities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List component complexity estimates
+         * @description List the complexity estimates on an application component, oldest first. Any member may read.
+         */
+        get: operations["api_applications_components_complexities_list"];
+        put?: never;
+        /**
+         * Estimate the complexity of a component
+         * @description Give or update your complexity estimate on an application component. Any member may estimate; a member holds at most one estimate per entity, so estimating again replaces it. The scale comes from the account's technical complexity mode; a value outside it is refused.
+         */
+        post: operations["api_applications_components_complexities_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features": {
         parameters: {
             query?: never;
@@ -3020,6 +3224,26 @@ export interface paths {
          * @description List the scenarios of the account across every journey, most recent first. Filter by status, type and/or criticity (repeat the query param for multiple values), sort by date/title/status/type/criticity, and page through results. Filter with `tagIds` (repeat the query param) to keep only the scenarios carrying at least one of those tags, and with `personasIds` to keep only those targeting at least one of those personas. Each scenario carries its parent `journeyId` and `journeyTitle`. Any member may read.
          */
         get: operations["api_scenarios_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/components": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List components
+         * @description List the components of the account across every application, most recent first. Filter by status and/or type (repeat the query param for multiple values), restrict to given applications with `applicationIds`, sort by date/title/status/type, and page through results. Filter with `tagIds` (repeat the query param) to keep only the components carrying at least one of those tags. Each component carries its parent `applicationId` and `applicationTitle`. Any member may read.
+         */
+        get: operations["api_components_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6471,6 +6695,225 @@ export interface components {
             token: string;
         };
         /**
+         * ApplicationComponentCreateForm
+         * @description Create a component. It starts as a draft owned by the caller.
+         */
+        ApplicationComponentCreateForm: {
+            /** Title */
+            title: string;
+            /** @default other */
+            type: components["schemas"]["ApplicationComponentType"];
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document).
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Tagids */
+            tagIds?: string[];
+        };
+        /**
+         * ApplicationComponentItem
+         * @description A building block of an application.
+         */
+        ApplicationComponentItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationComponentStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationComponentType"];
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /** Tagcount */
+            readonly tagCount: number;
+        };
+        /**
+         * ApplicationComponentListItem
+         * @description A component in the account-wide listing, carrying its parent application.
+         *
+         *     `applicationTitle` is null when the parent application has since been removed.
+         */
+        ApplicationComponentListItem: {
+            myVote?: components["schemas"]["VoteValue"] | null;
+            /** Tagids */
+            tagIds: string[];
+            /**
+             * Applicationid
+             * Format: uuid
+             */
+            applicationId: string;
+            /**
+             * Commentcount
+             * @default 0
+             */
+            commentCount: number;
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Locked */
+            locked: boolean;
+            lockedBy?: components["schemas"]["OwnerItem"] | null;
+            /** Lockedbyid */
+            lockedById?: string | null;
+            /** Lockeddate */
+            lockedDate?: string | null;
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            status: components["schemas"]["ApplicationComponentStatus"];
+            /**
+             * Statusdate
+             * Format: date-time
+             */
+            statusDate: string;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: components["schemas"]["TagItem"][];
+            /** Title */
+            title: string;
+            type: components["schemas"]["ApplicationComponentType"];
+            /**
+             * Votescountsbyrolevalue
+             * @default {}
+             */
+            votesCountsByRoleValue: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Votescountsbyvalue
+             * @default {}
+             */
+            votesCountsByValue: {
+                [key: string]: number;
+            };
+            /** Applicationtitle */
+            applicationTitle?: string | null;
+            /** Tagcount */
+            readonly tagCount: number;
+        };
+        /**
+         * ApplicationComponentPatchForm
+         * @description Partial update of a component — only the keys sent are applied.
+         */
+        ApplicationComponentPatchForm: {
+            /** Title */
+            title?: string | null;
+            type?: components["schemas"]["ApplicationComponentType"] | null;
+            status?: components["schemas"]["ApplicationComponentStatus"] | null;
+            /**
+             * Description
+             * @description Rich text (Tiptap JSON document).
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** Tagids */
+            tagIds?: string[] | null;
+        };
+        /**
+         * ApplicationComponentSortField
+         * @description Sortable columns for the components listings.
+         * @enum {string}
+         */
+        ApplicationComponentSortField: "date" | "title" | "status" | "type";
+        /**
+         * ApplicationComponentStatus
+         * @enum {string}
+         */
+        ApplicationComponentStatus: "draft" | "active" | "archived";
+        /**
+         * ApplicationComponentType
+         * @description The kind of building block a component is.
+         *
+         *     Architectural rather than visual: a component is a piece the application is
+         *     built from — its front, its back, a shared library, an async worker, a
+         *     third-party integration.
+         * @enum {string}
+         */
+        ApplicationComponentType: "frontend" | "backend" | "library" | "worker" | "integration" | "other";
+        /**
          * ApplicationCreateForm
          * @description Create an application. It starts as a draft owned by the caller.
          */
@@ -7558,6 +8001,14 @@ export interface components {
              */
             items: components["schemas"]["AccountCreateForm"][];
         };
+        /** BulkCreateRequest[ApplicationComponentCreateForm] */
+        BulkCreateRequest_ApplicationComponentCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["ApplicationComponentCreateForm"][];
+        };
         /** BulkCreateRequest[ApplicationCreateForm] */
         BulkCreateRequest_ApplicationCreateForm_: {
             /**
@@ -7818,6 +8269,15 @@ export interface components {
         BulkCreateResponse_AccountItem_: {
             /** Results */
             results: components["schemas"]["BulkItemResult_AccountItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[ApplicationComponentItem] */
+        BulkCreateResponse_ApplicationComponentItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_ApplicationComponentItem_"][];
             /** Created */
             created: number;
             /** Failed */
@@ -8129,6 +8589,18 @@ export interface components {
              */
             status: "created" | "error";
             item?: components["schemas"]["AccountItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[ApplicationComponentItem] */
+        BulkItemResult_ApplicationComponentItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["ApplicationComponentItem"] | null;
             error?: components["schemas"]["BulkItemError"] | null;
         };
         /** BulkItemResult[ApplicationEnvironmentItem] */
@@ -10004,7 +10476,7 @@ export interface components {
          *     (`entity_type`).
          * @enum {string}
          */
-        EntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step";
+        EntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component";
         /**
          * ErrorResponse
          * @description A business error: a single human-readable message.
@@ -10346,6 +10818,10 @@ export interface components {
         /** ItemResponse[ActionTypeItem] */
         ItemResponse_ActionTypeItem_: {
             item: components["schemas"]["ActionTypeItem"];
+        };
+        /** ItemResponse[ApplicationComponentItem] */
+        ItemResponse_ApplicationComponentItem_: {
+            item: components["schemas"]["ApplicationComponentItem"];
         };
         /** ItemResponse[ApplicationEnvironmentItem] */
         ItemResponse_ApplicationEnvironmentItem_: {
@@ -11296,6 +11772,26 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["ActionTypeItem"][];
+        };
+        /** ListingResponse[ApplicationComponentItem] */
+        ListingResponse_ApplicationComponentItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationComponentItem"][];
+        };
+        /** ListingResponse[ApplicationComponentListItem] */
+        ListingResponse_ApplicationComponentListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["ApplicationComponentListItem"][];
         };
         /** ListingResponse[ApplicationEnvironmentItem] */
         ListingResponse_ApplicationEnvironmentItem_: {
@@ -12387,7 +12883,7 @@ export interface components {
          *     type (`search_entity_type`).
          * @enum {string}
          */
-        SearchEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "comment";
+        SearchEntityType: "feature" | "application" | "application_route" | "journey" | "persona" | "database" | "database_table" | "database_table_column" | "database_migration" | "database_migration_column" | "service" | "service_action" | "journey_scenario" | "journey_scenario_step" | "application_component" | "comment";
         /**
          * SearchResultItem
          * @description One ranked search hit.
@@ -12828,7 +13324,7 @@ export interface components {
          * @description The kind of entity a tag can be attached to.
          * @enum {string}
          */
-        TagEntityType: "application" | "application_route" | "application_guard" | "feature" | "journey" | "journey_scenario" | "journey_scenario_step" | "persona" | "database" | "database_table" | "database_table_column";
+        TagEntityType: "application" | "application_route" | "application_guard" | "application_component" | "feature" | "journey" | "journey_scenario" | "journey_scenario_step" | "persona" | "database" | "database_table" | "database_table_column";
         /**
          * TagItem
          * @description A colored label attachable to an account's entities.
@@ -19127,6 +19623,753 @@ export interface operations {
             };
         };
     };
+    api_applications_components_list: {
+        parameters: {
+            query?: {
+                tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationComponentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_ApplicationComponentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component is locked */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplicationComponentPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Component is locked */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                component_id: string;
+                application_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ApplicationComponentItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_comments_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_comments_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_comments_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_CommentCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_votes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_votes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_VoteItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_complexities_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_components_complexities_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                component_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComplexityUpsertForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_ComplexityItem_"];
+                };
+            };
+            /** @description Application or component not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Value is not on the account's scale */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     api_features_list: {
         parameters: {
             query?: {
@@ -24567,6 +25810,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListingResponse_JourneyScenarioListItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this account */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_components_list: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["ApplicationComponentStatus"][] | null;
+                type?: components["schemas"]["ApplicationComponentType"][] | null;
+                applicationIds?: string[] | null;
+                tagIds?: string[] | null;
+                /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
+                myVote?: string | null;
+                sortBy?: components["schemas"]["ApplicationComponentSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+                page?: number;
+                limit?: components["schemas"]["PageLimit"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_ApplicationComponentListItem_"];
                 };
             };
             /** @description Insufficient permissions on this account */
