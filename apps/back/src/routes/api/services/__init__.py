@@ -12,6 +12,8 @@ object is re-checked against the account (and its parent service) behind the URL
 from fastapi import APIRouter
 
 from src.routes.api.services.action_comments import router as action_comments_router
+from src.routes.api.services.action_complexities import router as action_complexities_router
+from src.routes.api.services.complexities import router as complexities_router
 from src.routes.api.services.action_votes import router as action_votes_router
 from src.routes.api.services.actions import router as actions_router
 from src.routes.api.services.comments import router as comments_router
@@ -25,3 +27,5 @@ router.include_router(comments_router)
 router.include_router(action_comments_router)
 router.include_router(votes_router)
 router.include_router(action_votes_router)
+router.include_router(complexities_router)
+router.include_router(action_complexities_router)

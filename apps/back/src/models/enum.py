@@ -623,6 +623,33 @@ class VoteRole(str, Enum):
     OTHER = "other"
 
 
+class ComplexityMode(str, Enum):
+    """The estimation scale a complexity is expressed on.
+
+    Set per account and per scope (`Account.technical_complexity_mode` /
+    `product_complexity_mode`), snapshotted onto each estimate so a stored value
+    stays readable after the account switches scale. The allowed values of each
+    scale live in `src/utils/complexity.py`.
+    """
+
+    FIBONACCI = "fibonacci"
+    MODIFIED_FIBONACCI = "modified_fibonacci"
+    POWERS_OF_TWO = "powers_of_two"
+    LINEAR = "linear"
+
+
+class ComplexityScope(str, Enum):
+    """Which of the account's two scales an entity is estimated on.
+
+    Technical entities (applications, routes, databases, services) are estimated
+    by the build side, product entities (features, personas, journeys) by the
+    product side — each with its own mode.
+    """
+
+    TECHNICAL = "technical"
+    PRODUCT = "product"
+
+
 class VoteValue(str, Enum):
     """A member's stance on an entity.
 

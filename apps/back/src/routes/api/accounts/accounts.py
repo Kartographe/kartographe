@@ -138,7 +138,10 @@ def get_account(
     "/{account_id}",
     operation_id="api_accounts_update",
     summary="Update an account",
-    description="Partially update a workspace (name, language, time zone). Owners and administrators only.",
+    description=(
+        "Partially update a workspace (name, language, time zone, and the estimation "
+        "scales used for technical and product complexity). Owners and administrators only."
+    ),
     response_model=ItemResponse[AccountItem],
     responses={**_FORBIDDEN, **_NOT_FOUND},
 )

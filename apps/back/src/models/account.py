@@ -16,7 +16,7 @@ from sqlmodel import Field, Relationship
 
 from src.models._base import BaseModel
 from src.models._fields import CreatedIpFields
-from src.models.enum import AccountStatus, Language
+from src.models.enum import AccountStatus, ComplexityMode, Language
 
 if TYPE_CHECKING:
     from src.models.account_user import AccountUser
@@ -34,6 +34,11 @@ class Account(BaseModel, CreatedIpFields, table=True):
     name: str = Field(index=True)
     picture_profile: str | None = Field(default=None)
     time_zone: str = Field(default="Europe/Paris")
+
+    # The estimation scale each side of the account works on. Snapshotted onto
+    # every `Complexity` row, so switching a mode never rewrites past estimates.
+    technical_complexity_mode: ComplexityMode = Field(default=ComplexityMode.FIBONACCI)
+    product_complexity_mode: ComplexityMode = Field(default=ComplexityMode.LINEAR)
 
     # Business-facing timestamps, distinct from BaseModel's internal ones.
     created_date: datetime | None = Field(default=None)

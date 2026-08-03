@@ -36,6 +36,7 @@ from src.managers.application_route_table import ApplicationRouteTableManager
 from src.managers.application_version import ApplicationVersionManager
 from src.managers.auth import AuthManager
 from src.managers.comment import CommentManager
+from src.managers.complexity import ComplexityManager
 from src.managers.core import CoreManager
 from src.managers.database import DatabaseManager
 from src.managers.database_migration import DatabaseMigrationManager
@@ -1253,3 +1254,12 @@ def get_vote_manager(session: SessionDep) -> VoteManager:
 
 
 VoteManagerDep = Annotated[VoteManager, Depends(get_vote_manager)]
+
+
+# --- Complexity ---------------------------------------------------------
+
+def get_complexity_manager(session: SessionDep) -> ComplexityManager:
+    return ComplexityManager(session)
+
+
+ComplexityManagerDep = Annotated[ComplexityManager, Depends(get_complexity_manager)]

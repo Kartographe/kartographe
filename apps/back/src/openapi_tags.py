@@ -366,9 +366,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Account-wide vote listing, and casting a vote on any entity.",
     },
     {
+        "name": "api.complexities",
+        "x-displayName": "Complexities",
+        "description": "Account-wide complexity listing, the account's scales, and estimating any entity.",
+    },
+    {
         "name": "api.features.votes",
         "x-displayName": "Features › Votes",
         "description": "Votes cast on a feature.",
+    },
+    {
+        "name": "api.features.complexities",
+        "x-displayName": "Features › Complexity",
+        "description": "Complexity estimates on a feature.",
     },
     {
         "name": "api.applications.votes",
@@ -376,9 +386,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on an application.",
     },
     {
+        "name": "api.applications.complexities",
+        "x-displayName": "Applications › Complexity",
+        "description": "Complexity estimates on an application.",
+    },
+    {
         "name": "api.applications.routes.votes",
         "x-displayName": "Applications › Route votes",
         "description": "Votes cast on an application route.",
+    },
+    {
+        "name": "api.applications.routes.complexities",
+        "x-displayName": "Applications › Route complexity",
+        "description": "Complexity estimates on an application route.",
     },
     {
         "name": "api.journeys.votes",
@@ -386,9 +406,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on a journey.",
     },
     {
+        "name": "api.journeys.complexities",
+        "x-displayName": "Journeys › Complexity",
+        "description": "Complexity estimates on a journey.",
+    },
+    {
         "name": "api.journeys.scenarios.votes",
         "x-displayName": "Journeys › Scenario votes",
         "description": "Votes cast on a scenario.",
+    },
+    {
+        "name": "api.journeys.scenarios.complexities",
+        "x-displayName": "Journeys › Scenario complexity",
+        "description": "Complexity estimates on a scenario.",
     },
     {
         "name": "api.journeys.scenarios.steps.votes",
@@ -396,9 +426,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on a scenario step.",
     },
     {
+        "name": "api.journeys.scenarios.steps.complexities",
+        "x-displayName": "Journeys › Step complexity",
+        "description": "Complexity estimates on a scenario step.",
+    },
+    {
         "name": "api.personas.votes",
         "x-displayName": "Personas › Votes",
         "description": "Votes cast on a persona.",
+    },
+    {
+        "name": "api.personas.complexities",
+        "x-displayName": "Personas › Complexity",
+        "description": "Complexity estimates on a persona.",
     },
     {
         "name": "api.services.votes",
@@ -406,9 +446,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on a service.",
     },
     {
+        "name": "api.services.complexities",
+        "x-displayName": "Services › Complexity",
+        "description": "Complexity estimates on a service.",
+    },
+    {
         "name": "api.services.actions.votes",
         "x-displayName": "Services › Action votes",
         "description": "Votes cast on a service action.",
+    },
+    {
+        "name": "api.services.actions.complexities",
+        "x-displayName": "Services › Action complexity",
+        "description": "Complexity estimates on a service action.",
     },
     {
         "name": "api.databases.votes",
@@ -416,9 +466,19 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on a database.",
     },
     {
+        "name": "api.databases.complexities",
+        "x-displayName": "Databases › Complexity",
+        "description": "Complexity estimates on a database.",
+    },
+    {
         "name": "api.databases.versions.tables.votes",
         "x-displayName": "Databases › Table votes",
         "description": "Votes cast on a database table.",
+    },
+    {
+        "name": "api.databases.versions.tables.complexities",
+        "x-displayName": "Databases › Table complexity",
+        "description": "Complexity estimates on a table.",
     },
     {
         "name": "api.databases.versions.tables.columns.votes",
@@ -426,14 +486,29 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Votes cast on a database column.",
     },
     {
+        "name": "api.databases.versions.tables.columns.complexities",
+        "x-displayName": "Databases › Column complexity",
+        "description": "Complexity estimates on a column.",
+    },
+    {
         "name": "api.databases.migrations.votes",
         "x-displayName": "Databases › Migration votes",
         "description": "Votes cast on a database migration.",
     },
     {
+        "name": "api.databases.migrations.complexities",
+        "x-displayName": "Databases › Migration complexity",
+        "description": "Complexity estimates on a migration.",
+    },
+    {
         "name": "api.databases.migrations.columns.votes",
         "x-displayName": "Databases › Migration column votes",
         "description": "Votes cast on a migration column step.",
+    },
+    {
+        "name": "api.databases.migrations.columns.complexities",
+        "x-displayName": "Databases › Migration column complexity",
+        "description": "Complexity estimates on a migration column.",
     },
 ]
 

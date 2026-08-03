@@ -59,6 +59,8 @@ class AccountManager:
             picture_profile=self._files.public_url_for(account.picture_profile),
             created_date=account.created_date,
             status_date=account.status_date,
+            technical_complexity_mode=account.technical_complexity_mode,
+            product_complexity_mode=account.product_complexity_mode,
             membership=(
                 AccountUserContextItem.model_validate(membership) if membership is not None else None
             ),

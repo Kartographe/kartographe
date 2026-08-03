@@ -7,7 +7,14 @@
 import uuid
 from datetime import datetime
 
-from src.models.enum import AccountStatus, AccountUserRole, AccountUserStatus, AccountUserType, Language
+from src.models.enum import (
+    AccountStatus,
+    AccountUserRole,
+    AccountUserStatus,
+    AccountUserType,
+    ComplexityMode,
+    Language,
+)
 from src.serializes._base import CamelBase
 
 
@@ -30,6 +37,8 @@ class AccountItem(CamelBase):
     membership: AccountUserContextItem | None = None
     name: str
     picture_profile: str | None = None
+    product_complexity_mode: ComplexityMode
     status: AccountStatus
     status_date: datetime | None = None
+    technical_complexity_mode: ComplexityMode
     time_zone: str

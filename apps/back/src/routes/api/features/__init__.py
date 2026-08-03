@@ -17,6 +17,7 @@ from src.routes.api.features.comments import router as comments_router
 from src.routes.api.features.features import router as features_router
 from src.routes.api.features.files import router as files_router
 from src.routes.api.features.journeys import router as journeys_router
+from src.routes.api.features.complexities import router as complexities_router
 from src.routes.api.features.votes import router as votes_router
 
 router = APIRouter()
@@ -25,3 +26,4 @@ router.include_router(files_router)
 router.include_router(journeys_router)
 router.include_router(comments_router)
 router.include_router(votes_router)
+router.include_router(complexities_router)

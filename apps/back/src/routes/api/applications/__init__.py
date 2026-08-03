@@ -24,6 +24,8 @@ from src.routes.api.applications.route_comments import router as route_comments_
 from src.routes.api.applications.route_examples import router as route_examples_router
 from src.routes.api.applications.route_responses import router as route_responses_router
 from src.routes.api.applications.route_tables import router as route_tables_router
+from src.routes.api.applications.complexities import router as complexities_router
+from src.routes.api.applications.route_complexities import router as route_complexities_router
 from src.routes.api.applications.route_votes import router as route_votes_router
 from src.routes.api.applications.routes import router as routes_router
 from src.routes.api.applications.versions import router as versions_router
@@ -45,3 +47,5 @@ router.include_router(comments_router)
 router.include_router(route_comments_router)
 router.include_router(votes_router)
 router.include_router(route_votes_router)
+router.include_router(complexities_router)
+router.include_router(route_complexities_router)

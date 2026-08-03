@@ -26,7 +26,14 @@ from src.routes.api.databases.migration_columns import router as migration_colum
 from src.routes.api.databases.migration_comments import router as migration_comments_router
 from src.routes.api.databases.migrations import router as migrations_router
 from src.routes.api.databases.subfields import router as subfields_router
+from src.routes.api.databases.column_complexities import router as column_complexities_router
+from src.routes.api.databases.complexities import router as complexities_router
 from src.routes.api.databases.column_votes import router as column_votes_router
+from src.routes.api.databases.migration_column_complexities import (
+    router as migration_column_complexities_router,
+)
+from src.routes.api.databases.migration_complexities import router as migration_complexities_router
+from src.routes.api.databases.table_complexities import router as table_complexities_router
 from src.routes.api.databases.migration_column_votes import (
     router as migration_column_votes_router,
 )
@@ -57,3 +64,8 @@ router.include_router(table_votes_router)
 router.include_router(column_votes_router)
 router.include_router(migration_votes_router)
 router.include_router(migration_column_votes_router)
+router.include_router(complexities_router)
+router.include_router(table_complexities_router)
+router.include_router(column_complexities_router)
+router.include_router(migration_complexities_router)
+router.include_router(migration_column_complexities_router)

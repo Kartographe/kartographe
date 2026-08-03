@@ -27,6 +27,7 @@ from src.models.application_route_table import ApplicationRouteTable
 from src.models.application_version import ApplicationVersion
 from src.models.assertion_type import AssertionType
 from src.models.comment import Comment
+from src.models.complexity import Complexity
 from src.models.database import Database
 from src.models.database_column_type import DatabaseColumnType
 from src.models.database_migration import DatabaseMigration
@@ -79,6 +80,7 @@ __all__ = [
     "AssertionType",
     "BaseModel",
     "Comment",
+    "Complexity",
     "Database",
     "DatabaseColumnType",
     "DatabaseMigration",

@@ -7,7 +7,7 @@
 from pydantic import Field
 
 from src.forms._base import CamelBase
-from src.models.enum import Language
+from src.models.enum import ComplexityMode, Language
 
 
 class AccountCreateForm(CamelBase):
@@ -24,3 +24,11 @@ class AccountPatchForm(CamelBase):
     name: str | None = Field(default=None, min_length=1, max_length=255)
     language: Language | None = Field(default=None)
     time_zone: str | None = Field(default=None, max_length=64)
+    technical_complexity_mode: ComplexityMode | None = Field(
+        default=None,
+        description="Estimation scale used for technical entities (applications, databases, services).",
+    )
+    product_complexity_mode: ComplexityMode | None = Field(
+        default=None,
+        description="Estimation scale used for product entities (features, personas, journeys).",
+    )

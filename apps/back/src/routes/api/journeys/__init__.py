@@ -21,6 +21,9 @@ from src.routes.api.journeys.scenarios import router as scenarios_router
 from src.routes.api.journeys.step_assertions import router as step_assertions_router
 from src.routes.api.journeys.step_comments import router as step_comments_router
 from src.routes.api.journeys.step_files import router as step_files_router
+from src.routes.api.journeys.complexities import router as complexities_router
+from src.routes.api.journeys.scenario_complexities import router as scenario_complexities_router
+from src.routes.api.journeys.step_complexities import router as step_complexities_router
 from src.routes.api.journeys.scenario_votes import router as scenario_votes_router
 from src.routes.api.journeys.step_routes import router as step_routes_router
 from src.routes.api.journeys.step_votes import router as step_votes_router
@@ -41,3 +44,6 @@ router.include_router(step_comments_router)
 router.include_router(votes_router)
 router.include_router(scenario_votes_router)
 router.include_router(step_votes_router)
+router.include_router(complexities_router)
+router.include_router(scenario_complexities_router)
+router.include_router(step_complexities_router)

@@ -17,6 +17,7 @@ from src.routes.api.accounts import router as accounts_router
 from src.routes.api.applications import router as applications_router
 from src.routes.api.auth import router as auth_router
 from src.routes.api.comments import router as comments_router
+from src.routes.api.complexities import router as complexities_router
 from src.routes.api.core import router as core_router
 from src.routes.api.databases import router as databases_router
 from src.routes.api.features import router as features_router
@@ -45,6 +46,7 @@ v1_router.include_router(services_router)  # services & their actions
 v1_router.include_router(tags_router)  # account tags
 v1_router.include_router(comments_router)  # account-level comment management
 v1_router.include_router(votes_router)  # account-level vote listing
+v1_router.include_router(complexities_router)  # account-level complexity listing & scales
 v1_router.include_router(core_router)  # global action, assertion & column type catalogues
 router.include_router(v1_router)
 
