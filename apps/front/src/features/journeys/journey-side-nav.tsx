@@ -9,6 +9,7 @@ import {
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
+  LinkOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -166,6 +167,11 @@ export function JourneySideNav({
     label: t`Commentaires`,
     icon: <CommentOutlined />,
   };
+  const links: NavItem = {
+    to: `${BASE}/links`,
+    label: t`Références`,
+    icon: <LinkOutlined />,
+  };
   const votes: NavItem = {
     to: `${BASE}/votes`,
     label: t`Votes`,
@@ -220,6 +226,12 @@ export function JourneySideNav({
       <NavLink
         accountId={accountId}
         item={comments}
+        journeyId={journeyId}
+        pathname={pathname}
+      />
+      <NavLink
+        accountId={accountId}
+        item={links}
         journeyId={journeyId}
         pathname={pathname}
       />

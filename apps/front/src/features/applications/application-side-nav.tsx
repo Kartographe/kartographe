@@ -11,6 +11,7 @@ import {
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
+  LinkOutlined,
   PartitionOutlined,
   RocketOutlined,
   SafetyOutlined,
@@ -114,6 +115,11 @@ export function ApplicationSideNav({
       to: `${BASE}/comments`,
       label: t`Commentaires`,
       icon: <CommentOutlined />,
+    },
+    {
+      to: `${BASE}/links`,
+      label: t`Références`,
+      icon: <LinkOutlined />,
     },
     { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
     {

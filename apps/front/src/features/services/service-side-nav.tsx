@@ -7,6 +7,7 @@ import {
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
+  LinkOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -84,6 +85,11 @@ export function ServiceSideNav({
       to: `${BASE}/comments`,
       label: t`Commentaires`,
       icon: <CommentOutlined />,
+    },
+    {
+      to: `${BASE}/links`,
+      label: t`Références`,
+      icon: <LinkOutlined />,
     },
     { to: `${BASE}/votes`, label: t`Votes`, icon: <LikeOutlined /> },
     {

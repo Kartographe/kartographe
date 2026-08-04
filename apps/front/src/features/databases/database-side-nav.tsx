@@ -8,6 +8,7 @@ import {
   CommentOutlined,
   InfoCircleOutlined,
   LikeOutlined,
+  LinkOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
@@ -251,6 +252,11 @@ export function DatabaseSideNav({
     label: t`Commentaires`,
     icon: <CommentOutlined />,
   };
+  const links: NavItem = {
+    to: `${BASE}/links`,
+    label: t`Références`,
+    icon: <LinkOutlined />,
+  };
   const votes: NavItem = {
     to: `${BASE}/votes`,
     label: t`Votes`,
@@ -322,6 +328,12 @@ export function DatabaseSideNav({
         accountId={accountId}
         databaseId={databaseId}
         item={comments}
+        pathname={pathname}
+      />
+      <NavLink
+        accountId={accountId}
+        databaseId={databaseId}
+        item={links}
         pathname={pathname}
       />
       <NavLink
