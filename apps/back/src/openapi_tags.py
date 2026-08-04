@@ -381,6 +381,39 @@ API_TAGS: list[dict[str, str]] = [
         "description": "Account-wide complexity listing, the account's scales, and estimating any entity.",
     },
     {
+        "name": "api.links",
+        "x-displayName": "Links",
+        "description": (
+            "Account-wide reference management: list, attach to any entity, read, edit, delete, "
+            "and preview a URL before saving it."
+        ),
+    },
+    {
+        "name": "api.features.links",
+        "x-displayName": "Features › References",
+        "description": "References attached to a feature.",
+    },
+    {
+        "name": "api.applications.links",
+        "x-displayName": "Applications › References",
+        "description": "References attached to an application.",
+    },
+    {
+        "name": "api.journeys.links",
+        "x-displayName": "Journeys › References",
+        "description": "References attached to a journey.",
+    },
+    {
+        "name": "api.services.links",
+        "x-displayName": "Services › References",
+        "description": "References attached to a service.",
+    },
+    {
+        "name": "api.databases.links",
+        "x-displayName": "Databases › References",
+        "description": "References attached to a database.",
+    },
+    {
         "name": "api.features.votes",
         "x-displayName": "Features › Votes",
         "description": "Votes cast on a feature.",

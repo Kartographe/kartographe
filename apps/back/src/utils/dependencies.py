@@ -61,6 +61,7 @@ from src.managers.journey_scenario_step import JourneyScenarioStepManager
 from src.managers.journey_scenario_step_assertion import JourneyScenarioStepAssertionManager
 from src.managers.journey_scenario_step_file import JourneyScenarioStepFileManager
 from src.managers.journey_scenario_step_route import JourneyScenarioStepRouteManager
+from src.managers.link import LinkManager
 from src.managers.persona import PersonaManager
 from src.managers.search import SearchManager
 from src.managers.service import ServiceManager
@@ -117,6 +118,7 @@ from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
+from src.models.link import Link
 from src.models.persona import Persona
 from src.models.service import Service
 from src.models.service_action import ServiceAction
@@ -1350,3 +1352,37 @@ def get_complexity_manager(session: SessionDep) -> ComplexityManager:
 
 
 ComplexityManagerDep = Annotated[ComplexityManager, Depends(get_complexity_manager)]
+
+
+# --- Links --------------------------------------------------------------
+
+def get_link_manager(session: SessionDep) -> LinkManager:
+    return LinkManager(session)
+
+
+LinkManagerDep = Annotated[LinkManager, Depends(get_link_manager)]
+
+# Roles that may edit or delete any reference (beyond its own author).
+_LINK_MODERATOR_ROLES = frozenset({AccountUserRole.OWNER, AccountUserRole.ADMINISTRATOR})
+
+
+def get_current_link(link_id: uuid.UUID, account: CurrentAccountDep, session: SessionDep) -> Link:
+    link = session.get(Link, link_id)
+    if link is None or not link.enabled or link.account_id != account.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Link not found.")
+    return link
+
+
+CurrentLinkDep = Annotated[Link, Depends(get_current_link)]
+
+
+def get_modifiable_link(
+    link: CurrentLinkDep, user: CurrentUserDep, membership: CurrentAccountUserDep
+) -> Link:
+    """Allow the reference's author, or an owner/administrator, to modify it."""
+    if link.owner_id != user.id and membership.role not in _LINK_MODERATOR_ROLES:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "You can only modify your own links.")
+    return link
+
+
+ModifiableLinkDep = Annotated[Link, Depends(get_modifiable_link)]

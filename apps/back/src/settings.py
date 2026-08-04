@@ -143,6 +143,15 @@ class Settings(BaseSettings):
     smtp_password: str | None = Field(default=None)
     smtp_use_tls: bool = Field(default=True)
 
+    # Link prefill — the server fetches a referenced page to propose its title
+    # (`api_links_prefill`). Because the fetch is triggered by a URL the user
+    # types, it is an SSRF surface: private, loopback and link-local addresses
+    # are refused unless `LINK_PREFILL_ALLOW_PRIVATE_HOSTS` is turned on, which
+    # a self-hosted instance may want so an internal wiki can be read.
+    link_prefill_enabled: bool = Field(default=True)
+    link_prefill_allow_private_hosts: bool = Field(default=False)
+    link_prefill_timeout: float = Field(default=5.0)
+
     # File storage. `STORAGE_BACKEND` selects local disk or S3-compatible object
     # storage. In local mode files are written under `STORAGE_LOCAL_ROOT` and
     # served from a static mount at `STORAGE_PUBLIC_URL_BASE`. In s3 mode a

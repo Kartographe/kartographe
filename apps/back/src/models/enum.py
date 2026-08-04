@@ -633,6 +633,22 @@ class CommentStatus(str, Enum):
     REMOVED = "removed"
 
 
+class LinkType(str, Enum):
+    """What a reference attached to an entity points at.
+
+    Deliberately short: the kind is what the UI groups and colours by, not a
+    taxonomy of every tool a team uses. `kartographe` marks a reference to
+    another entity of the same instance — the serializer resolves it into a
+    structured `internal` block when the reader may see the target.
+    """
+
+    TICKET = "ticket"
+    DOCUMENTATION = "documentation"
+    DESIGN = "design"
+    KARTOGRAPHE = "kartographe"
+    OTHER = "other"
+
+
 class VoteRole(str, Enum):
     """The hat a member wears when voting on an entity.
 

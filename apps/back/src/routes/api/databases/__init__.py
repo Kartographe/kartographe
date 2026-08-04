@@ -18,6 +18,7 @@ from src.routes.api.databases.columns import router as columns_router
 from src.routes.api.databases.comments import router as comments_router
 from src.routes.api.databases.constraints import router as constraints_router
 from src.routes.api.databases.indexes import router as indexes_router
+from src.routes.api.databases.links import router as links_router
 from src.routes.api.databases.databases import router as databases_router
 from src.routes.api.databases.migration_column_comments import (
     router as migration_column_comments_router,
@@ -55,6 +56,7 @@ router.include_router(constraints_router)
 router.include_router(migrations_router)
 router.include_router(migration_columns_router)
 router.include_router(comments_router)
+router.include_router(links_router)
 router.include_router(table_comments_router)
 router.include_router(column_comments_router)
 router.include_router(migration_comments_router)

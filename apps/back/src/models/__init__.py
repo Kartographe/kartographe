@@ -52,6 +52,7 @@ from src.models.journey_scenario_step import JourneyScenarioStep
 from src.models.journey_scenario_step_assertion import JourneyScenarioStepAssertion
 from src.models.journey_scenario_step_file import JourneyScenarioStepFile
 from src.models.journey_scenario_step_route import JourneyScenarioStepRoute
+from src.models.link import Link
 from src.models.oauth_authorization_request import OauthAuthorizationRequest
 from src.models.oauth_client import OauthClient
 from src.models.oauth_grant import OauthGrant
@@ -108,6 +109,7 @@ __all__ = [
     "JourneyScenarioStepAssertion",
     "JourneyScenarioStepFile",
     "JourneyScenarioStepRoute",
+    "Link",
     "OauthAuthorizationRequest",
     "OauthClient",
     "OauthGrant",

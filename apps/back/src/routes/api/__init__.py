@@ -25,6 +25,7 @@ from src.routes.api.databases import router as databases_router
 from src.routes.api.features import router as features_router
 from src.routes.api.health import router as health_router
 from src.routes.api.journeys import router as journeys_router
+from src.routes.api.links import router as links_router
 from src.routes.api.me import router as me_router
 from src.routes.api.oauth import router as oauth_router
 from src.routes.api.personas import router as personas_router
@@ -51,6 +52,7 @@ v1_router.include_router(tags_router)  # account tags
 v1_router.include_router(comments_router)  # account-level comment management
 v1_router.include_router(votes_router)  # account-level vote listing
 v1_router.include_router(complexities_router)  # account-level complexity listing & scales
+v1_router.include_router(links_router)  # account-level reference management & URL prefill
 v1_router.include_router(core_router)  # global action, assertion & column type catalogues
 router.include_router(v1_router)
 
