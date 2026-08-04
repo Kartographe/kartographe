@@ -72,6 +72,8 @@ export const dtoEnums = {
   JourneyStatus: ["draft", "active", "archived"] as const satisfies readonly S["JourneyStatus"][],
   JourneyType: ["business", "customer", "internal", "other"] as const satisfies readonly S["JourneyType"][],
   Language: ["fr-FR", "en-GB", "es-ES", "de-DE", "it-IT"] as const satisfies readonly S["Language"][],
+  LinkSortField: ["date", "title", "type"] as const satisfies readonly S["LinkSortField"][],
+  LinkType: ["ticket", "documentation", "design", "kartographe", "other"] as const satisfies readonly S["LinkType"][],
   OauthAuthorizationFlowType: ["device", "authorization_code"] as const satisfies readonly S["OauthAuthorizationFlowType"][],
   OauthGrantScope: ["read", "write"] as const satisfies readonly S["OauthGrantScope"][],
   PersonaSortField: ["date", "title", "status", "type"] as const satisfies readonly S["PersonaSortField"][],

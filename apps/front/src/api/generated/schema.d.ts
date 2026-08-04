@@ -1412,6 +1412,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/applications/{application_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List application references
+         * @description List the references attached to an application, oldest first. A reference pointing back at this Kartographe instance carries its resolved target in `meta.internal`, when the caller may see it. Any member may read.
+         */
+        get: operations["api_applications_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to an application
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to an application. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach.
+         */
+        post: operations["api_applications_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/applications/{application_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references to an application at once
+         * @description Attach 1 to 50 references to an application in a single call — prefer this over calling `api_applications_links_create` in a loop. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_applications_links_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/applications/{application_id}/routes/{route_id}/comments": {
         parameters: {
             query?: never;
@@ -2364,6 +2408,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/features/{feature_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List feature references
+         * @description List the references attached to a feature, oldest first. A reference pointing back at this Kartographe instance carries its resolved target in `meta.internal`, when the caller may see it. Any member may read.
+         */
+        get: operations["api_features_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to a feature
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to a feature. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach.
+         */
+        post: operations["api_features_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/features/{feature_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references to a feature at once
+         * @description Attach 1 to 50 references to a feature in a single call — prefer this over calling `api_features_links_create` in a loop. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_features_links_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/features/{feature_id}/votes": {
         parameters: {
             query?: never;
@@ -3274,6 +3362,50 @@ export interface paths {
          * @description Post 1 to 50 comments on a journey in a single call — prefer this over calling `api_journeys_comments_create` in a loop. Best-effort: each comment is posted independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may post.
          */
         post: operations["api_journeys_comments_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List journey references
+         * @description List the references attached to a journey, oldest first. A reference pointing back at this Kartographe instance carries its resolved target in `meta.internal`, when the caller may see it. Any member may read.
+         */
+        get: operations["api_journeys_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to a journey
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to a journey. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach.
+         */
+        post: operations["api_journeys_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/journeys/{journey_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references to a journey at once
+         * @description Attach 1 to 50 references to a journey in a single call — prefer this over calling `api_journeys_links_create` in a loop. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_journeys_links_bulk_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4638,6 +4770,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/databases/{database_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List database references
+         * @description List the references attached to a database, oldest first. A reference pointing back at this Kartographe instance carries its resolved target in `meta.internal`, when the caller may see it. Any member may read.
+         */
+        get: operations["api_databases_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to a database
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to a database. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach.
+         */
+        post: operations["api_databases_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/databases/{database_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references to a database at once
+         * @description Attach 1 to 50 references to a database in a single call — prefer this over calling `api_databases_links_create` in a loop. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_databases_links_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/databases/{database_id}/versions/{database_version_id}/tables/{database_table_id}/comments": {
         parameters: {
             query?: never;
@@ -5362,6 +5538,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/accounts/{account_id}/services/{service_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List service references
+         * @description List the references attached to a service, oldest first. A reference pointing back at this Kartographe instance carries its resolved target in `meta.internal`, when the caller may see it. Any member may read.
+         */
+        get: operations["api_services_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to a service
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to a service. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach.
+         */
+        post: operations["api_services_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/services/{service_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references to a service at once
+         * @description Attach 1 to 50 references to a service in a single call — prefer this over calling `api_services_links_create` in a loop. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_services_links_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/accounts/{account_id}/services/{service_id}/actions/{action_id}/comments": {
         parameters: {
             query?: never;
@@ -5764,6 +5984,98 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List references
+         * @description List the references of the account, most recent first. Filter by entity type, entity id, owner and/or kind (repeat the query param for multiple values), restrict to a date range with `lbound` / `ubound` (inclusive bounds on the reference's date, ISO-8601), and sort by date/title/type. Each reference carries its resolved `entity` — the entity it is attached to, with its containing entities in `parents` (null when that entity has since been deleted). A reference whose URL points back at this Kartographe instance carries a resolved `meta.internal` block — the target entity (type, id, label and its containing entities) plus the in-app `path`. It is filled only when the caller is a member of the account that owns the target; otherwise the reference stays a plain URL. Any member may read.
+         */
+        get: operations["api_links_list"];
+        put?: never;
+        /**
+         * Attach a reference to an entity
+         * @description Attach a reference (a ticket, a document, a design, another Kartographe entity, …) to any entity of the account, given its `entityType` and `entityId`. Only the URL is required; call `api_links_prefill` first to propose a title. Any member may attach. The mutualized counterpart of the per-entity `.../{entity}/links` endpoints.
+         */
+        post: operations["api_links_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/links/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach several references at once
+         * @description Attach 1 to 50 references in a single call — prefer this over calling `api_links_create` in a loop. Each item names its own target, so one call can reference several entities. Best-effort: each reference is created independently, so one failing item does not roll back the others. Always returns 207; read each `results[].status` and the `created` / `failed` counts. Any member may attach.
+         */
+        post: operations["api_links_bulk_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/links/prefill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview a URL before attaching it
+         * @description Read a URL and propose what to save with it: the target page's `<title>` (or its `og:title`) and a suggested `type`. A URL on this Kartographe instance is answered from the database — the entity's label as the title, `kartographe` as the type, and the resolved entity in `meta.internal` — with no outbound request. Any other URL is fetched server-side, once, with a short timeout: private and loopback addresses are refused, and a page that cannot be read simply comes back with a null `title` rather than an error. Nothing is stored; feed the result to `api_links_create`. Any member may call it.
+         */
+        post: operations["api_links_prefill"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/accounts/{account_id}/links/{link_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a reference
+         * @description Return a single reference of the account. A reference whose URL points back at this Kartographe instance carries a resolved `meta.internal` block — the target entity (type, id, label and its containing entities) plus the in-app `path`. It is filled only when the caller is a member of the account that owns the target; otherwise the reference stays a plain URL. Any member may read.
+         */
+        get: operations["api_links_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a reference
+         * @description Soft-delete a reference. The author or an owner/administrator only.
+         */
+        delete: operations["api_links_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Edit a reference
+         * @description Partial update of a reference — only the keys sent are applied; `title` and `description` accept `null` to clear them. The entity it is attached to cannot be changed: detach and attach again. The author or an owner/administrator only.
+         */
+        patch: operations["api_links_update"];
         trace?: never;
     };
     "/v1/core/actionTypes": {
@@ -8887,6 +9199,22 @@ export interface components {
              */
             items: components["schemas"]["JourneyScenarioStepRouteCreateForm"][];
         };
+        /** BulkCreateRequest[LinkAttachForm] */
+        BulkCreateRequest_LinkAttachForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["LinkAttachForm"][];
+        };
+        /** BulkCreateRequest[LinkCreateForm] */
+        BulkCreateRequest_LinkCreateForm_: {
+            /**
+             * Items
+             * @description The items to create, 1 to 50 per call. Each entry has the exact shape of the single-item create body. Items are created independently: a runtime failure on one does not roll back the others (see the response `results`).
+             */
+            items: components["schemas"]["LinkCreateForm"][];
+        };
         /** BulkCreateRequest[PersonaCreateForm] */
         BulkCreateRequest_PersonaCreateForm_: {
             /**
@@ -9202,6 +9530,15 @@ export interface components {
         BulkCreateResponse_JourneyScenarioStepRouteItem_: {
             /** Results */
             results: components["schemas"]["BulkItemResult_JourneyScenarioStepRouteItem_"][];
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+        };
+        /** BulkCreateResponse[LinkItem] */
+        BulkCreateResponse_LinkItem_: {
+            /** Results */
+            results: components["schemas"]["BulkItemResult_LinkItem_"][];
             /** Created */
             created: number;
             /** Failed */
@@ -9633,6 +9970,18 @@ export interface components {
              */
             status: "created" | "error";
             item?: components["schemas"]["JourneyScenarioStepRouteItem"] | null;
+            error?: components["schemas"]["BulkItemError"] | null;
+        };
+        /** BulkItemResult[LinkItem] */
+        BulkItemResult_LinkItem_: {
+            /** Index */
+            index: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "created" | "error";
+            item?: components["schemas"]["LinkItem"] | null;
             error?: components["schemas"]["BulkItemError"] | null;
         };
         /** BulkItemResult[PersonaItem] */
@@ -11706,6 +12055,14 @@ export interface components {
         ItemResponse_JourneyScenarioStepRouteItem_: {
             item: components["schemas"]["JourneyScenarioStepRouteItem"];
         };
+        /** ItemResponse[LinkItem] */
+        ItemResponse_LinkItem_: {
+            item: components["schemas"]["LinkItem"];
+        };
+        /** ItemResponse[LinkPrefillItem] */
+        ItemResponse_LinkPrefillItem_: {
+            item: components["schemas"]["LinkPrefillItem"];
+        };
         /** ItemResponse[MeIntegrationAuthorizationRequestItem] */
         ItemResponse_MeIntegrationAuthorizationRequestItem_: {
             item: components["schemas"]["MeIntegrationAuthorizationRequestItem"];
@@ -12484,6 +12841,258 @@ export interface components {
          * @enum {string}
          */
         Language: "fr-FR" | "en-GB" | "es-ES" | "de-DE" | "it-IT";
+        /**
+         * LinkAttachForm
+         * @description Attach a reference to any entity through the account-wide endpoint.
+         *
+         *     Same shape as the per-entity form, plus the polymorphic target
+         *     (`entityType` + `entityId`) — validated server-side against the account.
+         */
+        LinkAttachForm: {
+            /**
+             * Url
+             * @description Absolute URL the reference points at (`http`/`https` only). A URL on this Kartographe instance is resolved into a structured `internal` block on read.
+             */
+            url: string;
+            /**
+             * @description What the reference points at.
+             * @default other
+             */
+            type: components["schemas"]["LinkType"];
+            /**
+             * Title
+             * @description Human label for the reference. Leave it out to show the URL itself; `api_links_prefill` proposes the target page's title.
+             */
+            title?: string | null;
+            /**
+             * Description
+             * @description Rich-text note explaining the reference, as a document object.
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /** @description The kind of entity the reference is attached to. */
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Entityid
+             * Format: uuid
+             * @description The id of the entity the reference is attached to.
+             */
+            entityId: string;
+        };
+        /**
+         * LinkCreateForm
+         * @description Attach a reference to an entity.
+         */
+        LinkCreateForm: {
+            /**
+             * Url
+             * @description Absolute URL the reference points at (`http`/`https` only). A URL on this Kartographe instance is resolved into a structured `internal` block on read.
+             */
+            url: string;
+            /**
+             * @description What the reference points at.
+             * @default other
+             */
+            type: components["schemas"]["LinkType"];
+            /**
+             * Title
+             * @description Human label for the reference. Leave it out to show the URL itself; `api_links_prefill` proposes the target page's title.
+             */
+            title?: string | null;
+            /**
+             * Description
+             * @description Rich-text note explaining the reference, as a document object.
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * LinkInternalRef
+         * @description What a URL pointing back at this instance actually targets.
+         *
+         *     Only filled when the URL resolves to an entity of an account the caller is a
+         *     member of — otherwise the link stays an opaque URL, so a reference can never
+         *     be used to probe for entities the reader may not see.
+         */
+        LinkInternalRef: {
+            /**
+             * Accountid
+             * Format: uuid
+             */
+            accountId: string;
+            entity: components["schemas"]["EntityRef"];
+            /** Path */
+            path: string;
+        };
+        /**
+         * LinkItem
+         * @description A reference attached to an account entity.
+         */
+        LinkItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** @default {} */
+            meta: components["schemas"]["LinkMeta"];
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Title */
+            title?: string | null;
+            type: components["schemas"]["LinkType"];
+            /** Url */
+            url: string;
+        };
+        /**
+         * LinkListItem
+         * @description A reference enriched with the entity it is attached to.
+         *
+         *     `entity` is null when the target has been soft-deleted — the reference still
+         *     exists, the entity it documented no longer does.
+         */
+        LinkListItem: {
+            /**
+             * Date
+             * Format: date-time
+             */
+            date: string;
+            /** Description */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Entityid
+             * Format: uuid
+             */
+            entityId: string;
+            entityType: components["schemas"]["EntityType"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** @default {} */
+            meta: components["schemas"]["LinkMeta"];
+            owner: components["schemas"]["OwnerItem"];
+            /**
+             * Ownerid
+             * Format: uuid
+             */
+            ownerId: string;
+            /** Title */
+            title?: string | null;
+            type: components["schemas"]["LinkType"];
+            /** Url */
+            url: string;
+            entity?: components["schemas"]["EntityRef"] | null;
+        };
+        /**
+         * LinkMeta
+         * @description Facts derived from the URL at read time — never stored on the row.
+         *
+         *     `host` is what to show as the source ("linear.app"); `internal` is the
+         *     resolved pointer when the URL leads back into Kartographe.
+         */
+        LinkMeta: {
+            /** Host */
+            host?: string | null;
+            internal?: components["schemas"]["LinkInternalRef"] | null;
+        };
+        /**
+         * LinkPatchForm
+         * @description Edit a reference. Every field is optional — only those sent are applied.
+         *
+         *     `title` and `description` accept `null` to clear them.
+         */
+        LinkPatchForm: {
+            /**
+             * Url
+             * @description Absolute URL the reference points at (`http`/`https` only). A URL on this Kartographe instance is resolved into a structured `internal` block on read.
+             */
+            url?: string | null;
+            /** @description What the reference points at. */
+            type?: components["schemas"]["LinkType"] | null;
+            /**
+             * Title
+             * @description Human label for the reference. Leave it out to show the URL itself; `api_links_prefill` proposes the target page's title.
+             */
+            title?: string | null;
+            /**
+             * Description
+             * @description Rich-text note explaining the reference, as a document object.
+             */
+            description?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
+         * LinkPrefillForm
+         * @description Ask the server what a URL looks like, before saving a reference.
+         */
+        LinkPrefillForm: {
+            /**
+             * Url
+             * @description Absolute URL the reference points at (`http`/`https` only). A URL on this Kartographe instance is resolved into a structured `internal` block on read.
+             */
+            url: string;
+        };
+        /**
+         * LinkPrefillItem
+         * @description What the server could tell about a URL before the reference is saved.
+         *
+         *     `title` is the target page's title (or the internal entity's label); `type`
+         *     is a suggestion the client is free to override. Both are null/`other` when
+         *     the page could not be read — prefilling never fails the request.
+         */
+        LinkPrefillItem: {
+            /** @default {} */
+            meta: components["schemas"]["LinkMeta"];
+            /** Title */
+            title?: string | null;
+            /** @default other */
+            type: components["schemas"]["LinkType"];
+            /** Url */
+            url: string;
+        };
+        /**
+         * LinkSortField
+         * @description Sortable columns for the links listing.
+         * @enum {string}
+         */
+        LinkSortField: "date" | "title" | "type";
+        /**
+         * LinkType
+         * @description What a reference attached to an entity points at.
+         *
+         *     Deliberately short: the kind is what the UI groups and colours by, not a
+         *     taxonomy of every tool a team uses. `kartographe` marks a reference to
+         *     another entity of the same instance — the serializer resolves it into a
+         *     structured `internal` block when the reader may see the target.
+         * @enum {string}
+         */
+        LinkType: "ticket" | "documentation" | "design" | "kartographe" | "other";
         /** ListingResponse[AccountInvitationItem] */
         ListingResponse_AccountInvitationItem_: {
             /** Count */
@@ -12953,6 +13562,26 @@ export interface components {
             page: components["schemas"]["Pagination"];
             /** Items */
             items: components["schemas"]["JourneyScenarioStepRouteItem"][];
+        };
+        /** ListingResponse[LinkItem] */
+        ListingResponse_LinkItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["LinkItem"][];
+        };
+        /** ListingResponse[LinkListItem] */
+        ListingResponse_LinkListItem_: {
+            /** Count */
+            count: number;
+            /** Limit */
+            limit: number;
+            page: components["schemas"]["Pagination"];
+            /** Items */
+            items: components["schemas"]["LinkListItem"][];
         };
         /** ListingResponse[MeIntegrationGrantItem] */
         ListingResponse_MeIntegrationGrantItem_: {
@@ -19941,6 +20570,137 @@ export interface operations {
             };
         };
     };
+    api_applications_links_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_applications_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
+                };
+            };
+            /** @description Application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_applications_routes_comments_list: {
         parameters: {
             query?: never;
@@ -23588,6 +24348,137 @@ export interface operations {
             };
         };
     };
+    api_features_links_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_features_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                feature_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
+                };
+            };
+            /** @description Feature not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_features_votes_list: {
         parameters: {
             query?: never;
@@ -27078,6 +27969,137 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BulkCreateResponse_CommentItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_links_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_journeys_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
                 };
             };
             /** @description Journey not found */
@@ -32178,6 +33200,137 @@ export interface operations {
             };
         };
     };
+    api_databases_links_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_databases_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                database_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
+                };
+            };
+            /** @description Database not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_databases_versions_tables_comments_list: {
         parameters: {
             query?: never;
@@ -34872,6 +36025,137 @@ export interface operations {
             };
         };
     };
+    api_services_links_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkCreateForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_services_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkCreateForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     api_services_actions_comments_list: {
         parameters: {
             query?: never;
@@ -36364,6 +37648,330 @@ export interface operations {
                 };
             };
             /** @description Account or entity not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_list: {
+        parameters: {
+            query?: {
+                entityType?: components["schemas"]["EntityType"][] | null;
+                entityId?: string[] | null;
+                ownerId?: string[] | null;
+                type?: components["schemas"]["LinkType"][] | null;
+                lbound?: string | null;
+                ubound?: string | null;
+                sortBy?: components["schemas"]["LinkSortField"];
+                sortOrder?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingResponse_LinkListItem_"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkAttachForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_bulk_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkCreateRequest_LinkAttachForm_"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            207: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkCreateResponse_LinkItem_"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_prefill: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkPrefillForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkPrefillItem_"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                link_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                link_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Insufficient permissions on this link */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, entity or link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    api_links_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                link_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkPatchForm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemResponse_LinkItem_"];
+                };
+            };
+            /** @description Insufficient permissions on this link */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Account, entity or link not found */
             404: {
                 headers: {
                     [name: string]: unknown;
