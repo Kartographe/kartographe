@@ -75,6 +75,17 @@ class JourneyScenarioStepManager(BaseEntityManager):
         parent = self.session.get(JourneyScenarioStep, parent_id)
         if parent is None or not parent.enabled or parent.journey_scenario_id != scenario.id:
             raise HTTPException(status.HTTP_404_NOT_FOUND, "Parent step not found in this scenario.")
+        # Moving a step under one of its own descendants closes the tree into a
+        # ring. Nothing downstream survives it: the steps are still there and
+        # still returned, but no one is a root any more, so a reader walking the
+        # tree from its roots finds none of them — a whole scenario reads as
+        # empty. Refusing the move is the only place this can be caught, since
+        # each row on its own looks perfectly valid.
+        if self_id is not None and parent_id in set(self._descendant_step_ids(self_id)):
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                "A step cannot be moved under one of its own descendants.",
+            )
 
     # --- mutations -------------------------------------------------------
 
