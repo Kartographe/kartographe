@@ -19,6 +19,12 @@ type Step = components["schemas"]["JourneyScenarioStepItem"];
  * and a branch — should one exist — trails its parent rather than vanishing.
  * A step whose parent is missing starts a chain of its own instead of being
  * dropped; a cycle is broken by walking each step at most once.
+ *
+ * Every step comes back, whatever the parent links say. Walking from the roots
+ * alone is not enough: a ring (A → B → A) has no root, so that walk returns
+ * nothing at all and a scenario full of steps renders as a blank page with no
+ * error to explain it. Steps the walk never reached are appended in the order
+ * the API returned them.
  */
 function orderSteps(steps: Step[]): Step[] {
   const byId = new Map(steps.map((step) => [step.id, step]));
@@ -46,6 +52,13 @@ function orderSteps(steps: Step[]): Step[] {
     }
   }
   walk(null);
+  for (const step of steps) {
+    if (!walked.has(step.id)) {
+      walked.add(step.id);
+      ordered.push(step);
+      walk(step.id);
+    }
+  }
 
   return ordered;
 }

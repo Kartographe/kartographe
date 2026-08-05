@@ -30,6 +30,23 @@ const TITLE_MAX_LENGTH = 255;
 /** Empty string is how a select spells the API's `null`. */
 const NONE = "";
 
+/** `step` and everything hanging under it. Walks each step at most once. */
+function subtreeIds(steps: Step[], stepId: string): Set<string> {
+  const ids = new Set([stepId]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const candidate of steps) {
+      const parent = candidate.parentJourneyScenarioStepId;
+      if (parent && ids.has(parent) && !ids.has(candidate.id)) {
+        ids.add(candidate.id);
+        grew = true;
+      }
+    }
+  }
+  return ids;
+}
+
 interface StepFormModalProps {
   accountId: string;
   journeyId: string;
@@ -157,12 +174,15 @@ export function StepFormModal({
   );
   const schema = actionTypes.schema(actionTypeId || null);
 
-  // A step cannot be its own parent, nor — the API would reject it — a step of
-  // another scenario. Descendants are left in: the API guards the cycle.
+  // A step cannot go under itself, nor under anything that already hangs from
+  // it: that closes the tree into a ring, and a ring has no root to read the
+  // scenario from — every step would disappear from the timeline at once. The
+  // API refuses it too; not offering it is what keeps the refusal invisible.
+  const excluded = step ? subtreeIds(steps, step.id) : new Set<string>();
   const parentOptions = [
     { value: NONE, label: t`Aucune (étape racine)` },
     ...steps
-      .filter((candidate) => candidate.id !== step?.id)
+      .filter((candidate) => !excluded.has(candidate.id))
       .map((candidate) => ({ value: candidate.id, label: candidate.title })),
   ];
   const actionOptions = [
