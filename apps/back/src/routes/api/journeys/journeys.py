@@ -56,7 +56,8 @@ _EDITOR = require_role(
     operation_id="api_journeys_list",
     summary="List journeys",
     description=(
-        "List the journeys of the account. Filter by status and/or type (repeat the query param "
+        "List the journeys of the account. Narrow by title with `q` (case-insensitive "
+        "contains), filter by status and/or type (repeat the query param "
         "for multiple values), sort by date/title/status/type, and page through results. "
         "Any member may read. "
         "Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. "
@@ -74,6 +75,10 @@ def list_journeys(
     type: Annotated[list[JourneyType] | None, Query(alias="type")] = None,
     tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
     persona_ids: Annotated[list[uuid.UUID] | None, Query(alias="personasIds")] = None,
+    q: Annotated[
+        str | None,
+        Query(description="Keep only journeys whose title contains this text (case-insensitive)."),
+    ] = None,
     my_vote: MyVoteFilter = None,
     my_complexity: MyComplexityFilter = None,
     sort_by: Annotated[JourneySortField, Query(alias="sortBy")] = JourneySortField.DATE,
@@ -87,6 +92,7 @@ def list_journeys(
         types=type,
         tag_ids=tag_ids,
         persona_ids=persona_ids,
+        query=q,
         my_vote=my_vote,
         my_complexity=my_complexity,
         user_id=member.user_id,

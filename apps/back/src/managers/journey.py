@@ -45,6 +45,7 @@ class JourneyManager(BaseEntityManager):
         types: list[JourneyType] | None = None,
         tag_ids: list[uuid.UUID] | None = None,
         persona_ids: list[uuid.UUID] | None = None,
+        query: str | None = None,
         my_vote: str | None = None,
         my_complexity: str | None = None,
         user_id: uuid.UUID | None = None,
@@ -67,6 +68,12 @@ class JourneyManager(BaseEntityManager):
             # matches nothing, and 404-ing here would let a caller probe which
             # persona ids exist elsewhere. Writes do validate.
             conditions.append(uuid_array_overlap(Journey.personas_ids, persona_ids))
+        if query and (needle := query.strip()):
+            # Deliberately a title match, not the full-text index: this serves
+            # the pickers, where the user types the name they already know and
+            # expects the list to narrow as they type — including on a prefix
+            # the stemmer would not match.
+            conditions.append(Journey.title.ilike(f"%{needle}%"))
         if my_vote and user_id:
             conditions.append(my_vote_filter(Journey, EntityType.JOURNEY, user_id, my_vote))
 
