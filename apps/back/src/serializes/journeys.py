@@ -20,8 +20,24 @@ from src.models.enum import (
     VoteValue,
 )
 from src.serializes._base import CamelBase, EstimableItem, TaggableItem, VotableItem
+from src.serializes.application_routes import ApplicationRouteRef
+from src.serializes.features import FeatureRef
 from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
+
+
+class JourneyRef(CamelBase):
+    """A journey as seen from something that links to it.
+
+    Carried by the link rows themselves so a listing of links is displayable on
+    its own — without the reader having to fetch the account's journeys and
+    join client-side, which silently breaks past the first page.
+    """
+
+    id: uuid.UUID
+    status: JourneyStatus
+    title: str
+    type: JourneyType
 
 
 class JourneyItem(TaggableItem, VotableItem, EstimableItem):
@@ -140,19 +156,29 @@ class JourneyScenarioStepAssertionItem(CamelBase):
 
 
 class FeatureJourneyItem(CamelBase):
-    """A journey linked to a feature."""
+    """A journey linked to a feature.
+
+    `journey` repeats what `journeyId` points at, so the link is displayable
+    without a second call.
+    """
 
     date: datetime
     id: uuid.UUID
+    journey: JourneyRef
     journey_id: uuid.UUID
     owner: OwnerItem
     owner_id: uuid.UUID
 
 
 class JourneyFeatureItem(CamelBase):
-    """A feature linked to a journey — the same link row, seen from the journey."""
+    """A feature linked to a journey — the same link row, seen from the journey.
+
+    `feature` repeats what `featureId` points at, so the link is displayable
+    without a second call.
+    """
 
     date: datetime
+    feature: FeatureRef
     feature_id: uuid.UUID
     id: uuid.UUID
     owner: OwnerItem
@@ -160,7 +186,11 @@ class JourneyFeatureItem(CamelBase):
 
 
 class JourneyScenarioStepRouteItem(CamelBase):
-    """An application route linked to a scenario step."""
+    """An application route linked to a scenario step.
+
+    `route` repeats what `applicationRouteId` points at, so the link is
+    displayable without a second call.
+    """
 
     application_id: uuid.UUID
     application_route_id: uuid.UUID
@@ -168,3 +198,4 @@ class JourneyScenarioStepRouteItem(CamelBase):
     id: uuid.UUID
     owner: OwnerItem
     owner_id: uuid.UUID
+    route: ApplicationRouteRef

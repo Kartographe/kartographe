@@ -58,6 +58,20 @@ class ApplicationRoleItem(CamelBase):
     title: str
 
 
+class ApplicationRouteRef(CamelBase):
+    """A route as seen from something that links to it.
+
+    Carried by the link rows themselves so a listing of links is displayable on
+    its own — without the reader having to fetch the application's routes and
+    join client-side, which silently breaks past the first page.
+    """
+
+    id: uuid.UUID
+    method: ApplicationRouteMethod
+    path: str
+    title: str | None = None
+
+
 class ApplicationRouteItem(TaggableItem, VotableItem, EstimableItem):
     """An HTTP route exposed by an application."""
 

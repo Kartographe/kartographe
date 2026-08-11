@@ -16,6 +16,8 @@ from sqlmodel import Field, Relationship
 from src.models._base import BaseModel
 
 if TYPE_CHECKING:
+    from src.models.feature import Feature
+    from src.models.journey import Journey
     from src.models.user import User
 
 
@@ -30,3 +32,7 @@ class FeatureJourney(BaseModel, table=True):
     date: datetime
 
     owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Both ends are eager-loaded: a link is only ever read to be displayed, and
+    # what it must show (title, type, status) lives on the entities, not here.
+    feature: "Feature" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    journey: "Journey" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})

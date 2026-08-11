@@ -20,6 +20,20 @@ from src.serializes.tags import TagItem
 from src.serializes.users import OwnerItem
 
 
+class FeatureRef(CamelBase):
+    """A feature as seen from something that links to it.
+
+    Carried by the link rows themselves so a listing of links is displayable on
+    its own — without the reader having to fetch the account's features and
+    join client-side, which silently breaks past the first page.
+    """
+
+    id: uuid.UUID
+    status: FeatureStatus
+    title: str
+    type: FeatureType
+
+
 class FeatureItem(TaggableItem, VotableItem, EstimableItem):
     """A feature tracked at the account level."""
 

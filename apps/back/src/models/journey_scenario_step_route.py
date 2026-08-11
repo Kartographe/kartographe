@@ -16,6 +16,7 @@ from sqlmodel import Field, Relationship
 from src.models._base import BaseModel
 
 if TYPE_CHECKING:
+    from src.models.application_route import ApplicationRoute
     from src.models.user import User
 
 
@@ -33,3 +34,11 @@ class JourneyScenarioStepRoute(BaseModel, table=True):
     date: datetime
 
     owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "selectin"})
+    # Eager-loaded: a link is only ever read to be displayed, and what it must
+    # show (method, path, title) lives on the route, not here.
+    route: "ApplicationRoute" = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "[JourneyScenarioStepRoute.application_route_id]",
+        }
+    )
