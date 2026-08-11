@@ -2721,7 +2721,7 @@ export interface paths {
         };
         /**
          * List journeys
-         * @description List the journeys of the account. Filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. Filter with `personasIds` (repeat the query param) to keep only the journeys targeting at least one of those personas.
+         * @description List the journeys of the account. Narrow by title with `q` (case-insensitive contains), filter by status and/or type (repeat the query param for multiple values), sort by date/title/status/type, and page through results. Any member may read. Filter with `tagIds` (repeat the query param) to keep only the entities carrying at least one of those tags. Filter with `personasIds` (repeat the query param) to keep only the journeys targeting at least one of those personas.
          */
         get: operations["api_journeys_list"];
         put?: never;
@@ -8635,6 +8635,26 @@ export interface components {
             tagIds?: string[] | null;
         };
         /**
+         * ApplicationRouteRef
+         * @description A route as seen from something that links to it.
+         *
+         *     Carried by the link rows themselves so a listing of links is displayable on
+         *     its own — without the reader having to fetch the application's routes and
+         *     join client-side, which silently breaks past the first page.
+         */
+        ApplicationRouteRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            method: components["schemas"]["ApplicationRouteMethod"];
+            /** Path */
+            path: string;
+            /** Title */
+            title?: string | null;
+        };
+        /**
          * ApplicationRouteResponseCreateForm
          * @description Create a documented response of a route.
          */
@@ -11745,6 +11765,9 @@ export interface components {
         /**
          * FeatureJourneyItem
          * @description A journey linked to a feature.
+         *
+         *     `journey` repeats what `journeyId` points at, so the link is displayable
+         *     without a second call.
          */
         FeatureJourneyItem: {
             /**
@@ -11757,6 +11780,7 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            journey: components["schemas"]["JourneyRef"];
             /**
              * Journeyid
              * Format: uuid
@@ -11784,6 +11808,25 @@ export interface components {
             type?: components["schemas"]["FeatureType"] | null;
             /** Tagids */
             tagIds?: string[] | null;
+        };
+        /**
+         * FeatureRef
+         * @description A feature as seen from something that links to it.
+         *
+         *     Carried by the link rows themselves so a listing of links is displayable on
+         *     its own — without the reader having to fetch the account's features and
+         *     join client-side, which silently breaks past the first page.
+         */
+        FeatureRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["FeatureStatus"];
+            /** Title */
+            title: string;
+            type: components["schemas"]["FeatureType"];
         };
         /**
          * FeatureSortField
@@ -12172,6 +12215,9 @@ export interface components {
         /**
          * JourneyFeatureItem
          * @description A feature linked to a journey — the same link row, seen from the journey.
+         *
+         *     `feature` repeats what `featureId` points at, so the link is displayable
+         *     without a second call.
          */
         JourneyFeatureItem: {
             /**
@@ -12179,6 +12225,7 @@ export interface components {
              * Format: date-time
              */
             date: string;
+            feature: components["schemas"]["FeatureRef"];
             /**
              * Featureid
              * Format: uuid
@@ -12290,6 +12337,25 @@ export interface components {
             personasIds?: string[] | null;
             /** Tagids */
             tagIds?: string[] | null;
+        };
+        /**
+         * JourneyRef
+         * @description A journey as seen from something that links to it.
+         *
+         *     Carried by the link rows themselves so a listing of links is displayable on
+         *     its own — without the reader having to fetch the account's journeys and
+         *     join client-side, which silently breaks past the first page.
+         */
+        JourneyRef: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["JourneyStatus"];
+            /** Title */
+            title: string;
+            type: components["schemas"]["JourneyType"];
         };
         /**
          * JourneyScenarioCreateForm
@@ -12785,6 +12851,9 @@ export interface components {
         /**
          * JourneyScenarioStepRouteItem
          * @description An application route linked to a scenario step.
+         *
+         *     `route` repeats what `applicationRouteId` points at, so the link is
+         *     displayable without a second call.
          */
         JourneyScenarioStepRouteItem: {
             /**
@@ -12813,6 +12882,7 @@ export interface components {
              * Format: uuid
              */
             ownerId: string;
+            route: components["schemas"]["ApplicationRouteRef"];
         };
         /**
          * JourneyScenarioType
@@ -25458,6 +25528,8 @@ export interface operations {
                 type?: components["schemas"]["JourneyType"][] | null;
                 tagIds?: string[] | null;
                 personasIds?: string[] | null;
+                /** @description Keep only journeys whose title contains this text (case-insensitive). */
+                q?: string | null;
                 /** @description Keep only entities the caller voted this way, or `none` for not-yet-voted. */
                 myVote?: string | null;
                 /** @description Keep only entities the caller has estimated (`estimated`) or has not (`none`). */
