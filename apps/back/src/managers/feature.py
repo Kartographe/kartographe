@@ -18,6 +18,7 @@ from src.models.application_feature import ApplicationFeature
 from src.models.enum import EntityType, FeatureStatus, FeatureType
 from src.models.feature import Feature
 from src.models.feature_file import FeatureFile
+from src.models.feature_journey import FeatureJourney
 from src.models.user import User
 from src.utils.datetime import utc_now
 
@@ -102,10 +103,14 @@ class FeatureManager(BaseEntityManager):
         return self._persist(feature)
 
     def soft_delete(self, feature: Feature) -> None:
-        """Soft-delete the feature, its files and its application links."""
+        """Soft-delete the feature, its files and its application/journey links."""
         self._guard_unlocked(feature)
         now = utc_now()
         self._disable(feature, now)
         self._bulk_disable(ApplicationFeature, ApplicationFeature.feature_id == feature.id, now=now)
         self._bulk_disable(FeatureFile, FeatureFile.feature_id == feature.id, now=now)
+        # Mirror of the journey side, which already disables its feature links:
+        # a surviving link would leave the journey's Features tab pointing at an
+        # entity that no longer exists.
+        self._bulk_disable(FeatureJourney, FeatureJourney.feature_id == feature.id, now=now)
         self.session.commit()
