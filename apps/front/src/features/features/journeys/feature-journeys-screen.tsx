@@ -34,17 +34,14 @@ import {
 } from "@/features/journeys/journey-tags";
 
 type FeatureJourney = components["schemas"]["FeatureJourneyItem"];
-type Journey = components["schemas"]["JourneyItem"];
+type Journey = components["schemas"]["JourneyRef"];
 
 const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/features/{feature_id}/journeys",
 ];
-/** The type/status shown here belong to the journey, read from this listing. */
+/** The type/status shown here belong to the journey, edited in place from here. */
 const JOURNEYS_KEY = ["get", "/v1/accounts/{account_id}/journeys"];
-
-/** Matches the link modal's picker: an account with more journeys pages beyond it. */
-const JOURNEYS_LIMIT = 100;
 
 export function FeatureJourneysScreen({
   accountId,
@@ -65,18 +62,6 @@ export function FeatureJourneysScreen({
     "/v1/accounts/{account_id}/features/{feature_id}/journeys",
     { params: { path } }
   );
-  // The link carries only a `journeyId`; the journey itself is read from the
-  // account's listing.
-  const journeysQuery = $api.useQuery(
-    "get",
-    "/v1/accounts/{account_id}/journeys",
-    {
-      params: {
-        path: { account_id: accountId },
-        query: { limit: JOURNEYS_LIMIT },
-      },
-    }
-  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/features/{feature_id}/journeys/{feature_journey_id}",
@@ -94,13 +79,16 @@ export function FeatureJourneysScreen({
   );
 
   const links = linksQuery.data?.items ?? [];
-  const journeys = journeysQuery.data?.items ?? [];
-  const journeyById = new Map(journeys.map((journey) => [journey.id, journey]));
   const linkedIds = new Set(links.map((link) => link.journeyId));
-  const linkable = journeys.filter((journey) => !linkedIds.has(journey.id));
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  /** The edited journey is shown from the link listing — refresh both. */
+  function invalidateJourney() {
+    invalidate();
+    queryClient.invalidateQueries({ queryKey: JOURNEYS_KEY });
   }
 
   async function changeStatus(journey: Journey, status: Journey["status"]) {
@@ -108,7 +96,7 @@ export function FeatureJourneysScreen({
       params: { path: { account_id: accountId, journey_id: journey.id } },
       body: { status },
     });
-    queryClient.invalidateQueries({ queryKey: JOURNEYS_KEY });
+    invalidateJourney();
   }
 
   async function changeType(journey: Journey, type: Journey["type"]) {
@@ -116,15 +104,12 @@ export function FeatureJourneysScreen({
       params: { path: { account_id: accountId, journey_id: journey.id } },
       body: { type },
     });
-    queryClient.invalidateQueries({ queryKey: JOURNEYS_KEY });
+    invalidateJourney();
   }
 
   function confirmUnlink(link: FeatureJourney) {
-    const journey = journeyById.get(link.journeyId);
     modal.confirm({
-      title: journey
-        ? t`Détacher ${journey.title} ?`
-        : t`Détacher ce parcours ?`,
+      title: t`Détacher ${link.journey.title} ?`,
       content: t`Le parcours lui-même n'est pas supprimé, seul le lien avec cette fonctionnalité disparaît.`,
       okText: t`Détacher`,
       okButtonProps: { danger: true },
@@ -152,9 +137,8 @@ export function FeatureJourneysScreen({
     <LinkJourneyModal
       accountId={accountId}
       featureId={featureId}
-      isLoading={journeysQuery.isLoading}
-      journeys={linkable}
       key={linkOpen ? "open" : "closed"}
+      linkedIds={linkedIds}
       onClose={() => setLinkOpen(false)}
       open={linkOpen}
     />
@@ -166,49 +150,33 @@ export function FeatureJourneysScreen({
       key: "journey",
       width: COL.title,
       ellipsis: true,
-      render: (_, link) => {
-        const journey = journeyById.get(link.journeyId);
-        return journey ? (
-          <Typography.Text strong>{journey.title}</Typography.Text>
-        ) : (
-          // Beyond the listing's page, or archived out of it.
-          <Typography.Text type="secondary">{t`Parcours introuvable`}</Typography.Text>
-        );
-      },
+      render: (_, link) => (
+        <Typography.Text strong>{link.journey.title}</Typography.Text>
+      ),
     },
     {
       title: t`Type`,
       key: "type",
       width: COL.type,
-      render: (_, link) => {
-        const journey = journeyById.get(link.journeyId);
-        return journey ? (
-          <JourneyTypeTag
-            loading={typeMutation.isPending}
-            onChange={(next) => changeType(journey, next)}
-            type={journey.type}
-          />
-        ) : (
-          "—"
-        );
-      },
+      render: (_, link) => (
+        <JourneyTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(link.journey, next)}
+          type={link.journey.type}
+        />
+      ),
     },
     {
       title: t`Statut`,
       key: "status",
       width: COL.status,
-      render: (_, link) => {
-        const journey = journeyById.get(link.journeyId);
-        return journey ? (
-          <JourneyStatusTag
-            loading={statusMutation.isPending}
-            onChange={(next) => changeStatus(journey, next)}
-            status={journey.status}
-          />
-        ) : (
-          "—"
-        );
-      },
+      render: (_, link) => (
+        <JourneyStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(link.journey, next)}
+          status={link.journey.status}
+        />
+      ),
     },
     {
       title: t`Lien`,
@@ -230,35 +198,30 @@ export function FeatureJourneysScreen({
       align: "right",
       fixed: "right",
       width: actionsWidth({ icons: 1, labelled: 1 }),
-      render: (_, link) => {
-        const journey = journeyById.get(link.journeyId);
-        return (
-          <Space>
-            {journey ? (
-              <Link
-                params={{ accountId, journeyId: journey.id }}
-                to="/accounts/$accountId/journeys/$journeyId"
-              >
-                <Button
-                  icon={<ArrowRightOutlined />}
-                  iconPosition="end"
-                  size="small"
-                >
-                  {t`Accéder`}
-                </Button>
-              </Link>
-            ) : null}
-            <Tooltip title={t`Détacher`}>
-              <Button
-                danger
-                icon={<DisconnectOutlined />}
-                onClick={() => confirmUnlink(link)}
-                size="small"
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
+      render: (_, link) => (
+        <Space>
+          <Link
+            params={{ accountId, journeyId: link.journey.id }}
+            to="/accounts/$accountId/journeys/$journeyId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Détacher`}>
+            <Button
+              danger
+              icon={<DisconnectOutlined />}
+              onClick={() => confirmUnlink(link)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 

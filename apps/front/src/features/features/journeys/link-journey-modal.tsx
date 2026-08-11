@@ -5,20 +5,20 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { Modal } from "antd";
+import { useState } from "react";
 import { z } from "zod";
 import { $api } from "@/api/$api";
-import type { components } from "@/api/generated/schema";
 import { handleFormError } from "@/lib/tanstack/react-form/server-errors";
 import { useAppForm } from "@/lib/tanstack/react-form/use-app-form";
 
-type Journey = components["schemas"]["JourneyItem"];
+/** One page is plenty next to a search box; the query narrows, not the page. */
+const SEARCH_LIMIT = 25;
 
 interface LinkJourneyModalProps {
   accountId: string;
   featureId: string;
-  /** The account's journeys not already linked to this feature. */
-  journeys: Journey[];
-  isLoading: boolean;
+  /** Already-linked ids, filtered out of whatever the search brings back. */
+  linkedIds: Set<string>;
   open: boolean;
   onClose: () => void;
 }
@@ -26,13 +26,27 @@ interface LinkJourneyModalProps {
 export function LinkJourneyModal({
   accountId,
   featureId,
-  journeys,
-  isLoading,
+  linkedIds,
   open,
   onClose,
 }: LinkJourneyModalProps) {
   const { t } = useLingui();
   const queryClient = useQueryClient();
+  const [search, setSearch] = useState("");
+
+  // Searching server-side rather than filtering a first page client-side: an
+  // account past the page size would otherwise have journeys the picker can
+  // never reach.
+  const journeysQuery = $api.useQuery(
+    "get",
+    "/v1/accounts/{account_id}/journeys",
+    {
+      params: {
+        path: { account_id: accountId },
+        query: { limit: SEARCH_LIMIT, ...(search ? { q: search } : {}) },
+      },
+    }
+  );
 
   const createMutation = $api.useMutation(
     "post",
@@ -67,10 +81,9 @@ export function LinkJourneyModal({
     },
   });
 
-  const options = journeys.map((journey) => ({
-    value: journey.id,
-    label: journey.title,
-  }));
+  const options = (journeysQuery.data?.items ?? [])
+    .filter((journey) => !linkedIds.has(journey.id))
+    .map((journey) => ({ value: journey.id, label: journey.title }));
 
   return (
     <Modal
@@ -86,13 +99,10 @@ export function LinkJourneyModal({
             {(field) => (
               <field.SelectField
                 label={t`Parcours utilisateur`}
-                loading={isLoading}
+                loading={journeysQuery.isLoading}
+                onSearch={setSearch}
                 options={options}
-                placeholder={
-                  options.length
-                    ? t`Choisir un parcours`
-                    : t`Tous les parcours sont déjà liés`
-                }
+                placeholder={t`Rechercher un parcours`}
               />
             )}
           </form.AppField>

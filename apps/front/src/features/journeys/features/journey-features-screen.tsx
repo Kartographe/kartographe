@@ -34,17 +34,14 @@ import {
 import { LinkFeatureModal } from "@/features/journeys/features/link-feature-modal";
 
 type JourneyFeature = components["schemas"]["JourneyFeatureItem"];
-type Feature = components["schemas"]["FeatureItem"];
+type Feature = components["schemas"]["FeatureRef"];
 
 const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/journeys/{journey_id}/features",
 ];
-/** The type/status shown here belong to the feature, read from this listing. */
+/** The type/status shown here belong to the feature, edited in place from here. */
 const FEATURES_KEY = ["get", "/v1/accounts/{account_id}/features"];
-
-/** Matches the link modal's picker: an account with more features pages beyond it. */
-const FEATURES_LIMIT = 100;
 
 export function JourneyFeaturesScreen({
   accountId,
@@ -65,18 +62,6 @@ export function JourneyFeaturesScreen({
     "/v1/accounts/{account_id}/journeys/{journey_id}/features",
     { params: { path } }
   );
-  // The link carries only a `featureId`; the feature itself is read from the
-  // account's listing.
-  const featuresQuery = $api.useQuery(
-    "get",
-    "/v1/accounts/{account_id}/features",
-    {
-      params: {
-        path: { account_id: accountId },
-        query: { limit: FEATURES_LIMIT },
-      },
-    }
-  );
   const deleteMutation = $api.useMutation(
     "delete",
     "/v1/accounts/{account_id}/journeys/{journey_id}/features/{feature_journey_id}",
@@ -94,12 +79,16 @@ export function JourneyFeaturesScreen({
   );
 
   const links = linksQuery.data?.items ?? [];
-  const features = featuresQuery.data?.items ?? [];
-  const featureById = new Map(features.map((feature) => [feature.id, feature]));
   const linkedIds = new Set(links.map((link) => link.featureId));
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
+  }
+
+  /** The edited feature is shown from the link listing — refresh both. */
+  function invalidateFeature() {
+    invalidate();
+    queryClient.invalidateQueries({ queryKey: FEATURES_KEY });
   }
 
   async function changeStatus(feature: Feature, status: Feature["status"]) {
@@ -107,7 +96,7 @@ export function JourneyFeaturesScreen({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { status },
     });
-    queryClient.invalidateQueries({ queryKey: FEATURES_KEY });
+    invalidateFeature();
   }
 
   async function changeType(feature: Feature, type: Feature["type"]) {
@@ -115,15 +104,12 @@ export function JourneyFeaturesScreen({
       params: { path: { account_id: accountId, feature_id: feature.id } },
       body: { type },
     });
-    queryClient.invalidateQueries({ queryKey: FEATURES_KEY });
+    invalidateFeature();
   }
 
   function confirmUnlink(link: JourneyFeature) {
-    const feature = featureById.get(link.featureId);
     modal.confirm({
-      title: feature
-        ? t`Détacher ${feature.title} ?`
-        : t`Détacher cette fonctionnalité ?`,
+      title: t`Détacher ${link.feature.title} ?`,
       content: t`La fonctionnalité elle-même n'est pas supprimée, seul le lien avec ce parcours disparaît.`,
       okText: t`Détacher`,
       okButtonProps: { danger: true },
@@ -164,49 +150,33 @@ export function JourneyFeaturesScreen({
       key: "feature",
       width: COL.title,
       ellipsis: true,
-      render: (_, link) => {
-        const feature = featureById.get(link.featureId);
-        return feature ? (
-          <Typography.Text strong>{feature.title}</Typography.Text>
-        ) : (
-          // Beyond the listing's page, or archived out of it.
-          <Typography.Text type="secondary">{t`Fonctionnalité introuvable`}</Typography.Text>
-        );
-      },
+      render: (_, link) => (
+        <Typography.Text strong>{link.feature.title}</Typography.Text>
+      ),
     },
     {
       title: t`Type`,
       key: "type",
       width: COL.type,
-      render: (_, link) => {
-        const feature = featureById.get(link.featureId);
-        return feature ? (
-          <FeatureTypeTag
-            loading={typeMutation.isPending}
-            onChange={(next) => changeType(feature, next)}
-            type={feature.type}
-          />
-        ) : (
-          "—"
-        );
-      },
+      render: (_, link) => (
+        <FeatureTypeTag
+          loading={typeMutation.isPending}
+          onChange={(next) => changeType(link.feature, next)}
+          type={link.feature.type}
+        />
+      ),
     },
     {
       title: t`Statut`,
       key: "status",
       width: COL.status,
-      render: (_, link) => {
-        const feature = featureById.get(link.featureId);
-        return feature ? (
-          <FeatureStatusTag
-            loading={statusMutation.isPending}
-            onChange={(next) => changeStatus(feature, next)}
-            status={feature.status}
-          />
-        ) : (
-          "—"
-        );
-      },
+      render: (_, link) => (
+        <FeatureStatusTag
+          loading={statusMutation.isPending}
+          onChange={(next) => changeStatus(link.feature, next)}
+          status={link.feature.status}
+        />
+      ),
     },
     {
       title: t`Lien`,
@@ -228,35 +198,30 @@ export function JourneyFeaturesScreen({
       align: "right",
       fixed: "right",
       width: actionsWidth({ icons: 1, labelled: 1 }),
-      render: (_, link) => {
-        const feature = featureById.get(link.featureId);
-        return (
-          <Space>
-            {feature ? (
-              <Link
-                params={{ accountId, featureId: feature.id }}
-                to="/accounts/$accountId/features/$featureId"
-              >
-                <Button
-                  icon={<ArrowRightOutlined />}
-                  iconPosition="end"
-                  size="small"
-                >
-                  {t`Accéder`}
-                </Button>
-              </Link>
-            ) : null}
-            <Tooltip title={t`Détacher`}>
-              <Button
-                danger
-                icon={<DisconnectOutlined />}
-                onClick={() => confirmUnlink(link)}
-                size="small"
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
+      render: (_, link) => (
+        <Space>
+          <Link
+            params={{ accountId, featureId: link.feature.id }}
+            to="/accounts/$accountId/features/$featureId"
+          >
+            <Button
+              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              size="small"
+            >
+              {t`Accéder`}
+            </Button>
+          </Link>
+          <Tooltip title={t`Détacher`}>
+            <Button
+              danger
+              icon={<DisconnectOutlined />}
+              onClick={() => confirmUnlink(link)}
+              size="small"
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 

@@ -4,7 +4,7 @@
 
 import { DisconnectOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLingui } from "@lingui/react/macro";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { App, Button, Empty, Flex, List, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { $api } from "@/api/$api";
@@ -13,52 +13,11 @@ import { MethodTag } from "@/components/method-tag";
 import { LinkRouteModal } from "@/features/journeys/steps/link-route-modal";
 
 type StepRoute = components["schemas"]["JourneyScenarioStepRouteItem"];
-type ApplicationRoute = components["schemas"]["ApplicationRouteItem"];
 
 const LIST_KEY = [
   "get",
   "/v1/accounts/{account_id}/journeys/{journey_id}/scenarios/{scenario_id}/steps/{step_id}/routes",
 ];
-
-/**
- * Resolves the routes a step links to.
- *
- * A link carries an `applicationId` and an `applicationRouteId`, nothing more —
- * and a route is only listed under its own application, so the lookup is one
- * query per distinct application rather than one per link.
- */
-function useRouteLookup(accountId: string, applicationIds: string[]) {
-  const uniqueIds = [...new Set(applicationIds)];
-
-  const queries = useQueries({
-    queries: uniqueIds.map((applicationId) =>
-      $api.queryOptions(
-        "get",
-        "/v1/accounts/{account_id}/applications/{application_id}/routes",
-        {
-          params: {
-            path: { account_id: accountId, application_id: applicationId },
-          },
-        }
-      )
-    ),
-  });
-
-  const byApplication = new Map<string, Map<string, ApplicationRoute>>();
-  uniqueIds.forEach((applicationId, index) => {
-    const routes = queries[index]?.data?.items ?? [];
-    byApplication.set(
-      applicationId,
-      new Map(routes.map((route) => [route.id, route]))
-    );
-  });
-
-  return {
-    isLoading: queries.some((query) => query.isLoading),
-    route: (applicationId: string, routeId: string) =>
-      byApplication.get(applicationId)?.get(routeId) ?? null,
-  };
-}
 
 export function StepRoutes({
   accountId,
@@ -95,10 +54,6 @@ export function StepRoutes({
   );
 
   const links = linksQuery.data?.items ?? [];
-  const routes = useRouteLookup(
-    accountId,
-    links.map((link) => link.applicationId)
-  );
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: LIST_KEY });
@@ -141,39 +96,28 @@ export function StepRoutes({
       ) : (
         <List
           dataSource={links}
-          loading={linksQuery.isLoading || routes.isLoading}
-          renderItem={(link) => {
-            const route = routes.route(
-              link.applicationId,
-              link.applicationRouteId
-            );
-            return (
-              <List.Item
-                actions={[
-                  <Tooltip key="unlink" title={t`Détacher`}>
-                    <Button
-                      danger
-                      icon={<DisconnectOutlined />}
-                      onClick={() => confirmUnlink(link)}
-                      size="small"
-                    />
-                  </Tooltip>,
-                ]}
-              >
-                {route ? (
-                  <Flex align="center" gap={8} style={{ minWidth: 0 }}>
-                    <MethodTag method={route.method} />
-                    <Typography.Text code ellipsis>
-                      {route.path}
-                    </Typography.Text>
-                  </Flex>
-                ) : (
-                  // Archived out of the listing, or deleted from its application.
-                  <Typography.Text type="secondary">{t`Route introuvable`}</Typography.Text>
-                )}
-              </List.Item>
-            );
-          }}
+          loading={linksQuery.isLoading}
+          renderItem={(link) => (
+            <List.Item
+              actions={[
+                <Tooltip key="unlink" title={t`Détacher`}>
+                  <Button
+                    danger
+                    icon={<DisconnectOutlined />}
+                    onClick={() => confirmUnlink(link)}
+                    size="small"
+                  />
+                </Tooltip>,
+              ]}
+            >
+              <Flex align="center" gap={8} style={{ minWidth: 0 }}>
+                <MethodTag method={link.route.method} />
+                <Typography.Text code ellipsis>
+                  {link.route.path}
+                </Typography.Text>
+              </Flex>
+            </List.Item>
+          )}
           size="small"
         />
       )}
